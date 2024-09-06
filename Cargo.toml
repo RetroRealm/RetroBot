@@ -6,10 +6,13 @@ edition = "2021"
 [dependencies]
 tokio = { version = "^1", features = ["macros", "rt-multi-thread", "time"] }
 dotenvy = "^0.15"
-env_logger = "^0.11"
 log = "^0.4"
-serenity = { version = "^0.12", features = ["client", "gateway", "rustls_backend", "model", "framework"] }
+serenity = { version = "^0.12", features = ["client", "gateway", "rustls_backend", "model", "framework", "cache", "builder", "chrono"] }
 poise = "^0.6"
+anyhow = "^1"
+tracing = "^0.1"
+tracing-subscriber = "^0.3"
+chrono = "^0.4"
 
 [build-dependencies]
 built = { version = "^0.7", features = ["chrono", "semver", "git2"] }
