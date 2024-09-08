@@ -37,7 +37,7 @@ async fn main() -> anyhow::Result<()> {
 		.setup(|ctx, _ready, framework| {
 			Box::pin(async move {
 				poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-				Ok(command::UserData {})
+				Ok(command::UserData::default())
 			})
 		})
 		.build();

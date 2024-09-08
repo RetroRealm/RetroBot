@@ -1,7 +1,17 @@
 use poise::Command;
 use serenity::Error;
 
-pub struct UserData;
+pub struct UserData {
+	client: reqwest::Client,
+}
+
+impl Default for UserData {
+	fn default() -> Self {
+		Self {
+			client: reqwest::Client::new(),
+		}
+	}
+}
 
 type Context<'a> = poise::Context<'a, UserData, Error>;
 
