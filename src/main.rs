@@ -1,3 +1,4 @@
+pub mod abstraction;
 mod command;
 mod events;
 
@@ -37,9 +38,10 @@ async fn main() -> anyhow::Result<()> {
 		.setup(|ctx, _ready, framework| {
 			Box::pin(async move {
 				poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-				Ok(command::UserData::default())
+				Ok(abstraction::command::CommandData::default())
 			})
 		})
+		.initialize_owners(true)
 		.build();
 
 	let mut client = serenity::Client::builder(token, intents)

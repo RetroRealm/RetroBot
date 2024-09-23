@@ -10,6 +10,7 @@ dependencies = [
  "built",
  "chrono",
  "dotenvy",
+ "lazy_static",
  "log",
  "poise",
  "reqwest 0.12.7",
