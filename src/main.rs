@@ -1,8 +1,10 @@
 pub mod abstraction;
 mod command;
 mod events;
+pub mod util;
 
 use crate::command::get_commands;
+use abstraction::command::CommandData;
 use dotenvy::dotenv;
 use log::info;
 use serenity::prelude::GatewayIntents;
@@ -38,7 +40,7 @@ async fn main() -> anyhow::Result<()> {
 		.setup(|ctx, _ready, framework| {
 			Box::pin(async move {
 				poise::builtins::register_globally(ctx, &framework.options().commands).await?;
-				Ok(abstraction::command::CommandData::default())
+				Ok(CommandData::default())
 			})
 		})
 		.initialize_owners(true)

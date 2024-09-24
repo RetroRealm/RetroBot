@@ -72,7 +72,7 @@ jobs:
           target: ${{ matrix.target.build_target }}
 
       - name: Run cargo fmt
-        run: cargo fmt -- --check
+        run: cargo fmt -p RetroBot  -- --check
 
   clippy:
     name: Cargo clippy
