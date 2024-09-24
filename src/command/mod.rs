@@ -1,6 +1,6 @@
-pub mod playmatch;
-pub mod role;
-pub mod util;
+mod playmatch;
+mod role;
+mod util;
 
 use crate::abstraction::command::{CommandData, CommandError};
 use crate::command::playmatch::list;
