@@ -9,21 +9,28 @@ repository = "https://github.com/RetroRealm/RetroBot"
 members = ["playmatch_client", "."]
 
 [dependencies]
-playmatch_client = { path = "playmatch_client" }
+# basic rust dependencies
 tokio = { version = "^1", features = ["macros", "rt-multi-thread", "time"] }
 dotenvy = "^0.15"
 log = "^0.4"
-serenity = { version = "^0.12", features = ["client", "gateway", "rustls_backend", "model", "framework", "cache", "builder", "chrono"] }
-poise = { version = "^0.6", features = ["chrono", "cache"] }
 anyhow = "^1"
 tracing = "^0.1"
 tracing-subscriber = "^0.3"
+serde = { version = "^1", features = ["derive"] }
 chrono = "^0.4"
 reqwest = { version = "^0.12", features = ["rustls-tls", "json", "stream"], default-features = false }
 lazy_static = "^1.5"
 futures = "0.3"
-serde = { version = "^1", features = ["derive"] }
 uuid = { version = "1.0.0", features = ["serde", "v4"] }
+
+# discord api
+serenity = { version = "^0.12", features = ["client", "gateway", "rustls_backend", "model", "framework", "cache", "builder", "chrono"] }
+poise = { version = "^0.6", features = ["chrono", "cache"] }
+
+# playmatch
+playmatch_client = { path = "playmatch_client" }
+
+# commands
 unicode-width = "^0.2"
 
 [build-dependencies]
