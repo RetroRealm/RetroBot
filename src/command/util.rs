@@ -1,4 +1,5 @@
 use crate::abstraction::command::{CommandContext, CommandResult};
+use poise::CreateReply;
 
 /// Show this menu
 #[poise::command(
@@ -26,6 +27,25 @@ Type /help command for more info on a command.",
 	required_permissions = "SEND_MESSAGES"
 )]
 pub async fn ping(ctx: CommandContext<'_>) -> CommandResult {
-	ctx.say("pong!").await?;
+	let handle = ctx.reply("Calculating....").await?;
+
+	let handle_message = handle.message().await?;
+
+	let sent_timestamp = handle_message.timestamp.timestamp_millis();
+	let original_timestamp = ctx.created_at().timestamp_millis();
+
+	let rest_latency = sent_timestamp - original_timestamp;
+	let gateway_latency = ctx.ping().await.as_millis();
+
+	handle
+		.edit(
+			ctx,
+			CreateReply::default().content(format!(
+				"Pong! Rest latency: {}ms, Gateway latency: {}ms",
+				rest_latency, gateway_latency
+			)),
+		)
+		.await?;
+
 	Ok(())
 }
