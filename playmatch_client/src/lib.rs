@@ -7039,11 +7039,11 @@ impl Client {
 impl Client {
 	///Returns all companies and its external metadata mappings
 	///
-	///Sends a `GET` request to `/api/company`
+	///Sends a `GET` request to `/api/companies`
 	pub async fn get_all_companies<'a>(
 		&'a self,
 	) -> Result<ResponseValue<Vec<types::CompanyResponse>>, Error<()>> {
-		let url = format!("{}/api/company", self.baseurl,);
+		let url = format!("{}/api/companies", self.baseurl,);
 		#[allow(unused_mut)]
 		let mut request = self
 			.client
@@ -7057,6 +7057,36 @@ impl Client {
 		let response = result?;
 		match response.status().as_u16() {
 			200u16 => ResponseValue::from_response(response).await,
+			_ => Err(Error::UnexpectedResponse(response)),
+		}
+	}
+
+	///Returns a company and its metadata mappings by id
+	///
+	///Sends a `GET` request to `/api/companies/{id}`
+	pub async fn get_company_by_id<'a>(
+		&'a self,
+		id: &'a uuid::Uuid,
+	) -> Result<ResponseValue<types::CompanyResponse>, Error<()>> {
+		let url = format!(
+			"{}/api/companies/{}",
+			self.baseurl,
+			encode_path(&id.to_string()),
+		);
+		#[allow(unused_mut)]
+		let mut request = self
+			.client
+			.get(url)
+			.header(
+				reqwest::header::ACCEPT,
+				reqwest::header::HeaderValue::from_static("application/json"),
+			)
+			.build()?;
+		let result = self.client.execute(request).await;
+		let response = result?;
+		match response.status().as_u16() {
+			200u16 => ResponseValue::from_response(response).await,
+			404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
 			_ => Err(Error::UnexpectedResponse(response)),
 		}
 	}
@@ -7692,11 +7722,11 @@ impl Client {
 	///Returns all platforms with its company and its external metadata
 	/// mappings
 	///
-	///Sends a `GET` request to `/api/platform`
+	///Sends a `GET` request to `/api/platforms`
 	pub async fn get_all_platforms<'a>(
 		&'a self,
 	) -> Result<ResponseValue<Vec<types::PlatformResponse>>, Error<()>> {
-		let url = format!("{}/api/platform", self.baseurl,);
+		let url = format!("{}/api/platforms", self.baseurl,);
 		#[allow(unused_mut)]
 		let mut request = self
 			.client
@@ -7710,6 +7740,36 @@ impl Client {
 		let response = result?;
 		match response.status().as_u16() {
 			200u16 => ResponseValue::from_response(response).await,
+			_ => Err(Error::UnexpectedResponse(response)),
+		}
+	}
+
+	///Returns a platform and its metadata mappings by id
+	///
+	///Sends a `GET` request to `/api/platforms/{id}`
+	pub async fn get_platform_by_id<'a>(
+		&'a self,
+		id: &'a uuid::Uuid,
+	) -> Result<ResponseValue<types::PlatformResponse>, Error<()>> {
+		let url = format!(
+			"{}/api/platforms/{}",
+			self.baseurl,
+			encode_path(&id.to_string()),
+		);
+		#[allow(unused_mut)]
+		let mut request = self
+			.client
+			.get(url)
+			.header(
+				reqwest::header::ACCEPT,
+				reqwest::header::HeaderValue::from_static("application/json"),
+			)
+			.build()?;
+		let result = self.client.execute(request).await;
+		let response = result?;
+		match response.status().as_u16() {
+			200u16 => ResponseValue::from_response(response).await,
+			404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
 			_ => Err(Error::UnexpectedResponse(response)),
 		}
 	}
