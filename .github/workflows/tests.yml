@@ -97,4 +97,4 @@ jobs:
           target: ${{ matrix.target.build_target }}
 
       - name: Run cargo clippy
-        run: cargo clippy -- -D warnings
+        run: cargo clippy --no-deps -- -D warnings
