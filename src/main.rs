@@ -35,6 +35,25 @@ async fn main() -> anyhow::Result<()> {
 	let framework = poise::Framework::builder()
 		.options(poise::FrameworkOptions {
 			commands: get_commands(),
+			post_command: |ctx| {
+				Box::pin(async move {
+					let author = ctx.author();
+					let guild = ctx.guild();
+					let cmd = ctx.command();
+
+					let user_info = format!("{}[{}]", author.name, author.id);
+
+					let guild_info = if let Some(guild) = guild {
+						format!("{}[{}]", guild.name, guild.id)
+					} else {
+						"Direct Messages".to_string()
+					};
+
+					let command_name = cmd.name.to_lowercase();
+
+					info!("{} @ {} {}", user_info, guild_info, command_name);
+				})
+			},
 			..Default::default()
 		})
 		.setup(|ctx, _ready, framework| {
