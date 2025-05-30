@@ -1,7 +1,7 @@
 [package]
 name = "RetroBot"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 license = "MIT"
 repository = "https://github.com/RetroRealm/RetroBot"
 
@@ -20,8 +20,8 @@ serde = { version = "^1", features = ["derive"] }
 chrono = "^0.4"
 reqwest = { version = "^0.12", features = ["rustls-tls", "json", "stream"], default-features = false }
 lazy_static = "^1.5"
-futures = "0.3"
-uuid = { version = "1.0.0", features = ["serde", "v4"] }
+futures = "^0.3"
+uuid = { version = "^1.10", features = ["serde", "v4"] }
 
 # discord api
 serenity = { version = "^0.12", features = ["client", "gateway", "rustls_backend", "model", "framework", "cache", "builder", "chrono"] }
@@ -34,4 +34,4 @@ playmatch_client = { path = "playmatch_client" }
 unicode-width = "^0.2"
 
 [build-dependencies]
-built = { version = "^0.7", features = ["chrono", "semver", "git2"] }
+built = { version = "^0.8", features = ["chrono", "semver", "git2"] }
