@@ -4,7 +4,7 @@
 		"title": "api",
 		"description": "",
 		"license": {
-			"name": ""
+			"name": "MIT"
 		},
 		"version": "0.1.0"
 	},
@@ -670,16 +670,26 @@
 				"tags": [
 					"IGDB"
 				],
-				"summary": "Queries the IGDB API for a game by its Id",
+				"summary": "Queries the IGDB API for a game by its Id or Slug",
 				"operationId": "get_game_by_id",
 				"parameters": [
 					{
+						"name": "slug",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"nullable": true
+						}
+					},
+					{
 						"name": "id",
 						"in": "query",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "integer",
-							"format": "int32"
+							"format": "int32",
+							"nullable": true
 						}
 					}
 				],
@@ -841,6 +851,44 @@
 								}
 							}
 						}
+					}
+				}
+			}
+		},
+		"/api/match": {
+			"post": {
+				"tags": [
+					"Match"
+				],
+				"summary": "Endpoint is currently private as community suggestions are still being worked on, manually match a game by its file hashes or filename, returning the matched game ExternalMetadata.",
+				"operationId": "match_game",
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/MatchRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully Matched",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/UpdatedMatchResult"
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Game not found"
 					}
 				}
 			}
@@ -1590,9 +1638,7 @@
 				"type": "object",
 				"required": [
 					"id",
-					"change_date",
 					"change_date_category",
-					"changed_company_id",
 					"checksum",
 					"country",
 					"created_at",
@@ -1600,10 +1646,8 @@
 					"developed",
 					"logo",
 					"name",
-					"parent",
 					"published",
 					"slug",
-					"start_date",
 					"start_date_category",
 					"updated_at",
 					"url",
@@ -1612,14 +1656,16 @@
 				"properties": {
 					"change_date": {
 						"type": "integer",
-						"format": "int64"
+						"format": "int64",
+						"nullable": true
 					},
 					"change_date_category": {
 						"$ref": "#/components/schemas/CompanyChangeDateCategory"
 					},
 					"changed_company_id": {
 						"type": "integer",
-						"format": "int32"
+						"format": "int32",
+						"nullable": true
 					},
 					"checksum": {
 						"type": "string",
@@ -1656,7 +1702,8 @@
 					},
 					"parent": {
 						"type": "integer",
-						"format": "int32"
+						"format": "int32",
+						"nullable": true
 					},
 					"published": {
 						"type": "array",
@@ -1670,7 +1717,8 @@
 					},
 					"start_date": {
 						"type": "integer",
-						"format": "int64"
+						"format": "int64",
+						"nullable": true
 					},
 					"start_date_category": {
 						"$ref": "#/components/schemas/CompanyStartDateCategory"
@@ -3358,6 +3406,51 @@
 					"Trusted"
 				]
 			},
+			"MatchRequest": {
+				"type": "object",
+				"required": [
+					"provider",
+					"provider_id",
+					"manual_match_type"
+				],
+				"properties": {
+					"comment": {
+						"type": "string",
+						"description": "Optional comment about the match.",
+						"nullable": true
+					},
+					"manual_match_type": {
+						"$ref": "#/components/schemas/ManualMatchMode"
+					},
+					"md5": {
+						"type": "string",
+						"description": "MD5 hash of the game file.",
+						"nullable": true
+					},
+					"name": {
+						"type": "string",
+						"description": "Name of game or file.",
+						"nullable": true
+					},
+					"provider": {
+						"$ref": "#/components/schemas/MetadataProvider"
+					},
+					"provider_id": {
+						"type": "string",
+						"description": "ID of the game file in the metadata provider."
+					},
+					"sha1": {
+						"type": "string",
+						"description": "SHA1 hash of the game file.",
+						"nullable": true
+					},
+					"sha256": {
+						"type": "string",
+						"description": "SHA256 hash of the game file.",
+						"nullable": true
+					}
+				}
+			},
 			"MatchType": {
 				"type": "string",
 				"description": "Match types for a game",
@@ -4349,6 +4442,27 @@
 					},
 					"url": {
 						"type": "string"
+					}
+				}
+			},
+			"UpdatedMatchResult": {
+				"type": "object",
+				"description": "Result of a manual game match.",
+				"required": [
+					"id"
+				],
+				"properties": {
+					"externalMetadata": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ExternalMetadata"
+						},
+						"description": "External metadata for the matched game."
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "ID of the game."
 					}
 				}
 			},

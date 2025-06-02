@@ -3,7 +3,7 @@ mod role;
 mod util;
 
 use crate::abstraction::command::{CommandData, CommandError};
-use crate::command::playmatch::list;
+use crate::command::playmatch::{list, manual_match};
 use crate::command::role::toggle_update_role;
 use crate::command::util::{help, ping};
 use lazy_static::lazy_static;
@@ -15,5 +15,5 @@ lazy_static! {
 }
 
 pub fn get_commands() -> Vec<Command<CommandData, CommandError>> {
-	vec![help(), ping(), toggle_update_role(), list()]
+	vec![help(), ping(), toggle_update_role(), list(), manual_match()]
 }

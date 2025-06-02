@@ -1,5 +1,6 @@
 use crate::built_info;
 use lazy_static::lazy_static;
+use reqwest::header::HeaderMap;
 use serenity::all::RoleId;
 
 pub type CommandError = anyhow::Error;
@@ -14,6 +15,17 @@ pub struct CommandData {
 
 impl Default for CommandData {
 	fn default() -> Self {
+		let mut headers = HeaderMap::new();
+		headers.insert(
+			"Authorization",
+			format!(
+				"Bearer {}",
+				std::env::var("PLAYMATCH_API_AUTH").expect("missing PLAYMATCH_API_AUTH")
+			)
+			.parse()
+			.expect("Invalid Authorization header"),
+		);
+
 		let client = reqwest::ClientBuilder::new()
 			.user_agent(format!(
 				"{}/{} ({})",
@@ -21,6 +33,7 @@ impl Default for CommandData {
 				built_info::PKG_VERSION,
 				built_info::PKG_REPOSITORY
 			))
+			.default_headers(headers)
 			.build()
 			.unwrap();
 

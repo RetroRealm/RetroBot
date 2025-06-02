@@ -5,13 +5,13 @@ edition = "2021"
 license = "MIT"
 
 [dependencies]
-bytes = "1.5.0"
-chrono = { version = "0.4.34", default-features = false, features = ["serde"] }
-futures-core = "0.3.30"
-percent-encoding = "2.3.1"
-reqwest = { version = "0.12.1", default-features = false, features = ["json", "stream"] }
-serde = { version = "1.0.197", features = ["derive"] }
-serde_json = "1.0.128"
-serde_urlencoded = "0.7.1"
-uuid = { version = "1.7.0", features = ["serde", "v4"] }
+bytes = "1.9"
+chrono = { version = "0.4", default-features = false, features = ["serde"] }
+futures-core = "0.3"
+percent-encoding = "2.3"
+reqwest = { version = "0.12", default-features = false, features = ["json", "stream"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_urlencoded = "0.7"
+uuid = { version = "1.0", features = ["serde", "v4"] }
 
