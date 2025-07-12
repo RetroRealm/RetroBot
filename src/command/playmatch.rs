@@ -1,9 +1,11 @@
 use crate::abstraction::command::{CommandContext, CommandResult, is_user_trusted_or_above};
 use crate::abstraction::playmatch::paginate_playmatch_response;
 use log::warn;
+use playmatch_client::Error;
 use playmatch_client::types::ManualMatchMode::{Admin, Trusted};
 use playmatch_client::types::MatchRequest;
 use playmatch_client::types::MetadataProvider::Igdb;
+use reqwest::StatusCode;
 
 /// Shows a list of playmatch entities with its metadata matches
 #[poise::command(
@@ -54,7 +56,7 @@ pub async fn manual_match(
 
 	let is_admin = ctx.framework().options().owners.contains(&ctx.author().id);
 
-	let response = ctx
+	let result = ctx
 		.data()
 		.playmatch_client
 		.match_game(&MatchRequest {
@@ -67,16 +69,28 @@ pub async fn manual_match(
 			name,
 			comment: None,
 		})
-		.await?;
+		.await;
 
-	if !response.status().is_success() {
-		ctx.reply("Failed to match game").await?;
-		warn!("Failed to match game: {}", response.status());
+	if let Err(e) = &result {
+		match e {
+			Error::ErrorResponse(e_res) => {
+				if e_res.status() == StatusCode::BAD_REQUEST {
+					ctx.reply("No game found with the provided hash or name")
+						.await?;
+					return Ok(());
+				}
+			}
+			_ => {
+				ctx.reply(format!("Failed to match game: {}", e)).await?;
+				warn!("Failed to match game: {}", e);
+				return Ok(());
+			}
+		}
 	}
 
 	ctx.reply(format!(
-		"Successfully matched game, Playmatch was able to match {} roms thanks to this!",
-		response.into_inner().len()
+		"Successfully matched game, Playmatch matched {} roms!",
+		result?.into_inner().len()
 	))
 	.await?;
 
