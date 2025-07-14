@@ -3,10 +3,13 @@ mod command;
 mod events;
 pub mod util;
 
-use crate::command::get_commands;
+use crate::command::{
+	RETROREALM_SERVER_ID, get_all_commands, get_global_commands, retrorealm_server_commands,
+};
 use abstraction::command::CommandData;
 use dotenvy::dotenv;
 use log::info;
+use serenity::all::GuildId;
 use serenity::prelude::GatewayIntents;
 
 pub mod built_info {
@@ -34,7 +37,7 @@ async fn main() -> anyhow::Result<()> {
 
 	let framework = poise::Framework::builder()
 		.options(poise::FrameworkOptions {
-			commands: get_commands(),
+			commands: get_all_commands(),
 			post_command: |ctx| {
 				Box::pin(async move {
 					let author = ctx.author();
@@ -56,9 +59,17 @@ async fn main() -> anyhow::Result<()> {
 			},
 			..Default::default()
 		})
-		.setup(|ctx, _ready, framework| {
+		.setup(|ctx, _ready, _framework| {
 			Box::pin(async move {
-				poise::builtins::register_globally(ctx, &framework.options().commands).await?;
+				poise::builtins::register_globally(ctx, get_global_commands().as_slice()).await?;
+
+				poise::builtins::register_in_guild(
+					ctx,
+					retrorealm_server_commands().as_slice(),
+					GuildId::from(*RETROREALM_SERVER_ID),
+				)
+				.await?;
+
 				Ok(CommandData::default())
 			})
 		})
