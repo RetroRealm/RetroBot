@@ -9,7 +9,7 @@ use std::str::FromStr;
 	slash_command,
 	category = "Role",
 	rename = "toggle_update",
-	required_permissions = "SEND_MESSAGES | MANAGE_ROLES"
+	required_bot_permissions = "SEND_MESSAGES | MANAGE_ROLES"
 )]
 pub async fn toggle_update_role(ctx: CommandContext<'_>) -> CommandResult {
 	if UPDATE_ROLE_ID.is_empty() {
