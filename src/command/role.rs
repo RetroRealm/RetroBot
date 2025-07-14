@@ -20,7 +20,7 @@ pub async fn toggle_update_role(ctx: CommandContext<'_>) -> CommandResult {
 
 	let member = ctx.author_member().await;
 
-	if member.is_none() || ctx.guild_id().map(|g| g.get()) == Some(*RETROREALM_SERVER_ID) {
+	if member.is_none() || ctx.guild_id().map(|g| g.get()) != Some(*RETROREALM_SERVER_ID) {
 		ctx.say("This command can only be run inside RetroRealm's Discord Server")
 			.await?;
 		return Ok(());
