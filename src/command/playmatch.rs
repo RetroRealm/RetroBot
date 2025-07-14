@@ -630,7 +630,7 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 	};
 
 	let platform_text = if let Some(platform) = &data.platform {
-		format!(" on Platform **{}**", platform)
+		format!(" on Platform **{platform}**")
 	} else {
 		String::new()
 	};
