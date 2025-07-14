@@ -41,8 +41,7 @@ pub async fn ping(ctx: CommandContext<'_>) -> CommandResult {
 		.edit(
 			ctx,
 			CreateReply::default().content(format!(
-				"Pong! Rest latency: {}ms, Gateway latency: {}ms",
-				rest_latency, gateway_latency
+				"Pong! Rest latency: {rest_latency}ms, Gateway latency: {gateway_latency}ms"
 			)),
 		)
 		.await?;

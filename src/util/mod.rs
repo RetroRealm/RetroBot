@@ -8,7 +8,7 @@ fn pad_string(input: &str, width: usize) -> String {
 		input.to_string()
 	} else {
 		let padding = " ".repeat(width - length);
-		format!("{}{}", input, padding)
+		format!("{input}{padding}")
 	}
 }
 
@@ -54,5 +54,5 @@ pub fn create_discord_markdown_table(rows: Vec<Vec<String>>) -> String {
 	}
 
 	// Encapsulate in a monospace code block for Discord
-	format!("```\n{}\n```", result)
+	format!("```\n{result}\n```")
 }

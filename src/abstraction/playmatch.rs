@@ -1,6 +1,9 @@
 use crate::abstraction::command::CommandContext;
 use crate::util::create_discord_markdown_table;
-use playmatch_client::types::{ExternalMetadata, MatchType, MetadataProvider};
+use playmatch_client::types::{
+	CompanyMetadataResponse, ExternalMetadata, MatchType, MetadataProvider,
+	PlatformMetadataResponse,
+};
 use uuid::Uuid;
 
 pub trait PlaymatchResponse {
@@ -9,7 +12,7 @@ pub trait PlaymatchResponse {
 	fn get_external_metadata(&self) -> Vec<ExternalMetadata>;
 }
 
-impl PlaymatchResponse for playmatch_client::types::CompanyResponse {
+impl PlaymatchResponse for CompanyMetadataResponse {
 	fn get_id(&self) -> Uuid {
 		self.id
 	}
@@ -23,7 +26,7 @@ impl PlaymatchResponse for playmatch_client::types::CompanyResponse {
 	}
 }
 
-impl PlaymatchResponse for playmatch_client::types::PlatformResponse {
+impl PlaymatchResponse for PlatformMetadataResponse {
 	fn get_id(&self) -> Uuid {
 		self.id
 	}

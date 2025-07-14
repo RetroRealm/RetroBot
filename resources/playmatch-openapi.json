@@ -6,7 +6,7 @@
 		"license": {
 			"name": "MIT"
 		},
-		"version": "0.1.0"
+		"version": "0.2.0"
 	},
 	"paths": {
 		"/api/companies": {
@@ -24,7 +24,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/CompanyResponse"
+										"$ref": "#/components/schemas/CompanyMetadataResponse"
 									}
 								}
 							}
@@ -57,13 +57,77 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/CompanyResponse"
+									"$ref": "#/components/schemas/CompanyMetadataResponse"
 								}
 							}
 						}
 					},
 					"404": {
 						"description": "Company not found"
+					}
+				}
+			}
+		},
+		"/api/game/{id}": {
+			"get": {
+				"tags": [
+					"PlaymatchGame"
+				],
+				"summary": "Gets a Playmatch game by its ID.",
+				"operationId": "get_playmatch_game_by_id",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Returns the found game",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PlaymatchGame"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/game/{id}/with-relations": {
+			"get": {
+				"tags": [
+					"PlaymatchGame"
+				],
+				"summary": "Gets a Playmatch game by its ID, includes all relations.",
+				"operationId": "get_playmatch_game_with_relations_by_id",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Returns the found game including all relations",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GameAndRelationsResult"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -87,8 +151,8 @@
 				"tags": [
 					"Identify"
 				],
-				"summary": "Identify a game by its file hashes or filename and size, returning the matched metadata ids, goes in order sha256, sha1, md5 and filename + size (from most accurate to least accurate)",
-				"operationId": "identify",
+				"summary": "Identify a game by its file hashes or filename and size, returning the matched metadata, goes in order sha256, sha1, md5 and filename + size (from most accurate to least accurate)",
+				"operationId": "identify_game_with_metadata_ids",
 				"parameters": [
 					{
 						"name": "fileName",
@@ -146,7 +210,79 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GameMatchResult"
+									"$ref": "#/components/schemas/GameMetadataMatchResult"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/identify/relations": {
+			"get": {
+				"tags": [
+					"Identify"
+				],
+				"summary": "Identify a game by its file hashes or filename and size, goes in order sha256, sha1, md5 and filename + size (from most accurate to least accurate), returning information about the game, game files, publisher and company",
+				"operationId": "identify_game_and_relations",
+				"parameters": [
+					{
+						"name": "fileName",
+						"in": "query",
+						"description": "The file name of the game file.",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "fileSize",
+						"in": "query",
+						"description": "The size of the game file in bytes.",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "md5",
+						"in": "query",
+						"description": "Optional MD5 hash of the game file.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"nullable": true
+						}
+					},
+					{
+						"name": "sha1",
+						"in": "query",
+						"description": "Optional SHA1 hash of the game file.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"nullable": true
+						}
+					},
+					{
+						"name": "sha256",
+						"in": "query",
+						"description": "Optional SHA256 hash of the game file.",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"nullable": true
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Returns info about a possible match via hashes or filename and size",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GameAndRelationMatchResult"
 								}
 							}
 						}
@@ -855,19 +991,20 @@
 				}
 			}
 		},
-		"/api/match": {
+		"/api/match/manual/company": {
 			"post": {
 				"tags": [
 					"Match"
 				],
-				"summary": "Endpoint is currently private as community suggestions are still being worked on, manually match a game by its file hashes or filename, returning the matched game ExternalMetadata.",
-				"operationId": "match_game",
+				"summary": "Manually match a Company by its name, returning the matched ExternalMetadata.",
+				"description": "This Endpoint requires Credentials of a User with at least Trusted level, if you do not have user credentials and a user account with at least Trusted level, use the suggestion endpoints instead.",
+				"operationId": "manually_match_company",
 				"requestBody": {
 					"description": "",
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/MatchRequest"
+								"$ref": "#/components/schemas/CompanyOrPlatformMatchRequest"
 							}
 						}
 					},
@@ -875,7 +1012,54 @@
 				},
 				"responses": {
 					"200": {
-						"description": "Successfully Matched",
+						"description": "Successfully Matched Company",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdatedMatchResult"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to manually match a company"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to manually match a company"
+					},
+					"404": {
+						"description": "Company not found"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/match/manual/game": {
+			"post": {
+				"tags": [
+					"Match"
+				],
+				"summary": "Manually match a Game by its file hashes, filename or Game name, returning the matched game ExternalMetadata.",
+				"description": "This Endpoint requires Credentials of a User with at least Trusted level, if you do not have user credentials and a user account with at least Trusted level, use the suggestion endpoints instead.",
+				"operationId": "manually_match_game",
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GameMatchRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully Matched Game",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -887,10 +1071,71 @@
 							}
 						}
 					},
+					"400": {
+						"description": "At least one of file_name, md5, sha1 or sha256 must be provided."
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to manually match a game"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to manually match a game"
+					},
 					"404": {
 						"description": "Game not found"
 					}
-				}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/match/manual/platform": {
+			"post": {
+				"tags": [
+					"Match"
+				],
+				"summary": "Manually match a Platform by its name, returning the matched ExternalMetadata.",
+				"description": "This Endpoint requires Credentials of a User with at least Trusted level, if you do not have user credentials and a user account with at least Trusted level, use the suggestion endpoints instead.",
+				"operationId": "manually_match_platform",
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CompanyOrPlatformMatchRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully Matched Platform",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdatedMatchResult"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to manually match a platform"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to manually match a platform"
+					},
+					"404": {
+						"description": "Platform not found"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		},
 		"/api/platforms": {
@@ -908,7 +1153,7 @@
 								"schema": {
 									"type": "array",
 									"items": {
-										"$ref": "#/components/schemas/PlatformResponse"
+										"$ref": "#/components/schemas/PlatformMetadataResponse"
 									}
 								}
 							}
@@ -941,7 +1186,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PlatformResponse"
+									"$ref": "#/components/schemas/PlatformMetadataResponse"
 								}
 							}
 						}
@@ -964,6 +1209,508 @@
 						"description": "Service is Ready"
 					}
 				}
+			}
+		},
+		"/api/suggestion": {
+			"get": {
+				"tags": [
+					"Suggestion"
+				],
+				"summary": "Gets all currently pending suggestions.",
+				"description": "This Endpoint requires Credentials of at least Automation level.",
+				"operationId": "get_all_suggestions",
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved suggestions",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Suggestion"
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to view all suggestion"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to view all suggestions"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/suggestion/company": {
+			"post": {
+				"tags": [
+					"Suggestion"
+				],
+				"summary": "Adds a suggestion for a manual company metadata match.",
+				"description": "This Endpoint requires Credentials of a User.",
+				"operationId": "create_company_suggestion",
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CompanyOrPlatformSuggestionRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully created suggestion",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Suggestion"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to create a suggestion"
+					},
+					"404": {
+						"description": "Could not find a Company with the provided id"
+					},
+					"409": {
+						"description": "A suggestion for this Company already exists with the same provider & provider id."
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/suggestion/game": {
+			"post": {
+				"tags": [
+					"Suggestion"
+				],
+				"summary": "Adds a suggestion for a manual game metadata match.",
+				"description": "This Endpoint requires Credentials of a User.",
+				"operationId": "create_game_suggestion",
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GameSuggestionRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully created suggestion",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Suggestion"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to create a suggestion"
+					},
+					"404": {
+						"description": "Could not find a Game with the provided id"
+					},
+					"409": {
+						"description": "A suggestion for this game already exists with the same provider & provider id."
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/suggestion/platform": {
+			"post": {
+				"tags": [
+					"Suggestion"
+				],
+				"summary": "Adds a suggestion for a manual platform metadata match.",
+				"description": "This Endpoint requires Credentials of a User.",
+				"operationId": "create_platform_suggestion",
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CompanyOrPlatformSuggestionRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully created suggestion",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Suggestion"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to create a suggestion"
+					},
+					"404": {
+						"description": "Could not find a Platform with the provided id"
+					},
+					"409": {
+						"description": "A suggestion for this Platform already exists with the same provider & provider id."
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/suggestion/{id}": {
+			"get": {
+				"tags": [
+					"Suggestion"
+				],
+				"summary": "Gets a pending suggestion by id.",
+				"description": "This Endpoint requires Credentials of at least Automation level.",
+				"operationId": "get_suggestion_by_id",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successfully retrieved suggestions",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Suggestion"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to view suggestion"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to view suggestions"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			},
+			"delete": {
+				"tags": [
+					"Suggestion"
+				],
+				"summary": "Declines a suggestion by id.",
+				"description": "This Endpoint requires Credentials of at least Automation level.",
+				"operationId": "delete_suggestion",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Successfully declined suggestion"
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to decline a suggestion"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to decline suggestions"
+					},
+					"404": {
+						"description": "Could not find a Suggestion with the provided id"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/suggestion/{id}/accept": {
+			"post": {
+				"tags": [
+					"Suggestion"
+				],
+				"summary": "Approves a suggestion by id.",
+				"description": "This Endpoint requires Credentials of at least Automation level.",
+				"operationId": "approve_suggestion",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successfully approved suggestion",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdatedMetadataMatchesFromSuggestionResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to approve a suggestion"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to approve suggestions"
+					},
+					"404": {
+						"description": "Could not find a Suggestion with the provided id"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/user": {
+			"get": {
+				"tags": [
+					"User"
+				],
+				"summary": "Find a User by their Discord ID.",
+				"description": "This Endpoint requires Credentials of a User with at least Automation level.",
+				"operationId": "get_user_by_discord_id",
+				"parameters": [
+					{
+						"name": "discord_id",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successfully found user",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to get a user by discord id"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to get a user by discord id"
+					},
+					"404": {
+						"description": "Could not find User with the provided discord id"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/user/by-discord-id": {
+			"post": {
+				"tags": [
+					"User"
+				],
+				"summary": "Find or Create a User by their Discord ID.",
+				"description": "This Endpoint requires Credentials of a User with at least Automation level.",
+				"operationId": "create_or_get_by_discord_id",
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrGetUserRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully created or got user",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to get a user by discord id"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to get a user by discord id"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/user/{id}": {
+			"get": {
+				"tags": [
+					"User"
+				],
+				"summary": "Find a User by their ID.",
+				"description": "This Endpoint requires Credentials of a User with at least Automation level.",
+				"operationId": "get_user",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successfully found user",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to get a user by id"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to get a user by id"
+					},
+					"404": {
+						"description": "Could not find User with the provided id"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
+			}
+		},
+		"/api/user/{id}/permission": {
+			"patch": {
+				"tags": [
+					"User"
+				],
+				"summary": "Update a user's Permission Level.",
+				"description": "This Endpoint requires Credentials of a User with at least Automation level.",
+				"operationId": "update_user_permission_level",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"format": "uuid"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "",
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateUserPermissionsRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successfully updated user permission level",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized, you need to be logged in to update a user permission level"
+					},
+					"403": {
+						"description": "Forbidden, you do not have permission to update a user permission level"
+					},
+					"404": {
+						"description": "Could not find User with the provided id"
+					}
+				},
+				"security": [
+					{
+						"bearer_auth": []
+					}
+				]
 			}
 		}
 	},
@@ -1638,20 +2385,11 @@
 				"type": "object",
 				"required": [
 					"id",
-					"change_date_category",
 					"checksum",
-					"country",
 					"created_at",
-					"description",
-					"developed",
-					"logo",
 					"name",
-					"published",
 					"slug",
-					"start_date_category",
-					"updated_at",
-					"url",
-					"websites"
+					"updated_at"
 				],
 				"properties": {
 					"change_date": {
@@ -1660,7 +2398,12 @@
 						"nullable": true
 					},
 					"change_date_category": {
-						"$ref": "#/components/schemas/CompanyChangeDateCategory"
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/CompanyChangeDateCategory"
+							}
+						],
+						"nullable": true
 					},
 					"changed_company_id": {
 						"type": "integer",
@@ -1673,21 +2416,24 @@
 					},
 					"country": {
 						"type": "integer",
-						"format": "int32"
+						"format": "int32",
+						"nullable": true
 					},
 					"created_at": {
 						"type": "string",
 						"format": "date-time"
 					},
 					"description": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"developed": {
 						"type": "array",
 						"items": {
 							"type": "integer",
 							"format": "int32"
-						}
+						},
+						"nullable": true
 					},
 					"id": {
 						"type": "integer",
@@ -1695,7 +2441,8 @@
 					},
 					"logo": {
 						"type": "integer",
-						"format": "int32"
+						"format": "int32",
+						"nullable": true
 					},
 					"name": {
 						"type": "string"
@@ -1710,7 +2457,8 @@
 						"items": {
 							"type": "integer",
 							"format": "int32"
-						}
+						},
+						"nullable": true
 					},
 					"slug": {
 						"type": "string"
@@ -1721,21 +2469,28 @@
 						"nullable": true
 					},
 					"start_date_category": {
-						"$ref": "#/components/schemas/CompanyStartDateCategory"
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/CompanyStartDateCategory"
+							}
+						],
+						"nullable": true
 					},
 					"updated_at": {
 						"type": "string",
 						"format": "date-time"
 					},
 					"url": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"websites": {
 						"type": "array",
 						"items": {
 							"type": "integer",
 							"format": "int32"
-						}
+						},
+						"nullable": true
 					}
 				}
 			},
@@ -1795,7 +2550,7 @@
 					}
 				}
 			},
-			"CompanyResponse": {
+			"CompanyMetadataResponse": {
 				"type": "object",
 				"description": "Response for a company including external metadata.",
 				"required": [
@@ -1818,6 +2573,74 @@
 					"name": {
 						"type": "string",
 						"description": "The name of the company."
+					}
+				}
+			},
+			"CompanyOrPlatformMatchRequest": {
+				"type": "object",
+				"required": [
+					"name",
+					"provider",
+					"providerId",
+					"manualMatchType"
+				],
+				"properties": {
+					"comment": {
+						"type": "string",
+						"description": "Optional comment about the match.",
+						"nullable": true
+					},
+					"manualMatchType": {
+						"$ref": "#/components/schemas/ManualMatchMode"
+					},
+					"name": {
+						"type": "string",
+						"description": "Name of the Company or Platform to match."
+					},
+					"provider": {
+						"$ref": "#/components/schemas/MetadataProvider"
+					},
+					"providerId": {
+						"type": "string",
+						"description": "ID of the Company or Platform file in the metadata provider."
+					},
+					"userId": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The id of the user making the suggestion, if your permission level is not Automation or Admin, this is ignored and set to your user id instead.",
+						"nullable": true
+					}
+				}
+			},
+			"CompanyOrPlatformSuggestionRequest": {
+				"type": "object",
+				"required": [
+					"name",
+					"provider",
+					"providerId"
+				],
+				"properties": {
+					"comment": {
+						"type": "string",
+						"description": "Optional comment about the match.",
+						"nullable": true
+					},
+					"name": {
+						"type": "string",
+						"description": "Name of company or platform."
+					},
+					"provider": {
+						"$ref": "#/components/schemas/MetadataProvider"
+					},
+					"providerId": {
+						"type": "string",
+						"description": "ID of the company or platform in the metadata provider."
+					},
+					"userId": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The id of the user making the suggestion, if your permission level is not Automation or Admin, this is ignored and set to your user id instead.",
+						"nullable": true
 					}
 				}
 			},
@@ -1935,6 +2758,27 @@
 					"width": {
 						"type": "integer",
 						"format": "int32"
+					}
+				}
+			},
+			"CreateOrGetUserRequest": {
+				"type": "object",
+				"description": "Request to get or create a user by their Discord ID.",
+				"required": [
+					"discord_id",
+					"username",
+					"permissions"
+				],
+				"properties": {
+					"discord_id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"permissions": {
+						"$ref": "#/components/schemas/UserPermissions"
+					},
+					"username": {
+						"type": "string"
 					}
 				}
 			},
@@ -2719,6 +3563,116 @@
 					}
 				}
 			},
+			"GameAndRelationMatchResult": {
+				"type": "object",
+				"description": "Result of a game match including company, platform and files.",
+				"required": [
+					"gameMatchType"
+				],
+				"properties": {
+					"company": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/PlaymatchCompany"
+							}
+						],
+						"nullable": true
+					},
+					"datFile": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/PlaymatchDatFile"
+							}
+						],
+						"nullable": true
+					},
+					"datFileImport": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/PlaymatchDatFileImport"
+							}
+						],
+						"nullable": true
+					},
+					"game": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/PlaymatchGame"
+							}
+						],
+						"nullable": true
+					},
+					"gameFiles": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PlaymatchGameFile"
+						},
+						"description": "If a match was found, the game files for this game."
+					},
+					"gameMatchType": {
+						"$ref": "#/components/schemas/GameMatchType"
+					},
+					"platform": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/PlaymatchPlatform"
+							}
+						],
+						"nullable": true
+					},
+					"signatureGroup": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/PlaymatchSignatureGroup"
+							}
+						],
+						"nullable": true
+					}
+				}
+			},
+			"GameAndRelationsResult": {
+				"type": "object",
+				"description": "Result of a game match including company, platform and files.",
+				"required": [
+					"game",
+					"platform",
+					"signatureGroup",
+					"datFile",
+					"datFileImport"
+				],
+				"properties": {
+					"company": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/PlaymatchCompany"
+							}
+						],
+						"nullable": true
+					},
+					"datFile": {
+						"$ref": "#/components/schemas/PlaymatchDatFile"
+					},
+					"datFileImport": {
+						"$ref": "#/components/schemas/PlaymatchDatFileImport"
+					},
+					"game": {
+						"$ref": "#/components/schemas/PlaymatchGame"
+					},
+					"gameFiles": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PlaymatchGameFile"
+						},
+						"description": "If a match was found, the game files for this game."
+					},
+					"platform": {
+						"$ref": "#/components/schemas/PlaymatchPlatform"
+					},
+					"signatureGroup": {
+						"$ref": "#/components/schemas/PlaymatchSignatureGroup"
+					}
+				}
+			},
 			"GameCategory": {
 				"type": "integer",
 				"enum": [
@@ -2892,9 +3846,71 @@
 					}
 				}
 			},
-			"GameMatchResult": {
+			"GameMatchRequest": {
 				"type": "object",
-				"description": "Result of a game match.",
+				"required": [
+					"provider",
+					"providerId",
+					"manualMatchType"
+				],
+				"properties": {
+					"comment": {
+						"type": "string",
+						"description": "Optional comment about the match.",
+						"nullable": true
+					},
+					"manualMatchType": {
+						"$ref": "#/components/schemas/ManualMatchMode"
+					},
+					"md5": {
+						"type": "string",
+						"description": "MD5 hash of the game file.",
+						"nullable": true
+					},
+					"name": {
+						"type": "string",
+						"description": "Name of game or file.",
+						"nullable": true
+					},
+					"provider": {
+						"$ref": "#/components/schemas/MetadataProvider"
+					},
+					"providerId": {
+						"type": "string",
+						"description": "ID of the game file in the metadata provider."
+					},
+					"sha1": {
+						"type": "string",
+						"description": "SHA1 hash of the game file.",
+						"nullable": true
+					},
+					"sha256": {
+						"type": "string",
+						"description": "SHA256 hash of the game file.",
+						"nullable": true
+					},
+					"userId": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The id of the user making the suggestion, if your permission level is not Automation or Admin, this is ignored and set to your user id instead.",
+						"nullable": true
+					}
+				}
+			},
+			"GameMatchType": {
+				"type": "string",
+				"description": "Type of match for this game.",
+				"enum": [
+					"SHA256",
+					"SHA1",
+					"MD5",
+					"FileNameAndSize",
+					"NoMatch"
+				]
+			},
+			"GameMetadataMatchResult": {
+				"type": "object",
+				"description": "Result of a game match, containing external metadata ids.",
 				"required": [
 					"gameMatchType"
 				],
@@ -2916,17 +3932,6 @@
 						"nullable": true
 					}
 				}
-			},
-			"GameMatchType": {
-				"type": "string",
-				"description": "Type of match for this game.",
-				"enum": [
-					"SHA256",
-					"SHA1",
-					"MD5",
-					"FileNameAndSize",
-					"NoMatch"
-				]
 			},
 			"GameMode": {
 				"type": "object",
@@ -2979,6 +3984,53 @@
 					7,
 					8
 				]
+			},
+			"GameSuggestionRequest": {
+				"type": "object",
+				"required": [
+					"provider",
+					"providerId"
+				],
+				"properties": {
+					"comment": {
+						"type": "string",
+						"description": "Optional comment about the match.",
+						"nullable": true
+					},
+					"md5": {
+						"type": "string",
+						"description": "MD5 hash of the game file.",
+						"nullable": true
+					},
+					"name": {
+						"type": "string",
+						"description": "Name of game or file.",
+						"nullable": true
+					},
+					"provider": {
+						"$ref": "#/components/schemas/MetadataProvider"
+					},
+					"providerId": {
+						"type": "string",
+						"description": "ID of the game file in the metadata provider."
+					},
+					"sha1": {
+						"type": "string",
+						"description": "SHA1 hash of the game file.",
+						"nullable": true
+					},
+					"sha256": {
+						"type": "string",
+						"description": "SHA256 hash of the game file.",
+						"nullable": true
+					},
+					"userId": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The id of the user making the suggestion, if your permission level is not Automation or Admin, this is ignored and set to your user id instead.",
+						"nullable": true
+					}
+				}
 			},
 			"GameVersion": {
 				"type": "object",
@@ -3406,51 +4458,6 @@
 					"Trusted"
 				]
 			},
-			"MatchRequest": {
-				"type": "object",
-				"required": [
-					"provider",
-					"provider_id",
-					"manual_match_type"
-				],
-				"properties": {
-					"comment": {
-						"type": "string",
-						"description": "Optional comment about the match.",
-						"nullable": true
-					},
-					"manual_match_type": {
-						"$ref": "#/components/schemas/ManualMatchMode"
-					},
-					"md5": {
-						"type": "string",
-						"description": "MD5 hash of the game file.",
-						"nullable": true
-					},
-					"name": {
-						"type": "string",
-						"description": "Name of game or file.",
-						"nullable": true
-					},
-					"provider": {
-						"$ref": "#/components/schemas/MetadataProvider"
-					},
-					"provider_id": {
-						"type": "string",
-						"description": "ID of the game file in the metadata provider."
-					},
-					"sha1": {
-						"type": "string",
-						"description": "SHA1 hash of the game file.",
-						"nullable": true
-					},
-					"sha256": {
-						"type": "string",
-						"description": "SHA256 hash of the game file.",
-						"nullable": true
-					}
-				}
-			},
 			"MatchType": {
 				"type": "string",
 				"description": "Match types for a game",
@@ -3747,7 +4754,7 @@
 					}
 				}
 			},
-			"PlatformResponse": {
+			"PlatformMetadataResponse": {
 				"type": "object",
 				"description": "Response for a platform including external metadata.",
 				"required": [
@@ -4096,6 +5103,358 @@
 					}
 				}
 			},
+			"PlaymatchCompany": {
+				"type": "object",
+				"description": "contains basic information about a Company.",
+				"required": [
+					"id",
+					"name",
+					"updated_at",
+					"created_at"
+				],
+				"properties": {
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the company was created inside playmatch."
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The ID of the company."
+					},
+					"name": {
+						"type": "string",
+						"description": "The name of the company."
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the company was last updated inside playmatch."
+					}
+				}
+			},
+			"PlaymatchDatFile": {
+				"type": "object",
+				"description": "contains basic information about a Dat File.",
+				"required": [
+					"id",
+					"name",
+					"platform_id",
+					"current_version",
+					"signature_group_id",
+					"created_at",
+					"updated_at"
+				],
+				"properties": {
+					"company_id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Optional company for the platform this dat file is for.",
+						"nullable": true
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the dat file was created inside playmatch."
+					},
+					"current_version": {
+						"type": "string",
+						"description": "The current version of the dat file."
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The ID of the dat file."
+					},
+					"name": {
+						"type": "string",
+						"description": "The name of the dat file."
+					},
+					"platform_id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The platform this dat file is for."
+					},
+					"signature_group_id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The id of the signature group which publishes this dat file."
+					},
+					"subset": {
+						"type": "string",
+						"description": "The subset this dat file is for, if any",
+						"nullable": true
+					},
+					"tags": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"description": "Optional tags for the dat file.",
+						"nullable": true
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the dat file was last updated inside playmatch."
+					}
+				}
+			},
+			"PlaymatchDatFileImport": {
+				"type": "object",
+				"description": "contains basic information about an imported dat file in Playmatch.",
+				"required": [
+					"id",
+					"dat_file_id",
+					"name",
+					"version",
+					"md5",
+					"imported_at",
+					"created_at",
+					"updated_at"
+				],
+				"properties": {
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the dat file import was created inside playmatch."
+					},
+					"dat_file_id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The ID of the dat file this import belongs to."
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The ID of the dat file import."
+					},
+					"imported_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the dat file was imported into playmatch."
+					},
+					"md5": {
+						"type": "string",
+						"description": "MD5 hash of the imported dat file."
+					},
+					"name": {
+						"type": "string",
+						"description": "The name of the imported file, this contains usually some information like version and date of creation"
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the dat file import was last updated inside playmatch."
+					},
+					"version": {
+						"type": "string",
+						"description": "The version of the dat file which was imported."
+					}
+				}
+			},
+			"PlaymatchGame": {
+				"type": "object",
+				"description": "contains basic information about a Game.",
+				"required": [
+					"id",
+					"name",
+					"created_at",
+					"updated_at"
+				],
+				"properties": {
+					"categories": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						},
+						"description": "Optional categories for the game.",
+						"nullable": true
+					},
+					"clone_of": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Optional which game this game is a clone of (different editions/versions).",
+						"nullable": true
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the game was created inside playmatch."
+					},
+					"description": {
+						"type": "string",
+						"description": "Optional description of the game.",
+						"nullable": true
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The ID of the game."
+					},
+					"name": {
+						"type": "string",
+						"description": "The name of the game."
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the game was last updated inside playmatch."
+					}
+				}
+			},
+			"PlaymatchGameFile": {
+				"type": "object",
+				"description": "contains basic information about a Game File.",
+				"required": [
+					"id",
+					"game_id",
+					"file_name",
+					"created_at",
+					"updated_at"
+				],
+				"properties": {
+					"crc": {
+						"type": "string",
+						"description": "Optional crc32 checksum of the file.",
+						"nullable": true
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the game file was created inside playmatch."
+					},
+					"file_name": {
+						"type": "string",
+						"description": "The name of the file, including extension."
+					},
+					"file_size_in_bytes": {
+						"type": "integer",
+						"format": "int64",
+						"description": "The size of the file in bytes, if available.",
+						"nullable": true
+					},
+					"game_id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The ID of the game this file belongs to."
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The ID of the game file."
+					},
+					"md5": {
+						"type": "string",
+						"description": "Optional MD5 hash of the file.",
+						"nullable": true
+					},
+					"serial": {
+						"type": "string",
+						"description": "Optional serial number of the rom file, if applicable.",
+						"nullable": true
+					},
+					"sha1": {
+						"type": "string",
+						"description": "Optional SHA1 hash of the file.",
+						"nullable": true
+					},
+					"sha256": {
+						"type": "string",
+						"description": "Optional SHA256 hash of the file.",
+						"nullable": true
+					},
+					"status": {
+						"type": "string",
+						"description": "Optional status of the file, e.g. \"verified\", etc.",
+						"nullable": true
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the game file was last updated inside playmatch."
+					}
+				}
+			},
+			"PlaymatchPlatform": {
+				"type": "object",
+				"description": "contains basic information about a Platform.",
+				"required": [
+					"id",
+					"name",
+					"updated_at",
+					"created_at"
+				],
+				"properties": {
+					"company_id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Optional id of the company that made the platform.",
+						"nullable": true
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the platform was created inside playmatch."
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The ID of the platform."
+					},
+					"name": {
+						"type": "string",
+						"description": "The name of the platform."
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the platform was last updated inside playmatch."
+					}
+				}
+			},
+			"PlaymatchSignatureGroup": {
+				"type": "object",
+				"description": "contains basic information about a Signature Group.",
+				"required": [
+					"id",
+					"name",
+					"created_at",
+					"updated_at"
+				],
+				"properties": {
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the signature group was created inside playmatch."
+					},
+					"description": {
+						"type": "string",
+						"description": "Optional description of the signature group.",
+						"nullable": true
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "The ID of the signature group."
+					},
+					"name": {
+						"type": "string",
+						"description": "The ID of the dat file import this signature group belongs to."
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the signature group was last updated inside playmatch."
+					},
+					"website_link": {
+						"type": "string",
+						"description": "Optional Link to the website of the signature group.",
+						"nullable": true
+					}
+				}
+			},
 			"PopularityPrimitive": {
 				"type": "object",
 				"required": [
@@ -4406,6 +5765,69 @@
 					}
 				}
 			},
+			"Suggestion": {
+				"type": "object",
+				"required": [
+					"id",
+					"provider",
+					"providerId",
+					"createdAt",
+					"updatedAt"
+				],
+				"properties": {
+					"comment": {
+						"type": "string",
+						"description": "Optional comment about the suggestion.",
+						"nullable": true
+					},
+					"companyId": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Id of the company this suggestion is for.",
+						"nullable": true
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the suggestion was created."
+					},
+					"createdBy": {
+						"type": "string",
+						"format": "uuid",
+						"description": "User Id of the user who created the suggestion.",
+						"nullable": true
+					},
+					"gameId": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Id of the game this suggestion is for.",
+						"nullable": true
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Unique identifier for the suggestion."
+					},
+					"platformId": {
+						"type": "string",
+						"format": "uuid",
+						"description": "Id of the platform this suggestion is for.",
+						"nullable": true
+					},
+					"provider": {
+						"$ref": "#/components/schemas/MetadataProvider"
+					},
+					"providerId": {
+						"type": "string",
+						"description": "The ID of the game, company, or platform on the metadata provider."
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"description": "When the suggestion was last updated."
+					}
+				}
+			},
 			"Theme": {
 				"type": "object",
 				"required": [
@@ -4445,26 +5867,97 @@
 					}
 				}
 			},
+			"UpdateUserPermissionsRequest": {
+				"type": "object",
+				"description": "Request to update a user's permissions.",
+				"required": [
+					"new_permission"
+				],
+				"properties": {
+					"new_permission": {
+						"$ref": "#/components/schemas/UserPermissions"
+					}
+				}
+			},
 			"UpdatedMatchResult": {
 				"type": "object",
-				"description": "Result of a manual game match.",
+				"description": "Result of a manual match.",
 				"required": [
-					"id"
+					"id",
+					"externalMetadata"
 				],
 				"properties": {
 					"externalMetadata": {
-						"type": "array",
-						"items": {
-							"$ref": "#/components/schemas/ExternalMetadata"
-						},
-						"description": "External metadata for the matched game."
+						"$ref": "#/components/schemas/ExternalMetadata"
 					},
 					"id": {
 						"type": "string",
 						"format": "uuid",
-						"description": "ID of the game."
+						"description": "ID of the entity matched (game, platform or company)."
 					}
 				}
+			},
+			"UpdatedMetadataMatchesFromSuggestionResponse": {
+				"type": "object",
+				"required": [
+					"updated"
+				],
+				"properties": {
+					"updated": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"User": {
+				"type": "object",
+				"description": "A User inside Playmatch.",
+				"required": [
+					"id",
+					"username",
+					"permissions",
+					"createdAt",
+					"updatedAt"
+				],
+				"properties": {
+					"apiKey": {
+						"type": "string",
+						"nullable": true
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"discordId": {
+						"type": "integer",
+						"format": "int64",
+						"nullable": true
+					},
+					"id": {
+						"type": "string",
+						"format": "uuid"
+					},
+					"permissions": {
+						"$ref": "#/components/schemas/UserPermissions"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"username": {
+						"type": "string"
+					}
+				}
+			},
+			"UserPermissions": {
+				"type": "string",
+				"description": "Permission Levels a user can have in Playmatch.",
+				"enum": [
+					"User",
+					"Trusted",
+					"Automation",
+					"Admin"
+				]
 			},
 			"WebsiteCategory": {
 				"type": "integer",
@@ -4487,6 +5980,13 @@
 					17,
 					18
 				]
+			}
+		},
+		"securitySchemes": {
+			"bearer_auth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
 			}
 		}
 	}

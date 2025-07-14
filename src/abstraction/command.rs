@@ -2,6 +2,8 @@ use crate::built_info;
 use lazy_static::lazy_static;
 use reqwest::header::HeaderMap;
 use serenity::all::RoleId;
+use std::env;
+use std::sync::Arc;
 
 pub type CommandError = anyhow::Error;
 pub type CommandContext<'a> = poise::Context<'a, CommandData, CommandError>;
@@ -10,7 +12,7 @@ pub type CheckResult = Result<bool, CommandError>;
 
 pub struct CommandData {
 	pub client: reqwest::Client,
-	pub playmatch_client: playmatch_client::Client,
+	pub playmatch_client: Arc<playmatch_client::Client>,
 }
 
 impl Default for CommandData {
@@ -39,23 +41,25 @@ impl Default for CommandData {
 
 		Self {
 			client: client.clone(),
-			playmatch_client: playmatch_client::Client::new_with_client(
-				"https://playmatch.retrorealm.dev",
+			playmatch_client: Arc::new(playmatch_client::Client::new_with_client(
+				&env::var("PLAYMATCH_API_URL")
+					.unwrap_or("https://playmatch.retrorealm.dev".to_string()),
 				client,
-			),
+			)),
 		}
 	}
 }
 
 lazy_static! {
-	pub static ref STAFF_ROLE_ID: u64 = std::env::var("DISCORD_RETROREALM_STAFF_ROLE_ID")
+	pub static ref STAFF_ROLE_ID: u64 = env::var("DISCORD_RETROREALM_STAFF_ROLE_ID")
 		.unwrap_or_default()
 		.parse()
 		.unwrap();
-	pub static ref TRUSTED_ROLE_ID: u64 = std::env::var("DISCORD_RETROREALM_TRUSTED_ROLE_ID")
+	pub static ref TRUSTED_ROLE_IDS: Vec<u64> = env::var("DISCORD_TRUSTED_ROLE_IDS")
 		.unwrap_or_default()
-		.parse()
-		.unwrap();
+		.split(",")
+		.map(|id| id.trim().parse().unwrap())
+		.collect();
 }
 
 pub async fn is_user_trusted_or_above(ctx: CommandContext<'_>) -> CheckResult {
@@ -75,7 +79,7 @@ pub async fn is_user_trusted_or_above(ctx: CommandContext<'_>) -> CheckResult {
 
 	// Check if user has the Staff or Trusted role
 	if member.roles.iter().any(|role_id| {
-		role_id == &RoleId::new(*STAFF_ROLE_ID) || role_id == &RoleId::new(*TRUSTED_ROLE_ID)
+		role_id == &RoleId::new(*STAFF_ROLE_ID) || TRUSTED_ROLE_IDS.contains(&role_id.get())
 	}) {
 		return Ok(true);
 	}

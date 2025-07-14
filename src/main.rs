@@ -51,7 +51,7 @@ async fn main() -> anyhow::Result<()> {
 
 					let command_name = cmd.name.to_lowercase();
 
-					info!("{} @ {} {}", user_info, guild_info, command_name);
+					info!("{user_info} @ {guild_info} {command_name}");
 				})
 			},
 			..Default::default()

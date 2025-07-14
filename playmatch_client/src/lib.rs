@@ -1301,21 +1301,12 @@ pub mod types {
     ///{
     ///  "type": "object",
     ///  "required": [
-    ///    "change_date_category",
     ///    "checksum",
-    ///    "country",
     ///    "created_at",
-    ///    "description",
-    ///    "developed",
     ///    "id",
-    ///    "logo",
     ///    "name",
-    ///    "published",
     ///    "slug",
-    ///    "start_date_category",
-    ///    "updated_at",
-    ///    "url",
-    ///    "websites"
+    ///    "updated_at"
     ///  ],
     ///  "properties": {
     ///    "change_date": {
@@ -1326,7 +1317,18 @@ pub mod types {
     ///      "format": "int64"
     ///    },
     ///    "change_date_category": {
-    ///      "$ref": "#/components/schemas/CompanyChangeDateCategory"
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/CompanyChangeDateCategory"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
     ///    },
     ///    "changed_company_id": {
     ///      "type": [
@@ -1340,7 +1342,10 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "country": {
-    ///      "type": "integer",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
     ///      "format": "int32"
     ///    },
     ///    "created_at": {
@@ -1348,10 +1353,16 @@ pub mod types {
     ///      "format": "date-time"
     ///    },
     ///    "description": {
-    ///      "type": "string"
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
     ///    },
     ///    "developed": {
-    ///      "type": "array",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
     ///      "items": {
     ///        "type": "integer",
     ///        "format": "int32"
@@ -1362,7 +1373,10 @@ pub mod types {
     ///      "format": "int32"
     ///    },
     ///    "logo": {
-    ///      "type": "integer",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
     ///      "format": "int32"
     ///    },
     ///    "name": {
@@ -1376,7 +1390,10 @@ pub mod types {
     ///      "format": "int32"
     ///    },
     ///    "published": {
-    ///      "type": "array",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
     ///      "items": {
     ///        "type": "integer",
     ///        "format": "int32"
@@ -1393,17 +1410,34 @@ pub mod types {
     ///      "format": "int64"
     ///    },
     ///    "start_date_category": {
-    ///      "$ref": "#/components/schemas/CompanyStartDateCategory"
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/CompanyStartDateCategory"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
     ///    },
     ///    "updated_at": {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
     ///    "url": {
-    ///      "type": "string"
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
     ///    },
     ///    "websites": {
-    ///      "type": "array",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
     ///      "items": {
     ///        "type": "integer",
     ///        "format": "int32"
@@ -1417,27 +1451,36 @@ pub mod types {
     pub struct Company {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub change_date: ::std::option::Option<i64>,
-        pub change_date_category: CompanyChangeDateCategory,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub change_date_category: ::std::option::Option<CompanyChangeDateCategory>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub changed_company_id: ::std::option::Option<i32>,
         pub checksum: ::uuid::Uuid,
-        pub country: i32,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub country: ::std::option::Option<i32>,
         pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
-        pub description: ::std::string::String,
-        pub developed: ::std::vec::Vec<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub developed: ::std::option::Option<::std::vec::Vec<i32>>,
         pub id: i32,
-        pub logo: i32,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub logo: ::std::option::Option<i32>,
         pub name: ::std::string::String,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub parent: ::std::option::Option<i32>,
-        pub published: ::std::vec::Vec<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub published: ::std::option::Option<::std::vec::Vec<i32>>,
         pub slug: ::std::string::String,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub start_date: ::std::option::Option<i64>,
-        pub start_date_category: CompanyStartDateCategory,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub start_date_category: ::std::option::Option<CompanyStartDateCategory>,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
-        pub url: ::std::string::String,
-        pub websites: ::std::vec::Vec<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub url: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub websites: ::std::option::Option<::std::vec::Vec<i32>>,
     }
     impl ::std::convert::From<&Company> for Company {
         fn from(value: &Company) -> Self {
@@ -1608,7 +1651,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct CompanyResponse {
+    pub struct CompanyMetadataResponse {
         ///External metadata for the company.
         #[serde(
             rename = "externalMetadata",
@@ -1621,8 +1664,160 @@ pub mod types {
         ///The name of the company.
         pub name: ::std::string::String,
     }
-    impl ::std::convert::From<&CompanyResponse> for CompanyResponse {
-        fn from(value: &CompanyResponse) -> Self {
+    impl ::std::convert::From<&CompanyMetadataResponse> for CompanyMetadataResponse {
+        fn from(value: &CompanyMetadataResponse) -> Self {
+            value.clone()
+        }
+    }
+    ///`CompanyOrPlatformMatchRequest`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "manualMatchType",
+    ///    "name",
+    ///    "provider",
+    ///    "providerId"
+    ///  ],
+    ///  "properties": {
+    ///    "comment": {
+    ///      "description": "Optional comment about the match.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "manualMatchType": {
+    ///      "$ref": "#/components/schemas/ManualMatchMode"
+    ///    },
+    ///    "name": {
+    ///      "description": "Name of the Company or Platform to match.",
+    ///      "type": "string"
+    ///    },
+    ///    "provider": {
+    ///      "$ref": "#/components/schemas/MetadataProvider"
+    ///    },
+    ///    "providerId": {
+    ///      "description": "ID of the Company or Platform file in the metadata
+    /// provider.",
+    ///      "type": "string"
+    ///    },
+    ///    "userId": {
+    ///      "description": "The id of the user making the suggestion, if your
+    /// permission level is not Automation or Admin, this is ignored and set to
+    /// your user id instead.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct CompanyOrPlatformMatchRequest {
+        ///Optional comment about the match.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub comment: ::std::option::Option<::std::string::String>,
+        #[serde(rename = "manualMatchType")]
+        pub manual_match_type: ManualMatchMode,
+        ///Name of the Company or Platform to match.
+        pub name: ::std::string::String,
+        pub provider: MetadataProvider,
+        ///ID of the Company or Platform file in the metadata provider.
+        #[serde(rename = "providerId")]
+        pub provider_id: ::std::string::String,
+        ///The id of the user making the suggestion, if your permission level
+        /// is not Automation or Admin, this is ignored and set to your user id
+        /// instead.
+        #[serde(
+            rename = "userId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub user_id: ::std::option::Option<::uuid::Uuid>,
+    }
+    impl ::std::convert::From<&CompanyOrPlatformMatchRequest> for CompanyOrPlatformMatchRequest {
+        fn from(value: &CompanyOrPlatformMatchRequest) -> Self {
+            value.clone()
+        }
+    }
+    ///`CompanyOrPlatformSuggestionRequest`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "name",
+    ///    "provider",
+    ///    "providerId"
+    ///  ],
+    ///  "properties": {
+    ///    "comment": {
+    ///      "description": "Optional comment about the match.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "description": "Name of company or platform.",
+    ///      "type": "string"
+    ///    },
+    ///    "provider": {
+    ///      "$ref": "#/components/schemas/MetadataProvider"
+    ///    },
+    ///    "providerId": {
+    ///      "description": "ID of the company or platform in the metadata
+    /// provider.",
+    ///      "type": "string"
+    ///    },
+    ///    "userId": {
+    ///      "description": "The id of the user making the suggestion, if your
+    /// permission level is not Automation or Admin, this is ignored and set to
+    /// your user id instead.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct CompanyOrPlatformSuggestionRequest {
+        ///Optional comment about the match.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub comment: ::std::option::Option<::std::string::String>,
+        ///Name of company or platform.
+        pub name: ::std::string::String,
+        pub provider: MetadataProvider,
+        ///ID of the company or platform in the metadata provider.
+        #[serde(rename = "providerId")]
+        pub provider_id: ::std::string::String,
+        ///The id of the user making the suggestion, if your permission level
+        /// is not Automation or Admin, this is ignored and set to your user id
+        /// instead.
+        #[serde(
+            rename = "userId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub user_id: ::std::option::Option<::uuid::Uuid>,
+    }
+    impl ::std::convert::From<&CompanyOrPlatformSuggestionRequest>
+        for CompanyOrPlatformSuggestionRequest
+    {
+        fn from(value: &CompanyOrPlatformSuggestionRequest) -> Self {
             value.clone()
         }
     }
@@ -1892,6 +2087,45 @@ pub mod types {
     }
     impl ::std::convert::From<&Cover> for Cover {
         fn from(value: &Cover) -> Self {
+            value.clone()
+        }
+    }
+    ///Request to get or create a user by their Discord ID.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Request to get or create a user by their Discord ID.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "discord_id",
+    ///    "permissions",
+    ///    "username"
+    ///  ],
+    ///  "properties": {
+    ///    "discord_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "permissions": {
+    ///      "$ref": "#/components/schemas/UserPermissions"
+    ///    },
+    ///    "username": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct CreateOrGetUserRequest {
+        pub discord_id: i64,
+        pub permissions: UserPermissions,
+        pub username: ::std::string::String,
+    }
+    impl ::std::convert::From<&CreateOrGetUserRequest> for CreateOrGetUserRequest {
+        fn from(value: &CreateOrGetUserRequest) -> Self {
             value.clone()
         }
     }
@@ -3297,6 +3531,242 @@ pub mod types {
             value.clone()
         }
     }
+    ///Result of a game match including company, platform and files.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Result of a game match including company, platform and
+    /// files.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "gameMatchType"
+    ///  ],
+    ///  "properties": {
+    ///    "company": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PlaymatchCompany"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "datFile": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PlaymatchDatFile"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "datFileImport": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PlaymatchDatFileImport"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "game": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PlaymatchGame"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "gameFiles": {
+    ///      "description": "If a match was found, the game files for this
+    /// game.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PlaymatchGameFile"
+    ///      }
+    ///    },
+    ///    "gameMatchType": {
+    ///      "$ref": "#/components/schemas/GameMatchType"
+    ///    },
+    ///    "platform": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PlaymatchPlatform"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "signatureGroup": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PlaymatchSignatureGroup"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct GameAndRelationMatchResult {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub company: ::std::option::Option<PlaymatchCompany>,
+        #[serde(
+            rename = "datFile",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub dat_file: ::std::option::Option<PlaymatchDatFile>,
+        #[serde(
+            rename = "datFileImport",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub dat_file_import: ::std::option::Option<PlaymatchDatFileImport>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub game: ::std::option::Option<PlaymatchGame>,
+        ///If a match was found, the game files for this game.
+        #[serde(
+            rename = "gameFiles",
+            default,
+            skip_serializing_if = "::std::vec::Vec::is_empty"
+        )]
+        pub game_files: ::std::vec::Vec<PlaymatchGameFile>,
+        #[serde(rename = "gameMatchType")]
+        pub game_match_type: GameMatchType,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub platform: ::std::option::Option<PlaymatchPlatform>,
+        #[serde(
+            rename = "signatureGroup",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub signature_group: ::std::option::Option<PlaymatchSignatureGroup>,
+    }
+    impl ::std::convert::From<&GameAndRelationMatchResult> for GameAndRelationMatchResult {
+        fn from(value: &GameAndRelationMatchResult) -> Self {
+            value.clone()
+        }
+    }
+    ///Result of a game match including company, platform and files.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Result of a game match including company, platform and
+    /// files.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "datFile",
+    ///    "datFileImport",
+    ///    "game",
+    ///    "platform",
+    ///    "signatureGroup"
+    ///  ],
+    ///  "properties": {
+    ///    "company": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PlaymatchCompany"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "datFile": {
+    ///      "$ref": "#/components/schemas/PlaymatchDatFile"
+    ///    },
+    ///    "datFileImport": {
+    ///      "$ref": "#/components/schemas/PlaymatchDatFileImport"
+    ///    },
+    ///    "game": {
+    ///      "$ref": "#/components/schemas/PlaymatchGame"
+    ///    },
+    ///    "gameFiles": {
+    ///      "description": "If a match was found, the game files for this
+    /// game.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PlaymatchGameFile"
+    ///      }
+    ///    },
+    ///    "platform": {
+    ///      "$ref": "#/components/schemas/PlaymatchPlatform"
+    ///    },
+    ///    "signatureGroup": {
+    ///      "$ref": "#/components/schemas/PlaymatchSignatureGroup"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct GameAndRelationsResult {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub company: ::std::option::Option<PlaymatchCompany>,
+        #[serde(rename = "datFile")]
+        pub dat_file: PlaymatchDatFile,
+        #[serde(rename = "datFileImport")]
+        pub dat_file_import: PlaymatchDatFileImport,
+        pub game: PlaymatchGame,
+        ///If a match was found, the game files for this game.
+        #[serde(
+            rename = "gameFiles",
+            default,
+            skip_serializing_if = "::std::vec::Vec::is_empty"
+        )]
+        pub game_files: ::std::vec::Vec<PlaymatchGameFile>,
+        pub platform: PlaymatchPlatform,
+        #[serde(rename = "signatureGroup")]
+        pub signature_group: PlaymatchSignatureGroup,
+    }
+    impl ::std::convert::From<&GameAndRelationsResult> for GameAndRelationsResult {
+        fn from(value: &GameAndRelationsResult) -> Self {
+            value.clone()
+        }
+    }
     ///`GameCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -3616,30 +4086,68 @@ pub mod types {
             value.clone()
         }
     }
-    ///Result of a game match.
+    ///`GameMatchRequest`
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Result of a game match.",
     ///  "type": "object",
     ///  "required": [
-    ///    "gameMatchType"
+    ///    "manualMatchType",
+    ///    "provider",
+    ///    "providerId"
     ///  ],
     ///  "properties": {
-    ///    "externalMetadata": {
-    ///      "description": "External metadata for the matched game.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ExternalMetadata"
-    ///      }
+    ///    "comment": {
+    ///      "description": "Optional comment about the match.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
     ///    },
-    ///    "gameMatchType": {
-    ///      "$ref": "#/components/schemas/GameMatchType"
+    ///    "manualMatchType": {
+    ///      "$ref": "#/components/schemas/ManualMatchMode"
     ///    },
-    ///    "id": {
-    ///      "description": "If a match was found, the ID of the matched game.",
+    ///    "md5": {
+    ///      "description": "MD5 hash of the game file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "description": "Name of game or file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "provider": {
+    ///      "$ref": "#/components/schemas/MetadataProvider"
+    ///    },
+    ///    "providerId": {
+    ///      "description": "ID of the game file in the metadata provider.",
+    ///      "type": "string"
+    ///    },
+    ///    "sha1": {
+    ///      "description": "SHA1 hash of the game file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "sha256": {
+    ///      "description": "SHA256 hash of the game file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "userId": {
+    ///      "description": "The id of the user making the suggestion, if your
+    /// permission level is not Automation or Admin, this is ignored and set to
+    /// your user id instead.",
     ///      "type": [
     ///        "string",
     ///        "null"
@@ -3651,22 +4159,40 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct GameMatchResult {
-        ///External metadata for the matched game.
-        #[serde(
-            rename = "externalMetadata",
-            default,
-            skip_serializing_if = "::std::vec::Vec::is_empty"
-        )]
-        pub external_metadata: ::std::vec::Vec<ExternalMetadata>,
-        #[serde(rename = "gameMatchType")]
-        pub game_match_type: GameMatchType,
-        ///If a match was found, the ID of the matched game.
+    pub struct GameMatchRequest {
+        ///Optional comment about the match.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub id: ::std::option::Option<::uuid::Uuid>,
+        pub comment: ::std::option::Option<::std::string::String>,
+        #[serde(rename = "manualMatchType")]
+        pub manual_match_type: ManualMatchMode,
+        ///MD5 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub md5: ::std::option::Option<::std::string::String>,
+        ///Name of game or file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<::std::string::String>,
+        pub provider: MetadataProvider,
+        ///ID of the game file in the metadata provider.
+        #[serde(rename = "providerId")]
+        pub provider_id: ::std::string::String,
+        ///SHA1 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sha1: ::std::option::Option<::std::string::String>,
+        ///SHA256 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sha256: ::std::option::Option<::std::string::String>,
+        ///The id of the user making the suggestion, if your permission level
+        /// is not Automation or Admin, this is ignored and set to your user id
+        /// instead.
+        #[serde(
+            rename = "userId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub user_id: ::std::option::Option<::uuid::Uuid>,
     }
-    impl ::std::convert::From<&GameMatchResult> for GameMatchResult {
-        fn from(value: &GameMatchResult) -> Self {
+    impl ::std::convert::From<&GameMatchRequest> for GameMatchRequest {
+        fn from(value: &GameMatchRequest) -> Self {
             value.clone()
         }
     }
@@ -3759,6 +4285,61 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+    ///Result of a game match, containing external metadata ids.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Result of a game match, containing external metadata
+    /// ids.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "gameMatchType"
+    ///  ],
+    ///  "properties": {
+    ///    "externalMetadata": {
+    ///      "description": "External metadata for the matched game.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ExternalMetadata"
+    ///      }
+    ///    },
+    ///    "gameMatchType": {
+    ///      "$ref": "#/components/schemas/GameMatchType"
+    ///    },
+    ///    "id": {
+    ///      "description": "If a match was found, the ID of the matched game.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct GameMetadataMatchResult {
+        ///External metadata for the matched game.
+        #[serde(
+            rename = "externalMetadata",
+            default,
+            skip_serializing_if = "::std::vec::Vec::is_empty"
+        )]
+        pub external_metadata: ::std::vec::Vec<ExternalMetadata>,
+        #[serde(rename = "gameMatchType")]
+        pub game_match_type: GameMatchType,
+        ///If a match was found, the ID of the matched game.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub id: ::std::option::Option<::uuid::Uuid>,
+    }
+    impl ::std::convert::From<&GameMetadataMatchResult> for GameMetadataMatchResult {
+        fn from(value: &GameMetadataMatchResult) -> Self {
+            value.clone()
         }
     }
     ///`GameMode`
@@ -3878,6 +4459,110 @@ pub mod types {
         {
             Self::try_from(<i64>::deserialize(deserializer)?)
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+    ///`GameSuggestionRequest`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "provider",
+    ///    "providerId"
+    ///  ],
+    ///  "properties": {
+    ///    "comment": {
+    ///      "description": "Optional comment about the match.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "md5": {
+    ///      "description": "MD5 hash of the game file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "description": "Name of game or file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "provider": {
+    ///      "$ref": "#/components/schemas/MetadataProvider"
+    ///    },
+    ///    "providerId": {
+    ///      "description": "ID of the game file in the metadata provider.",
+    ///      "type": "string"
+    ///    },
+    ///    "sha1": {
+    ///      "description": "SHA1 hash of the game file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "sha256": {
+    ///      "description": "SHA256 hash of the game file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "userId": {
+    ///      "description": "The id of the user making the suggestion, if your
+    /// permission level is not Automation or Admin, this is ignored and set to
+    /// your user id instead.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct GameSuggestionRequest {
+        ///Optional comment about the match.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub comment: ::std::option::Option<::std::string::String>,
+        ///MD5 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub md5: ::std::option::Option<::std::string::String>,
+        ///Name of game or file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<::std::string::String>,
+        pub provider: MetadataProvider,
+        ///ID of the game file in the metadata provider.
+        #[serde(rename = "providerId")]
+        pub provider_id: ::std::string::String,
+        ///SHA1 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sha1: ::std::option::Option<::std::string::String>,
+        ///SHA256 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sha256: ::std::option::Option<::std::string::String>,
+        ///The id of the user making the suggestion, if your permission level
+        /// is not Automation or Admin, this is ignored and set to your user id
+        /// instead.
+        #[serde(
+            rename = "userId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub user_id: ::std::option::Option<::uuid::Uuid>,
+    }
+    impl ::std::convert::From<&GameSuggestionRequest> for GameSuggestionRequest {
+        fn from(value: &GameSuggestionRequest) -> Self {
+            value.clone()
         }
     }
     ///`GameVersion`
@@ -4698,95 +5383,6 @@ pub mod types {
             value.parse()
         }
     }
-    ///`MatchRequest`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "type": "object",
-    ///  "required": [
-    ///    "manual_match_type",
-    ///    "provider",
-    ///    "provider_id"
-    ///  ],
-    ///  "properties": {
-    ///    "comment": {
-    ///      "description": "Optional comment about the match.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "manual_match_type": {
-    ///      "$ref": "#/components/schemas/ManualMatchMode"
-    ///    },
-    ///    "md5": {
-    ///      "description": "MD5 hash of the game file.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "name": {
-    ///      "description": "Name of game or file.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "provider": {
-    ///      "$ref": "#/components/schemas/MetadataProvider"
-    ///    },
-    ///    "provider_id": {
-    ///      "description": "ID of the game file in the metadata provider.",
-    ///      "type": "string"
-    ///    },
-    ///    "sha1": {
-    ///      "description": "SHA1 hash of the game file.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "sha256": {
-    ///      "description": "SHA256 hash of the game file.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    }
-    ///  }
-    ///}
-    /// ```
-    /// </details>
-    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct MatchRequest {
-        ///Optional comment about the match.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub comment: ::std::option::Option<::std::string::String>,
-        pub manual_match_type: ManualMatchMode,
-        ///MD5 hash of the game file.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub md5: ::std::option::Option<::std::string::String>,
-        ///Name of game or file.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub name: ::std::option::Option<::std::string::String>,
-        pub provider: MetadataProvider,
-        ///ID of the game file in the metadata provider.
-        pub provider_id: ::std::string::String,
-        ///SHA1 hash of the game file.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub sha1: ::std::option::Option<::std::string::String>,
-        ///SHA256 hash of the game file.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub sha256: ::std::option::Option<::std::string::String>,
-    }
-    impl ::std::convert::From<&MatchRequest> for MatchRequest {
-        fn from(value: &MatchRequest) -> Self {
-            value.clone()
-        }
-    }
     ///Match types for a game
     ///
     /// <details><summary>JSON schema</summary>
@@ -5488,7 +6084,7 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct PlatformResponse {
+    pub struct PlatformMetadataResponse {
         ///Optional ID of the company that made the platform.
         #[serde(
             rename = "companyId",
@@ -5515,8 +6111,8 @@ pub mod types {
         ///The name of the platform.
         pub name: ::std::string::String,
     }
-    impl ::std::convert::From<&PlatformResponse> for PlatformResponse {
-        fn from(value: &PlatformResponse) -> Self {
+    impl ::std::convert::From<&PlatformMetadataResponse> for PlatformMetadataResponse {
+        fn from(value: &PlatformMetadataResponse) -> Self {
             value.clone()
         }
     }
@@ -6153,6 +6749,635 @@ pub mod types {
             value.clone()
         }
     }
+    ///contains basic information about a Company.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "contains basic information about a Company.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "created_at",
+    ///    "id",
+    ///    "name",
+    ///    "updated_at"
+    ///  ],
+    ///  "properties": {
+    ///    "created_at": {
+    ///      "description": "When the company was created inside playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "id": {
+    ///      "description": "The ID of the company.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the company.",
+    ///      "type": "string"
+    ///    },
+    ///    "updated_at": {
+    ///      "description": "When the company was last updated inside
+    /// playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PlaymatchCompany {
+        ///When the company was created inside playmatch.
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///The ID of the company.
+        pub id: ::uuid::Uuid,
+        ///The name of the company.
+        pub name: ::std::string::String,
+        ///When the company was last updated inside playmatch.
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+    impl ::std::convert::From<&PlaymatchCompany> for PlaymatchCompany {
+        fn from(value: &PlaymatchCompany) -> Self {
+            value.clone()
+        }
+    }
+    ///contains basic information about a Dat File.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "contains basic information about a Dat File.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "created_at",
+    ///    "current_version",
+    ///    "id",
+    ///    "name",
+    ///    "platform_id",
+    ///    "signature_group_id",
+    ///    "updated_at"
+    ///  ],
+    ///  "properties": {
+    ///    "company_id": {
+    ///      "description": "Optional company for the platform this dat file is
+    /// for.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "created_at": {
+    ///      "description": "When the dat file was created inside playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "current_version": {
+    ///      "description": "The current version of the dat file.",
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "description": "The ID of the dat file.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the dat file.",
+    ///      "type": "string"
+    ///    },
+    ///    "platform_id": {
+    ///      "description": "The platform this dat file is for.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "signature_group_id": {
+    ///      "description": "The id of the signature group which publishes this
+    /// dat file.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "subset": {
+    ///      "description": "The subset this dat file is for, if any",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "tags": {
+    ///      "description": "Optional tags for the dat file.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "updated_at": {
+    ///      "description": "When the dat file was last updated inside
+    /// playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PlaymatchDatFile {
+        ///Optional company for the platform this dat file is for.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub company_id: ::std::option::Option<::uuid::Uuid>,
+        ///When the dat file was created inside playmatch.
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///The current version of the dat file.
+        pub current_version: ::std::string::String,
+        ///The ID of the dat file.
+        pub id: ::uuid::Uuid,
+        ///The name of the dat file.
+        pub name: ::std::string::String,
+        ///The platform this dat file is for.
+        pub platform_id: ::uuid::Uuid,
+        ///The id of the signature group which publishes this dat file.
+        pub signature_group_id: ::uuid::Uuid,
+        ///The subset this dat file is for, if any
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub subset: ::std::option::Option<::std::string::String>,
+        ///Optional tags for the dat file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub tags: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+        ///When the dat file was last updated inside playmatch.
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+    impl ::std::convert::From<&PlaymatchDatFile> for PlaymatchDatFile {
+        fn from(value: &PlaymatchDatFile) -> Self {
+            value.clone()
+        }
+    }
+    ///contains basic information about an imported dat file in Playmatch.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "contains basic information about an imported dat file
+    /// in Playmatch.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "created_at",
+    ///    "dat_file_id",
+    ///    "id",
+    ///    "imported_at",
+    ///    "md5",
+    ///    "name",
+    ///    "updated_at",
+    ///    "version"
+    ///  ],
+    ///  "properties": {
+    ///    "created_at": {
+    ///      "description": "When the dat file import was created inside
+    /// playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "dat_file_id": {
+    ///      "description": "The ID of the dat file this import belongs to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "id": {
+    ///      "description": "The ID of the dat file import.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "imported_at": {
+    ///      "description": "When the dat file was imported into playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "md5": {
+    ///      "description": "MD5 hash of the imported dat file.",
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the imported file, this contains
+    /// usually some information like version and date of creation",
+    ///      "type": "string"
+    ///    },
+    ///    "updated_at": {
+    ///      "description": "When the dat file import was last updated inside
+    /// playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "version": {
+    ///      "description": "The version of the dat file which was imported.",
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PlaymatchDatFileImport {
+        ///When the dat file import was created inside playmatch.
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///The ID of the dat file this import belongs to.
+        pub dat_file_id: ::uuid::Uuid,
+        ///The ID of the dat file import.
+        pub id: ::uuid::Uuid,
+        ///When the dat file was imported into playmatch.
+        pub imported_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///MD5 hash of the imported dat file.
+        pub md5: ::std::string::String,
+        ///The name of the imported file, this contains usually some
+        /// information like version and date of creation
+        pub name: ::std::string::String,
+        ///When the dat file import was last updated inside playmatch.
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///The version of the dat file which was imported.
+        pub version: ::std::string::String,
+    }
+    impl ::std::convert::From<&PlaymatchDatFileImport> for PlaymatchDatFileImport {
+        fn from(value: &PlaymatchDatFileImport) -> Self {
+            value.clone()
+        }
+    }
+    ///contains basic information about a Game.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "contains basic information about a Game.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "created_at",
+    ///    "id",
+    ///    "name",
+    ///    "updated_at"
+    ///  ],
+    ///  "properties": {
+    ///    "categories": {
+    ///      "description": "Optional categories for the game.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "clone_of": {
+    ///      "description": "Optional which game this game is a clone of
+    /// (different editions/versions).",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "created_at": {
+    ///      "description": "When the game was created inside playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "description": {
+    ///      "description": "Optional description of the game.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "The ID of the game.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the game.",
+    ///      "type": "string"
+    ///    },
+    ///    "updated_at": {
+    ///      "description": "When the game was last updated inside playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PlaymatchGame {
+        ///Optional categories for the game.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub categories: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+        ///Optional which game this game is a clone of (different
+        /// editions/versions).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub clone_of: ::std::option::Option<::uuid::Uuid>,
+        ///When the game was created inside playmatch.
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///Optional description of the game.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        ///The ID of the game.
+        pub id: ::uuid::Uuid,
+        ///The name of the game.
+        pub name: ::std::string::String,
+        ///When the game was last updated inside playmatch.
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+    impl ::std::convert::From<&PlaymatchGame> for PlaymatchGame {
+        fn from(value: &PlaymatchGame) -> Self {
+            value.clone()
+        }
+    }
+    ///contains basic information about a Game File.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "contains basic information about a Game File.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "created_at",
+    ///    "file_name",
+    ///    "game_id",
+    ///    "id",
+    ///    "updated_at"
+    ///  ],
+    ///  "properties": {
+    ///    "crc": {
+    ///      "description": "Optional crc32 checksum of the file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "created_at": {
+    ///      "description": "When the game file was created inside playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "file_name": {
+    ///      "description": "The name of the file, including extension.",
+    ///      "type": "string"
+    ///    },
+    ///    "file_size_in_bytes": {
+    ///      "description": "The size of the file in bytes, if available.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "game_id": {
+    ///      "description": "The ID of the game this file belongs to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "id": {
+    ///      "description": "The ID of the game file.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "md5": {
+    ///      "description": "Optional MD5 hash of the file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "serial": {
+    ///      "description": "Optional serial number of the rom file, if
+    /// applicable.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "sha1": {
+    ///      "description": "Optional SHA1 hash of the file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "sha256": {
+    ///      "description": "Optional SHA256 hash of the file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "status": {
+    ///      "description": "Optional status of the file, e.g. \"verified\",
+    /// etc.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "updated_at": {
+    ///      "description": "When the game file was last updated inside
+    /// playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PlaymatchGameFile {
+        ///Optional crc32 checksum of the file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub crc: ::std::option::Option<::std::string::String>,
+        ///When the game file was created inside playmatch.
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///The name of the file, including extension.
+        pub file_name: ::std::string::String,
+        ///The size of the file in bytes, if available.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub file_size_in_bytes: ::std::option::Option<i64>,
+        ///The ID of the game this file belongs to.
+        pub game_id: ::uuid::Uuid,
+        ///The ID of the game file.
+        pub id: ::uuid::Uuid,
+        ///Optional MD5 hash of the file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub md5: ::std::option::Option<::std::string::String>,
+        ///Optional serial number of the rom file, if applicable.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub serial: ::std::option::Option<::std::string::String>,
+        ///Optional SHA1 hash of the file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sha1: ::std::option::Option<::std::string::String>,
+        ///Optional SHA256 hash of the file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sha256: ::std::option::Option<::std::string::String>,
+        ///Optional status of the file, e.g. "verified", etc.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub status: ::std::option::Option<::std::string::String>,
+        ///When the game file was last updated inside playmatch.
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+    impl ::std::convert::From<&PlaymatchGameFile> for PlaymatchGameFile {
+        fn from(value: &PlaymatchGameFile) -> Self {
+            value.clone()
+        }
+    }
+    ///contains basic information about a Platform.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "contains basic information about a Platform.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "created_at",
+    ///    "id",
+    ///    "name",
+    ///    "updated_at"
+    ///  ],
+    ///  "properties": {
+    ///    "company_id": {
+    ///      "description": "Optional id of the company that made the
+    /// platform.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "created_at": {
+    ///      "description": "When the platform was created inside playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "id": {
+    ///      "description": "The ID of the platform.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the platform.",
+    ///      "type": "string"
+    ///    },
+    ///    "updated_at": {
+    ///      "description": "When the platform was last updated inside
+    /// playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PlaymatchPlatform {
+        ///Optional id of the company that made the platform.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub company_id: ::std::option::Option<::uuid::Uuid>,
+        ///When the platform was created inside playmatch.
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///The ID of the platform.
+        pub id: ::uuid::Uuid,
+        ///The name of the platform.
+        pub name: ::std::string::String,
+        ///When the platform was last updated inside playmatch.
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+    impl ::std::convert::From<&PlaymatchPlatform> for PlaymatchPlatform {
+        fn from(value: &PlaymatchPlatform) -> Self {
+            value.clone()
+        }
+    }
+    ///contains basic information about a Signature Group.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "contains basic information about a Signature Group.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "created_at",
+    ///    "id",
+    ///    "name",
+    ///    "updated_at"
+    ///  ],
+    ///  "properties": {
+    ///    "created_at": {
+    ///      "description": "When the signature group was created inside
+    /// playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "description": {
+    ///      "description": "Optional description of the signature group.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "The ID of the signature group.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "The ID of the dat file import this signature group
+    /// belongs to.",
+    ///      "type": "string"
+    ///    },
+    ///    "updated_at": {
+    ///      "description": "When the signature group was last updated inside
+    /// playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "website_link": {
+    ///      "description": "Optional Link to the website of the signature
+    /// group.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PlaymatchSignatureGroup {
+        ///When the signature group was created inside playmatch.
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///Optional description of the signature group.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        ///The ID of the signature group.
+        pub id: ::uuid::Uuid,
+        ///The ID of the dat file import this signature group belongs to.
+        pub name: ::std::string::String,
+        ///When the signature group was last updated inside playmatch.
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///Optional Link to the website of the signature group.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub website_link: ::std::option::Option<::std::string::String>,
+    }
+    impl ::std::convert::From<&PlaymatchSignatureGroup> for PlaymatchSignatureGroup {
+        fn from(value: &PlaymatchSignatureGroup) -> Self {
+            value.clone()
+        }
+    }
     ///`PopularityPrimitive`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6748,6 +7973,138 @@ pub mod types {
             value.clone()
         }
     }
+    ///`Suggestion`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "createdAt",
+    ///    "id",
+    ///    "provider",
+    ///    "providerId",
+    ///    "updatedAt"
+    ///  ],
+    ///  "properties": {
+    ///    "comment": {
+    ///      "description": "Optional comment about the suggestion.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "companyId": {
+    ///      "description": "Id of the company this suggestion is for.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "createdAt": {
+    ///      "description": "When the suggestion was created.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "createdBy": {
+    ///      "description": "User Id of the user who created the suggestion.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "gameId": {
+    ///      "description": "Id of the game this suggestion is for.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "id": {
+    ///      "description": "Unique identifier for the suggestion.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "platformId": {
+    ///      "description": "Id of the platform this suggestion is for.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "provider": {
+    ///      "$ref": "#/components/schemas/MetadataProvider"
+    ///    },
+    ///    "providerId": {
+    ///      "description": "The ID of the game, company, or platform on the
+    /// metadata provider.",
+    ///      "type": "string"
+    ///    },
+    ///    "updatedAt": {
+    ///      "description": "When the suggestion was last updated.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct Suggestion {
+        ///Optional comment about the suggestion.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub comment: ::std::option::Option<::std::string::String>,
+        ///Id of the company this suggestion is for.
+        #[serde(
+            rename = "companyId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub company_id: ::std::option::Option<::uuid::Uuid>,
+        ///When the suggestion was created.
+        #[serde(rename = "createdAt")]
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///User Id of the user who created the suggestion.
+        #[serde(
+            rename = "createdBy",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub created_by: ::std::option::Option<::uuid::Uuid>,
+        ///Id of the game this suggestion is for.
+        #[serde(
+            rename = "gameId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub game_id: ::std::option::Option<::uuid::Uuid>,
+        ///Unique identifier for the suggestion.
+        pub id: ::uuid::Uuid,
+        ///Id of the platform this suggestion is for.
+        #[serde(
+            rename = "platformId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub platform_id: ::std::option::Option<::uuid::Uuid>,
+        pub provider: MetadataProvider,
+        ///The ID of the game, company, or platform on the metadata provider.
+        #[serde(rename = "providerId")]
+        pub provider_id: ::std::string::String,
+        ///When the suggestion was last updated.
+        #[serde(rename = "updatedAt")]
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+    impl ::std::convert::From<&Suggestion> for Suggestion {
+        fn from(value: &Suggestion) -> Self {
+            value.clone()
+        }
+    }
     ///`Theme`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6809,27 +8166,53 @@ pub mod types {
             value.clone()
         }
     }
-    ///Result of a manual game match.
+    ///Request to update a user's permissions.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Result of a manual game match.",
+    ///  "description": "Request to update a user's permissions.",
     ///  "type": "object",
     ///  "required": [
+    ///    "new_permission"
+    ///  ],
+    ///  "properties": {
+    ///    "new_permission": {
+    ///      "$ref": "#/components/schemas/UserPermissions"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct UpdateUserPermissionsRequest {
+        pub new_permission: UserPermissions,
+    }
+    impl ::std::convert::From<&UpdateUserPermissionsRequest> for UpdateUserPermissionsRequest {
+        fn from(value: &UpdateUserPermissionsRequest) -> Self {
+            value.clone()
+        }
+    }
+    ///Result of a manual match.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Result of a manual match.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "externalMetadata",
     ///    "id"
     ///  ],
     ///  "properties": {
     ///    "externalMetadata": {
-    ///      "description": "External metadata for the matched game.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ExternalMetadata"
-    ///      }
+    ///      "$ref": "#/components/schemas/ExternalMetadata"
     ///    },
     ///    "id": {
-    ///      "description": "ID of the game.",
+    ///      "description": "ID of the entity matched (game, platform or
+    /// company).",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    }
@@ -6839,19 +8222,206 @@ pub mod types {
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
     pub struct UpdatedMatchResult {
-        ///External metadata for the matched game.
-        #[serde(
-            rename = "externalMetadata",
-            default,
-            skip_serializing_if = "::std::vec::Vec::is_empty"
-        )]
-        pub external_metadata: ::std::vec::Vec<ExternalMetadata>,
-        ///ID of the game.
+        #[serde(rename = "externalMetadata")]
+        pub external_metadata: ExternalMetadata,
+        ///ID of the entity matched (game, platform or company).
         pub id: ::uuid::Uuid,
     }
     impl ::std::convert::From<&UpdatedMatchResult> for UpdatedMatchResult {
         fn from(value: &UpdatedMatchResult) -> Self {
             value.clone()
+        }
+    }
+    ///`UpdatedMetadataMatchesFromSuggestionResponse`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "updated"
+    ///  ],
+    ///  "properties": {
+    ///    "updated": {
+    ///      "type": "integer",
+    ///      "format": "int32"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct UpdatedMetadataMatchesFromSuggestionResponse {
+        pub updated: i32,
+    }
+    impl ::std::convert::From<&UpdatedMetadataMatchesFromSuggestionResponse>
+        for UpdatedMetadataMatchesFromSuggestionResponse
+    {
+        fn from(value: &UpdatedMetadataMatchesFromSuggestionResponse) -> Self {
+            value.clone()
+        }
+    }
+    ///A User inside Playmatch.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A User inside Playmatch.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "createdAt",
+    ///    "id",
+    ///    "permissions",
+    ///    "updatedAt",
+    ///    "username"
+    ///  ],
+    ///  "properties": {
+    ///    "apiKey": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "createdAt": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "discordId": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "permissions": {
+    ///      "$ref": "#/components/schemas/UserPermissions"
+    ///    },
+    ///    "updatedAt": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "username": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct User {
+        #[serde(
+            rename = "apiKey",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub api_key: ::std::option::Option<::std::string::String>,
+        #[serde(rename = "createdAt")]
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        #[serde(
+            rename = "discordId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub discord_id: ::std::option::Option<i64>,
+        pub id: ::uuid::Uuid,
+        pub permissions: UserPermissions,
+        #[serde(rename = "updatedAt")]
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        pub username: ::std::string::String,
+    }
+    impl ::std::convert::From<&User> for User {
+        fn from(value: &User) -> Self {
+            value.clone()
+        }
+    }
+    ///Permission Levels a user can have in Playmatch.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Permission Levels a user can have in Playmatch.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "User",
+    ///    "Trusted",
+    ///    "Automation",
+    ///    "Admin"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum UserPermissions {
+        User,
+        Trusted,
+        Automation,
+        Admin,
+    }
+    impl ::std::convert::From<&Self> for UserPermissions {
+        fn from(value: &UserPermissions) -> Self {
+            value.clone()
+        }
+    }
+    impl ::std::fmt::Display for UserPermissions {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::User => write!(f, "User"),
+                Self::Trusted => write!(f, "Trusted"),
+                Self::Automation => write!(f, "Automation"),
+                Self::Admin => write!(f, "Admin"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for UserPermissions {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "User" => Ok(Self::User),
+                "Trusted" => Ok(Self::Trusted),
+                "Automation" => Ok(Self::Automation),
+                "Admin" => Ok(Self::Admin),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for UserPermissions {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for UserPermissions {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for UserPermissions {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
     ///`WebsiteCategory`
@@ -6932,7 +8502,7 @@ pub mod types {
 ///
 ///
 ///
-///Version: 0.1.0
+///Version: 0.2.0
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -6980,7 +8550,7 @@ impl Client {
     /// This string is pulled directly from the source OpenAPI
     /// document and may be in any format the API selects.
     pub fn api_version(&self) -> &'static str {
-        "0.1.0"
+        "0.2.0"
     }
 }
 #[allow(clippy::all)]
@@ -6991,7 +8561,7 @@ impl Client {
     ///Sends a `GET` request to `/api/companies`
     pub async fn get_all_companies<'a>(
         &'a self,
-    ) -> Result<ResponseValue<::std::vec::Vec<types::CompanyResponse>>, Error<()>> {
+    ) -> Result<ResponseValue<::std::vec::Vec<types::CompanyMetadataResponse>>, Error<()>> {
         let url = format!("{}/api/companies", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(
@@ -7021,7 +8591,7 @@ impl Client {
     pub async fn get_company_by_id<'a>(
         &'a self,
         id: &'a ::uuid::Uuid,
-    ) -> Result<ResponseValue<types::CompanyResponse>, Error<()>> {
+    ) -> Result<ResponseValue<types::CompanyMetadataResponse>, Error<()>> {
         let url = format!(
             "{}/api/companies/{}",
             self.baseurl,
@@ -7050,6 +8620,70 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+    ///Gets a Playmatch game by its ID
+    ///
+    ///Sends a `GET` request to `/api/game/{id}`
+    pub async fn get_playmatch_game_by_id<'a>(
+        &'a self,
+        id: &'a ::uuid::Uuid,
+    ) -> Result<ResponseValue<types::PlaymatchGame>, Error<()>> {
+        let url = format!("{}/api/game/{}", self.baseurl, encode_path(&id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Gets a Playmatch game by its ID, includes all relations
+    ///
+    ///Sends a `GET` request to `/api/game/{id}/with-relations`
+    pub async fn get_playmatch_game_with_relations_by_id<'a>(
+        &'a self,
+        id: &'a ::uuid::Uuid,
+    ) -> Result<ResponseValue<types::GameAndRelationsResult>, Error<()>> {
+        let url = format!(
+            "{}/api/game/{}/with-relations",
+            self.baseurl,
+            encode_path(&id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
     ///Checks if the service is healthy
     ///
     ///Sends a `GET` request to `/api/health`
@@ -7070,8 +8704,8 @@ impl Client {
         }
     }
     ///Identify a game by its file hashes or filename and size, returning the
-    /// matched metadata ids, goes in order sha256, sha1, md5 and filename +
-    /// size (from most accurate to least accurate)
+    /// matched metadata, goes in order sha256, sha1, md5 and filename + size
+    /// (from most accurate to least accurate)
     ///
     ///Sends a `GET` request to `/api/identify/ids`
     ///
@@ -7081,15 +8715,64 @@ impl Client {
     /// - `md5`: Optional MD5 hash of the game file.
     /// - `sha1`: Optional SHA1 hash of the game file.
     /// - `sha256`: Optional SHA256 hash of the game file.
-    pub async fn identify<'a>(
+    pub async fn identify_game_with_metadata_ids<'a>(
         &'a self,
         file_name: &'a str,
         file_size: i64,
         md5: Option<&'a str>,
         sha1: Option<&'a str>,
         sha256: Option<&'a str>,
-    ) -> Result<ResponseValue<types::GameMatchResult>, Error<()>> {
+    ) -> Result<ResponseValue<types::GameMetadataMatchResult>, Error<()>> {
         let url = format!("{}/api/identify/ids", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new("fileName", &file_name))
+            .query(&progenitor_client::QueryParam::new("fileSize", &file_size))
+            .query(&progenitor_client::QueryParam::new("md5", &md5))
+            .query(&progenitor_client::QueryParam::new("sha1", &sha1))
+            .query(&progenitor_client::QueryParam::new("sha256", &sha256))
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Identify a game by its file hashes or filename and size, goes in order
+    /// sha256, sha1, md5 and filename + size (from most accurate to least
+    /// accurate), returning information about the game, game files, publisher
+    /// and company
+    ///
+    ///Sends a `GET` request to `/api/identify/relations`
+    ///
+    ///Arguments:
+    /// - `file_name`: The file name of the game file.
+    /// - `file_size`: The size of the game file in bytes.
+    /// - `md5`: Optional MD5 hash of the game file.
+    /// - `sha1`: Optional SHA1 hash of the game file.
+    /// - `sha256`: Optional SHA256 hash of the game file.
+    pub async fn identify_game_and_relations<'a>(
+        &'a self,
+        file_name: &'a str,
+        file_size: i64,
+        md5: Option<&'a str>,
+        sha1: Option<&'a str>,
+        sha256: Option<&'a str>,
+    ) -> Result<ResponseValue<types::GameAndRelationMatchResult>, Error<()>> {
+        let url = format!("{}/api/identify/relations", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(
             ::reqwest::header::HeaderName::from_static("api-version"),
@@ -7717,19 +9400,22 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
-    ///Endpoint is currently private as community suggestions are still being
-    /// worked on, manually match a game by its file hashes or filename,
-    /// returning the matched game ExternalMetadata
+    ///Manually match a Company by its name, returning the matched
+    /// ExternalMetadata
     ///
-    ///Sends a `POST` request to `/api/match`
+    ///This Endpoint requires Credentials of a User with at least Trusted
+    /// level, if you do not have user credentials and a user account with at
+    /// least Trusted level, use the suggestion endpoints instead.
+    ///
+    ///Sends a `POST` request to `/api/match/manual/company`
     ///
     ///Arguments:
     /// - `body`:
-    pub async fn match_game<'a>(
+    pub async fn manually_match_company<'a>(
         &'a self,
-        body: &'a types::MatchRequest,
-    ) -> Result<ResponseValue<::std::vec::Vec<types::UpdatedMatchResult>>, Error<()>> {
-        let url = format!("{}/api/match", self.baseurl,);
+        body: &'a types::CompanyOrPlatformMatchRequest,
+    ) -> Result<ResponseValue<types::UpdatedMatchResult>, Error<()>> {
+        let url = format!("{}/api/match/manual/company", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(
             ::reqwest::header::HeaderName::from_static("api-version"),
@@ -7750,6 +9436,93 @@ impl Client {
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Manually match a Game by its file hashes, filename or Game name,
+    /// returning the matched game ExternalMetadata
+    ///
+    ///This Endpoint requires Credentials of a User with at least Trusted
+    /// level, if you do not have user credentials and a user account with at
+    /// least Trusted level, use the suggestion endpoints instead.
+    ///
+    ///Sends a `POST` request to `/api/match/manual/game`
+    ///
+    ///Arguments:
+    /// - `body`:
+    pub async fn manually_match_game<'a>(
+        &'a self,
+        body: &'a types::GameMatchRequest,
+    ) -> Result<ResponseValue<::std::vec::Vec<types::UpdatedMatchResult>>, Error<()>> {
+        let url = format!("{}/api/match/manual/game", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Manually match a Platform by its name, returning the matched
+    /// ExternalMetadata
+    ///
+    ///This Endpoint requires Credentials of a User with at least Trusted
+    /// level, if you do not have user credentials and a user account with at
+    /// least Trusted level, use the suggestion endpoints instead.
+    ///
+    ///Sends a `POST` request to `/api/match/manual/platform`
+    ///
+    ///Arguments:
+    /// - `body`:
+    pub async fn manually_match_platform<'a>(
+        &'a self,
+        body: &'a types::CompanyOrPlatformMatchRequest,
+    ) -> Result<ResponseValue<types::UpdatedMatchResult>, Error<()>> {
+        let url = format!("{}/api/match/manual/platform", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
             404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
             _ => Err(Error::UnexpectedResponse(response)),
         }
@@ -7760,7 +9533,7 @@ impl Client {
     ///Sends a `GET` request to `/api/platforms`
     pub async fn get_all_platforms<'a>(
         &'a self,
-    ) -> Result<ResponseValue<::std::vec::Vec<types::PlatformResponse>>, Error<()>> {
+    ) -> Result<ResponseValue<::std::vec::Vec<types::PlatformMetadataResponse>>, Error<()>> {
         let url = format!("{}/api/platforms", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(
@@ -7790,7 +9563,7 @@ impl Client {
     pub async fn get_platform_by_id<'a>(
         &'a self,
         id: &'a ::uuid::Uuid,
-    ) -> Result<ResponseValue<types::PlatformResponse>, Error<()>> {
+    ) -> Result<ResponseValue<types::PlatformMetadataResponse>, Error<()>> {
         let url = format!(
             "{}/api/platforms/{}",
             self.baseurl,
@@ -7835,6 +9608,425 @@ impl Client {
         let response = result?;
         match response.status().as_u16() {
             200u16 => Ok(ResponseValue::empty(response)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Gets all currently pending suggestions
+    ///
+    ///This Endpoint requires Credentials of at least Automation level.
+    ///
+    ///Sends a `GET` request to `/api/suggestion`
+    pub async fn get_all_suggestions<'a>(
+        &'a self,
+    ) -> Result<ResponseValue<::std::vec::Vec<types::Suggestion>>, Error<()>> {
+        let url = format!("{}/api/suggestion", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Adds a suggestion for a manual company metadata match
+    ///
+    ///This Endpoint requires Credentials of a User.
+    ///
+    ///Sends a `POST` request to `/api/suggestion/company`
+    ///
+    ///Arguments:
+    /// - `body`:
+    pub async fn create_company_suggestion<'a>(
+        &'a self,
+        body: &'a types::CompanyOrPlatformSuggestionRequest,
+    ) -> Result<ResponseValue<types::Suggestion>, Error<()>> {
+        let url = format!("{}/api/suggestion/company", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            409u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Adds a suggestion for a manual game metadata match
+    ///
+    ///This Endpoint requires Credentials of a User.
+    ///
+    ///Sends a `POST` request to `/api/suggestion/game`
+    ///
+    ///Arguments:
+    /// - `body`:
+    pub async fn create_game_suggestion<'a>(
+        &'a self,
+        body: &'a types::GameSuggestionRequest,
+    ) -> Result<ResponseValue<types::Suggestion>, Error<()>> {
+        let url = format!("{}/api/suggestion/game", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            409u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Adds a suggestion for a manual platform metadata match
+    ///
+    ///This Endpoint requires Credentials of a User.
+    ///
+    ///Sends a `POST` request to `/api/suggestion/platform`
+    ///
+    ///Arguments:
+    /// - `body`:
+    pub async fn create_platform_suggestion<'a>(
+        &'a self,
+        body: &'a types::CompanyOrPlatformSuggestionRequest,
+    ) -> Result<ResponseValue<types::Suggestion>, Error<()>> {
+        let url = format!("{}/api/suggestion/platform", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            409u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Gets a pending suggestion by id
+    ///
+    ///This Endpoint requires Credentials of at least Automation level.
+    ///
+    ///Sends a `GET` request to `/api/suggestion/{id}`
+    pub async fn get_suggestion_by_id<'a>(
+        &'a self,
+        id: &'a ::uuid::Uuid,
+    ) -> Result<ResponseValue<types::Suggestion>, Error<()>> {
+        let url = format!(
+            "{}/api/suggestion/{}",
+            self.baseurl,
+            encode_path(&id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Declines a suggestion by id
+    ///
+    ///This Endpoint requires Credentials of at least Automation level.
+    ///
+    ///Sends a `DELETE` request to `/api/suggestion/{id}`
+    pub async fn delete_suggestion<'a>(
+        &'a self,
+        id: &'a ::uuid::Uuid,
+    ) -> Result<ResponseValue<()>, Error<()>> {
+        let url = format!(
+            "{}/api/suggestion/{}",
+            self.baseurl,
+            encode_path(&id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self.client.delete(url).headers(header_map).build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            204u16 => Ok(ResponseValue::empty(response)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Approves a suggestion by id
+    ///
+    ///This Endpoint requires Credentials of at least Automation level.
+    ///
+    ///Sends a `POST` request to `/api/suggestion/{id}/accept`
+    pub async fn approve_suggestion<'a>(
+        &'a self,
+        id: &'a ::uuid::Uuid,
+    ) -> Result<ResponseValue<types::UpdatedMetadataMatchesFromSuggestionResponse>, Error<()>> {
+        let url = format!(
+            "{}/api/suggestion/{}/accept",
+            self.baseurl,
+            encode_path(&id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Find a User by their Discord ID
+    ///
+    ///This Endpoint requires Credentials of a User with at least Automation
+    /// level.
+    ///
+    ///Sends a `GET` request to `/api/user`
+    pub async fn get_user_by_discord_id<'a>(
+        &'a self,
+        discord_id: i64,
+    ) -> Result<ResponseValue<types::User>, Error<()>> {
+        let url = format!("{}/api/user", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .query(&progenitor_client::QueryParam::new(
+                "discord_id",
+                &discord_id,
+            ))
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Find or Create a User by their Discord ID
+    ///
+    ///This Endpoint requires Credentials of a User with at least Automation
+    /// level.
+    ///
+    ///Sends a `POST` request to `/api/user/by-discord-id`
+    ///
+    ///Arguments:
+    /// - `body`:
+    pub async fn create_or_get_by_discord_id<'a>(
+        &'a self,
+        body: &'a types::CreateOrGetUserRequest,
+    ) -> Result<ResponseValue<types::User>, Error<()>> {
+        let url = format!("{}/api/user/by-discord-id", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Find a User by their ID
+    ///
+    ///This Endpoint requires Credentials of a User with at least Automation
+    /// level.
+    ///
+    ///Sends a `GET` request to `/api/user/{id}`
+    pub async fn get_user<'a>(
+        &'a self,
+        id: &'a ::uuid::Uuid,
+    ) -> Result<ResponseValue<types::User>, Error<()>> {
+        let url = format!("{}/api/user/{}", self.baseurl, encode_path(&id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+    ///Update a user's Permission Level
+    ///
+    ///This Endpoint requires Credentials of a User with at least Automation
+    /// level.
+    ///
+    ///Sends a `PATCH` request to `/api/user/{id}/permission`
+    ///
+    ///Arguments:
+    /// - `id`
+    /// - `body`:
+    pub async fn update_user_permission_level<'a>(
+        &'a self,
+        id: &'a ::uuid::Uuid,
+        body: &'a types::UpdateUserPermissionsRequest,
+    ) -> Result<ResponseValue<types::User>, Error<()>> {
+        let url = format!(
+            "{}/api/user/{}/permission",
+            self.baseurl,
+            encode_path(&id.to_string()),
+        );
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(
+            ::reqwest::header::HeaderName::from_static("api-version"),
+            ::reqwest::header::HeaderValue::from_static(self.api_version()),
+        );
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .patch(url)
+            .header(
+                ::reqwest::header::ACCEPT,
+                ::reqwest::header::HeaderValue::from_static("application/json"),
+            )
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }

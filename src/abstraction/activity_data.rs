@@ -11,7 +11,7 @@ impl FromStringTuple for ActivityData {
 			"listening" => ActivityData::listening(second),
 			"watching" => ActivityData::watching(second),
 			"competing" => ActivityData::competing(second),
-			_ => ActivityData::custom(format!("{} {}", first, second)),
+			_ => ActivityData::custom(format!("{first} {second}")),
 		}
 	}
 }

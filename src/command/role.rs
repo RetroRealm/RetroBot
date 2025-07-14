@@ -1,5 +1,5 @@
 use crate::abstraction::command::{CommandContext, CommandResult};
-use crate::command::UPDATE_ROLE_ID;
+use crate::command::{RETROREALM_SERVER_ID, UPDATE_ROLE_ID};
 use log::warn;
 use serenity::all::RoleId;
 use std::str::FromStr;
@@ -20,8 +20,8 @@ pub async fn toggle_update_role(ctx: CommandContext<'_>) -> CommandResult {
 
 	let member = ctx.author_member().await;
 
-	if member.is_none() {
-		ctx.say("This command can only be run inside of RetroRealm's Server")
+	if member.is_none() || ctx.guild_id().map(|g| g.get()) == Some(*RETROREALM_SERVER_ID) {
+		ctx.say("This command can only be run inside RetroRealm's Discord Server")
 			.await?;
 		return Ok(());
 	}
