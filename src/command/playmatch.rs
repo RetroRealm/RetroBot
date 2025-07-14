@@ -10,8 +10,10 @@ use playmatch_client::types::ManualMatchMode::{Admin, Trusted};
 use playmatch_client::types::MetadataProvider::Igdb;
 use playmatch_client::types::{
 	CompanyOrPlatformMatchRequest, CompanyOrPlatformSuggestionRequest, CreateOrGetUserRequest,
-	GameMatchRequest, GameSuggestionRequest, UpdateUserPermissionsRequest, UserPermissions,
+	GameMatchRequest, GameMatchType, GameSuggestionRequest, UpdateUserPermissionsRequest,
+	UserPermissions,
 };
+use poise::CreateReply;
 use reqwest::StatusCode;
 use serenity::all::{
 	ButtonStyle, Cache, ChannelId, ComponentInteractionDataKind, CreateEmbedFooter, ShardMessenger,
@@ -80,6 +82,122 @@ pub async fn list_platforms(ctx: CommandContext<'_>) -> CommandResult {
 	let companies = response.into_inner();
 
 	paginate_playmatch_response(ctx, companies).await
+}
+
+/// Gets metadata for a game on Playmatch by hashes or file name and size.
+#[poise::command(slash_command, category = "Playmatch", rename = "game")]
+pub async fn get_game_metadata(
+	ctx: CommandContext<'_>,
+	md5_hash: Option<String>,
+	sha1_hash: Option<String>,
+	sha256_hash: Option<String>,
+	file_name: String,
+	file_size: i64,
+) -> CommandResult {
+	let response = ctx
+		.data()
+		.playmatch_client
+		.identify_game_and_relations(
+			&file_name,
+			file_size,
+			md5_hash.as_deref(),
+			sha1_hash.as_deref(),
+			sha256_hash.as_deref(),
+		)
+		.await?;
+
+	let inner = response.into_inner();
+
+	if inner.game_match_type == GameMatchType::NoMatch {
+		ctx.reply("No matching game found for the provided hashes or file name and size.")
+			.await?;
+		return Ok(());
+	}
+
+	let game = inner.game.ok_or(anyhow!(
+		"No game found for the provided hashes or file name"
+	))?;
+	let game_files = inner.game_files;
+	let platform = inner.platform.ok_or(anyhow!(
+		"No platform found for the provided hashes or file name"
+	))?;
+	let company = inner.company;
+	let dat_file = inner.dat_file.ok_or(anyhow!(
+		"No DAT file found for the provided hashes or file name"
+	))?;
+	let signature_group = inner.signature_group.ok_or(anyhow!(
+		"No signature group found for the provided hashes or file name"
+	))?;
+
+	let files_info = game_files
+		.iter()
+		.enumerate()
+		.map(|(i, file)| {
+			let mut out = format!("**{}. {}**", i + 1, file.file_name);
+			if let Some(size) = file.file_size_in_bytes {
+				out.push_str(&format!("Size: `{:.2} MB`", size as f64 / 1024.0 / 1024.0));
+			}
+			if let Some(serial) = &file.serial {
+				out.push_str(&format!("\nSerial: `{}`", serial));
+			}
+			if let Some(crc) = &file.crc {
+				out.push_str(&format!("\nCRC32: `{}`", crc));
+			}
+			if let Some(md5) = &file.md5 {
+				out.push_str(&format!("\nMD5: `{}`", md5));
+			}
+			if let Some(sha1) = &file.sha1 {
+				out.push_str(&format!("\nSHA1: `{}`", sha1));
+			}
+			if let Some(sha256) = &file.sha256 {
+				out.push_str(&format!("\nSHA256: `{}`", sha256));
+			}
+			out
+		})
+		.collect::<Vec<_>>()
+		.join("\n\n");
+
+	let dat_file_value = match dat_file.tags {
+		None => format!(
+			"**{}**\nCurrent Version: `{}`\n",
+			dat_file.name, dat_file.current_version
+		),
+		Some(tags) => format!(
+			"**{}**\nCurrent Version: `{}`\nTags: `{}`",
+			dat_file.name,
+			dat_file.current_version,
+			tags.join(", ")
+		),
+	};
+
+	let signature_group_value = match signature_group.website_link {
+		None => signature_group.name,
+		Some(website_link) => format!("[{}]({})", signature_group.name, website_link),
+	};
+
+	// Build the embed
+	let mut embed = CreateEmbed::new()
+		.title(game.name)
+		.color(0x2ecc71)
+		.field("Match Type", format!("`{}`", inner.game_match_type), true)
+		.field("Platform", platform.name, true);
+
+	if let Some(c) = company {
+		embed = embed.field("Company", c.name, true)
+	}
+
+	embed = embed
+		.field("ROM Files", files_info, false)
+		.field("DAT File", dat_file_value, true)
+		.field("Signature Group", signature_group_value, false)
+		.footer(CreateEmbedFooter::new(format!(
+			"Playmatch Game ID: {}",
+			game.id
+		)));
+
+	ctx.send(CreateReply::default().embed(embed)).await?;
+
+	Ok(())
 }
 
 /// Creates a metadata match suggestion for a Game by hashes or name to the IGDB database.
