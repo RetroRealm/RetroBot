@@ -201,7 +201,7 @@ pub async fn get_game_metadata(
 }
 
 /// Creates a metadata match suggestion for a Game by hashes or name to the IGDB database.
-#[poise::command(slash_command, category = "Playmatch", rename = "game", check = is_user_trusted_or_above)]
+#[poise::command(slash_command, category = "Playmatch", rename = "game")]
 pub async fn create_game_suggestion(
 	ctx: CommandContext<'_>,
 	igdb_id: i64,
@@ -311,7 +311,7 @@ pub async fn create_game_suggestion(
 }
 
 /// Creates a metadata match suggestion for a Company by name to the IGDB database.
-#[poise::command(slash_command, category = "Playmatch", rename = "company", check = is_user_trusted_or_above)]
+#[poise::command(slash_command, category = "Playmatch", rename = "company")]
 pub async fn create_company_suggestion(
 	ctx: CommandContext<'_>,
 	igdb_id: i64,
@@ -391,7 +391,7 @@ pub async fn create_company_suggestion(
 }
 
 /// Creates a metadata match suggestion for a Platform by name to the IGDB database.
-#[poise::command(slash_command, category = "Playmatch", rename = "platform", check = is_user_trusted_or_above)]
+#[poise::command(slash_command, category = "Playmatch", rename = "platform")]
 pub async fn create_platform_suggestion(
 	ctx: CommandContext<'_>,
 	igdb_id: i64,
