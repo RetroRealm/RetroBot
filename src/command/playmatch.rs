@@ -138,19 +138,19 @@ pub async fn get_game_metadata(
 				out.push_str(&format!("Size: `{:.2} MB`", size as f64 / 1024.0 / 1024.0));
 			}
 			if let Some(serial) = &file.serial {
-				out.push_str(&format!("\nSerial: `{}`", serial));
+				out.push_str(&format!("\nSerial: `{serial}`"));
 			}
 			if let Some(crc) = &file.crc {
-				out.push_str(&format!("\nCRC32: `{}`", crc));
+				out.push_str(&format!("\nCRC32: `{crc}`"));
 			}
 			if let Some(md5) = &file.md5 {
-				out.push_str(&format!("\nMD5: `{}`", md5));
+				out.push_str(&format!("\nMD5: `{md5}`"));
 			}
 			if let Some(sha1) = &file.sha1 {
-				out.push_str(&format!("\nSHA1: `{}`", sha1));
+				out.push_str(&format!("\nSHA1: `{sha1}`"));
 			}
 			if let Some(sha256) = &file.sha256 {
-				out.push_str(&format!("\nSHA256: `{}`", sha256));
+				out.push_str(&format!("\nSHA256: `{sha256}`"));
 			}
 			out
 		})
