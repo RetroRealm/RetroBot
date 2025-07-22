@@ -84,5 +84,8 @@ pub async fn is_user_trusted_or_above(ctx: CommandContext<'_>) -> CheckResult {
 		return Ok(true);
 	}
 
+	ctx.say("You do not have permission to use this command.")
+		.await?;
+
 	Ok(false)
 }
