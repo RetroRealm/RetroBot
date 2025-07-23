@@ -284,6 +284,7 @@ pub async fn create_game_suggestion(
 		let author_id = ctx.author().id;
 		let game_name = game_response.game.name.clone();
 		let platform = game_response.platform.name.clone();
+		let company = game_response.company.clone().map(|c| c.name);
 		async move {
 			handle_suggestion_message(SuggestionMessageHandleData {
 				playmatch_client,
@@ -296,6 +297,8 @@ pub async fn create_game_suggestion(
 				r#type: SuggestionType::Game,
 				name: game_name,
 				platform: Some(platform),
+				company,
+				comment: suggestion.comment,
 			})
 			.await
 		}
@@ -376,6 +379,8 @@ pub async fn create_company_suggestion(
 				r#type: SuggestionType::Company,
 				name: company_name,
 				platform: None,
+				company: None,
+				comment: suggestion.comment,
 			})
 			.await
 		}
@@ -437,6 +442,16 @@ pub async fn create_platform_suggestion(
 		}
 	};
 
+	let platform_id = suggestion.platform_id.ok_or_else(|| {
+		anyhow!("Platform ID is missing in the suggestion response! This should not happen.")
+	})?;
+
+	let platform = ctx
+		.data()
+		.playmatch_client
+		.get_platform_by_id(&platform_id)
+		.await?;
+
 	tokio::spawn({
 		let playmatch_client = ctx.data().playmatch_client.clone();
 		let http = ctx.serenity_context().http.clone();
@@ -445,6 +460,7 @@ pub async fn create_platform_suggestion(
 		let owners = ctx.framework().options().owners.clone();
 		let author_id = ctx.author().id;
 		let platform_name = name.clone();
+		let company = platform.company_name.clone();
 		async move {
 			handle_suggestion_message(SuggestionMessageHandleData {
 				playmatch_client,
@@ -457,6 +473,8 @@ pub async fn create_platform_suggestion(
 				r#type: SuggestionType::Platform,
 				name: platform_name,
 				platform: None,
+				company,
+				comment: suggestion.comment,
 			})
 			.await
 		}
@@ -657,6 +675,8 @@ struct SuggestionMessageHandleData {
 	r#type: SuggestionType,
 	name: String,
 	platform: Option<String>,
+	company: Option<String>,
+	comment: Option<String>,
 }
 
 async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> CommandResult {
@@ -685,13 +705,19 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 	};
 
 	let mut embed = CreateEmbed::new()
-		.title("📝 New Metadata Suggestion")
-		.color(0x3498DB)
-		.field(
-			display_type.to_string(),
-			format!("**{}**", data.name),
-			false,
-		)
+		.title(format!("📝 New {} Metadata Suggestion", display_type))
+		.color(0x3498DB);
+
+	if let Some(company) = &data.company {
+		embed = embed.field("Company", company, true);
+	}
+
+	if let Some(platform) = &data.platform {
+		embed = embed.field("Platform", platform, true);
+	}
+
+	embed = embed
+		.field(display_type.to_string(), format!("**{}**", data.name), true)
 		.field(
 			"Suggested by",
 			format!("<@{}> ({})", author.id, author.name),
@@ -699,13 +725,15 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		)
 		.field("Metadata Provider", "IGDB", true)
 		.field("Provider ID", format!("`{}`", suggestion.provider_id), true)
+		.field(
+			"Comment",
+			data.comment
+				.unwrap_or_else(|| "No comment provided".to_string()),
+			false,
+		)
 		.footer(CreateEmbedFooter::new(
 			"Use the buttons below to approve or decline this suggestion.",
 		));
-
-	if let Some(platform) = &data.platform {
-		embed = embed.field("Platform", platform, true);
-	}
 
 	let message = channel
 		.send_message(
