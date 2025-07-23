@@ -5,7 +5,7 @@ use poise::CreateReply;
 #[poise::command(
 	slash_command,
 	category = "Util",
-	required_permissions = "SEND_MESSAGES"
+	required_bot_permissions = "SEND_MESSAGES"
 )]
 pub async fn help(
 	ctx: CommandContext<'_>,
@@ -24,7 +24,7 @@ Type /help command for more info on a command.",
 #[poise::command(
 	slash_command,
 	category = "Util",
-	required_permissions = "SEND_MESSAGES"
+	required_bot_permissions = "SEND_MESSAGES"
 )]
 pub async fn ping(ctx: CommandContext<'_>) -> CommandResult {
 	let handle = ctx.reply("Calculating....").await?;

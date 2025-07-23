@@ -30,7 +30,7 @@ use uuid::Uuid;
 #[poise::command(
 	slash_command,
 	category = "Playmatch",
-	required_permissions = "SEND_MESSAGES | EMBED_LINKS",
+	required_bot_permissions = "SEND_MESSAGES | EMBED_LINKS",
 	subcommands("list_companies", "list_platforms")
 )]
 pub async fn list(_: CommandContext<'_>) -> CommandResult {
@@ -41,7 +41,7 @@ pub async fn list(_: CommandContext<'_>) -> CommandResult {
 #[poise::command(
 	slash_command,
 	category = "Playmatch",
-	required_permissions = "SEND_MESSAGES | EMBED_LINKS",
+	required_bot_permissions = "SEND_MESSAGES | EMBED_LINKS",
 	rename = "match",
 	subcommands("manual_match_game", "manual_match_platform", "manual_match_company")
 )]
@@ -53,7 +53,7 @@ pub async fn r#match(_: CommandContext<'_>) -> CommandResult {
 #[poise::command(
 	slash_command,
 	category = "Playmatch",
-	required_permissions = "SEND_MESSAGES | EMBED_LINKS",
+	required_bot_permissions = "SEND_MESSAGES | EMBED_LINKS",
 	subcommands(
 		"create_platform_suggestion",
 		"create_company_suggestion",
