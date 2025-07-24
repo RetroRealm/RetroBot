@@ -10,8 +10,8 @@ use playmatch_client::types::ManualMatchMode::{Admin, Trusted};
 use playmatch_client::types::MetadataProvider::Igdb;
 use playmatch_client::types::{
 	CompanyOrPlatformMatchRequest, CompanyOrPlatformSuggestionRequest, CreateOrGetUserRequest,
-	GameMatchRequest, GameMatchType, GameSuggestionRequest, UpdateUserPermissionsRequest,
-	UserPermissions,
+	GameMatchRequest, GameMatchType, GameSuggestionRequest, MatchType,
+	UpdateUserPermissionsRequest, UserPermissions,
 };
 use poise::CreateReply;
 use reqwest::StatusCode;
@@ -156,24 +156,28 @@ pub async fn get_game_metadata(
 			out
 		})
 		.collect::<Vec<_>>()
+		.into_iter()
+		.take(5)
+		.collect::<Vec<_>>()
 		.join("\n\n");
-
-	let dat_file_value = match dat_file.tags {
-		None => format!(
-			"**{}**\nCurrent Version: `{}`\n",
-			dat_file.name, dat_file.current_version
-		),
-		Some(tags) => format!(
-			"**{}**\nCurrent Version: `{}`\nTags: `{}`",
-			dat_file.name,
-			dat_file.current_version,
-			tags.join(", ")
-		),
-	};
 
 	let signature_group_value = match signature_group.website_link {
 		None => signature_group.name,
 		Some(website_link) => format!("[{}]({})", signature_group.name, website_link),
+	};
+
+	let dat_file_value = match dat_file.tags {
+		None => format!(
+			"**{}**\n**Signature Group: {}**\nCurrent Version: `{}`\n",
+			dat_file.name, signature_group_value, dat_file.current_version
+		),
+		Some(tags) => format!(
+			"**{}**\n**Signature Group: {}**\nCurrent Version: `{}`\nTags: `{}`",
+			dat_file.name,
+			signature_group_value,
+			dat_file.current_version,
+			tags.join(", ")
+		),
 	};
 
 	// Build the embed
@@ -189,24 +193,48 @@ pub async fn get_game_metadata(
 
 	embed = embed
 		.field("ROM Files", files_info, false)
-		.field("DAT File", dat_file_value, true)
-		.field("Signature Group", signature_group_value, false);
+		.field("DAT File", dat_file_value, false);
 
 	for metadata_mapping in metadata_mappings {
+		let provider_info = match metadata_mapping.match_type {
+			MatchType::Automatic => {
+				let reason = metadata_mapping
+					.automatic_match_reason
+					.expect("Automatic match reason is missing");
+				let provider_id = metadata_mapping
+					.provider_id
+					.expect("Provider ID is missing for automatic match");
+
+				format!("\nReason: `{}`\nProvider ID: `{}`", reason, provider_id)
+			}
+			MatchType::Manual => {
+				let manual_match_type = metadata_mapping
+					.manual_match_type
+					.expect("Manual match type is missing");
+				let provider_id = metadata_mapping
+					.provider_id
+					.expect("Provider ID is missing for manual match");
+
+				format!(
+					"\nMatched By: `{}`\nProvider ID: `{}`",
+					manual_match_type, provider_id
+				)
+			}
+			MatchType::Failed => {
+				let failed_reason = metadata_mapping
+					.failed_match_reason
+					.expect("Failed match reason is missing");
+
+				format!("\nReason: `{}`", failed_reason)
+			}
+			MatchType::None => {
+				String::new() // No additional info for None
+			}
+		};
+
 		embed = embed.field(
-			format!("{} Mapping:", metadata_mapping.provider_name),
-			format!(
-				"Status: `{}`{}",
-				metadata_mapping.match_type,
-				if let Some(provider_id) = metadata_mapping.provider_id {
-					format!(
-						"\nMatch Type: `{}`\nProvider ID: `{}`",
-						metadata_mapping.match_type, provider_id
-					)
-				} else {
-					"".to_string()
-				}
-			),
+			format!("{} Metadata Mapping", metadata_mapping.provider_name),
+			format!("Status: `{}`{}", metadata_mapping.match_type, provider_info),
 			true,
 		);
 	}
