@@ -121,6 +121,7 @@ pub async fn get_game_metadata(
 	let platform = inner.platform.ok_or(anyhow!(
 		"No platform found for the provided hashes or file name"
 	))?;
+	let metadata_mappings = inner.external_metadata;
 	let company = inner.company;
 	let dat_file = inner.dat_file.ok_or(anyhow!(
 		"No DAT file found for the provided hashes or file name"
@@ -189,11 +190,31 @@ pub async fn get_game_metadata(
 	embed = embed
 		.field("ROM Files", files_info, false)
 		.field("DAT File", dat_file_value, true)
-		.field("Signature Group", signature_group_value, false)
-		.footer(CreateEmbedFooter::new(format!(
-			"Playmatch Game ID: {}",
-			game.id
-		)));
+		.field("Signature Group", signature_group_value, false);
+
+	for metadata_mapping in metadata_mappings {
+		embed = embed.field(
+			format!("{} Mapping:", metadata_mapping.provider_name),
+			format!(
+				"Status: `{}`{}",
+				metadata_mapping.match_type,
+				if let Some(provider_id) = metadata_mapping.provider_id {
+					format!(
+						"\nMatch Type: `{}`\nProvider ID: `{}`",
+						metadata_mapping.match_type, provider_id
+					)
+				} else {
+					"".to_string()
+				}
+			),
+			true,
+		);
+	}
+
+	embed = embed.footer(CreateEmbedFooter::new(format!(
+		"Playmatch Game ID: {}",
+		game.id
+	)));
 
 	ctx.send(CreateReply::default().embed(embed)).await?;
 

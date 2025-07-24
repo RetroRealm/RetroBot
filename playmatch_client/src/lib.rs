@@ -17,22 +17,26 @@ pub mod types {
                 ::std::fmt::Display::fmt(&self.0, f)
             }
         }
+
         impl ::std::fmt::Debug for ConversionError {
             fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> Result<(), ::std::fmt::Error> {
                 ::std::fmt::Debug::fmt(&self.0, f)
             }
         }
+
         impl From<&'static str> for ConversionError {
             fn from(value: &'static str) -> Self {
                 Self(value.into())
             }
         }
+
         impl From<String> for ConversionError {
             fn from(value: String) -> Self {
                 Self(value.into())
             }
         }
     }
+
     ///`AgeRating`
     ///
     /// <details><summary>JSON schema</summary>
@@ -100,11 +104,13 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub synopsis: ::std::option::Option<::std::string::String>,
     }
+
     impl ::std::convert::From<&AgeRating> for AgeRating {
         fn from(value: &AgeRating) -> Self {
             value.clone()
         }
     }
+
     ///`AgeRatingCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -133,16 +139,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<AgeRatingCategory> for i64 {
         fn from(value: AgeRatingCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&AgeRatingCategory> for AgeRatingCategory {
         fn from(value: &AgeRatingCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for AgeRatingCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -153,6 +162,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for AgeRatingCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -162,6 +172,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`AgeRatingContentCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -268,16 +279,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<AgeRatingContentCategory> for i64 {
         fn from(value: AgeRatingContentCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&AgeRatingContentCategory> for AgeRatingContentCategory {
         fn from(value: &AgeRatingContentCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for AgeRatingContentCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -300,6 +314,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for AgeRatingContentCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -309,6 +324,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`AgeRatingContentDescription`
     ///
     /// <details><summary>JSON schema</summary>
@@ -348,11 +364,13 @@ pub mod types {
         pub description: ::std::string::String,
         pub id: i32,
     }
+
     impl ::std::convert::From<&AgeRatingContentDescription> for AgeRatingContentDescription {
         fn from(value: &AgeRatingContentDescription) -> Self {
             value.clone()
         }
     }
+
     ///`AgeRatingEnum`
     ///
     /// <details><summary>JSON schema</summary>
@@ -413,16 +431,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<AgeRatingEnum> for i64 {
         fn from(value: AgeRatingEnum) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&AgeRatingEnum> for AgeRatingEnum {
         fn from(value: &AgeRatingEnum) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for AgeRatingEnum {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -440,6 +461,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for AgeRatingEnum {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -449,6 +471,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`AlternativeName`
     ///
     /// <details><summary>JSON schema</summary>
@@ -497,11 +520,13 @@ pub mod types {
         pub id: i32,
         pub name: ::std::string::String,
     }
+
     impl ::std::convert::From<&AlternativeName> for AlternativeName {
         fn from(value: &AlternativeName) -> Self {
             value.clone()
         }
     }
+
     ///`Artwork`
     ///
     /// <details><summary>JSON schema</summary>
@@ -575,11 +600,13 @@ pub mod types {
         pub url: ::std::string::String,
         pub width: i32,
     }
+
     impl ::std::convert::From<&Artwork> for Artwork {
         fn from(value: &Artwork) -> Self {
             value.clone()
         }
     }
+
     ///Reason why a game was automatically matched.
     ///
     /// <details><summary>JSON schema</summary>
@@ -615,11 +642,13 @@ pub mod types {
         ViaChild,
         ViaParent,
     }
+
     impl ::std::convert::From<&Self> for AutomaticMatchReason {
         fn from(value: &AutomaticMatchReason) -> Self {
             value.clone()
         }
     }
+
     impl ::std::fmt::Display for AutomaticMatchReason {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -630,6 +659,7 @@ pub mod types {
             }
         }
     }
+
     impl ::std::str::FromStr for AutomaticMatchReason {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -642,12 +672,14 @@ pub mod types {
             }
         }
     }
+
     impl ::std::convert::TryFrom<&str> for AutomaticMatchReason {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<&::std::string::String> for AutomaticMatchReason {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -656,6 +688,7 @@ pub mod types {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<::std::string::String> for AutomaticMatchReason {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -664,6 +697,7 @@ pub mod types {
             value.parse()
         }
     }
+
     ///`Character`
     ///
     /// <details><summary>JSON schema</summary>
@@ -763,11 +797,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&Character> for Character {
         fn from(value: &Character) -> Self {
             value.clone()
         }
     }
+
     ///`CharacterGender`
     ///
     /// <details><summary>JSON schema</summary>
@@ -792,16 +828,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<CharacterGender> for i64 {
         fn from(value: CharacterGender) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&CharacterGender> for CharacterGender {
         fn from(value: &CharacterGender) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for CharacterGender {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -812,6 +851,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for CharacterGender {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -821,6 +861,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`CharacterSpecies`
     ///
     /// <details><summary>JSON schema</summary>
@@ -847,16 +888,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<CharacterSpecies> for i64 {
         fn from(value: CharacterSpecies) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&CharacterSpecies> for CharacterSpecies {
         fn from(value: &CharacterSpecies) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for CharacterSpecies {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -867,6 +911,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for CharacterSpecies {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -876,6 +921,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`Collection`
     ///
     /// <details><summary>JSON schema</summary>
@@ -972,11 +1018,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&Collection> for Collection {
         fn from(value: &Collection) -> Self {
             value.clone()
         }
     }
+
     ///`CollectionMembership`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1037,11 +1085,13 @@ pub mod types {
         pub type_: i32,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&CollectionMembership> for CollectionMembership {
         fn from(value: &CollectionMembership) -> Self {
             value.clone()
         }
     }
+
     ///`CollectionMembershipType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1099,11 +1149,13 @@ pub mod types {
         pub name: ::std::string::String,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&CollectionMembershipType> for CollectionMembershipType {
         fn from(value: &CollectionMembershipType) -> Self {
             value.clone()
         }
     }
+
     ///`CollectionRelation`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1164,11 +1216,13 @@ pub mod types {
         pub type_: i32,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&CollectionRelation> for CollectionRelation {
         fn from(value: &CollectionRelation) -> Self {
             value.clone()
         }
     }
+
     ///`CollectionRelationType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1232,11 +1286,13 @@ pub mod types {
         pub name: ::std::string::String,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&CollectionRelationType> for CollectionRelationType {
         fn from(value: &CollectionRelationType) -> Self {
             value.clone()
         }
     }
+
     ///`CollectionType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1288,11 +1344,13 @@ pub mod types {
         pub name: ::std::string::String,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&CollectionType> for CollectionType {
         fn from(value: &CollectionType) -> Self {
             value.clone()
         }
     }
+
     ///`Company`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1482,11 +1540,13 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub websites: ::std::option::Option<::std::vec::Vec<i32>>,
     }
+
     impl ::std::convert::From<&Company> for Company {
         fn from(value: &Company) -> Self {
             value.clone()
         }
     }
+
     ///`CompanyChangeDateCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1516,16 +1576,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<CompanyChangeDateCategory> for i64 {
         fn from(value: CompanyChangeDateCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&CompanyChangeDateCategory> for CompanyChangeDateCategory {
         fn from(value: &CompanyChangeDateCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for CompanyChangeDateCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -1536,6 +1599,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for CompanyChangeDateCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -1545,6 +1609,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`CompanyLogo`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1612,11 +1677,13 @@ pub mod types {
         pub url: ::std::string::String,
         pub width: i32,
     }
+
     impl ::std::convert::From<&CompanyLogo> for CompanyLogo {
         fn from(value: &CompanyLogo) -> Self {
             value.clone()
         }
     }
+
     ///Response for a company including external metadata.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1664,11 +1731,13 @@ pub mod types {
         ///The name of the company.
         pub name: ::std::string::String,
     }
+
     impl ::std::convert::From<&CompanyMetadataResponse> for CompanyMetadataResponse {
         fn from(value: &CompanyMetadataResponse) -> Self {
             value.clone()
         }
     }
+
     ///`CompanyOrPlatformMatchRequest`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1742,11 +1811,13 @@ pub mod types {
         )]
         pub user_id: ::std::option::Option<::uuid::Uuid>,
     }
+
     impl ::std::convert::From<&CompanyOrPlatformMatchRequest> for CompanyOrPlatformMatchRequest {
         fn from(value: &CompanyOrPlatformMatchRequest) -> Self {
             value.clone()
         }
     }
+
     ///`CompanyOrPlatformSuggestionRequest`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1814,6 +1885,7 @@ pub mod types {
         )]
         pub user_id: ::std::option::Option<::uuid::Uuid>,
     }
+
     impl ::std::convert::From<&CompanyOrPlatformSuggestionRequest>
         for CompanyOrPlatformSuggestionRequest
     {
@@ -1821,6 +1893,7 @@ pub mod types {
             value.clone()
         }
     }
+
     ///`CompanyStartDateCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1850,16 +1923,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<CompanyStartDateCategory> for i64 {
         fn from(value: CompanyStartDateCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&CompanyStartDateCategory> for CompanyStartDateCategory {
         fn from(value: &CompanyStartDateCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for CompanyStartDateCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -1870,6 +1946,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for CompanyStartDateCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -1879,6 +1956,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`CompanyWebsite`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1926,11 +2004,13 @@ pub mod types {
         pub trusted: ::std::option::Option<bool>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&CompanyWebsite> for CompanyWebsite {
         fn from(value: &CompanyWebsite) -> Self {
             value.clone()
         }
     }
+
     ///`CompanyWebsiteCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1969,16 +2049,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<CompanyWebsiteCategory> for i64 {
         fn from(value: CompanyWebsiteCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&CompanyWebsiteCategory> for CompanyWebsiteCategory {
         fn from(value: &CompanyWebsiteCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for CompanyWebsiteCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -1994,6 +2077,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for CompanyWebsiteCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -2003,6 +2087,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`Cover`
     ///
     /// <details><summary>JSON schema</summary>
@@ -2085,11 +2170,13 @@ pub mod types {
         pub url: ::std::string::String,
         pub width: i32,
     }
+
     impl ::std::convert::From<&Cover> for Cover {
         fn from(value: &Cover) -> Self {
             value.clone()
         }
     }
+
     ///Request to get or create a user by their Discord ID.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2124,11 +2211,13 @@ pub mod types {
         pub permissions: UserPermissions,
         pub username: ::std::string::String,
     }
+
     impl ::std::convert::From<&CreateOrGetUserRequest> for CreateOrGetUserRequest {
         fn from(value: &CreateOrGetUserRequest) -> Self {
             value.clone()
         }
     }
+
     ///`Event`
     ///
     /// <details><summary>JSON schema</summary>
@@ -2255,11 +2344,13 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub videos: ::std::option::Option<::std::vec::Vec<i32>>,
     }
+
     impl ::std::convert::From<&Event> for Event {
         fn from(value: &Event) -> Self {
             value.clone()
         }
     }
+
     ///`EventLogo`
     ///
     /// <details><summary>JSON schema</summary>
@@ -2345,11 +2436,13 @@ pub mod types {
         pub url: ::std::string::String,
         pub width: i32,
     }
+
     impl ::std::convert::From<&EventLogo> for EventLogo {
         fn from(value: &EventLogo) -> Self {
             value.clone()
         }
     }
+
     ///`EventNetwork`
     ///
     /// <details><summary>JSON schema</summary>
@@ -2408,11 +2501,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&EventNetwork> for EventNetwork {
         fn from(value: &EventNetwork) -> Self {
             value.clone()
         }
     }
+
     ///`ExternalGame`
     ///
     /// <details><summary>JSON schema</summary>
@@ -2515,11 +2610,13 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub year: ::std::option::Option<i32>,
     }
+
     impl ::std::convert::From<&ExternalGame> for ExternalGame {
         fn from(value: &ExternalGame) -> Self {
             value.clone()
         }
     }
+
     ///`ExternalGameCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -2561,16 +2658,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<ExternalGameCategory> for i64 {
         fn from(value: ExternalGameCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&ExternalGameCategory> for ExternalGameCategory {
         fn from(value: &ExternalGameCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for ExternalGameCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -2586,6 +2686,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for ExternalGameCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -2595,6 +2696,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`ExternalGameMedia`
     ///
     /// <details><summary>JSON schema</summary>
@@ -2618,16 +2720,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<ExternalGameMedia> for i64 {
         fn from(value: ExternalGameMedia) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&ExternalGameMedia> for ExternalGameMedia {
         fn from(value: &ExternalGameMedia) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for ExternalGameMedia {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -2638,6 +2743,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for ExternalGameMedia {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -2647,6 +2753,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///External metadata for a game/platform/company.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2761,11 +2868,13 @@ pub mod types {
         #[serde(rename = "providerName")]
         pub provider_name: MetadataProvider,
     }
+
     impl ::std::convert::From<&ExternalMetadata> for ExternalMetadata {
         fn from(value: &ExternalMetadata) -> Self {
             value.clone()
         }
     }
+
     ///Reason why an automatic match failed.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2797,11 +2906,13 @@ pub mod types {
         NoDirectMatch,
         TooManyMatches,
     }
+
     impl ::std::convert::From<&Self> for FailedMatchReason {
         fn from(value: &FailedMatchReason) -> Self {
             value.clone()
         }
     }
+
     impl ::std::fmt::Display for FailedMatchReason {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -2810,6 +2921,7 @@ pub mod types {
             }
         }
     }
+
     impl ::std::str::FromStr for FailedMatchReason {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -2820,12 +2932,14 @@ pub mod types {
             }
         }
     }
+
     impl ::std::convert::TryFrom<&str> for FailedMatchReason {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<&::std::string::String> for FailedMatchReason {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -2834,6 +2948,7 @@ pub mod types {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<::std::string::String> for FailedMatchReason {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -2842,6 +2957,7 @@ pub mod types {
             value.parse()
         }
     }
+
     ///`Franchise`
     ///
     /// <details><summary>JSON schema</summary>
@@ -2910,11 +3026,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&Franchise> for Franchise {
         fn from(value: &Franchise) -> Self {
             value.clone()
         }
     }
+
     ///`Game`
     ///
     /// <details><summary>JSON schema</summary>
@@ -3526,11 +3644,13 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub websites: ::std::option::Option<::std::vec::Vec<i32>>,
     }
+
     impl ::std::convert::From<&Game> for Game {
         fn from(value: &Game) -> Self {
             value.clone()
         }
     }
+
     ///Result of a game match including company, platform and files.
     ///
     /// <details><summary>JSON schema</summary>
@@ -3585,6 +3705,14 @@ pub mod types {
     ///          ]
     ///        }
     ///      ]
+    ///    },
+    ///    "externalMetadata": {
+    ///      "description": "If a match was found, External metadata for the
+    /// game.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ExternalMetadata"
+    ///      }
     ///    },
     ///    "game": {
     ///      "oneOf": [
@@ -3659,6 +3787,13 @@ pub mod types {
             skip_serializing_if = "::std::option::Option::is_none"
         )]
         pub dat_file_import: ::std::option::Option<PlaymatchDatFileImport>,
+        ///If a match was found, External metadata for the game.
+        #[serde(
+            rename = "externalMetadata",
+            default,
+            skip_serializing_if = "::std::vec::Vec::is_empty"
+        )]
+        pub external_metadata: ::std::vec::Vec<ExternalMetadata>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub game: ::std::option::Option<PlaymatchGame>,
         ///If a match was found, the game files for this game.
@@ -3679,11 +3814,13 @@ pub mod types {
         )]
         pub signature_group: ::std::option::Option<PlaymatchSignatureGroup>,
     }
+
     impl ::std::convert::From<&GameAndRelationMatchResult> for GameAndRelationMatchResult {
         fn from(value: &GameAndRelationMatchResult) -> Self {
             value.clone()
         }
     }
+
     ///Result of a game match including company, platform and files.
     ///
     /// <details><summary>JSON schema</summary>
@@ -3762,11 +3899,13 @@ pub mod types {
         #[serde(rename = "signatureGroup")]
         pub signature_group: PlaymatchSignatureGroup,
     }
+
     impl ::std::convert::From<&GameAndRelationsResult> for GameAndRelationsResult {
         fn from(value: &GameAndRelationsResult) -> Self {
             value.clone()
         }
     }
+
     ///`GameCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -3803,16 +3942,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<GameCategory> for i64 {
         fn from(value: GameCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&GameCategory> for GameCategory {
         fn from(value: &GameCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for GameCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -3828,6 +3970,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for GameCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -3837,6 +3980,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`GameEngine`
     ///
     /// <details><summary>JSON schema</summary>
@@ -3934,11 +4078,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&GameEngine> for GameEngine {
         fn from(value: &GameEngine) -> Self {
             value.clone()
         }
     }
+
     ///`GameEngineLogo`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4006,11 +4152,13 @@ pub mod types {
         pub url: ::std::string::String,
         pub width: i32,
     }
+
     impl ::std::convert::From<&GameEngineLogo> for GameEngineLogo {
         fn from(value: &GameEngineLogo) -> Self {
             value.clone()
         }
     }
+
     ///`GameLocalization`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4081,11 +4229,13 @@ pub mod types {
         pub region: ::std::option::Option<i32>,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&GameLocalization> for GameLocalization {
         fn from(value: &GameLocalization) -> Self {
             value.clone()
         }
     }
+
     ///`GameMatchRequest`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4191,11 +4341,13 @@ pub mod types {
         )]
         pub user_id: ::std::option::Option<::uuid::Uuid>,
     }
+
     impl ::std::convert::From<&GameMatchRequest> for GameMatchRequest {
         fn from(value: &GameMatchRequest) -> Self {
             value.clone()
         }
     }
+
     ///Type of match for this game.
     ///
     /// <details><summary>JSON schema</summary>
@@ -4236,11 +4388,13 @@ pub mod types {
         FileNameAndSize,
         NoMatch,
     }
+
     impl ::std::convert::From<&Self> for GameMatchType {
         fn from(value: &GameMatchType) -> Self {
             value.clone()
         }
     }
+
     impl ::std::fmt::Display for GameMatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -4252,6 +4406,7 @@ pub mod types {
             }
         }
     }
+
     impl ::std::str::FromStr for GameMatchType {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -4265,12 +4420,14 @@ pub mod types {
             }
         }
     }
+
     impl ::std::convert::TryFrom<&str> for GameMatchType {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<&::std::string::String> for GameMatchType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -4279,6 +4436,7 @@ pub mod types {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<::std::string::String> for GameMatchType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -4287,6 +4445,7 @@ pub mod types {
             value.parse()
         }
     }
+
     ///Result of a game match, containing external metadata ids.
     ///
     /// <details><summary>JSON schema</summary>
@@ -4337,11 +4496,13 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub id: ::std::option::Option<::uuid::Uuid>,
     }
+
     impl ::std::convert::From<&GameMetadataMatchResult> for GameMetadataMatchResult {
         fn from(value: &GameMetadataMatchResult) -> Self {
             value.clone()
         }
     }
+
     ///`GameMode`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4398,11 +4559,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&GameMode> for GameMode {
         fn from(value: &GameMode) -> Self {
             value.clone()
         }
     }
+
     ///`GameStatus`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4432,16 +4595,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<GameStatus> for i64 {
         fn from(value: GameStatus) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&GameStatus> for GameStatus {
         fn from(value: &GameStatus) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for GameStatus {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -4452,6 +4618,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for GameStatus {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -4461,6 +4628,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`GameSuggestionRequest`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4560,11 +4728,13 @@ pub mod types {
         )]
         pub user_id: ::std::option::Option<::uuid::Uuid>,
     }
+
     impl ::std::convert::From<&GameSuggestionRequest> for GameSuggestionRequest {
         fn from(value: &GameSuggestionRequest) -> Self {
             value.clone()
         }
     }
+
     ///`GameVersion`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4641,11 +4811,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&GameVersion> for GameVersion {
         fn from(value: &GameVersion) -> Self {
             value.clone()
         }
     }
+
     ///`GameVersionFeature`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4708,11 +4880,13 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub values: ::std::option::Option<::std::vec::Vec<i32>>,
     }
+
     impl ::std::convert::From<&GameVersionFeature> for GameVersionFeature {
         fn from(value: &GameVersionFeature) -> Self {
             value.clone()
         }
     }
+
     ///`GameVersionFeatureCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4736,16 +4910,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<GameVersionFeatureCategory> for i64 {
         fn from(value: GameVersionFeatureCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&GameVersionFeatureCategory> for GameVersionFeatureCategory {
         fn from(value: &GameVersionFeatureCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for GameVersionFeatureCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -4756,6 +4933,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for GameVersionFeatureCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -4765,6 +4943,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`GameVersionFeatureValue`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4819,11 +4998,13 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub note: ::std::option::Option<::std::string::String>,
     }
+
     impl ::std::convert::From<&GameVersionFeatureValue> for GameVersionFeatureValue {
         fn from(value: &GameVersionFeatureValue) -> Self {
             value.clone()
         }
     }
+
     ///`GameVersionFeatureValueEnum`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4848,16 +5029,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<GameVersionFeatureValueEnum> for i64 {
         fn from(value: GameVersionFeatureValueEnum) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&GameVersionFeatureValueEnum> for GameVersionFeatureValueEnum {
         fn from(value: &GameVersionFeatureValueEnum) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for GameVersionFeatureValueEnum {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -4868,6 +5052,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for GameVersionFeatureValueEnum {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -4877,6 +5062,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`GameVideo`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4922,11 +5108,13 @@ pub mod types {
         pub name: ::std::string::String,
         pub video_id: ::std::string::String,
     }
+
     impl ::std::convert::From<&GameVideo> for GameVideo {
         fn from(value: &GameVideo) -> Self {
             value.clone()
         }
     }
+
     ///`Genre`
     ///
     /// <details><summary>JSON schema</summary>
@@ -4983,11 +5171,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&Genre> for Genre {
         fn from(value: &Genre) -> Self {
             value.clone()
         }
     }
+
     ///`InvolvedCompany`
     ///
     /// <details><summary>JSON schema</summary>
@@ -5061,11 +5251,13 @@ pub mod types {
         pub supporting: bool,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&InvolvedCompany> for InvolvedCompany {
         fn from(value: &InvolvedCompany) -> Self {
             value.clone()
         }
     }
+
     ///`Keyword`
     ///
     /// <details><summary>JSON schema</summary>
@@ -5122,11 +5314,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&Keyword> for Keyword {
         fn from(value: &Keyword) -> Self {
             value.clone()
         }
     }
+
     ///`Language`
     ///
     /// <details><summary>JSON schema</summary>
@@ -5183,11 +5377,13 @@ pub mod types {
         pub native_name: ::std::string::String,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&Language> for Language {
         fn from(value: &Language) -> Self {
             value.clone()
         }
     }
+
     ///`LanguageSupport`
     ///
     /// <details><summary>JSON schema</summary>
@@ -5247,11 +5443,13 @@ pub mod types {
         pub language_support_type: i32,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&LanguageSupport> for LanguageSupport {
         fn from(value: &LanguageSupport) -> Self {
             value.clone()
         }
     }
+
     ///`LanguageSupportType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -5298,11 +5496,13 @@ pub mod types {
         pub name: ::std::string::String,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&LanguageSupportType> for LanguageSupportType {
         fn from(value: &LanguageSupportType) -> Self {
             value.clone()
         }
     }
+
     ///How a game was manually matched.
     ///
     /// <details><summary>JSON schema</summary>
@@ -5336,11 +5536,13 @@ pub mod types {
         Community,
         Trusted,
     }
+
     impl ::std::convert::From<&Self> for ManualMatchMode {
         fn from(value: &ManualMatchMode) -> Self {
             value.clone()
         }
     }
+
     impl ::std::fmt::Display for ManualMatchMode {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -5350,6 +5552,7 @@ pub mod types {
             }
         }
     }
+
     impl ::std::str::FromStr for ManualMatchMode {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -5361,12 +5564,14 @@ pub mod types {
             }
         }
     }
+
     impl ::std::convert::TryFrom<&str> for ManualMatchMode {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<&::std::string::String> for ManualMatchMode {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -5375,6 +5580,7 @@ pub mod types {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<::std::string::String> for ManualMatchMode {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -5383,6 +5589,7 @@ pub mod types {
             value.parse()
         }
     }
+
     ///Match types for a game
     ///
     /// <details><summary>JSON schema</summary>
@@ -5418,11 +5625,13 @@ pub mod types {
         Manual,
         None,
     }
+
     impl ::std::convert::From<&Self> for MatchType {
         fn from(value: &MatchType) -> Self {
             value.clone()
         }
     }
+
     impl ::std::fmt::Display for MatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -5433,6 +5642,7 @@ pub mod types {
             }
         }
     }
+
     impl ::std::str::FromStr for MatchType {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -5445,12 +5655,14 @@ pub mod types {
             }
         }
     }
+
     impl ::std::convert::TryFrom<&str> for MatchType {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<&::std::string::String> for MatchType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -5459,6 +5671,7 @@ pub mod types {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<::std::string::String> for MatchType {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -5467,6 +5680,7 @@ pub mod types {
             value.parse()
         }
     }
+
     ///Metadata provider for game/platform/company.
     ///
     /// <details><summary>JSON schema</summary>
@@ -5497,11 +5711,13 @@ pub mod types {
         #[serde(rename = "IGDB")]
         Igdb,
     }
+
     impl ::std::convert::From<&Self> for MetadataProvider {
         fn from(value: &MetadataProvider) -> Self {
             value.clone()
         }
     }
+
     impl ::std::fmt::Display for MetadataProvider {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -5509,6 +5725,7 @@ pub mod types {
             }
         }
     }
+
     impl ::std::str::FromStr for MetadataProvider {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -5518,12 +5735,14 @@ pub mod types {
             }
         }
     }
+
     impl ::std::convert::TryFrom<&str> for MetadataProvider {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<&::std::string::String> for MetadataProvider {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -5532,6 +5751,7 @@ pub mod types {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<::std::string::String> for MetadataProvider {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -5540,6 +5760,7 @@ pub mod types {
             value.parse()
         }
     }
+
     ///`MultiplayerMode`
     ///
     /// <details><summary>JSON schema</summary>
@@ -5652,11 +5873,13 @@ pub mod types {
         pub splitscreen: bool,
         pub splitscreenonline: bool,
     }
+
     impl ::std::convert::From<&MultiplayerMode> for MultiplayerMode {
         fn from(value: &MultiplayerMode) -> Self {
             value.clone()
         }
     }
+
     ///`NetworkType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -5715,11 +5938,13 @@ pub mod types {
         pub name: ::std::string::String,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&NetworkType> for NetworkType {
         fn from(value: &NetworkType) -> Self {
             value.clone()
         }
     }
+
     ///`Platform`
     ///
     /// <details><summary>JSON schema</summary>
@@ -5856,11 +6081,13 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub websites: ::std::option::Option<::std::vec::Vec<i32>>,
     }
+
     impl ::std::convert::From<&Platform> for Platform {
         fn from(value: &Platform) -> Self {
             value.clone()
         }
     }
+
     ///`PlatformCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -5888,16 +6115,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<PlatformCategory> for i64 {
         fn from(value: PlatformCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&PlatformCategory> for PlatformCategory {
         fn from(value: &PlatformCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for PlatformCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -5908,6 +6138,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for PlatformCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -5917,6 +6148,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`PlatformFamily`
     ///
     /// <details><summary>JSON schema</summary>
@@ -5956,11 +6188,13 @@ pub mod types {
         pub name: ::std::string::String,
         pub slug: ::std::string::String,
     }
+
     impl ::std::convert::From<&PlatformFamily> for PlatformFamily {
         fn from(value: &PlatformFamily) -> Self {
             value.clone()
         }
     }
+
     ///`PlatformLogo`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6028,11 +6262,13 @@ pub mod types {
         pub url: ::std::string::String,
         pub width: i32,
     }
+
     impl ::std::convert::From<&PlatformLogo> for PlatformLogo {
         fn from(value: &PlatformLogo) -> Self {
             value.clone()
         }
     }
+
     ///Response for a platform including external metadata.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6111,11 +6347,13 @@ pub mod types {
         ///The name of the platform.
         pub name: ::std::string::String,
     }
+
     impl ::std::convert::From<&PlatformMetadataResponse> for PlatformMetadataResponse {
         fn from(value: &PlatformMetadataResponse) -> Self {
             value.clone()
         }
     }
+
     ///`PlatformVersion`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6290,11 +6528,13 @@ pub mod types {
         pub summary: ::std::option::Option<::std::string::String>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&PlatformVersion> for PlatformVersion {
         fn from(value: &PlatformVersion) -> Self {
             value.clone()
         }
     }
+
     ///`PlatformVersionCompany`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6348,11 +6588,13 @@ pub mod types {
         pub id: i32,
         pub manufacturer: bool,
     }
+
     impl ::std::convert::From<&PlatformVersionCompany> for PlatformVersionCompany {
         fn from(value: &PlatformVersionCompany) -> Self {
             value.clone()
         }
     }
+
     ///`PlatformVersionReleaseDate`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6433,11 +6675,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub y: i32,
     }
+
     impl ::std::convert::From<&PlatformVersionReleaseDate> for PlatformVersionReleaseDate {
         fn from(value: &PlatformVersionReleaseDate) -> Self {
             value.clone()
         }
     }
+
     ///`PlatformVersionReleaseDateCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6467,11 +6711,13 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<PlatformVersionReleaseDateCategory> for i64 {
         fn from(value: PlatformVersionReleaseDateCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&PlatformVersionReleaseDateCategory>
         for PlatformVersionReleaseDateCategory
     {
@@ -6479,6 +6725,7 @@ pub mod types {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for PlatformVersionReleaseDateCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -6489,6 +6736,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for PlatformVersionReleaseDateCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -6498,6 +6746,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`PlatformVersionReleaseDateRegion`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6529,16 +6778,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<PlatformVersionReleaseDateRegion> for i64 {
         fn from(value: PlatformVersionReleaseDateRegion) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&PlatformVersionReleaseDateRegion> for PlatformVersionReleaseDateRegion {
         fn from(value: &PlatformVersionReleaseDateRegion) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for PlatformVersionReleaseDateRegion {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -6553,6 +6805,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for PlatformVersionReleaseDateRegion {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -6562,6 +6815,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`PlatformWebsite`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6609,11 +6863,13 @@ pub mod types {
         pub trusted: ::std::option::Option<bool>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&PlatformWebsite> for PlatformWebsite {
         fn from(value: &PlatformWebsite) -> Self {
             value.clone()
         }
     }
+
     ///`PlatformWebsiteCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6654,16 +6910,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<PlatformWebsiteCategory> for i64 {
         fn from(value: PlatformWebsiteCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&PlatformWebsiteCategory> for PlatformWebsiteCategory {
         fn from(value: &PlatformWebsiteCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for PlatformWebsiteCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -6679,6 +6938,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for PlatformWebsiteCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -6688,6 +6948,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`PlayerPerspective`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6744,11 +7005,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&PlayerPerspective> for PlayerPerspective {
         fn from(value: &PlayerPerspective) -> Self {
             value.clone()
         }
     }
+
     ///contains basic information about a Company.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6799,11 +7062,13 @@ pub mod types {
         ///When the company was last updated inside playmatch.
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&PlaymatchCompany> for PlaymatchCompany {
         fn from(value: &PlaymatchCompany) -> Self {
             value.clone()
         }
     }
+
     ///contains basic information about a Dat File.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6913,11 +7178,13 @@ pub mod types {
         ///When the dat file was last updated inside playmatch.
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&PlaymatchDatFile> for PlaymatchDatFile {
         fn from(value: &PlaymatchDatFile) -> Self {
             value.clone()
         }
     }
+
     ///contains basic information about an imported dat file in Playmatch.
     ///
     /// <details><summary>JSON schema</summary>
@@ -7002,11 +7269,13 @@ pub mod types {
         ///The version of the dat file which was imported.
         pub version: ::std::string::String,
     }
+
     impl ::std::convert::From<&PlaymatchDatFileImport> for PlaymatchDatFileImport {
         fn from(value: &PlaymatchDatFileImport) -> Self {
             value.clone()
         }
     }
+
     ///contains basic information about a Game.
     ///
     /// <details><summary>JSON schema</summary>
@@ -7092,11 +7361,13 @@ pub mod types {
         ///When the game was last updated inside playmatch.
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&PlaymatchGame> for PlaymatchGame {
         fn from(value: &PlaymatchGame) -> Self {
             value.clone()
         }
     }
+
     ///contains basic information about a Game File.
     ///
     /// <details><summary>JSON schema</summary>
@@ -7228,11 +7499,13 @@ pub mod types {
         ///When the game file was last updated inside playmatch.
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&PlaymatchGameFile> for PlaymatchGameFile {
         fn from(value: &PlaymatchGameFile) -> Self {
             value.clone()
         }
     }
+
     ///contains basic information about a Platform.
     ///
     /// <details><summary>JSON schema</summary>
@@ -7295,11 +7568,13 @@ pub mod types {
         ///When the platform was last updated inside playmatch.
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&PlaymatchPlatform> for PlaymatchPlatform {
         fn from(value: &PlaymatchPlatform) -> Self {
             value.clone()
         }
     }
+
     ///contains basic information about a Signature Group.
     ///
     /// <details><summary>JSON schema</summary>
@@ -7373,11 +7648,13 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub website_link: ::std::option::Option<::std::string::String>,
     }
+
     impl ::std::convert::From<&PlaymatchSignatureGroup> for PlaymatchSignatureGroup {
         fn from(value: &PlaymatchSignatureGroup) -> Self {
             value.clone()
         }
     }
+
     ///`PopularityPrimitive`
     ///
     /// <details><summary>JSON schema</summary>
@@ -7447,11 +7724,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub value: ::std::string::String,
     }
+
     impl ::std::convert::From<&PopularityPrimitive> for PopularityPrimitive {
         fn from(value: &PopularityPrimitive) -> Self {
             value.clone()
         }
     }
+
     ///`PopularitySource`
     ///
     /// <details><summary>JSON schema</summary>
@@ -7474,16 +7753,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<PopularitySource> for i64 {
         fn from(value: PopularitySource) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&PopularitySource> for PopularitySource {
         fn from(value: &PopularitySource) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for PopularitySource {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -7494,6 +7776,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for PopularitySource {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -7503,6 +7786,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`PopularityType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -7554,11 +7838,13 @@ pub mod types {
         pub popularity_source: PopularitySource,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&PopularityType> for PopularityType {
         fn from(value: &PopularityType) -> Self {
             value.clone()
         }
     }
+
     ///`Region`
     ///
     /// <details><summary>JSON schema</summary>
@@ -7615,11 +7901,13 @@ pub mod types {
         pub name: ::std::string::String,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&Region> for Region {
         fn from(value: &Region) -> Self {
             value.clone()
         }
     }
+
     ///`ReleaseDate`
     ///
     /// <details><summary>JSON schema</summary>
@@ -7712,11 +8000,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub y: i32,
     }
+
     impl ::std::convert::From<&ReleaseDate> for ReleaseDate {
         fn from(value: &ReleaseDate) -> Self {
             value.clone()
         }
     }
+
     ///`ReleaseDateCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -7746,16 +8036,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<ReleaseDateCategory> for i64 {
         fn from(value: ReleaseDateCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&ReleaseDateCategory> for ReleaseDateCategory {
         fn from(value: &ReleaseDateCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for ReleaseDateCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -7766,6 +8059,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for ReleaseDateCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -7775,6 +8069,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`ReleaseDateRegion`
     ///
     /// <details><summary>JSON schema</summary>
@@ -7806,16 +8101,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<ReleaseDateRegion> for i64 {
         fn from(value: ReleaseDateRegion) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&ReleaseDateRegion> for ReleaseDateRegion {
         fn from(value: &ReleaseDateRegion) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for ReleaseDateRegion {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -7830,6 +8128,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for ReleaseDateRegion {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -7839,6 +8138,7 @@ pub mod types {
                 .map_err(|e| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
+
     ///`ReleaseDateStatus`
     ///
     /// <details><summary>JSON schema</summary>
@@ -7890,11 +8190,13 @@ pub mod types {
         pub name: ::std::string::String,
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&ReleaseDateStatus> for ReleaseDateStatus {
         fn from(value: &ReleaseDateStatus) -> Self {
             value.clone()
         }
     }
+
     ///`Screenshot`
     ///
     /// <details><summary>JSON schema</summary>
@@ -7968,11 +8270,13 @@ pub mod types {
         pub url: ::std::string::String,
         pub width: i32,
     }
+
     impl ::std::convert::From<&Screenshot> for Screenshot {
         fn from(value: &Screenshot) -> Self {
             value.clone()
         }
     }
+
     ///`Suggestion`
     ///
     /// <details><summary>JSON schema</summary>
@@ -8100,11 +8404,13 @@ pub mod types {
         #[serde(rename = "updatedAt")]
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
+
     impl ::std::convert::From<&Suggestion> for Suggestion {
         fn from(value: &Suggestion) -> Self {
             value.clone()
         }
     }
+
     ///`Theme`
     ///
     /// <details><summary>JSON schema</summary>
@@ -8161,11 +8467,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub url: ::std::string::String,
     }
+
     impl ::std::convert::From<&Theme> for Theme {
         fn from(value: &Theme) -> Self {
             value.clone()
         }
     }
+
     ///Request to update a user's permissions.
     ///
     /// <details><summary>JSON schema</summary>
@@ -8189,11 +8497,13 @@ pub mod types {
     pub struct UpdateUserPermissionsRequest {
         pub new_permission: UserPermissions,
     }
+
     impl ::std::convert::From<&UpdateUserPermissionsRequest> for UpdateUserPermissionsRequest {
         fn from(value: &UpdateUserPermissionsRequest) -> Self {
             value.clone()
         }
     }
+
     ///Result of a manual match.
     ///
     /// <details><summary>JSON schema</summary>
@@ -8227,11 +8537,13 @@ pub mod types {
         ///ID of the entity matched (game, platform or company).
         pub id: ::uuid::Uuid,
     }
+
     impl ::std::convert::From<&UpdatedMatchResult> for UpdatedMatchResult {
         fn from(value: &UpdatedMatchResult) -> Self {
             value.clone()
         }
     }
+
     ///`UpdatedMetadataMatchesFromSuggestionResponse`
     ///
     /// <details><summary>JSON schema</summary>
@@ -8255,6 +8567,7 @@ pub mod types {
     pub struct UpdatedMetadataMatchesFromSuggestionResponse {
         pub updated: i32,
     }
+
     impl ::std::convert::From<&UpdatedMetadataMatchesFromSuggestionResponse>
         for UpdatedMetadataMatchesFromSuggestionResponse
     {
@@ -8262,6 +8575,7 @@ pub mod types {
             value.clone()
         }
     }
+
     ///A User inside Playmatch.
     ///
     /// <details><summary>JSON schema</summary>
@@ -8335,11 +8649,13 @@ pub mod types {
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         pub username: ::std::string::String,
     }
+
     impl ::std::convert::From<&User> for User {
         fn from(value: &User) -> Self {
             value.clone()
         }
     }
+
     ///Permission Levels a user can have in Playmatch.
     ///
     /// <details><summary>JSON schema</summary>
@@ -8375,11 +8691,13 @@ pub mod types {
         Automation,
         Admin,
     }
+
     impl ::std::convert::From<&Self> for UserPermissions {
         fn from(value: &UserPermissions) -> Self {
             value.clone()
         }
     }
+
     impl ::std::fmt::Display for UserPermissions {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -8390,6 +8708,7 @@ pub mod types {
             }
         }
     }
+
     impl ::std::str::FromStr for UserPermissions {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -8402,12 +8721,14 @@ pub mod types {
             }
         }
     }
+
     impl ::std::convert::TryFrom<&str> for UserPermissions {
         type Error = self::error::ConversionError;
         fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<&::std::string::String> for UserPermissions {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -8416,6 +8737,7 @@ pub mod types {
             value.parse()
         }
     }
+
     impl ::std::convert::TryFrom<::std::string::String> for UserPermissions {
         type Error = self::error::ConversionError;
         fn try_from(
@@ -8424,6 +8746,7 @@ pub mod types {
             value.parse()
         }
     }
+
     ///`WebsiteCategory`
     ///
     /// <details><summary>JSON schema</summary>
@@ -8462,16 +8785,19 @@ pub mod types {
             &self.0
         }
     }
+
     impl ::std::convert::From<WebsiteCategory> for i64 {
         fn from(value: WebsiteCategory) -> Self {
             value.0
         }
     }
+
     impl ::std::convert::From<&WebsiteCategory> for WebsiteCategory {
         fn from(value: &WebsiteCategory) -> Self {
             value.clone()
         }
     }
+
     impl ::std::convert::TryFrom<i64> for WebsiteCategory {
         type Error = self::error::ConversionError;
         fn try_from(value: i64) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -8487,6 +8813,7 @@ pub mod types {
             }
         }
     }
+
     impl<'de> ::serde::Deserialize<'de> for WebsiteCategory {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
@@ -8497,6 +8824,7 @@ pub mod types {
         }
     }
 }
+
 #[derive(Clone, Debug)]
 ///Client for api
 ///
@@ -8507,6 +8835,7 @@ pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
 }
+
 impl Client {
     /// Create a new client.
     ///
@@ -8525,6 +8854,7 @@ impl Client {
         let client = reqwest::ClientBuilder::new();
         Self::new_with_client(baseurl, client.build().unwrap())
     }
+
     /// Construct a new client with an existing `reqwest::Client`,
     /// allowing more control over its configuration.
     ///
@@ -8537,14 +8867,17 @@ impl Client {
             client,
         }
     }
+
     /// Get the base URL to which requests are made.
     pub fn baseurl(&self) -> &String {
         &self.baseurl
     }
+
     /// Get the internal `reqwest::Client` used to make requests.
     pub fn client(&self) -> &reqwest::Client {
         &self.client
     }
+
     /// Get the version of this API.
     ///
     /// This string is pulled directly from the source OpenAPI
@@ -8553,6 +8886,7 @@ impl Client {
         "0.2.0"
     }
 }
+
 #[allow(clippy::all)]
 #[allow(elided_named_lifetimes)]
 impl Client {
@@ -8585,6 +8919,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Returns a company and its metadata mappings by id
     ///
     ///Sends a `GET` request to `/api/companies/{id}`
@@ -8620,6 +8955,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Gets a Playmatch game by its ID
     ///
     ///Sends a `GET` request to `/api/game/{id}`
@@ -8650,6 +8986,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Gets a Playmatch game by its ID, includes all relations
     ///
     ///Sends a `GET` request to `/api/game/{id}/with-relations`
@@ -8684,6 +9021,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Checks if the service is healthy
     ///
     ///Sends a `GET` request to `/api/health`
@@ -8703,6 +9041,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Identify a game by its file hashes or filename and size, returning the
     /// matched metadata, goes in order sha256, sha1, md5 and filename + size
     /// (from most accurate to least accurate)
@@ -8751,10 +9090,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Identify a game by its file hashes or filename and size, goes in order
     /// sha256, sha1, md5 and filename + size (from most accurate to least
-    /// accurate), returning information about the game, game files, publisher
-    /// and company
+    /// accurate), returning information about the game, game files, metadata
+    /// mappings, publisher and company
     ///
     ///Sends a `GET` request to `/api/identify/relations`
     ///
@@ -8800,10 +9140,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for an Age Rating by Id
     ///
     ///Sends a `GET` request to `/api/igdb/age-rating`
-    pub async fn get_age_rating_by_id<'a>(
+    pub async fn get_igdb_age_rating_by_id<'a>(
         &'a self,
         id: i32,
     ) -> Result<ResponseValue<types::AgeRating>, Error<()>> {
@@ -8832,10 +9173,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for Age Ratings by Ids
     ///
     ///Sends a `GET` request to `/api/igdb/age-ratings`
-    pub async fn get_age_ratings_by_ids<'a>(
+    pub async fn get_igdb_age_ratings_by_ids<'a>(
         &'a self,
         ids: &'a ::std::vec::Vec<i32>,
     ) -> Result<ResponseValue<::std::vec::Vec<types::AgeRating>>, Error<()>> {
@@ -8863,10 +9205,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for an Alternative Name by Id
     ///
     ///Sends a `GET` request to `/api/igdb/alternative-name`
-    pub async fn get_alternative_name_by_id<'a>(
+    pub async fn get_igdb_alternative_name_by_id<'a>(
         &'a self,
         id: i32,
     ) -> Result<ResponseValue<types::AlternativeName>, Error<()>> {
@@ -8895,10 +9238,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for Alternative Names by Ids
     ///
     ///Sends a `GET` request to `/api/igdb/alternative-names`
-    pub async fn get_alternative_names_by_ids<'a>(
+    pub async fn get_igdb_alternative_names_by_ids<'a>(
         &'a self,
         ids: &'a ::std::vec::Vec<i32>,
     ) -> Result<ResponseValue<::std::vec::Vec<types::AlternativeName>>, Error<()>> {
@@ -8926,10 +9270,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for an Artwork by Id
     ///
     ///Sends a `GET` request to `/api/igdb/artwork`
-    pub async fn get_artwork_by_id<'a>(
+    pub async fn get_igdb_artwork_by_id<'a>(
         &'a self,
         id: i32,
     ) -> Result<ResponseValue<types::Artwork>, Error<()>> {
@@ -8958,10 +9303,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for Artworks by Ids
     ///
     ///Sends a `GET` request to `/api/igdb/artworks`
-    pub async fn get_artworks_by_ids<'a>(
+    pub async fn get_igdb_artworks_by_ids<'a>(
         &'a self,
         ids: &'a ::std::vec::Vec<i32>,
     ) -> Result<ResponseValue<::std::vec::Vec<types::Artwork>>, Error<()>> {
@@ -8989,10 +9335,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for an Collection by Id
     ///
     ///Sends a `GET` request to `/api/igdb/collection`
-    pub async fn get_collection_by_id<'a>(
+    pub async fn get_igdb_collection_by_id<'a>(
         &'a self,
         id: i32,
     ) -> Result<ResponseValue<types::Collection>, Error<()>> {
@@ -9021,10 +9368,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for Collections by Ids
     ///
     ///Sends a `GET` request to `/api/igdb/collections`
-    pub async fn get_collections_by_ids<'a>(
+    pub async fn get_igdb_collections_by_ids<'a>(
         &'a self,
         ids: &'a ::std::vec::Vec<i32>,
     ) -> Result<ResponseValue<::std::vec::Vec<types::Collection>>, Error<()>> {
@@ -9052,10 +9400,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for an Cover by Id
     ///
     ///Sends a `GET` request to `/api/igdb/cover`
-    pub async fn get_cover_by_id<'a>(
+    pub async fn get_igdb_cover_by_id<'a>(
         &'a self,
         id: i32,
     ) -> Result<ResponseValue<types::Cover>, Error<()>> {
@@ -9084,10 +9433,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for Covers by Ids
     ///
     ///Sends a `GET` request to `/api/igdb/covers`
-    pub async fn get_covers_by_ids<'a>(
+    pub async fn get_igdb_covers_by_ids<'a>(
         &'a self,
         ids: &'a ::std::vec::Vec<i32>,
     ) -> Result<ResponseValue<::std::vec::Vec<types::Cover>>, Error<()>> {
@@ -9115,10 +9465,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for an External Game by Id
     ///
     ///Sends a `GET` request to `/api/igdb/external-game`
-    pub async fn get_external_game_by_id<'a>(
+    pub async fn get_igdb_external_game_by_id<'a>(
         &'a self,
         id: i32,
     ) -> Result<ResponseValue<types::ExternalGame>, Error<()>> {
@@ -9147,10 +9498,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for External Games by Ids
     ///
     ///Sends a `GET` request to `/api/igdb/external-games`
-    pub async fn get_external_games_by_ids<'a>(
+    pub async fn get_igdb_external_games_by_ids<'a>(
         &'a self,
         ids: &'a ::std::vec::Vec<i32>,
     ) -> Result<ResponseValue<::std::vec::Vec<types::ExternalGame>>, Error<()>> {
@@ -9178,10 +9530,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for a Franchise by Id
     ///
     ///Sends a `GET` request to `/api/igdb/franchise`
-    pub async fn get_franchise_by_id<'a>(
+    pub async fn get_igdb_franchise_by_id<'a>(
         &'a self,
         id: i32,
     ) -> Result<ResponseValue<types::Franchise>, Error<()>> {
@@ -9210,10 +9563,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for Franchise by Ids
     ///
     ///Sends a `GET` request to `/api/igdb/franchises`
-    pub async fn get_franchises_by_ids<'a>(
+    pub async fn get_igdb_franchises_by_ids<'a>(
         &'a self,
         ids: &'a ::std::vec::Vec<i32>,
     ) -> Result<ResponseValue<::std::vec::Vec<types::Franchise>>, Error<()>> {
@@ -9241,10 +9595,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for a game by its Id or Slug
     ///
     ///Sends a `GET` request to `/api/igdb/game`
-    pub async fn get_game_by_id<'a>(
+    pub async fn get_igdb_game_by_id<'a>(
         &'a self,
         id: Option<i32>,
         slug: Option<&'a str>,
@@ -9275,10 +9630,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Searches the IGDB API for games by its name
     ///
     ///Sends a `GET` request to `/api/igdb/game/search`
-    pub async fn search_game_by_name<'a>(
+    pub async fn search_igdb_game_by_name<'a>(
         &'a self,
         query: &'a str,
     ) -> Result<ResponseValue<::std::vec::Vec<types::Game>>, Error<()>> {
@@ -9306,10 +9662,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for games by its Ids
     ///
     ///Sends a `GET` request to `/api/igdb/games`
-    pub async fn get_games_by_ids<'a>(
+    pub async fn get_igdb_games_by_ids<'a>(
         &'a self,
         ids: &'a ::std::vec::Vec<i32>,
     ) -> Result<ResponseValue<::std::vec::Vec<types::Game>>, Error<()>> {
@@ -9337,10 +9694,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for a Genre by Id
     ///
     ///Sends a `GET` request to `/api/igdb/genre`
-    pub async fn get_genre_by_id<'a>(
+    pub async fn get_igdb_genre_by_id<'a>(
         &'a self,
         id: i32,
     ) -> Result<ResponseValue<types::Genre>, Error<()>> {
@@ -9369,10 +9727,11 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Queries the IGDB API for Genres by Ids
     ///
     ///Sends a `GET` request to `/api/igdb/genres`
-    pub async fn get_genres_by_ids<'a>(
+    pub async fn get_igdb_genres_by_ids<'a>(
         &'a self,
         ids: &'a ::std::vec::Vec<i32>,
     ) -> Result<ResponseValue<::std::vec::Vec<types::Genre>>, Error<()>> {
@@ -9400,6 +9759,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Manually match a Company by its name, returning the matched
     /// ExternalMetadata
     ///
@@ -9442,6 +9802,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Manually match a Game by its file hashes, filename or Game name,
     /// returning the matched game ExternalMetadata
     ///
@@ -9485,6 +9846,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Manually match a Platform by its name, returning the matched
     /// ExternalMetadata
     ///
@@ -9527,6 +9889,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Returns all platforms with its company and its external metadata
     /// mappings
     ///
@@ -9557,6 +9920,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Returns a platform and its metadata mappings by id
     ///
     ///Sends a `GET` request to `/api/platforms/{id}`
@@ -9592,6 +9956,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Checks if the service is ready
     ///
     ///Sends a `GET` request to `/api/ready`
@@ -9611,6 +9976,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Gets all currently pending suggestions
     ///
     ///This Endpoint requires Credentials of at least Automation level.
@@ -9644,6 +10010,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Adds a suggestion for a manual company metadata match
     ///
     ///This Endpoint requires Credentials of a User.
@@ -9683,6 +10050,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Adds a suggestion for a manual game metadata match
     ///
     ///This Endpoint requires Credentials of a User.
@@ -9722,6 +10090,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Adds a suggestion for a manual platform metadata match
     ///
     ///This Endpoint requires Credentials of a User.
@@ -9761,6 +10130,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Gets a pending suggestion by id
     ///
     ///This Endpoint requires Credentials of at least Automation level.
@@ -9799,6 +10169,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Declines a suggestion by id
     ///
     ///This Endpoint requires Credentials of at least Automation level.
@@ -9830,6 +10201,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Approves a suggestion by id
     ///
     ///This Endpoint requires Credentials of at least Automation level.
@@ -9869,6 +10241,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Find a User by their Discord ID
     ///
     ///This Endpoint requires Credentials of a User with at least Automation
@@ -9909,6 +10282,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Find or Create a User by their Discord ID
     ///
     ///This Endpoint requires Credentials of a User with at least Automation
@@ -9948,6 +10322,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Find a User by their ID
     ///
     ///This Endpoint requires Credentials of a User with at least Automation
@@ -9984,6 +10359,7 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
     ///Update a user's Permission Level
     ///
     ///This Endpoint requires Credentials of a User with at least Automation
@@ -10031,6 +10407,7 @@ impl Client {
         }
     }
 }
+
 /// Items consumers will typically use such as the Client.
 pub mod prelude {
     #[allow(unused_imports)]

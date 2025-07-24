@@ -71,7 +71,7 @@
 		"/api/game/{id}": {
 			"get": {
 				"tags": [
-					"PlaymatchGame"
+					"Game"
 				],
 				"summary": "Gets a Playmatch game by its ID.",
 				"operationId": "get_playmatch_game_by_id",
@@ -103,7 +103,7 @@
 		"/api/game/{id}/with-relations": {
 			"get": {
 				"tags": [
-					"PlaymatchGame"
+					"Game"
 				],
 				"summary": "Gets a Playmatch game by its ID, includes all relations.",
 				"operationId": "get_playmatch_game_with_relations_by_id",
@@ -223,7 +223,7 @@
 				"tags": [
 					"Identify"
 				],
-				"summary": "Identify a game by its file hashes or filename and size, goes in order sha256, sha1, md5 and filename + size (from most accurate to least accurate), returning information about the game, game files, publisher and company",
+				"summary": "Identify a game by its file hashes or filename and size, goes in order sha256, sha1, md5 and filename + size (from most accurate to least accurate), returning information about the game, game files, metadata mappings, publisher and company",
 				"operationId": "identify_game_and_relations",
 				"parameters": [
 					{
@@ -296,7 +296,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for an Age Rating by Id",
-				"operationId": "get_age_rating_by_id",
+				"operationId": "get_igdb_age_rating_by_id",
 				"parameters": [
 					{
 						"name": "id",
@@ -331,7 +331,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for Age Ratings by Ids",
-				"operationId": "get_age_ratings_by_ids",
+				"operationId": "get_igdb_age_ratings_by_ids",
 				"parameters": [
 					{
 						"name": "ids",
@@ -369,7 +369,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for an Alternative Name by Id",
-				"operationId": "get_alternative_name_by_id",
+				"operationId": "get_igdb_alternative_name_by_id",
 				"parameters": [
 					{
 						"name": "id",
@@ -404,7 +404,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for Alternative Names by Ids",
-				"operationId": "get_alternative_names_by_ids",
+				"operationId": "get_igdb_alternative_names_by_ids",
 				"parameters": [
 					{
 						"name": "ids",
@@ -442,7 +442,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for an Artwork by Id",
-				"operationId": "get_artwork_by_id",
+				"operationId": "get_igdb_artwork_by_id",
 				"parameters": [
 					{
 						"name": "id",
@@ -477,7 +477,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for Artworks by Ids",
-				"operationId": "get_artworks_by_ids",
+				"operationId": "get_igdb_artworks_by_ids",
 				"parameters": [
 					{
 						"name": "ids",
@@ -515,7 +515,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for an Collection by Id",
-				"operationId": "get_collection_by_id",
+				"operationId": "get_igdb_collection_by_id",
 				"parameters": [
 					{
 						"name": "id",
@@ -550,7 +550,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for Collections by Ids",
-				"operationId": "get_collections_by_ids",
+				"operationId": "get_igdb_collections_by_ids",
 				"parameters": [
 					{
 						"name": "ids",
@@ -588,7 +588,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for an Cover by Id",
-				"operationId": "get_cover_by_id",
+				"operationId": "get_igdb_cover_by_id",
 				"parameters": [
 					{
 						"name": "id",
@@ -623,7 +623,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for Covers by Ids",
-				"operationId": "get_covers_by_ids",
+				"operationId": "get_igdb_covers_by_ids",
 				"parameters": [
 					{
 						"name": "ids",
@@ -661,7 +661,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for an External Game by Id",
-				"operationId": "get_external_game_by_id",
+				"operationId": "get_igdb_external_game_by_id",
 				"parameters": [
 					{
 						"name": "id",
@@ -696,7 +696,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for External Games by Ids",
-				"operationId": "get_external_games_by_ids",
+				"operationId": "get_igdb_external_games_by_ids",
 				"parameters": [
 					{
 						"name": "ids",
@@ -734,7 +734,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for a Franchise by Id",
-				"operationId": "get_franchise_by_id",
+				"operationId": "get_igdb_franchise_by_id",
 				"parameters": [
 					{
 						"name": "id",
@@ -769,7 +769,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for Franchise by Ids",
-				"operationId": "get_franchises_by_ids",
+				"operationId": "get_igdb_franchises_by_ids",
 				"parameters": [
 					{
 						"name": "ids",
@@ -807,7 +807,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for a game by its Id or Slug",
-				"operationId": "get_game_by_id",
+				"operationId": "get_igdb_game_by_id",
 				"parameters": [
 					{
 						"name": "slug",
@@ -852,7 +852,7 @@
 					"IGDB"
 				],
 				"summary": "Searches the IGDB API for games by its name",
-				"operationId": "search_game_by_name",
+				"operationId": "search_igdb_game_by_name",
 				"parameters": [
 					{
 						"name": "query",
@@ -886,7 +886,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for games by its Ids",
-				"operationId": "get_games_by_ids",
+				"operationId": "get_igdb_games_by_ids",
 				"parameters": [
 					{
 						"name": "ids",
@@ -924,7 +924,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for a Genre by Id",
-				"operationId": "get_genre_by_id",
+				"operationId": "get_igdb_genre_by_id",
 				"parameters": [
 					{
 						"name": "id",
@@ -959,7 +959,7 @@
 					"IGDB"
 				],
 				"summary": "Queries the IGDB API for Genres by Ids",
-				"operationId": "get_genres_by_ids",
+				"operationId": "get_igdb_genres_by_ids",
 				"parameters": [
 					{
 						"name": "ids",
@@ -3593,6 +3593,13 @@
 							}
 						],
 						"nullable": true
+					},
+					"externalMetadata": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ExternalMetadata"
+						},
+						"description": "If a match was found, External metadata for the game."
 					},
 					"game": {
 						"allOf": [
