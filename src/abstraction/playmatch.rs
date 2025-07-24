@@ -1,4 +1,4 @@
-use crate::abstraction::command::CommandContext;
+use crate::abstraction::command::{CommandContext, paginate};
 use crate::util::create_discord_markdown_table;
 use playmatch_client::types::{
 	CompanyMetadataResponse, ExternalMetadata, MatchType, MetadataProvider,
@@ -109,7 +109,7 @@ where
 		.map(|s| s.as_str())
 		.collect::<Vec<&str>>();
 
-	poise::builtins::paginate(ctx, markdown_pages_ref.as_slice()).await?;
+	paginate(ctx, markdown_pages_ref.as_slice()).await?;
 
 	Ok(())
 }

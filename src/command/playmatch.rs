@@ -838,11 +838,7 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 				.await?;
 
 			let message = match data.r#type {
-				SuggestionType::Platform => format!(
-					"Your Playmatch Metadata Suggestion for {display_type} **{}** was approved! Thank you very much for your contribution 🎉!",
-					data.name
-				),
-				SuggestionType::Company => format!(
+				SuggestionType::Platform | SuggestionType::Company => format!(
 					"Your Playmatch Metadata Suggestion for {display_type} **{}** was approved! Thank you very much for your contribution 🎉!",
 					data.name
 				),
