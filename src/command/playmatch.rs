@@ -166,14 +166,16 @@ pub async fn get_game_metadata(
 		Some(website_link) => format!("[{}]({})", signature_group.name, website_link),
 	};
 
+	let escape_dat_file_name = dat_file.name.replace("_", "\\_");
+
 	let dat_file_value = match dat_file.tags {
 		None => format!(
 			"**{}**\n**Signature Group: {}**\nCurrent Version: `{}`\n",
-			dat_file.name, signature_group_value, dat_file.current_version
+			escape_dat_file_name, signature_group_value, dat_file.current_version
 		),
 		Some(tags) => format!(
 			"**{}**\n**Signature Group: {}**\nCurrent Version: `{}`\nTags: `{}`",
-			dat_file.name,
+			escape_dat_file_name,
 			signature_group_value,
 			dat_file.current_version,
 			tags.join(", ")
