@@ -35,6 +35,9 @@ async fn main() -> anyhow::Result<()> {
 	let intents = GatewayIntents::non_privileged();
 
 	let http = Http::new(token.clone());
+	let app_info = http.get_current_application_info().await?;
+	http.set_application_id(app_info.id);
+
 	poise::builtins::register_globally(&http, get_global_commands().iter()).await?;
 	poise::builtins::register_in_guild(
 		&http,
