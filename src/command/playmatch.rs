@@ -3,19 +3,19 @@ use crate::abstraction::command::{
 };
 use crate::abstraction::components_v2::{self, Card, Status};
 use crate::abstraction::igdb;
-use crate::abstraction::playmatch::paginate_playmatch_response;
+use crate::abstraction::playmatch::{
+	ApiErrorAction, paginate_playmatch_response, send_playmatch_api_error,
+};
 use crate::command::SUGGESTION_CHANNEL_ID;
 use anyhow::anyhow;
 use log::{debug, error, warn};
-use playmatch_client::Error;
 use playmatch_client::types::ManualMatchMode::{Admin, Trusted};
 use playmatch_client::types::MetadataProvider::Igdb;
 use playmatch_client::types::{
 	CompanyOrPlatformMatchRequest, CompanyOrPlatformSuggestionRequest, CreateOrGetUserRequest,
-	GameMatchRequest, GameMatchType, GameSuggestionRequest, MetadataMatchType,
+	GameMatchRequest, GameMatchType, GameSuggestionRequest, ManualMatchMode, MetadataMatchType,
 	UpdateUserPermissionsRequest, UserPermissions,
 };
-use reqwest::StatusCode;
 use serenity::all::{
 	ButtonStyle, Cache, ChannelId, ComponentInteractionCollector, Context, CreateButton,
 	CreateComponent, CreateInteractionResponse, CreateInteractionResponseMessage, EditMessage,
@@ -337,31 +337,8 @@ pub async fn create_game_suggestion(
 	let suggestion = match result {
 		Ok(suggestion_value) => suggestion_value.into_inner(),
 		Err(e) => {
-			match &e {
-				Error::ErrorResponse(e_res) => {
-					if e_res.status() == StatusCode::NOT_FOUND {
-						ctx.send(components_v2::status_reply(
-							Status::Error,
-							"No Game found for the provided hashes or name.",
-						))
-						.await?;
-					} else if e_res.status() == StatusCode::CONFLICT {
-						ctx.send(components_v2::status_reply(
-							Status::Error,
-							"A suggestion for this Game already exists from the same provider.",
-						))
-						.await?;
-					}
-				}
-				_ => {
-					ctx.send(components_v2::status_reply(
-						Status::Error,
-						format!("Failed to submit suggestion for Game: {e}"),
-					))
-					.await?;
-					warn!("Failed to submit suggestion for Game: {e}");
-				}
-			}
+			send_playmatch_api_error(ctx, &e, "Game", "hashes or name", ApiErrorAction::Suggest)
+				.await?;
 			return Ok(());
 		}
 	};
@@ -461,31 +438,7 @@ pub async fn create_company_suggestion(
 	let suggestion = match result {
 		Ok(suggestion_value) => suggestion_value.into_inner(),
 		Err(e) => {
-			match &e {
-				Error::ErrorResponse(e_res) => {
-					if e_res.status() == StatusCode::NOT_FOUND {
-						ctx.send(components_v2::status_reply(
-							Status::Error,
-							"No Company found for the provided name.",
-						))
-						.await?;
-					} else if e_res.status() == StatusCode::CONFLICT {
-						ctx.send(components_v2::status_reply(
-							Status::Error,
-							"A suggestion for this Company already exists from the same provider.",
-						))
-						.await?;
-					}
-				}
-				_ => {
-					ctx.send(components_v2::status_reply(
-						Status::Error,
-						format!("Failed to submit suggestion for Company: {e}"),
-					))
-					.await?;
-					warn!("Failed to submit suggestion for Company: {e}");
-				}
-			}
+			send_playmatch_api_error(ctx, &e, "Company", "name", ApiErrorAction::Suggest).await?;
 			return Ok(());
 		}
 	};
@@ -564,31 +517,7 @@ pub async fn create_platform_suggestion(
 	let suggestion = match result {
 		Ok(suggestion_value) => suggestion_value.into_inner(),
 		Err(e) => {
-			match &e {
-				Error::ErrorResponse(e_res) => {
-					if e_res.status() == StatusCode::NOT_FOUND {
-						ctx.send(components_v2::status_reply(
-							Status::Error,
-							"No Platform found for the provided name.",
-						))
-						.await?;
-					} else if e_res.status() == StatusCode::CONFLICT {
-						ctx.send(components_v2::status_reply(
-							Status::Error,
-							"A suggestion for this Platform already exists from the same provider.",
-						))
-						.await?;
-					}
-				}
-				_ => {
-					ctx.send(components_v2::status_reply(
-						Status::Error,
-						format!("Failed to submit suggestion for Platform: {e}"),
-					))
-					.await?;
-					warn!("Failed to submit suggestion for Platform: {e}");
-				}
-			}
+			send_playmatch_api_error(ctx, &e, "Platform", "name", ApiErrorAction::Suggest).await?;
 			return Ok(());
 		}
 	};
@@ -675,11 +604,7 @@ pub async fn manual_match_platform(
 		.playmatch_client
 		.manually_match_platform()
 		.body(CompanyOrPlatformMatchRequest {
-			manual_match_type: if playmatch_user_ctx.is_admin {
-				Admin
-			} else {
-				Trusted
-			},
+			manual_match_type: playmatch_user_ctx.manual_match_mode(),
 			provider_id: igdb_id.to_string(),
 			provider: Igdb,
 			name,
@@ -690,25 +615,8 @@ pub async fn manual_match_platform(
 		.await;
 
 	if let Err(e) = &result {
-		match e {
-			Error::ErrorResponse(e_res) if e_res.status() == StatusCode::NOT_FOUND => {
-				ctx.send(components_v2::status_reply(
-					Status::Error,
-					"No Platform found for the provided name.",
-				))
-				.await?;
-				return Ok(());
-			}
-			_ => {
-				ctx.send(components_v2::status_reply(
-					Status::Error,
-					format!("Failed to match Platform: {e}"),
-				))
-				.await?;
-				warn!("Failed to match Platform: {e}");
-				return Ok(());
-			}
-		}
+		send_playmatch_api_error(ctx, e, "Platform", "name", ApiErrorAction::Match).await?;
+		return Ok(());
 	}
 
 	let igdb_id_str = igdb_id.to_string();
@@ -746,11 +654,7 @@ pub async fn manual_match_company(
 		.playmatch_client
 		.manually_match_company()
 		.body(CompanyOrPlatformMatchRequest {
-			manual_match_type: if playmatch_user_ctx.is_admin {
-				Admin
-			} else {
-				Trusted
-			},
+			manual_match_type: playmatch_user_ctx.manual_match_mode(),
 			provider_id: igdb_id.to_string(),
 			provider: Igdb,
 			name,
@@ -761,25 +665,8 @@ pub async fn manual_match_company(
 		.await;
 
 	if let Err(e) = &result {
-		match e {
-			Error::ErrorResponse(e_res) if e_res.status() == StatusCode::NOT_FOUND => {
-				ctx.send(components_v2::status_reply(
-					Status::Error,
-					"No Company found for the provided name.",
-				))
-				.await?;
-				return Ok(());
-			}
-			_ => {
-				ctx.send(components_v2::status_reply(
-					Status::Error,
-					format!("Failed to match Company: {e}"),
-				))
-				.await?;
-				warn!("Failed to match Company: {e}");
-				return Ok(());
-			}
-		}
+		send_playmatch_api_error(ctx, e, "Company", "name", ApiErrorAction::Match).await?;
+		return Ok(());
 	}
 
 	let igdb_id_str = igdb_id.to_string();
@@ -831,11 +718,7 @@ pub async fn manual_match_game(
 		.playmatch_client
 		.manually_match_game()
 		.body(GameMatchRequest {
-			manual_match_type: if playmatch_user_ctx.is_admin {
-				Admin
-			} else {
-				Trusted
-			},
+			manual_match_type: playmatch_user_ctx.manual_match_mode(),
 			provider_id: igdb_id.to_string(),
 			provider: Igdb,
 			md5: md5_hash,
@@ -849,25 +732,11 @@ pub async fn manual_match_game(
 		.await;
 
 	let matched = match result {
-		Err(e) => match &e {
-			Error::ErrorResponse(e_res) if e_res.status() == StatusCode::NOT_FOUND => {
-				ctx.send(components_v2::status_reply(
-					Status::Error,
-					"No Game found for the provided hashes or name.",
-				))
+		Err(e) => {
+			send_playmatch_api_error(ctx, &e, "Game", "hashes or name", ApiErrorAction::Match)
 				.await?;
-				return Ok(());
-			}
-			_ => {
-				ctx.send(components_v2::status_reply(
-					Status::Error,
-					format!("Failed to match Game: {e}"),
-				))
-				.await?;
-				warn!("Failed to match Game: {e}");
-				return Ok(());
-			}
-		},
+			return Ok(());
+		}
 		Ok(value) => value.into_inner().len(),
 	};
 
@@ -896,6 +765,12 @@ pub async fn manual_match_game(
 struct PlaymatchUserCtx {
 	is_admin: bool,
 	playmatch_user: playmatch_client::types::User,
+}
+
+impl PlaymatchUserCtx {
+	fn manual_match_mode(&self) -> ManualMatchMode {
+		if self.is_admin { Admin } else { Trusted }
+	}
 }
 
 enum SuggestionType {

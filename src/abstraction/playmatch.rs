@@ -1,10 +1,59 @@
 use crate::abstraction::command::{CommandContext, paginate};
+use crate::abstraction::components_v2::{self, Status};
 use crate::util::create_discord_markdown_table;
+use log::warn;
+use playmatch_client::Error;
 use playmatch_client::types::{
 	CompanyMetadataResponse, ExternalMetadata, MetadataMatchType, MetadataProvider,
 	PlatformMetadataResponse,
 };
+use reqwest::StatusCode;
 use uuid::Uuid;
+
+pub enum ApiErrorAction {
+	Suggest,
+	Match,
+}
+
+pub async fn send_playmatch_api_error<E: std::fmt::Debug>(
+	ctx: CommandContext<'_>,
+	e: &Error<E>,
+	entity: &str,
+	identifier: &str,
+	action: ApiErrorAction,
+) -> Result<(), serenity::Error> {
+	let action_verb = match action {
+		ApiErrorAction::Suggest => "submit suggestion for",
+		ApiErrorAction::Match => "match",
+	};
+
+	if let Error::ErrorResponse(e_res) = e {
+		if e_res.status() == StatusCode::NOT_FOUND {
+			ctx.send(components_v2::status_reply(
+				Status::Error,
+				format!("No {entity} found for the provided {identifier}."),
+			))
+			.await?;
+			return Ok(());
+		}
+		if e_res.status() == StatusCode::CONFLICT && matches!(action, ApiErrorAction::Suggest) {
+			ctx.send(components_v2::status_reply(
+				Status::Error,
+				format!("A suggestion for this {entity} already exists from the same provider."),
+			))
+			.await?;
+			return Ok(());
+		}
+	}
+
+	ctx.send(components_v2::status_reply(
+		Status::Error,
+		format!("Failed to {action_verb} {entity}: {e}"),
+	))
+	.await?;
+	warn!("Failed to {action_verb} {entity}: {e}");
+	Ok(())
+}
 
 pub trait PlaymatchResponse {
 	fn get_id(&self) -> Uuid;
