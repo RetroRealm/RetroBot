@@ -1,7 +1,8 @@
 use crate::abstraction::command::{
 	CommandContext, CommandResult, TRUSTED_ROLE_IDS, is_user_trusted_or_above,
 };
-use crate::abstraction::components_v2::{self, Status};
+use crate::abstraction::components_v2::{self, Card, Status};
+use crate::abstraction::igdb;
 use crate::abstraction::playmatch::paginate_playmatch_response;
 use crate::command::SUGGESTION_CHANNEL_ID;
 use anyhow::anyhow;
@@ -139,9 +140,27 @@ pub async fn get_game_metadata(
 		"No signature group found for the provided hashes or file name"
 	))?;
 
-	let files_info = game_files
+	let igdb_provider_id = metadata_mappings
+		.iter()
+		.find(|m| {
+			m.provider_name == Igdb
+				&& matches!(
+					m.match_type,
+					MetadataMatchType::Automatic | MetadataMatchType::Manual
+				)
+		})
+		.and_then(|m| m.provider_id.clone());
+
+	let igdb_info = match igdb_provider_id.as_deref() {
+		Some(pid) => igdb::fetch_game(&ctx.data().playmatch_client, pid).await,
+		None => None,
+	};
+
+	let total_files = game_files.len();
+	let mut files_info = game_files
 		.iter()
 		.enumerate()
+		.take(5)
 		.map(|(i, file)| {
 			let mut out = format!("**{}. {}**", i + 1, file.file_name);
 			if let Some(size) = file.file_size_in_bytes {
@@ -167,63 +186,56 @@ pub async fn get_game_metadata(
 			}
 			out
 		})
-		.take(5)
 		.collect::<Vec<_>>()
 		.join("\n\n");
 
-	let signature_group_value = match signature_group.website_link {
-		None => signature_group.name,
-		Some(website_link) => format!("[{}]({})", signature_group.name, website_link),
-	};
+	if total_files > 5 {
+		let hidden = total_files - 5;
+		files_info.push_str(&format!("\n\n-# …and {hidden} more ROM files not shown"));
+	}
 
 	let escape_dat_file_name = dat_file.name.replace("_", "\\_");
-
 	let dat_file_value = match dat_file.tags {
 		None => format!(
-			"**{}**\n**Signature Group: {}**\nCurrent Version: `{}`",
-			escape_dat_file_name, signature_group_value, dat_file.current_version
+			"**{}**\nSignature Group: {}\nCurrent Version: `{}`",
+			escape_dat_file_name, signature_group.name, dat_file.current_version
 		),
 		Some(tags) => format!(
-			"**{}**\n**Signature Group: {}**\nCurrent Version: `{}`\nTags: `{}`",
+			"**{}**\nSignature Group: {}\nCurrent Version: `{}`\nTags: `{}`",
 			escape_dat_file_name,
-			signature_group_value,
+			signature_group.name,
 			dat_file.current_version,
 			tags.join(", ")
 		),
 	};
 
-	let mut components: Vec<CreateContainerComponent<'static>> = Vec::new();
+	let mut card = Card::new(Status::Success, game.name.clone());
 
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(format!("## {}", game.name)),
-	));
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(format!(
-			"**Match Type:** `{}` • **Platform:** {}",
-			inner.game_match_type, platform.name
-		)),
-	));
-
-	if let Some(c) = company {
-		components.push(CreateContainerComponent::TextDisplay(
-			CreateTextDisplay::new(format!("**Company:** {}", c.name)),
-		));
+	if let Some(info) = igdb_info.as_ref() {
+		if let Some(cover_url) = info.cover_url.clone() {
+			card = card.thumbnail(cover_url);
+		}
+		if let Some(date) = info.first_release_date {
+			card = card.subheading(format!("Released {}", date.format("%b %-d, %Y")));
+		}
+		if let Some(summary) = info.summary.clone() {
+			card = card.intro(summary);
+		}
 	}
 
-	components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(format!("### ROM Files\n{files_info}")),
-	));
-	components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(format!("### DAT File\n{dat_file_value}")),
-	));
+	card = card
+		.row("Match Type", format!("`{}`", inner.game_match_type))
+		.row("Platform", platform.name);
+
+	if let Some(c) = company {
+		card = card.row("Company", c.name);
+	}
+
+	card = card.section("ROM Files").text(files_info);
+	card = card.section("DAT File").text(dat_file_value);
 
 	if !metadata_mappings.is_empty() {
-		components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
-		components.push(CreateContainerComponent::TextDisplay(
-			CreateTextDisplay::new("### Metadata Mappings".to_owned()),
-		));
+		card = card.section("Metadata Mappings");
 		for metadata_mapping in metadata_mappings {
 			let provider_info = match metadata_mapping.match_type {
 				MetadataMatchType::Automatic => {
@@ -252,23 +264,29 @@ pub async fn get_game_metadata(
 				}
 				MetadataMatchType::None => String::new(),
 			};
-			components.push(CreateContainerComponent::TextDisplay(
-				CreateTextDisplay::new(format!(
-					"**{}** — Status: `{}`{}",
-					metadata_mapping.provider_name, metadata_mapping.match_type, provider_info
-				)),
+			card = card.text(format!(
+				"**{}** Status: `{}`{}",
+				metadata_mapping.provider_name, metadata_mapping.match_type, provider_info
 			));
 		}
 	}
 
-	components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(format!("-# Playmatch Game ID: `{}`", game.id)),
-	));
+	if let Some(info) = igdb_info.as_ref()
+		&& !info.screenshot_urls.is_empty()
+	{
+		card = card.media(info.screenshot_urls.clone());
+	}
 
-	let container = CreateContainer::new(components).accent_colour(serenity::all::Colour(0x2ECC71));
-	ctx.send(components_v2::reply_from_container(container))
-		.await?;
+	if let Some(info) = igdb_info.as_ref() {
+		card = card.link(CreateButton::new_link(info.page_url.clone()).label("View on IGDB"));
+	}
+	if let Some(link) = signature_group.website_link.clone() {
+		card = card.link(CreateButton::new_link(link).label("Signature Group"));
+	}
+
+	card = card.footer(format!("Playmatch Game ID: `{}`", game.id));
+
+	ctx.send(card.into_reply()).await?;
 
 	Ok(())
 }
