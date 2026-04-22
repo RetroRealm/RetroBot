@@ -1,4 +1,5 @@
 use chrono::{DateTime, Utc};
+use log::{debug, warn};
 use playmatch_client::Client;
 
 pub struct IgdbGameInfo {
@@ -51,36 +52,60 @@ fn timestamp_to_datetime(ts: i64) -> Option<DateTime<Utc>> {
 }
 
 pub async fn fetch_game(client: &Client, provider_id: &str) -> Option<IgdbGameInfo> {
-	let id: i32 = provider_id.parse().ok()?;
-	let game = client
-		.get_igdb_game_by_id()
-		.id(id)
-		.send()
-		.await
-		.ok()?
-		.into_inner();
+	let id: i32 = match provider_id.parse() {
+		Ok(id) => id,
+		Err(e) => {
+			warn!("IGDB game provider_id '{provider_id}' is not a valid i32: {e}");
+			return None;
+		}
+	};
+
+	let game = match client.get_igdb_game_by_id().id(id).send().await {
+		Ok(resp) => resp.into_inner(),
+		Err(e) => {
+			warn!("IGDB game lookup failed for id {id}: {e}");
+			return None;
+		}
+	};
+
+	debug!(
+		"IGDB game {id}: cover={:?}, screenshots={:?}",
+		game.cover,
+		game.screenshots.as_ref().map(|v| v.len())
+	);
 
 	let cover_url = match game.cover {
-		Some(cover_id) => client
-			.get_igdb_cover_by_id()
-			.id(cover_id)
-			.send()
-			.await
-			.ok()
-			.map(|resp| normalize_image_url(&resp.into_inner().url, "t_cover_big")),
+		Some(cover_id) => match client.get_igdb_cover_by_id().id(cover_id).send().await {
+			Ok(resp) => {
+				let url = normalize_image_url(&resp.into_inner().url, "t_cover_big");
+				debug!("IGDB cover {cover_id} resolved to {url}");
+				Some(url)
+			}
+			Err(e) => {
+				warn!("IGDB cover lookup failed for id {cover_id}: {e}");
+				None
+			}
+		},
 		None => None,
 	};
 
 	let mut screenshot_urls = Vec::new();
 	if let Some(ids) = game.screenshots.as_ref() {
 		for screenshot_id in ids.iter().take(3) {
-			if let Ok(resp) = client
+			match client
 				.get_igdb_screenshot_by_id()
 				.id(*screenshot_id)
 				.send()
 				.await
 			{
-				screenshot_urls.push(normalize_image_url(&resp.into_inner().url, "t_1080p"));
+				Ok(resp) => {
+					let url = normalize_image_url(&resp.into_inner().url, "t_1080p");
+					debug!("IGDB screenshot {screenshot_id} resolved to {url}");
+					screenshot_urls.push(url);
+				}
+				Err(e) => {
+					warn!("IGDB screenshot lookup failed for id {screenshot_id}: {e}");
+				}
 			}
 		}
 	}
@@ -96,23 +121,39 @@ pub async fn fetch_game(client: &Client, provider_id: &str) -> Option<IgdbGameIn
 }
 
 pub async fn fetch_company(client: &Client, provider_id: &str) -> Option<IgdbCompanyInfo> {
-	let id: i32 = provider_id.parse().ok()?;
-	let company = client
-		.get_igdb_company_by_id()
-		.id(id)
-		.send()
-		.await
-		.ok()?
-		.into_inner();
+	let id: i32 = match provider_id.parse() {
+		Ok(id) => id,
+		Err(e) => {
+			warn!("IGDB company provider_id '{provider_id}' is not a valid i32: {e}");
+			return None;
+		}
+	};
+
+	let company = match client.get_igdb_company_by_id().id(id).send().await {
+		Ok(resp) => resp.into_inner(),
+		Err(e) => {
+			warn!("IGDB company lookup failed for id {id}: {e}");
+			return None;
+		}
+	};
 
 	let logo_url = match company.logo {
-		Some(logo_id) => client
+		Some(logo_id) => match client
 			.get_igdb_company_logo_by_id()
 			.id(logo_id)
 			.send()
 			.await
-			.ok()
-			.map(|resp| normalize_image_url(&resp.into_inner().url, "t_logo_med")),
+		{
+			Ok(resp) => {
+				let url = normalize_image_url(&resp.into_inner().url, "t_logo_med");
+				debug!("IGDB company logo {logo_id} resolved to {url}");
+				Some(url)
+			}
+			Err(e) => {
+				warn!("IGDB company logo lookup failed for id {logo_id}: {e}");
+				None
+			}
+		},
 		None => None,
 	};
 
@@ -125,23 +166,39 @@ pub async fn fetch_company(client: &Client, provider_id: &str) -> Option<IgdbCom
 }
 
 pub async fn fetch_platform(client: &Client, provider_id: &str) -> Option<IgdbPlatformInfo> {
-	let id: i32 = provider_id.parse().ok()?;
-	let platform = client
-		.get_igdb_platform_by_id()
-		.id(id)
-		.send()
-		.await
-		.ok()?
-		.into_inner();
+	let id: i32 = match provider_id.parse() {
+		Ok(id) => id,
+		Err(e) => {
+			warn!("IGDB platform provider_id '{provider_id}' is not a valid i32: {e}");
+			return None;
+		}
+	};
+
+	let platform = match client.get_igdb_platform_by_id().id(id).send().await {
+		Ok(resp) => resp.into_inner(),
+		Err(e) => {
+			warn!("IGDB platform lookup failed for id {id}: {e}");
+			return None;
+		}
+	};
 
 	let logo_url = match platform.platform_logo {
-		Some(logo_id) => client
+		Some(logo_id) => match client
 			.get_igdb_platform_logo_by_id()
 			.id(logo_id)
 			.send()
 			.await
-			.ok()
-			.map(|resp| normalize_image_url(&resp.into_inner().url, "t_logo_med")),
+		{
+			Ok(resp) => {
+				let url = normalize_image_url(&resp.into_inner().url, "t_logo_med");
+				debug!("IGDB platform logo {logo_id} resolved to {url}");
+				Some(url)
+			}
+			Err(e) => {
+				warn!("IGDB platform logo lookup failed for id {logo_id}: {e}");
+				None
+			}
+		},
 		None => None,
 	};
 
