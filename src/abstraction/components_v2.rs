@@ -38,8 +38,7 @@ fn container_message<'a>(container: CreateContainer<'a>) -> CreateMessage<'a> {
 		.components(vec![CreateComponent::Container(container)])
 }
 
-/// One-line Container reply with a TextDisplay, accent-coloured by `status`.
-/// Errors and warnings are auto-ephemeral.
+/// Error and Warning statuses are sent as ephemeral.
 pub fn status_reply<'a, S: Into<Cow<'a, str>>>(status: Status, text: S) -> CreateReply<'a> {
 	let container = CreateContainer::new(vec![CreateContainerComponent::TextDisplay(
 		CreateTextDisplay::new(text),
@@ -54,19 +53,14 @@ pub fn status_reply<'a, S: Into<Cow<'a, str>>>(status: Status, text: S) -> Creat
 	}
 }
 
-/// Wrap an owned Container as a V2-flagged reply (for commands that need custom layout).
 pub fn reply_from_container<'a>(container: CreateContainer<'a>) -> CreateReply<'a> {
 	container_reply(container)
 }
 
-/// Wrap an owned Container as a V2-flagged CreateMessage (for ChannelId::send_message /
-/// User::dm / interaction responses).
 pub fn message_from_container<'a>(container: CreateContainer<'a>) -> CreateMessage<'a> {
 	container_message(container)
 }
 
-/// Card reply: heading + separator + one labelled line per (label, value) row.
-/// Values are rendered with `**label:** value` markdown.
 pub fn card_reply<'a>(
 	status: Status,
 	heading: impl Into<Cow<'a, str>>,
@@ -92,7 +86,6 @@ pub fn card_reply<'a>(
 	container_reply(container)
 }
 
-/// Pagination container: body TextDisplay, separator, page indicator, navigation buttons row.
 pub fn paginate_container<'a>(
 	body: String,
 	page: usize,
