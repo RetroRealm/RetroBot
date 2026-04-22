@@ -1,6 +1,7 @@
 use crate::abstraction::command::{
 	CommandContext, CommandResult, TRUSTED_ROLE_IDS, is_user_trusted_or_above,
 };
+use crate::abstraction::components_v2::{self, Status};
 use crate::abstraction::playmatch::paginate_playmatch_response;
 use crate::command::SUGGESTION_CHANNEL_ID;
 use anyhow::anyhow;
@@ -10,16 +11,15 @@ use playmatch_client::types::ManualMatchMode::{Admin, Trusted};
 use playmatch_client::types::MetadataProvider::Igdb;
 use playmatch_client::types::{
 	CompanyOrPlatformMatchRequest, CompanyOrPlatformSuggestionRequest, CreateOrGetUserRequest,
-	GameMatchRequest, GameMatchType, GameSuggestionRequest, MatchType,
+	GameMatchRequest, GameMatchType, GameSuggestionRequest, MetadataMatchType,
 	UpdateUserPermissionsRequest, UserPermissions,
 };
-use poise::CreateReply;
 use reqwest::StatusCode;
 use serenity::all::{
-	ButtonStyle, Cache, ChannelId, ComponentInteractionDataKind, CreateEmbedFooter, ShardMessenger,
-	UserId,
+	ButtonStyle, Cache, ChannelId, ComponentInteractionCollector, ComponentInteractionDataKind,
+	Context, CreateActionRow, CreateButton, CreateContainer, CreateContainerComponent,
+	CreateSeparator, CreateTextDisplay, UserId,
 };
-use serenity::builder::{CreateButton, CreateEmbed, CreateMessage};
 use serenity::http::Http;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -67,21 +67,27 @@ pub async fn suggest(_: CommandContext<'_>) -> CommandResult {
 /// Shows a list of companies with its metadata matches
 #[poise::command(slash_command, category = "Playmatch", rename = "companies")]
 pub async fn list_companies(ctx: CommandContext<'_>) -> CommandResult {
-	let response = ctx.data().playmatch_client.get_all_companies().await?;
-
+	let response = ctx
+		.data()
+		.playmatch_client
+		.get_all_companies()
+		.send()
+		.await?;
 	let companies = response.into_inner();
-
 	paginate_playmatch_response(ctx, companies).await
 }
 
 /// Shows a list of platforms with its metadata matches
 #[poise::command(slash_command, category = "Playmatch", rename = "platforms")]
 pub async fn list_platforms(ctx: CommandContext<'_>) -> CommandResult {
-	let response = ctx.data().playmatch_client.get_all_platforms().await?;
-
-	let companies = response.into_inner();
-
-	paginate_playmatch_response(ctx, companies).await
+	let response = ctx
+		.data()
+		.playmatch_client
+		.get_all_platforms()
+		.send()
+		.await?;
+	let platforms = response.into_inner();
+	paginate_playmatch_response(ctx, platforms).await
 }
 
 /// Gets metadata for a game on Playmatch by hashes or file name and size.
@@ -97,20 +103,23 @@ pub async fn get_game_metadata(
 	let response = ctx
 		.data()
 		.playmatch_client
-		.identify_game_and_relations(
-			&file_name,
-			file_size,
-			md5_hash.as_deref(),
-			sha1_hash.as_deref(),
-			sha256_hash.as_deref(),
-		)
+		.identify_game_and_relations()
+		.file_name(file_name)
+		.file_size(file_size)
+		.md5(md5_hash.unwrap_or_default())
+		.sha1(sha1_hash.unwrap_or_default())
+		.sha256(sha256_hash.unwrap_or_default())
+		.send()
 		.await?;
 
 	let inner = response.into_inner();
 
 	if inner.game_match_type == GameMatchType::NoMatch {
-		ctx.reply("No matching game found for the provided hashes or file name and size.")
-			.await?;
+		ctx.send(components_v2::status_reply(
+			Status::Error,
+			"No matching game found for the provided hashes or file name and size.",
+		))
+		.await?;
 		return Ok(());
 	}
 
@@ -136,7 +145,10 @@ pub async fn get_game_metadata(
 		.map(|(i, file)| {
 			let mut out = format!("**{}. {}**", i + 1, file.file_name);
 			if let Some(size) = file.file_size_in_bytes {
-				out.push_str(&format!("Size: `{:.2} MB`", size as f64 / 1024.0 / 1024.0));
+				out.push_str(&format!(
+					"\nSize: `{:.2} MB`",
+					size as f64 / 1024.0 / 1024.0
+				));
 			}
 			if let Some(serial) = &file.serial {
 				out.push_str(&format!("\nSerial: `{serial}`"));
@@ -155,8 +167,6 @@ pub async fn get_game_metadata(
 			}
 			out
 		})
-		.collect::<Vec<_>>()
-		.into_iter()
 		.take(5)
 		.collect::<Vec<_>>()
 		.join("\n\n");
@@ -170,7 +180,7 @@ pub async fn get_game_metadata(
 
 	let dat_file_value = match dat_file.tags {
 		None => format!(
-			"**{}**\n**Signature Group: {}**\nCurrent Version: `{}`\n",
+			"**{}**\n**Signature Group: {}**\nCurrent Version: `{}`",
 			escape_dat_file_name, signature_group_value, dat_file.current_version
 		),
 		Some(tags) => format!(
@@ -182,71 +192,83 @@ pub async fn get_game_metadata(
 		),
 	};
 
-	// Build the embed
-	let mut embed = CreateEmbed::new()
-		.title(game.name)
-		.color(0x2ecc71)
-		.field("Match Type", format!("`{}`", inner.game_match_type), true)
-		.field("Platform", platform.name, true);
+	let mut components: Vec<CreateContainerComponent<'static>> = Vec::new();
+
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(format!("## {}", game.name)),
+	));
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(format!(
+			"**Match Type:** `{}` • **Platform:** {}",
+			inner.game_match_type, platform.name
+		)),
+	));
 
 	if let Some(c) = company {
-		embed = embed.field("Company", c.name, true)
+		components.push(CreateContainerComponent::TextDisplay(
+			CreateTextDisplay::new(format!("**Company:** {}", c.name)),
+		));
 	}
 
-	embed = embed
-		.field("ROM Files", files_info, false)
-		.field("DAT File", dat_file_value, false);
+	components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(format!("### ROM Files\n{files_info}")),
+	));
+	components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(format!("### DAT File\n{dat_file_value}")),
+	));
 
-	for metadata_mapping in metadata_mappings {
-		let provider_info = match metadata_mapping.match_type {
-			MatchType::Automatic => {
-				let reason = metadata_mapping
-					.automatic_match_reason
-					.expect("Automatic match reason is missing");
-				let provider_id = metadata_mapping
-					.provider_id
-					.expect("Provider ID is missing for automatic match");
-
-				format!("\nReason: `{}`\nProvider ID: `{}`", reason, provider_id)
-			}
-			MatchType::Manual => {
-				let manual_match_type = metadata_mapping
-					.manual_match_type
-					.expect("Manual match type is missing");
-				let provider_id = metadata_mapping
-					.provider_id
-					.expect("Provider ID is missing for manual match");
-
-				format!(
-					"\nMatched By: `{}`\nProvider ID: `{}`",
-					manual_match_type, provider_id
-				)
-			}
-			MatchType::Failed => {
-				let failed_reason = metadata_mapping
-					.failed_match_reason
-					.expect("Failed match reason is missing");
-
-				format!("\nReason: `{}`", failed_reason)
-			}
-			MatchType::None => {
-				String::new() // No additional info for None
-			}
-		};
-
-		embed = embed.field(
-			format!("{} Metadata Mapping", metadata_mapping.provider_name),
-			format!("Status: `{}`{}", metadata_mapping.match_type, provider_info),
-			true,
-		);
+	if !metadata_mappings.is_empty() {
+		components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
+		components.push(CreateContainerComponent::TextDisplay(
+			CreateTextDisplay::new("### Metadata Mappings".to_owned()),
+		));
+		for metadata_mapping in metadata_mappings {
+			let provider_info = match metadata_mapping.match_type {
+				MetadataMatchType::Automatic => {
+					let reason = metadata_mapping
+						.automatic_match_reason
+						.expect("Automatic match reason is missing");
+					let provider_id = metadata_mapping
+						.provider_id
+						.expect("Provider ID is missing for automatic match");
+					format!("\nReason: `{reason}`\nProvider ID: `{provider_id}`")
+				}
+				MetadataMatchType::Manual => {
+					let manual_match_type = metadata_mapping
+						.manual_match_type
+						.expect("Manual match type is missing");
+					let provider_id = metadata_mapping
+						.provider_id
+						.expect("Provider ID is missing for manual match");
+					format!("\nMatched By: `{manual_match_type}`\nProvider ID: `{provider_id}`")
+				}
+				MetadataMatchType::Failed => {
+					let failed_reason = metadata_mapping
+						.failed_match_reason
+						.expect("Failed match reason is missing");
+					format!("\nReason: `{failed_reason}`")
+				}
+				MetadataMatchType::None => String::new(),
+			};
+			components.push(CreateContainerComponent::TextDisplay(
+				CreateTextDisplay::new(format!(
+					"**{}** — Status: `{}`{}",
+					metadata_mapping.provider_name, metadata_mapping.match_type, provider_info
+				)),
+			));
+		}
 	}
 
-	embed = embed.footer(CreateEmbedFooter::new(format!(
-		"Playmatch Game ID: {}",
-		game.id
-	)));
+	components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(format!("-# Playmatch Game ID: `{}`", game.id)),
+	));
 
-	ctx.send(CreateReply::default().embed(embed)).await?;
+	let container = CreateContainer::new(components).accent_colour(serenity::all::Colour(0x2ECC71));
+	ctx.send(components_v2::reply_from_container(container))
+		.await?;
 
 	Ok(())
 }
@@ -263,8 +285,11 @@ pub async fn create_game_suggestion(
 	comment: Option<String>,
 ) -> CommandResult {
 	if md5_hash.is_none() && sha1_hash.is_none() && sha256_hash.is_none() && name.is_none() {
-		ctx.reply("You must provide at least one of the following: MD5, SHA1, SHA256 or name")
-			.await?;
+		ctx.send(components_v2::status_reply(
+			Status::Error,
+			"You must provide at least one of the following: MD5, SHA1, SHA256 or name.",
+		))
+		.await?;
 		return Ok(());
 	}
 
@@ -273,7 +298,8 @@ pub async fn create_game_suggestion(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.create_game_suggestion(&GameSuggestionRequest {
+		.create_game_suggestion()
+		.body(GameSuggestionRequest {
 			provider_id: igdb_id.to_string(),
 			sha1: sha1_hash,
 			provider: Igdb,
@@ -283,26 +309,34 @@ pub async fn create_game_suggestion(
 			md5: md5_hash,
 			sha256: sha256_hash,
 		})
+		.send()
 		.await;
 
 	let suggestion = match result {
 		Ok(suggestion_value) => suggestion_value.into_inner(),
 		Err(e) => {
-			match e {
+			match &e {
 				Error::ErrorResponse(e_res) => {
 					if e_res.status() == StatusCode::NOT_FOUND {
-						ctx.reply("No Game found with the provided hashes or names")
-							.await?;
+						ctx.send(components_v2::status_reply(
+							Status::Error,
+							"No Game found with the provided hashes or names.",
+						))
+						.await?;
 					} else if e_res.status() == StatusCode::CONFLICT {
-						ctx.reply(
+						ctx.send(components_v2::status_reply(
+							Status::Error,
 							"A suggestion for this Game already exists with the same provider and provider id.",
-						)
+						))
 						.await?;
 					}
 				}
 				_ => {
-					ctx.reply(format!("Failed to create a suggestion for Game: {e}"))
-						.await?;
+					ctx.send(components_v2::status_reply(
+						Status::Error,
+						format!("Failed to create a suggestion for Game: {e}"),
+					))
+					.await?;
 					warn!("Failed to create a suggestion for Game: {e}");
 				}
 			}
@@ -310,12 +344,15 @@ pub async fn create_game_suggestion(
 		}
 	};
 
-	let game = match suggestion.game_id {
-		Some(game_id) => game_id,
+	let game_id = match suggestion.game_id {
+		Some(id) => id,
 		None => {
 			error!("Game ID is missing in the suggestion response! This should not happen.");
-			ctx.reply("Failed to create a suggestion for Game: Game ID is missing in the suggestion response! This should not happen.")
-				.await?;
+			ctx.send(components_v2::status_reply(
+				Status::Error,
+				"Failed to create a suggestion for Game: Game ID is missing in the suggestion response.",
+			))
+			.await?;
 			return Ok(());
 		}
 	};
@@ -323,14 +360,14 @@ pub async fn create_game_suggestion(
 	let game_response = ctx
 		.data()
 		.playmatch_client
-		.get_playmatch_game_with_relations_by_id(&game)
+		.get_playmatch_game_with_relations_by_id()
+		.id(game_id)
+		.send()
 		.await?;
 
 	tokio::spawn({
 		let playmatch_client = ctx.data().playmatch_client.clone();
-		let http = ctx.serenity_context().http.clone();
-		let cache = ctx.serenity_context().cache.clone();
-		let shard_messenger = ctx.serenity_context().shard.clone();
+		let serenity_ctx = ctx.serenity_context().clone();
 		let owners = ctx.framework().options().owners.clone();
 		let author_id = ctx.author().id;
 		let game_name = game_response.game.name.clone();
@@ -339,9 +376,7 @@ pub async fn create_game_suggestion(
 		async move {
 			handle_suggestion_message(SuggestionMessageHandleData {
 				playmatch_client,
-				http,
-				cache,
-				shard_messenger,
+				serenity_ctx,
 				suggestion_id: suggestion.id,
 				owners,
 				author_id,
@@ -355,11 +390,14 @@ pub async fn create_game_suggestion(
 		}
 	});
 
-	ctx.reply(format!(
-		"Successfully created suggestion for Game {}, Thank you for your contribution 🎉!\nWe will notify you once it has been approved or rejected.",
-		&game_response.game.name
+	ctx.send(components_v2::status_reply(
+		Status::Success,
+		format!(
+			"Successfully created suggestion for Game {}. Thank you for your contribution 🎉! We will notify you once it has been approved or rejected.",
+			&game_response.game.name
+		),
 	))
-		.await?;
+	.await?;
 
 	Ok(())
 }
@@ -377,32 +415,42 @@ pub async fn create_company_suggestion(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.create_company_suggestion(&CompanyOrPlatformSuggestionRequest {
+		.create_company_suggestion()
+		.body(CompanyOrPlatformSuggestionRequest {
 			provider_id: igdb_id.to_string(),
 			provider: Igdb,
 			name: name.clone(),
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
+		.send()
 		.await;
 
 	let suggestion = match result {
 		Ok(suggestion_value) => suggestion_value.into_inner(),
 		Err(e) => {
-			match e {
+			match &e {
 				Error::ErrorResponse(e_res) => {
 					if e_res.status() == StatusCode::NOT_FOUND {
-						ctx.reply("No Company found with the provided name").await?;
+						ctx.send(components_v2::status_reply(
+							Status::Error,
+							"No Company found with the provided name.",
+						))
+						.await?;
 					} else if e_res.status() == StatusCode::CONFLICT {
-						ctx.reply(
+						ctx.send(components_v2::status_reply(
+							Status::Error,
 							"A suggestion for this Company already exists with the same provider and provider id.",
-						)
+						))
 						.await?;
 					}
 				}
 				_ => {
-					ctx.reply(format!("Failed to create a suggestion for Company: {e}"))
-						.await?;
+					ctx.send(components_v2::status_reply(
+						Status::Error,
+						format!("Failed to create a suggestion for Company: {e}"),
+					))
+					.await?;
 					warn!("Failed to create a suggestion for Company: {e}");
 				}
 			}
@@ -412,18 +460,14 @@ pub async fn create_company_suggestion(
 
 	tokio::spawn({
 		let playmatch_client = ctx.data().playmatch_client.clone();
-		let http = ctx.serenity_context().http.clone();
-		let cache = ctx.serenity_context().cache.clone();
-		let shard_messenger = ctx.serenity_context().shard.clone();
+		let serenity_ctx = ctx.serenity_context().clone();
 		let owners = ctx.framework().options().owners.clone();
 		let author_id = ctx.author().id;
 		let company_name = name.clone();
 		async move {
 			handle_suggestion_message(SuggestionMessageHandleData {
 				playmatch_client,
-				http,
-				cache,
-				shard_messenger,
+				serenity_ctx,
 				suggestion_id: suggestion.id,
 				owners,
 				author_id,
@@ -437,11 +481,14 @@ pub async fn create_company_suggestion(
 		}
 	});
 
-	ctx.reply(format!(
-		"Successfully created suggestion for Platform {}, Thank you for your contribution 🎉!\nWe will notify you once it has been approved or rejected.",
-		&name
+	ctx.send(components_v2::status_reply(
+		Status::Success,
+		format!(
+			"Successfully created suggestion for Company {}. Thank you for your contribution 🎉! We will notify you once it has been approved or rejected.",
+			&name
+		),
 	))
-		.await?;
+	.await?;
 
 	Ok(())
 }
@@ -459,33 +506,42 @@ pub async fn create_platform_suggestion(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.create_platform_suggestion(&CompanyOrPlatformSuggestionRequest {
+		.create_platform_suggestion()
+		.body(CompanyOrPlatformSuggestionRequest {
 			provider_id: igdb_id.to_string(),
 			provider: Igdb,
 			name: name.clone(),
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
+		.send()
 		.await;
 
 	let suggestion = match result {
 		Ok(suggestion_value) => suggestion_value.into_inner(),
 		Err(e) => {
-			match e {
+			match &e {
 				Error::ErrorResponse(e_res) => {
 					if e_res.status() == StatusCode::NOT_FOUND {
-						ctx.reply("No Platform found with the provided name")
-							.await?;
+						ctx.send(components_v2::status_reply(
+							Status::Error,
+							"No Platform found with the provided name.",
+						))
+						.await?;
 					} else if e_res.status() == StatusCode::CONFLICT {
-						ctx.reply(
+						ctx.send(components_v2::status_reply(
+							Status::Error,
 							"A suggestion for this Platform already exists with the same provider and provider id.",
-						)
+						))
 						.await?;
 					}
 				}
 				_ => {
-					ctx.reply(format!("Failed to create a suggestion for Platform: {e}"))
-						.await?;
+					ctx.send(components_v2::status_reply(
+						Status::Error,
+						format!("Failed to create a suggestion for Platform: {e}"),
+					))
+					.await?;
 					warn!("Failed to create a suggestion for Platform: {e}");
 				}
 			}
@@ -500,14 +556,14 @@ pub async fn create_platform_suggestion(
 	let platform = ctx
 		.data()
 		.playmatch_client
-		.get_platform_by_id(&platform_id)
+		.get_platform_by_id()
+		.id(platform_id)
+		.send()
 		.await?;
 
 	tokio::spawn({
 		let playmatch_client = ctx.data().playmatch_client.clone();
-		let http = ctx.serenity_context().http.clone();
-		let cache = ctx.serenity_context().cache.clone();
-		let shard_messenger = ctx.serenity_context().shard.clone();
+		let serenity_ctx = ctx.serenity_context().clone();
 		let owners = ctx.framework().options().owners.clone();
 		let author_id = ctx.author().id;
 		let platform_name = name.clone();
@@ -515,9 +571,7 @@ pub async fn create_platform_suggestion(
 		async move {
 			handle_suggestion_message(SuggestionMessageHandleData {
 				playmatch_client,
-				http,
-				cache,
-				shard_messenger,
+				serenity_ctx,
 				suggestion_id: suggestion.id,
 				owners,
 				author_id,
@@ -531,9 +585,12 @@ pub async fn create_platform_suggestion(
 		}
 	});
 
-	ctx.reply(format!(
-		"Successfully created suggestion for Platform {}, Thank you for your contribution 🎉!\nWe will notify you once it has been approved or rejected.",
-		&name
+	ctx.send(components_v2::status_reply(
+		Status::Success,
+		format!(
+			"Successfully created suggestion for Platform {}. Thank you for your contribution 🎉! We will notify you once it has been approved or rejected.",
+			&name
+		),
 	))
 	.await?;
 
@@ -553,7 +610,8 @@ pub async fn manual_match_platform(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.manually_match_platform(&CompanyOrPlatformMatchRequest {
+		.manually_match_platform()
+		.body(CompanyOrPlatformMatchRequest {
 			manual_match_type: if playmatch_user_ctx.is_admin {
 				Admin
 			} else {
@@ -565,27 +623,36 @@ pub async fn manual_match_platform(
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
+		.send()
 		.await;
 
 	if let Err(e) = &result {
 		match e {
-			Error::ErrorResponse(e_res) => {
-				if e_res.status() == StatusCode::NOT_FOUND {
-					ctx.reply("No Platform found with the provided name")
-						.await?;
-					return Ok(());
-				}
+			Error::ErrorResponse(e_res) if e_res.status() == StatusCode::NOT_FOUND => {
+				ctx.send(components_v2::status_reply(
+					Status::Error,
+					"No Platform found with the provided name.",
+				))
+				.await?;
+				return Ok(());
 			}
 			_ => {
-				ctx.reply(format!("Failed to match Platform: {e}")).await?;
+				ctx.send(components_v2::status_reply(
+					Status::Error,
+					format!("Failed to match Platform: {e}"),
+				))
+				.await?;
 				warn!("Failed to match Platform: {e}");
 				return Ok(());
 			}
 		}
 	}
 
-	ctx.reply("Successfully matched Platform, Thank you for your contribution 🎉!")
-		.await?;
+	ctx.send(components_v2::status_reply(
+		Status::Success,
+		"Successfully matched Platform. Thank you for your contribution 🎉!",
+	))
+	.await?;
 
 	Ok(())
 }
@@ -603,7 +670,8 @@ pub async fn manual_match_company(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.manually_match_company(&CompanyOrPlatformMatchRequest {
+		.manually_match_company()
+		.body(CompanyOrPlatformMatchRequest {
 			manual_match_type: if playmatch_user_ctx.is_admin {
 				Admin
 			} else {
@@ -615,26 +683,36 @@ pub async fn manual_match_company(
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
+		.send()
 		.await;
 
 	if let Err(e) = &result {
 		match e {
-			Error::ErrorResponse(e_res) => {
-				if e_res.status() == StatusCode::NOT_FOUND {
-					ctx.reply("No Company found with the provided name").await?;
-					return Ok(());
-				}
+			Error::ErrorResponse(e_res) if e_res.status() == StatusCode::NOT_FOUND => {
+				ctx.send(components_v2::status_reply(
+					Status::Error,
+					"No Company found with the provided name.",
+				))
+				.await?;
+				return Ok(());
 			}
 			_ => {
-				ctx.reply(format!("Failed to match Company: {e}")).await?;
+				ctx.send(components_v2::status_reply(
+					Status::Error,
+					format!("Failed to match Company: {e}"),
+				))
+				.await?;
 				warn!("Failed to match Company: {e}");
 				return Ok(());
 			}
 		}
 	}
 
-	ctx.reply("Successfully matched Company, Thank you for your contribution 🎉!")
-		.await?;
+	ctx.send(components_v2::status_reply(
+		Status::Success,
+		"Successfully matched Company. Thank you for your contribution 🎉!",
+	))
+	.await?;
 
 	Ok(())
 }
@@ -651,8 +729,11 @@ pub async fn manual_match_game(
 	comment: Option<String>,
 ) -> CommandResult {
 	if md5_hash.is_none() && sha1_hash.is_none() && sha256_hash.is_none() && name.is_none() {
-		ctx.reply("You must provide at least one of the following: MD5, SHA1, SHA256 or name")
-			.await?;
+		ctx.send(components_v2::status_reply(
+			Status::Error,
+			"You must provide at least one of the following: MD5, SHA1, SHA256 or name.",
+		))
+		.await?;
 		return Ok(());
 	}
 
@@ -661,7 +742,8 @@ pub async fn manual_match_game(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.manually_match_game(&GameMatchRequest {
+		.manually_match_game()
+		.body(GameMatchRequest {
 			manual_match_type: if playmatch_user_ctx.is_admin {
 				Admin
 			} else {
@@ -676,28 +758,35 @@ pub async fn manual_match_game(
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
+		.send()
 		.await;
 
-	if let Err(e) = &result {
-		match e {
-			Error::ErrorResponse(e_res) => {
-				if e_res.status() == StatusCode::NOT_FOUND {
-					ctx.reply("No game found with the provided hash or name")
-						.await?;
-					return Ok(());
-				}
+	let matched = match result {
+		Err(e) => match &e {
+			Error::ErrorResponse(e_res) if e_res.status() == StatusCode::NOT_FOUND => {
+				ctx.send(components_v2::status_reply(
+					Status::Error,
+					"No game found with the provided hash or name.",
+				))
+				.await?;
+				return Ok(());
 			}
 			_ => {
-				ctx.reply(format!("Failed to match game: {e}")).await?;
+				ctx.send(components_v2::status_reply(
+					Status::Error,
+					format!("Failed to match game: {e}"),
+				))
+				.await?;
 				warn!("Failed to match game: {e}");
 				return Ok(());
 			}
-		}
-	}
+		},
+		Ok(value) => value.into_inner().len(),
+	};
 
-	ctx.reply(format!(
-		"Successfully matched game, Playmatch matched {} roms thanks to you 🎉!",
-		result?.into_inner().len()
+	ctx.send(components_v2::status_reply(
+		Status::Success,
+		format!("Successfully matched game. Playmatch matched {matched} roms thanks to you 🎉!"),
 	))
 	.await?;
 
@@ -717,9 +806,7 @@ enum SuggestionType {
 
 struct SuggestionMessageHandleData {
 	playmatch_client: Arc<playmatch_client::Client>,
-	http: Arc<Http>,
-	cache: Arc<Cache>,
-	shard_messenger: ShardMessenger,
+	serenity_ctx: Context,
 	suggestion_id: Uuid,
 	owners: HashSet<UserId>,
 	author_id: UserId,
@@ -731,23 +818,28 @@ struct SuggestionMessageHandleData {
 }
 
 async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> CommandResult {
-	let channel_opt = data.cache.guilds().iter().find_map(|guild_id| {
-		data.cache.guild(*guild_id).and_then(|guild| {
-			guild
-				.channels
-				.get(&ChannelId::from(*SUGGESTION_CHANNEL_ID))
-				.cloned()
-		})
+	let http: &Http = data.serenity_ctx.http.as_ref();
+	let cache: Arc<Cache> = data.serenity_ctx.cache.clone();
+
+	let channel_id = ChannelId::new(*SUGGESTION_CHANNEL_ID);
+	let channel_exists = cache.guilds().iter().any(|guild_id| {
+		cache
+			.guild(*guild_id)
+			.is_some_and(|g| g.channels.contains_key(&channel_id))
 	});
 
-	let channel = channel_opt.ok_or_else(|| anyhow!("Suggestion channel not found"))?;
+	if !channel_exists {
+		return Err(anyhow!("Suggestion channel not found"));
+	}
 
 	let suggestion = data
 		.playmatch_client
-		.get_suggestion_by_id(&data.suggestion_id)
+		.get_suggestion_by_id()
+		.id(data.suggestion_id)
+		.send()
 		.await?;
 
-	let author = data.http.get_user(data.author_id).await?;
+	let author = http.get_user(data.author_id).await?;
 
 	let display_type = match data.r#type {
 		SuggestionType::Platform => "Platform",
@@ -755,76 +847,90 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		SuggestionType::Game => "Game",
 	};
 
-	let mut embed = CreateEmbed::new()
-		.title(format!("📝 New {} Metadata Suggestion", display_type))
-		.color(0x3498DB);
+	let mut components: Vec<CreateContainerComponent<'static>> = Vec::new();
+
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(format!("📝 New {display_type} Metadata Suggestion")),
+	));
+	components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
 
 	if let Some(company) = &data.company {
-		embed = embed.field("Company", company, true);
-	}
-
-	if let Some(platform) = &data.platform {
-		embed = embed.field("Platform", platform, true);
-	}
-
-	embed = embed
-		.field(display_type.to_string(), format!("**{}**", data.name), true)
-		.field(
-			"Suggested by",
-			format!("<@{}> ({})", author.id, author.name),
-			false,
-		)
-		.field("Metadata Provider", "IGDB", true)
-		.field("Provider ID", format!("`{}`", suggestion.provider_id), true)
-		.field(
-			"Comment",
-			data.comment
-				.unwrap_or_else(|| "No comment provided".to_string()),
-			false,
-		)
-		.footer(CreateEmbedFooter::new(
-			"Use the buttons below to approve or decline this suggestion.",
+		components.push(CreateContainerComponent::TextDisplay(
+			CreateTextDisplay::new(format!("**Company:** {company}")),
 		));
+	}
+	if let Some(platform) = &data.platform {
+		components.push(CreateContainerComponent::TextDisplay(
+			CreateTextDisplay::new(format!("**Platform:** {platform}")),
+		));
+	}
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(format!("**{display_type}:** **{}**", data.name)),
+	));
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(format!(
+			"**Suggested by:** <@{}> ({})",
+			author.id, author.name
+		)),
+	));
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new("**Metadata Provider:** IGDB".to_owned()),
+	));
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(format!("**Provider ID:** `{}`", suggestion.provider_id)),
+	));
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(format!(
+			"**Comment:** {}",
+			data.comment
+				.clone()
+				.unwrap_or_else(|| "No comment provided".to_string())
+		)),
+	));
+	components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
+	components.push(CreateContainerComponent::TextDisplay(
+		CreateTextDisplay::new(
+			"-# Use the buttons below to approve or decline this suggestion.".to_owned(),
+		),
+	));
+	components.push(CreateContainerComponent::ActionRow(
+		CreateActionRow::buttons(vec![
+			CreateButton::new("approve")
+				.label("Approve")
+				.style(ButtonStyle::Success),
+			CreateButton::new("decline")
+				.label("Decline")
+				.style(ButtonStyle::Danger),
+		]),
+	));
 
-	let message = channel
-		.send_message(
-			&data.http,
-			CreateMessage::new()
-				.embed(embed)
-				.button(
-					CreateButton::new("approve")
-						.label("Approve")
-						.style(ButtonStyle::Success),
-				)
-				.button(
-					CreateButton::new("decline")
-						.label("Decline")
-						.style(ButtonStyle::Danger),
-				),
-		)
+	let container = CreateContainer::new(components).accent_colour(serenity::all::Colour(0x3498DB));
+
+	let message = channel_id
+		.widen()
+		.send_message(http, components_v2::message_from_container(container))
 		.await?;
 
-	let interaction_opt = message
-		.await_component_interaction(data.shard_messenger)
-		.filter(move |i| data.owners.clone().contains(&i.user.id))
-		.timeout(Duration::from_secs(7 * 24 * 60)) // 7 days
+	let owners = data.owners.clone();
+	let interaction_opt = ComponentInteractionCollector::new(&data.serenity_ctx)
+		.message_id(message.id)
+		.timeout(Duration::from_secs(7 * 24 * 60 * 60))
+		.filter(move |i| owners.contains(&i.user.id))
 		.await;
 
 	let interaction = match interaction_opt {
 		Some(interaction) => interaction,
 		None => {
-			debug!("No interaction received in time, deleting suggestion");
-			message.delete(&data.http).await?;
+			debug!("No interaction received in time, deleting suggestion message");
+			message.delete(http, None).await?;
 			return Ok(());
 		}
 	};
 
 	match &interaction.data.kind {
-		ComponentInteractionDataKind::Button => {
-			debug!("Interaction data kind: Button");
-		}
+		ComponentInteractionDataKind::Button => debug!("Interaction data kind: Button"),
 		_ => warn!("unexpected interaction data kind"),
-	};
+	}
 
 	let platform_text = if let Some(platform) = &data.platform {
 		format!(" on Platform **{platform}**")
@@ -836,10 +942,12 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		"approve" => {
 			let updated = data
 				.playmatch_client
-				.approve_suggestion(&data.suggestion_id)
+				.approve_suggestion()
+				.id(data.suggestion_id)
+				.send()
 				.await?;
 
-			let message = match data.r#type {
+			let message_text = match data.r#type {
 				SuggestionType::Platform | SuggestionType::Company => format!(
 					"Your Playmatch Metadata Suggestion for {display_type} **{}** was approved! Thank you very much for your contribution 🎉!",
 					data.name
@@ -850,24 +958,33 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 				),
 			};
 
+			let dm_container = CreateContainer::new(vec![CreateContainerComponent::TextDisplay(
+				CreateTextDisplay::new(message_text),
+			)])
+			.accent_colour(serenity::all::Colour(0x2ECC71));
 			author
-				.dm(
-					&data.http,
-					CreateMessage::new().embed(CreateEmbed::new().description(message)),
-				)
+				.id
+				.dm(http, components_v2::message_from_container(dm_container))
 				.await?;
 		}
 		"decline" => {
 			data.playmatch_client
-				.delete_suggestion(&data.suggestion_id)
+				.delete_suggestion()
+				.id(data.suggestion_id)
+				.send()
 				.await?;
 
+			let dm_text = format!(
+				"Your Playmatch Metadata Suggestion for {display_type} **{}**{} was declined! If you want to find out why, please contact the Playmatch team.",
+				data.name, platform_text
+			);
+			let dm_container = CreateContainer::new(vec![CreateContainerComponent::TextDisplay(
+				CreateTextDisplay::new(dm_text),
+			)])
+			.accent_colour(serenity::all::Colour::RED);
 			author
-				.dm(
-					&data.http,
-					CreateMessage::new()
-						.embed(CreateEmbed::new().description(format!("Your Playmatch Metadata Suggestion for {display_type} **{}**{}  was declined! If you want to find out why, please contact the Playmatch team.", data.name, platform_text))),
-				)
+				.id
+				.dm(http, components_v2::message_from_container(dm_container))
 				.await?;
 		}
 		_ => {
@@ -876,11 +993,8 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		}
 	};
 
-	match message.delete(&data.http).await {
-		Ok(_) => {}
-		Err(e) => {
-			error!("{e}")
-		}
+	if let Err(e) = message.delete(http, None).await {
+		error!("{e}");
 	}
 
 	Ok(())
@@ -910,11 +1024,13 @@ async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<Playm
 	let mut playmatch_user_response = ctx
 		.data()
 		.playmatch_client
-		.create_or_get_by_discord_id(&CreateOrGetUserRequest {
+		.create_or_get_by_discord_id()
+		.body(CreateOrGetUserRequest {
 			discord_id: author.id.get() as i64,
 			permissions,
-			username: author.name.clone(),
+			username: author.name.to_string(),
 		})
+		.send()
 		.await?;
 
 	if playmatch_user_response.permissions == UserPermissions::User && (is_trusted || is_admin) {
@@ -931,10 +1047,10 @@ async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<Playm
 
 		ctx.data()
 			.playmatch_client
-			.update_user_permission_level(
-				&playmatch_user_response.id,
-				&UpdateUserPermissionsRequest { new_permission },
-			)
+			.update_user_permission_level()
+			.id(playmatch_user_response.id)
+			.body(UpdateUserPermissionsRequest { new_permission })
+			.send()
 			.await?;
 
 		debug!("User permission updated for user: {}", author.id);

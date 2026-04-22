@@ -1,7 +1,7 @@
 use crate::abstraction::command::{CommandContext, paginate};
 use crate::util::create_discord_markdown_table;
 use playmatch_client::types::{
-	CompanyMetadataResponse, ExternalMetadata, MatchType, MetadataProvider,
+	CompanyMetadataResponse, ExternalMetadata, MetadataMatchType, MetadataProvider,
 	PlatformMetadataResponse,
 };
 use uuid::Uuid;
@@ -66,8 +66,8 @@ where
 
 			let is_igdb_matched = if let Some(igdb_mapping) = igdb_mapping {
 				match igdb_mapping.match_type {
-					MatchType::Automatic | MatchType::Manual => true,
-					MatchType::Failed | MatchType::None => false,
+					MetadataMatchType::Automatic | MetadataMatchType::Manual => true,
+					MetadataMatchType::Failed | MetadataMatchType::None => false,
 				}
 			} else {
 				false
