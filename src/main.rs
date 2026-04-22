@@ -9,8 +9,9 @@ use crate::command::{
 use abstraction::command::CommandData;
 use dotenvy::dotenv;
 use log::info;
-use serenity::all::GuildId;
+use serenity::all::{GuildId, Http, Token};
 use serenity::prelude::GatewayIntents;
+use std::sync::Arc;
 
 pub mod built_info {
 	// The file has been placed there by the build script.
@@ -19,7 +20,6 @@ pub mod built_info {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-	// Load environment variables from .env file, if present but do nothing if it fails
 	let _ = dotenv();
 	tracing_subscriber::fmt::init();
 
@@ -31,57 +31,51 @@ async fn main() -> anyhow::Result<()> {
 		built_info::BUILT_TIME_UTC
 	);
 
-	let token = std::env::var("DISCORD_TOKEN").expect("missing DISCORD_TOKEN");
-
+	let token = Token::from_env("DISCORD_TOKEN")?;
 	let intents = GatewayIntents::non_privileged();
 
-	let framework = poise::Framework::builder()
-		.options(poise::FrameworkOptions {
-			commands: get_all_commands(),
-			post_command: |ctx| {
-				Box::pin(async move {
-					let author = ctx.author();
-					let guild = ctx.guild();
-					let cmd = ctx.command();
+	let http = Http::new(token.clone());
+	poise::builtins::register_globally(&http, get_global_commands().iter()).await?;
+	poise::builtins::register_in_guild(
+		&http,
+		retrorealm_server_commands().iter(),
+		GuildId::new(*RETROREALM_SERVER_ID),
+	)
+	.await?;
 
-					let user_info = format!("{}[{}]", author.name, author.id);
-
-					let guild_info = if let Some(guild) = guild {
-						format!("{}[{}]", guild.name, guild.id)
-					} else {
-						"Direct Messages".to_string()
-					};
-
-					let command_name = cmd.name.to_lowercase();
-
-					info!("{user_info} @ {guild_info} {command_name}");
-				})
-			},
-			..Default::default()
-		})
-		.setup(|ctx, _ready, _framework| {
+	let options = poise::FrameworkOptions {
+		commands: get_all_commands(),
+		post_command: |ctx| {
 			Box::pin(async move {
-				poise::builtins::register_globally(ctx, get_global_commands().as_slice()).await?;
+				let author = ctx.author();
+				let guild = ctx.guild();
+				let cmd = ctx.command();
 
-				poise::builtins::register_in_guild(
-					ctx,
-					retrorealm_server_commands().as_slice(),
-					GuildId::from(*RETROREALM_SERVER_ID),
-				)
-				.await?;
+				let user_info = format!("{}[{}]", author.name, author.id);
 
-				Ok(CommandData::default())
+				let guild_info = if let Some(guild) = guild {
+					format!("{}[{}]", guild.name, guild.id)
+				} else {
+					"Direct Messages".to_string()
+				};
+
+				let command_name = cmd.name.to_lowercase();
+
+				info!("{user_info} @ {guild_info} {command_name}");
 			})
-		})
-		.initialize_owners(true)
-		.build();
+		},
+		..Default::default()
+	};
 
-	let mut client = serenity::Client::builder(token, intents)
-		.event_handler(events::Handler)
-		.framework(framework)
-		.await?;
+	let framework = poise::Framework::new(options);
 
-	client.start().await?;
+	let client = serenity::Client::builder(token, intents)
+		.framework(Box::new(framework))
+		.event_handler(Arc::new(events::Handler))
+		.data(Arc::new(CommandData::default()) as _)
+		.await;
+
+	client?.start().await?;
 
 	Ok(())
 }
