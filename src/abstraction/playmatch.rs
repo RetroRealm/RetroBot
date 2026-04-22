@@ -52,8 +52,8 @@ where
 
 	let default_headers: Vec<String> = vec![
 		"Name".to_string(),
-		"Igdb Match".to_string(),
-		"Igdb Id".to_string(),
+		"IGDB Match".to_string(),
+		"IGDB ID".to_string(),
 	];
 
 	let mapped_markdown_rows = input
