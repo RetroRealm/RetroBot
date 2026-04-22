@@ -1,11 +1,10 @@
+use crate::abstraction::components_v2::{self, Status};
 use crate::built_info;
 use lazy_static::lazy_static;
-use poise::CreateReply;
-use poise::serenity_prelude::CreateActionRow;
 use reqwest::header::HeaderMap;
-use serenity::all::RoleId;
-use serenity::builder::{
-	CreateButton, CreateEmbed, CreateInteractionResponse, CreateInteractionResponseMessage,
+use serenity::all::{
+	ButtonStyle, ComponentInteractionCollector, CreateButton, CreateComponent,
+	CreateInteractionResponse, CreateInteractionResponseMessage, MessageFlags, RoleId,
 };
 use std::env;
 use std::sync::Arc;
@@ -28,7 +27,7 @@ impl Default for CommandData {
 			"Authorization",
 			format!(
 				"Bearer {}",
-				std::env::var("PLAYMATCH_API_AUTH").expect("missing PLAYMATCH_API_AUTH")
+				env::var("PLAYMATCH_API_AUTH").expect("missing PLAYMATCH_API_AUTH")
 			)
 			.parse()
 			.expect("Invalid Authorization header"),
@@ -72,7 +71,6 @@ pub async fn is_user_trusted_or_above(ctx: CommandContext<'_>) -> CheckResult {
 	let user = ctx.author();
 	let member = ctx.author_member().await;
 
-	// Check if user is owner
 	if ctx.framework().options().owners.contains(&user.id) {
 		return Ok(true);
 	}
@@ -83,75 +81,86 @@ pub async fn is_user_trusted_or_above(ctx: CommandContext<'_>) -> CheckResult {
 
 	let member = member.unwrap();
 
-	// Check if user has the Staff or Trusted role
 	if member.roles.iter().any(|role_id| {
 		role_id == &RoleId::new(*STAFF_ROLE_ID) || TRUSTED_ROLE_IDS.contains(&role_id.get())
 	}) {
 		return Ok(true);
 	}
 
-	ctx.say("You do not have permission to use this command.")
-		.await?;
+	ctx.send(components_v2::status_reply(
+		Status::Error,
+		"You do not have permission to use this command.",
+	))
+	.await?;
 
 	Ok(false)
 }
 
-pub async fn paginate<U, E>(
+pub async fn paginate<U: Send + Sync + 'static, E>(
 	ctx: poise::Context<'_, U, E>,
 	pages: &[&str],
 ) -> Result<(), serenity::Error> {
-	// Define some unique identifiers for the navigation buttons
 	let ctx_id = ctx.id();
 	let author_id = ctx.author().id;
-	let prev_button_id = format!("{}prev", ctx_id);
-	let next_button_id = format!("{}next", ctx_id);
+	let prev_button_id = format!("{ctx_id}prev");
+	let next_button_id = format!("{ctx_id}next");
+	let ctx_id_str = ctx_id.to_string();
+	let total = pages.len().max(1);
 
-	// Send the embed with the first page as content
-	let reply = {
-		let components = CreateActionRow::Buttons(vec![
-			CreateButton::new(&prev_button_id).emoji('◀'),
-			CreateButton::new(&next_button_id).emoji('▶'),
-		]);
-
-		CreateReply::default()
-			.embed(CreateEmbed::default().description(pages[0]))
-			.components(vec![components])
+	let build_buttons = |prev_id: &str, next_id: &str| -> Vec<CreateButton<'static>> {
+		vec![
+			CreateButton::new(prev_id.to_owned())
+				.emoji('◀')
+				.style(ButtonStyle::Secondary),
+			CreateButton::new(next_id.to_owned())
+				.emoji('▶')
+				.style(ButtonStyle::Secondary),
+		]
 	};
 
-	ctx.send(reply).await?;
+	let container = components_v2::paginate_container(
+		pages[0].to_owned(),
+		0,
+		total,
+		build_buttons(&prev_button_id, &next_button_id),
+	);
+	ctx.send(components_v2::reply_from_container(container))
+		.await?;
 
-	// Loop through incoming interactions with the navigation buttons
-	let mut current_page = 0;
-	while let Some(press) = serenity::collector::ComponentInteractionCollector::new(ctx)
-		// We defined our button IDs to start with `ctx_id`. If they don't, some other command's
-		// button was pressed
-		.filter(move |press| {
-			press.data.custom_id.starts_with(&ctx_id.to_string()) && press.user.id == author_id
-		})
-		// Timeout when no navigation button has been pressed for 24 hours
-		.timeout(Duration::from_secs(3600 * 24))
-		.await
-	{
-		// Depending on which button was pressed, go to next or previous page
+	let mut current_page = 0usize;
+	loop {
+		let prefix = ctx_id_str.clone();
+		let Some(press) = ComponentInteractionCollector::new(ctx.serenity_context())
+			.timeout(Duration::from_secs(3600 * 24))
+			.author_id(author_id)
+			.filter(move |press| press.data.custom_id.starts_with(&prefix))
+			.await
+		else {
+			break;
+		};
+
 		if press.data.custom_id == next_button_id {
-			current_page += 1;
-			if current_page >= pages.len() {
-				current_page = 0;
-			}
+			current_page = (current_page + 1) % total;
 		} else if press.data.custom_id == prev_button_id {
-			current_page = current_page.checked_sub(1).unwrap_or(pages.len() - 1);
+			current_page = current_page.checked_sub(1).unwrap_or(total - 1);
 		} else {
-			// This is an unrelated button interaction
 			continue;
 		}
 
-		// Update the message with the new page contents
+		let container = components_v2::paginate_container(
+			pages[current_page].to_owned(),
+			current_page,
+			total,
+			build_buttons(&prev_button_id, &next_button_id),
+		);
+
 		press
 			.create_response(
-				ctx.serenity_context(),
+				ctx.serenity_context().http.as_ref(),
 				CreateInteractionResponse::UpdateMessage(
 					CreateInteractionResponseMessage::new()
-						.embed(CreateEmbed::new().description(pages[current_page])),
+						.flags(MessageFlags::IS_COMPONENTS_V2)
+						.components(vec![CreateComponent::Container(container)]),
 				),
 			)
 			.await?;
