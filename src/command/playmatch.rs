@@ -101,17 +101,21 @@ pub async fn get_game_metadata(
 	file_name: String,
 	file_size: i64,
 ) -> CommandResult {
-	let response = ctx
-		.data()
-		.playmatch_client
+	let client = ctx.data().playmatch_client.clone();
+	let mut request = client
 		.identify_game_and_relations()
 		.file_name(file_name)
-		.file_size(file_size)
-		.md5(md5_hash.unwrap_or_default())
-		.sha1(sha1_hash.unwrap_or_default())
-		.sha256(sha256_hash.unwrap_or_default())
-		.send()
-		.await?;
+		.file_size(file_size);
+	if let Some(md5) = md5_hash {
+		request = request.md5(md5);
+	}
+	if let Some(sha1) = sha1_hash {
+		request = request.sha1(sha1);
+	}
+	if let Some(sha256) = sha256_hash {
+		request = request.sha256(sha256);
+	}
+	let response = request.send().await?;
 
 	let inner = response.into_inner();
 
