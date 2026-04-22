@@ -649,7 +649,7 @@ pub async fn manual_match_platform(
 			Error::ErrorResponse(e_res) if e_res.status() == StatusCode::NOT_FOUND => {
 				ctx.send(components_v2::status_reply(
 					Status::Error,
-					"No Platform found with the provided name.",
+					"No Platform found for the provided name.",
 				))
 				.await?;
 				return Ok(());
@@ -666,11 +666,22 @@ pub async fn manual_match_platform(
 		}
 	}
 
-	ctx.send(components_v2::status_reply(
-		Status::Success,
-		"Successfully matched Platform. Thank you for your contribution 🎉!",
-	))
-	.await?;
+	let igdb_id_str = igdb_id.to_string();
+	let info = igdb::fetch_platform(&ctx.data().playmatch_client, &igdb_id_str).await;
+
+	let mut card = Card::new(Status::Success, "Matched Platform");
+	if let Some(info) = info.as_ref() {
+		if let Some(logo) = info.logo_url.clone() {
+			card = card.thumbnail(logo);
+		}
+		card = card.subheading(info.name.clone());
+	}
+	card = card.row("IGDB ID", format!("`{igdb_id_str}`"));
+	if let Some(info) = info.as_ref() {
+		card = card.link(CreateButton::new_link(info.page_url.clone()).label("View on IGDB"));
+	}
+
+	ctx.send(card.into_reply()).await?;
 
 	Ok(())
 }
@@ -709,7 +720,7 @@ pub async fn manual_match_company(
 			Error::ErrorResponse(e_res) if e_res.status() == StatusCode::NOT_FOUND => {
 				ctx.send(components_v2::status_reply(
 					Status::Error,
-					"No Company found with the provided name.",
+					"No Company found for the provided name.",
 				))
 				.await?;
 				return Ok(());
@@ -726,11 +737,24 @@ pub async fn manual_match_company(
 		}
 	}
 
-	ctx.send(components_v2::status_reply(
-		Status::Success,
-		"Successfully matched Company. Thank you for your contribution 🎉!",
-	))
-	.await?;
+	let igdb_id_str = igdb_id.to_string();
+	let info = igdb::fetch_company(&ctx.data().playmatch_client, &igdb_id_str).await;
+
+	let mut card = Card::new(Status::Success, "Matched Company");
+	if let Some(info) = info.as_ref() {
+		if let Some(logo) = info.logo_url.clone() {
+			card = card.thumbnail(logo);
+		}
+		card = card.subheading(info.name.clone());
+	}
+	card = card.row("IGDB ID", format!("`{igdb_id_str}`"));
+	if let Some(info) = info.as_ref()
+		&& let Some(page_url) = info.page_url.clone()
+	{
+		card = card.link(CreateButton::new_link(page_url).label("View on IGDB"));
+	}
+
+	ctx.send(card.into_reply()).await?;
 
 	Ok(())
 }
@@ -784,7 +808,7 @@ pub async fn manual_match_game(
 			Error::ErrorResponse(e_res) if e_res.status() == StatusCode::NOT_FOUND => {
 				ctx.send(components_v2::status_reply(
 					Status::Error,
-					"No game found with the provided hash or name.",
+					"No Game found for the provided hashes or name.",
 				))
 				.await?;
 				return Ok(());
@@ -792,21 +816,34 @@ pub async fn manual_match_game(
 			_ => {
 				ctx.send(components_v2::status_reply(
 					Status::Error,
-					format!("Failed to match game: {e}"),
+					format!("Failed to match Game: {e}"),
 				))
 				.await?;
-				warn!("Failed to match game: {e}");
+				warn!("Failed to match Game: {e}");
 				return Ok(());
 			}
 		},
 		Ok(value) => value.into_inner().len(),
 	};
 
-	ctx.send(components_v2::status_reply(
-		Status::Success,
-		format!("Successfully matched game. Playmatch matched {matched} roms thanks to you 🎉!"),
-	))
-	.await?;
+	let igdb_id_str = igdb_id.to_string();
+	let info = igdb::fetch_game(&ctx.data().playmatch_client, &igdb_id_str).await;
+
+	let mut card = Card::new(Status::Success, "Matched Game");
+	if let Some(info) = info.as_ref() {
+		if let Some(cover) = info.cover_url.clone() {
+			card = card.thumbnail(cover);
+		}
+		card = card.subheading(info.name.clone());
+	}
+	card = card
+		.row("IGDB ID", format!("`{igdb_id_str}`"))
+		.row("ROMs updated", matched.to_string());
+	if let Some(info) = info.as_ref() {
+		card = card.link(CreateButton::new_link(info.page_url.clone()).label("View on IGDB"));
+	}
+
+	ctx.send(card.into_reply()).await?;
 
 	Ok(())
 }
