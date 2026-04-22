@@ -41,7 +41,7 @@ pub async fn toggle_update_role(ctx: CommandContext<'_>) -> CommandResult {
 		member.remove_role(ctx.http(), role_id, None).await?;
 		ctx.send(components_v2::status_reply(
 			Status::Success,
-			"Update Role Removed!",
+			"Updates role removed.",
 		))
 		.await?;
 		return Ok(());
@@ -50,7 +50,7 @@ pub async fn toggle_update_role(ctx: CommandContext<'_>) -> CommandResult {
 	member.add_role(ctx.http(), role_id, None).await?;
 	ctx.send(components_v2::status_reply(
 		Status::Success,
-		"Update Role Added!",
+		"Updates role added.",
 	))
 	.await?;
 

@@ -1,5 +1,5 @@
 use crate::abstraction::command::{CommandContext, CommandResult};
-use crate::abstraction::components_v2::{self, Status};
+use crate::abstraction::components_v2::{self, Card, Status};
 
 /// Show this menu
 #[poise::command(
@@ -21,41 +21,40 @@ pub async fn help(
 		});
 
 		if let Some(cmd) = found {
-			let params = if cmd.parameters.is_empty() {
-				"—".to_string()
+			let parameters = if cmd.parameters.is_empty() {
+				"None".to_string()
 			} else {
 				cmd.parameters
 					.iter()
 					.map(|p| {
 						let req = if p.required { "" } else { "?" };
-						format!("`{}{}`", p.name, req)
+						match p.description.as_deref() {
+							Some(desc) => format!("`{}{}` {}", p.name, req, desc),
+							None => format!("`{}{}`", p.name, req),
+						}
 					})
 					.collect::<Vec<_>>()
-					.join(" ")
+					.join("\n")
 			};
 
 			let category = cmd
 				.category
 				.as_deref()
 				.map(|s| s.to_string())
-				.unwrap_or_else(|| "—".to_string());
+				.unwrap_or_else(|| "Uncategorized".to_string());
 			let description = cmd
 				.description
 				.as_deref()
 				.map(|s| s.to_string())
-				.unwrap_or_else(|| "—".to_string());
+				.unwrap_or_else(|| "No description".to_string());
 
-			let rows = vec![
-				("Category".to_string(), category),
-				("Description".to_string(), description),
-				("Parameters".to_string(), params),
-			];
-
-			ctx.send(components_v2::card_reply(
-				Status::Info,
-				format!("/{}", cmd.qualified_name),
-				rows,
-			))
+			ctx.send(
+				Card::new(Status::Info, format!("/{}", cmd.qualified_name))
+					.row("Category", category)
+					.row("Description", description)
+					.row("Parameters", parameters)
+					.into_reply(),
+			)
 			.await?;
 		} else {
 			ctx.send(components_v2::status_reply(
@@ -80,29 +79,19 @@ pub async fn help(
 			.map(|s| s.to_string())
 			.unwrap_or_else(|| "Uncategorized".to_string());
 		let line = match cmd.description.as_deref() {
-			Some(desc) => format!("`/{}` — {desc}", cmd.qualified_name),
+			Some(desc) => format!("`/{}` {desc}", cmd.qualified_name),
 			None => format!("`/{}`", cmd.qualified_name),
 		};
 		by_category.entry(category).or_default().push(line);
 	}
 
-	let rows: Vec<(String, String)> = by_category
-		.into_iter()
-		.map(|(cat, lines)| (cat, lines.join("\n")))
-		.collect();
+	let mut card = Card::new(Status::Info, "RetroBot commands");
+	for (category, lines) in by_category {
+		card = card.section(category).text(lines.join("\n"));
+	}
+	card = card.footer("Type `/help <command>` for details on a specific command.");
 
-	ctx.send(components_v2::card_reply(
-		Status::Info,
-		"RetroBot commands",
-		rows,
-	))
-	.await?;
-
-	ctx.send(components_v2::status_reply(
-		Status::Info,
-		"Type `/help <command>` for details on a specific command.",
-	))
-	.await?;
+	ctx.send(card.into_reply()).await?;
 
 	Ok(())
 }
@@ -115,7 +104,10 @@ pub async fn help(
 )]
 pub async fn ping(ctx: CommandContext<'_>) -> CommandResult {
 	let handle = ctx
-		.send(components_v2::status_reply(Status::Info, "Calculating..."))
+		.send(components_v2::status_reply(
+			Status::Info,
+			"Pinging Discord...",
+		))
 		.await?;
 
 	let handle_message = handle.message().await?;
