@@ -18,14 +18,14 @@ tracing = "^0.1"
 tracing-subscriber = "^0.3"
 serde = { version = "^1.0", features = ["derive"] }
 chrono = "^0.4"
-reqwest = { version = "^0.12", features = ["rustls-tls", "json", "stream"], default-features = false }
+reqwest = { version = "^0.13", features = ["rustls", "json", "stream"], default-features = false }
 lazy_static = "^1.5"
 futures = "^0.3"
 uuid = { version = "^1.23", features = ["serde", "v4"] }
 
-# discord api
-serenity = { version = "^0.12", features = ["client", "gateway", "rustls_backend", "model", "framework", "cache", "builder", "chrono"] }
-poise = { version = "^0.6", features = ["chrono", "cache"] }
+# discord api (Components V2 only exists on unreleased next branches)
+serenity = { git = "https://github.com/serenity-rs/serenity", branch = "next", default-features = false, features = ["gateway", "rustls_backend", "model", "framework", "cache", "builder", "chrono"] }
+poise = { git = "https://github.com/serenity-rs/poise", branch = "serenity-next", features = ["chrono", "cache"] }
 
 # playmatch
 playmatch_client = { path = "playmatch_client" }
