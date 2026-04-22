@@ -17,9 +17,9 @@ use playmatch_client::types::{
 };
 use reqwest::StatusCode;
 use serenity::all::{
-	ButtonStyle, Cache, ChannelId, ComponentInteractionCollector, ComponentInteractionDataKind,
-	Context, CreateActionRow, CreateButton, CreateContainer, CreateContainerComponent,
-	CreateSeparator, CreateTextDisplay, UserId,
+	ButtonStyle, Cache, ChannelId, ComponentInteractionCollector, Context, CreateButton,
+	CreateComponent, CreateInteractionResponse, CreateInteractionResponseMessage, EditMessage,
+	MessageFlags, UserId,
 };
 use serenity::http::Http;
 use std::collections::HashSet;
@@ -943,68 +943,65 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		SuggestionType::Game => "Game",
 	};
 
-	let mut components: Vec<CreateContainerComponent<'static>> = Vec::new();
+	let igdb_page_url: Option<String> = match data.r#type {
+		SuggestionType::Game => igdb::fetch_game(&data.playmatch_client, &suggestion.provider_id)
+			.await
+			.map(|i| i.page_url),
+		SuggestionType::Company => {
+			igdb::fetch_company(&data.playmatch_client, &suggestion.provider_id)
+				.await
+				.and_then(|i| i.page_url)
+		}
+		SuggestionType::Platform => {
+			igdb::fetch_platform(&data.playmatch_client, &suggestion.provider_id)
+				.await
+				.map(|i| i.page_url)
+		}
+	};
 
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(format!("📝 New {display_type} Metadata Suggestion")),
-	));
-	components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
+	let build_card = |status: Status, heading: String| -> Card<'static> {
+		let mut card = Card::new(status, heading).row(
+			"Suggested by",
+			format!("<@{}> ({})", author.id, author.name),
+		);
+		card = card.row(display_type.to_string(), data.name.clone());
+		if let Some(platform) = data.platform.clone() {
+			card = card.row("Platform", platform);
+		}
+		if let Some(company) = data.company.clone() {
+			card = card.row("Company", company);
+		}
+		card = card.row("IGDB ID", format!("`{}`", suggestion.provider_id.clone()));
+		card = card.row(
+			"Comment",
+			data.comment.clone().unwrap_or_else(|| "—".to_string()),
+		);
+		card
+	};
 
-	if let Some(company) = &data.company {
-		components.push(CreateContainerComponent::TextDisplay(
-			CreateTextDisplay::new(format!("**Company:** {company}")),
-		));
+	let mut staff_card = build_card(
+		Status::Info,
+		format!("New {display_type} Metadata Suggestion"),
+	);
+	if let Some(url) = igdb_page_url.clone() {
+		staff_card = staff_card.link(CreateButton::new_link(url).label("View on IGDB"));
 	}
-	if let Some(platform) = &data.platform {
-		components.push(CreateContainerComponent::TextDisplay(
-			CreateTextDisplay::new(format!("**Platform:** {platform}")),
-		));
-	}
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(format!("**{display_type}:** **{}**", data.name)),
-	));
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(format!(
-			"**Suggested by:** <@{}> ({})",
-			author.id, author.name
-		)),
-	));
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new("**Metadata Provider:** IGDB".to_owned()),
-	));
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(format!("**Provider ID:** `{}`", suggestion.provider_id)),
-	));
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(format!(
-			"**Comment:** {}",
-			data.comment
-				.clone()
-				.unwrap_or_else(|| "No comment provided".to_string())
-		)),
-	));
-	components.push(CreateContainerComponent::Separator(CreateSeparator::new()));
-	components.push(CreateContainerComponent::TextDisplay(
-		CreateTextDisplay::new(
-			"-# Use the buttons below to approve or decline this suggestion.".to_owned(),
-		),
-	));
-	components.push(CreateContainerComponent::ActionRow(
-		CreateActionRow::buttons(vec![
+	staff_card = staff_card
+		.link(
 			CreateButton::new("approve")
 				.label("Approve")
 				.style(ButtonStyle::Success),
+		)
+		.link(
 			CreateButton::new("decline")
 				.label("Decline")
 				.style(ButtonStyle::Danger),
-		]),
-	));
-
-	let container = CreateContainer::new(components).accent_colour(serenity::all::Colour(0x3498DB));
+		)
+		.footer("Only bot owners can approve or decline.");
 
 	let message = channel_id
 		.widen()
-		.send_message(http, components_v2::message_from_container(container))
+		.send_message(http, staff_card.into_message())
 		.await?;
 
 	let owners = data.owners.clone();
@@ -1014,25 +1011,20 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		.filter(move |i| owners.contains(&i.user.id))
 		.await;
 
-	let interaction = match interaction_opt {
-		Some(interaction) => interaction,
-		None => {
-			debug!("No interaction received in time, deleting suggestion message");
-			message.delete(http, None).await?;
-			return Ok(());
+	let Some(interaction) = interaction_opt else {
+		debug!("No interaction received in time, marking suggestion as expired");
+		let expired = build_card(Status::Warning, "Suggestion Expired".to_string())
+			.footer("Expired without review after 7 days.");
+		let edit = EditMessage::new()
+			.flags(MessageFlags::IS_COMPONENTS_V2)
+			.components(vec![CreateComponent::Container(expired.into_container())]);
+		if let Err(e) = message.clone().edit(http, edit).await {
+			error!("failed to edit expired suggestion message: {e}");
 		}
+		return Ok(());
 	};
 
-	match &interaction.data.kind {
-		ComponentInteractionDataKind::Button => debug!("Interaction data kind: Button"),
-		_ => warn!("unexpected interaction data kind"),
-	}
-
-	let platform_text = if let Some(platform) = &data.platform {
-		format!(" on Platform **{platform}**")
-	} else {
-		String::new()
-	};
+	let staff_id = interaction.user.id;
 
 	match interaction.data.custom_id.as_str() {
 		"approve" => {
@@ -1043,25 +1035,37 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 				.send()
 				.await?;
 
-			let message_text = match data.r#type {
-				SuggestionType::Platform | SuggestionType::Company => format!(
-					"Your Playmatch Metadata Suggestion for {display_type} **{}** was approved! Thank you very much for your contribution 🎉!",
-					data.name
-				),
-				SuggestionType::Game => format!(
-					"Your Playmatch Metadata Suggestion for {display_type} **{}**{} was approved! Playmatch was able to match {} game(s) thanks to this! Thank you very much for your contribution 🎉!",
-					data.name, platform_text, updated.updated
-				),
-			};
+			let mut resolution = build_card(Status::Success, "Suggestion Approved".to_string())
+				.row("Handled by", format!("<@{staff_id}>"));
+			if matches!(data.r#type, SuggestionType::Game) {
+				resolution = resolution.row("ROMs updated", updated.updated.to_string());
+			}
+			if let Some(url) = igdb_page_url.clone() {
+				resolution = resolution.link(CreateButton::new_link(url).label("View on IGDB"));
+			}
 
-			let dm_container = CreateContainer::new(vec![CreateContainerComponent::TextDisplay(
-				CreateTextDisplay::new(message_text),
-			)])
-			.accent_colour(serenity::all::Colour(0x2ECC71));
-			author
-				.id
-				.dm(http, components_v2::message_from_container(dm_container))
+			interaction
+				.create_response(
+					http,
+					CreateInteractionResponse::UpdateMessage(
+						CreateInteractionResponseMessage::new()
+							.flags(MessageFlags::IS_COMPONENTS_V2)
+							.components(vec![CreateComponent::Container(
+								resolution.into_container(),
+							)]),
+					),
+				)
 				.await?;
+
+			let mut dm = Card::new(Status::Success, "Suggestion Approved")
+				.row(display_type.to_string(), data.name.clone());
+			if matches!(data.r#type, SuggestionType::Game) {
+				dm = dm.row("ROMs updated", updated.updated.to_string());
+			}
+			dm = dm.text("Thanks for contributing.");
+			if let Err(e) = author.id.dm(http, dm.into_message()).await {
+				error!("failed to DM submitter on approval: {e}");
+			}
 		}
 		"decline" => {
 			data.playmatch_client
@@ -1070,27 +1074,35 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 				.send()
 				.await?;
 
-			let dm_text = format!(
-				"Your Playmatch Metadata Suggestion for {display_type} **{}**{} was declined! If you want to find out why, please contact the Playmatch team.",
-				data.name, platform_text
-			);
-			let dm_container = CreateContainer::new(vec![CreateContainerComponent::TextDisplay(
-				CreateTextDisplay::new(dm_text),
-			)])
-			.accent_colour(serenity::all::Colour::RED);
-			author
-				.id
-				.dm(http, components_v2::message_from_container(dm_container))
+			let mut resolution = build_card(Status::Error, "Suggestion Declined".to_string())
+				.row("Handled by", format!("<@{staff_id}>"));
+			if let Some(url) = igdb_page_url.clone() {
+				resolution = resolution.link(CreateButton::new_link(url).label("View on IGDB"));
+			}
+
+			interaction
+				.create_response(
+					http,
+					CreateInteractionResponse::UpdateMessage(
+						CreateInteractionResponseMessage::new()
+							.flags(MessageFlags::IS_COMPONENTS_V2)
+							.components(vec![CreateComponent::Container(
+								resolution.into_container(),
+							)]),
+					),
+				)
 				.await?;
+
+			let dm = Card::new(Status::Error, "Suggestion Declined")
+				.row(display_type.to_string(), data.name.clone())
+				.text("If you'd like context, reach out to the Playmatch team.");
+			if let Err(e) = author.id.dm(http, dm.into_message()).await {
+				error!("failed to DM submitter on decline: {e}");
+			}
 		}
 		_ => {
 			warn!("Unexpected button interaction");
-			return Ok(());
 		}
-	};
-
-	if let Err(e) = message.delete(http, None).await {
-		error!("{e}");
 	}
 
 	Ok(())
