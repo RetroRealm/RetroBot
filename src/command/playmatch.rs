@@ -338,13 +338,13 @@ pub async fn create_game_suggestion(
 					if e_res.status() == StatusCode::NOT_FOUND {
 						ctx.send(components_v2::status_reply(
 							Status::Error,
-							"No Game found with the provided hashes or names.",
+							"No Game found for the provided hashes or name.",
 						))
 						.await?;
 					} else if e_res.status() == StatusCode::CONFLICT {
 						ctx.send(components_v2::status_reply(
 							Status::Error,
-							"A suggestion for this Game already exists with the same provider and provider id.",
+							"A suggestion for this Game already exists from the same provider.",
 						))
 						.await?;
 					}
@@ -352,10 +352,10 @@ pub async fn create_game_suggestion(
 				_ => {
 					ctx.send(components_v2::status_reply(
 						Status::Error,
-						format!("Failed to create a suggestion for Game: {e}"),
+						format!("Failed to submit suggestion for Game: {e}"),
 					))
 					.await?;
-					warn!("Failed to create a suggestion for Game: {e}");
+					warn!("Failed to submit suggestion for Game: {e}");
 				}
 			}
 			return Ok(());
@@ -368,7 +368,7 @@ pub async fn create_game_suggestion(
 			error!("Game ID is missing in the suggestion response! This should not happen.");
 			ctx.send(components_v2::status_reply(
 				Status::Error,
-				"Failed to create a suggestion for Game: Game ID is missing in the suggestion response.",
+				"Internal error: game ID missing from suggestion response.",
 			))
 			.await?;
 			return Ok(());
@@ -408,14 +408,24 @@ pub async fn create_game_suggestion(
 		}
 	});
 
-	ctx.send(components_v2::status_reply(
-		Status::Success,
-		format!(
-			"Successfully created suggestion for Game {}. Thank you for your contribution 🎉! We will notify you once it has been approved or rejected.",
-			&game_response.game.name
-		),
-	))
-	.await?;
+	let igdb_id_str = igdb_id.to_string();
+	let info = igdb::fetch_game(&ctx.data().playmatch_client, &igdb_id_str).await;
+
+	let mut card = Card::new(Status::Success, "Suggestion Submitted");
+	if let Some(info) = info.as_ref()
+		&& let Some(cover) = info.cover_url.clone()
+	{
+		card = card.thumbnail(cover);
+	}
+	card = card
+		.row("Game", game_response.game.name.clone())
+		.row("IGDB ID", format!("`{igdb_id_str}`"))
+		.text("We'll DM you when a maintainer approves or declines this.");
+	if let Some(info) = info.as_ref() {
+		card = card.link(CreateButton::new_link(info.page_url.clone()).label("View on IGDB"));
+	}
+
+	ctx.send(card.into_reply()).await?;
 
 	Ok(())
 }
@@ -452,13 +462,13 @@ pub async fn create_company_suggestion(
 					if e_res.status() == StatusCode::NOT_FOUND {
 						ctx.send(components_v2::status_reply(
 							Status::Error,
-							"No Company found with the provided name.",
+							"No Company found for the provided name.",
 						))
 						.await?;
 					} else if e_res.status() == StatusCode::CONFLICT {
 						ctx.send(components_v2::status_reply(
 							Status::Error,
-							"A suggestion for this Company already exists with the same provider and provider id.",
+							"A suggestion for this Company already exists from the same provider.",
 						))
 						.await?;
 					}
@@ -466,10 +476,10 @@ pub async fn create_company_suggestion(
 				_ => {
 					ctx.send(components_v2::status_reply(
 						Status::Error,
-						format!("Failed to create a suggestion for Company: {e}"),
+						format!("Failed to submit suggestion for Company: {e}"),
 					))
 					.await?;
-					warn!("Failed to create a suggestion for Company: {e}");
+					warn!("Failed to submit suggestion for Company: {e}");
 				}
 			}
 			return Ok(());
@@ -499,14 +509,26 @@ pub async fn create_company_suggestion(
 		}
 	});
 
-	ctx.send(components_v2::status_reply(
-		Status::Success,
-		format!(
-			"Successfully created suggestion for Company {}. Thank you for your contribution 🎉! We will notify you once it has been approved or rejected.",
-			&name
-		),
-	))
-	.await?;
+	let igdb_id_str = igdb_id.to_string();
+	let info = igdb::fetch_company(&ctx.data().playmatch_client, &igdb_id_str).await;
+
+	let mut card = Card::new(Status::Success, "Suggestion Submitted");
+	if let Some(info) = info.as_ref()
+		&& let Some(logo) = info.logo_url.clone()
+	{
+		card = card.thumbnail(logo);
+	}
+	card = card
+		.row("Company", name.clone())
+		.row("IGDB ID", format!("`{igdb_id_str}`"))
+		.text("We'll DM you when a maintainer approves or declines this.");
+	if let Some(info) = info.as_ref()
+		&& let Some(page_url) = info.page_url.clone()
+	{
+		card = card.link(CreateButton::new_link(page_url).label("View on IGDB"));
+	}
+
+	ctx.send(card.into_reply()).await?;
 
 	Ok(())
 }
@@ -543,13 +565,13 @@ pub async fn create_platform_suggestion(
 					if e_res.status() == StatusCode::NOT_FOUND {
 						ctx.send(components_v2::status_reply(
 							Status::Error,
-							"No Platform found with the provided name.",
+							"No Platform found for the provided name.",
 						))
 						.await?;
 					} else if e_res.status() == StatusCode::CONFLICT {
 						ctx.send(components_v2::status_reply(
 							Status::Error,
-							"A suggestion for this Platform already exists with the same provider and provider id.",
+							"A suggestion for this Platform already exists from the same provider.",
 						))
 						.await?;
 					}
@@ -557,19 +579,28 @@ pub async fn create_platform_suggestion(
 				_ => {
 					ctx.send(components_v2::status_reply(
 						Status::Error,
-						format!("Failed to create a suggestion for Platform: {e}"),
+						format!("Failed to submit suggestion for Platform: {e}"),
 					))
 					.await?;
-					warn!("Failed to create a suggestion for Platform: {e}");
+					warn!("Failed to submit suggestion for Platform: {e}");
 				}
 			}
 			return Ok(());
 		}
 	};
 
-	let platform_id = suggestion.platform_id.ok_or_else(|| {
-		anyhow!("Platform ID is missing in the suggestion response! This should not happen.")
-	})?;
+	let platform_id = match suggestion.platform_id {
+		Some(id) => id,
+		None => {
+			error!("Platform ID is missing in the suggestion response! This should not happen.");
+			ctx.send(components_v2::status_reply(
+				Status::Error,
+				"Internal error: platform ID missing from suggestion response.",
+			))
+			.await?;
+			return Ok(());
+		}
+	};
 
 	let platform = ctx
 		.data()
@@ -603,14 +634,24 @@ pub async fn create_platform_suggestion(
 		}
 	});
 
-	ctx.send(components_v2::status_reply(
-		Status::Success,
-		format!(
-			"Successfully created suggestion for Platform {}. Thank you for your contribution 🎉! We will notify you once it has been approved or rejected.",
-			&name
-		),
-	))
-	.await?;
+	let igdb_id_str = igdb_id.to_string();
+	let info = igdb::fetch_platform(&ctx.data().playmatch_client, &igdb_id_str).await;
+
+	let mut card = Card::new(Status::Success, "Suggestion Submitted");
+	if let Some(info) = info.as_ref()
+		&& let Some(logo) = info.logo_url.clone()
+	{
+		card = card.thumbnail(logo);
+	}
+	card = card
+		.row("Platform", name.clone())
+		.row("IGDB ID", format!("`{igdb_id_str}`"))
+		.text("We'll DM you when a maintainer approves or declines this.");
+	if let Some(info) = info.as_ref() {
+		card = card.link(CreateButton::new_link(info.page_url.clone()).label("View on IGDB"));
+	}
+
+	ctx.send(card.into_reply()).await?;
 
 	Ok(())
 }
