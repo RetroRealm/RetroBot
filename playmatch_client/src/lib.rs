@@ -577,6 +577,155 @@ pub mod types {
             Default::default()
         }
     }
+    ///Filter knobs passed straight through to SGDB's asset endpoints. All
+    /// fields optional; serialised values are stable so the cache helper
+    /// can hash them.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Filter knobs passed straight through to SGDB's asset
+    /// endpoints. All fields\noptional; serialised values are stable so the
+    /// cache helper can hash them.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "dimensions": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "epilepsy": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SgdbTriState"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "humor": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SgdbTriState"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "limit": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "mimes": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "nsfw": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SgdbTriState"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "oneoftag": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "page": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "styles": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "types": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct AssetFilters {
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub dimensions: ::std::vec::Vec<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub epilepsy: ::std::option::Option<SgdbTriState>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub humor: ::std::option::Option<SgdbTriState>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub limit: ::std::option::Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub mimes: ::std::vec::Vec<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub nsfw: ::std::option::Option<SgdbTriState>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub oneoftag: ::std::vec::Vec<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub page: ::std::option::Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub styles: ::std::vec::Vec<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub types: ::std::vec::Vec<::std::string::String>,
+    }
+    impl ::std::default::Default for AssetFilters {
+        fn default() -> Self {
+            Self {
+                dimensions: Default::default(),
+                epilepsy: Default::default(),
+                humor: Default::default(),
+                limit: Default::default(),
+                mimes: Default::default(),
+                nsfw: Default::default(),
+                oneoftag: Default::default(),
+                page: Default::default(),
+                styles: Default::default(),
+                types: Default::default(),
+            }
+        }
+    }
+    impl AssetFilters {
+        pub fn builder() -> builder::AssetFilters {
+            Default::default()
+        }
+    }
     ///Reason why a game was automatically matched.
     ///
     /// <details><summary>JSON schema</summary>
@@ -591,7 +740,12 @@ pub mod types {
     ///    "ViaChild",
     ///    "ViaParent",
     ///    "NormalizedName",
-    ///    "NormalizedAlternativeName"
+    ///    "NormalizedAlternativeName",
+    ///    "Md5Hash",
+    ///    "Sha1Hash",
+    ///    "CrcHash",
+    ///    "CrossProviderDirectName",
+    ///    "CrossProviderNormalizedName"
     ///  ]
     ///}
     /// ```
@@ -615,6 +769,11 @@ pub mod types {
         ViaParent,
         NormalizedName,
         NormalizedAlternativeName,
+        Md5Hash,
+        Sha1Hash,
+        CrcHash,
+        CrossProviderDirectName,
+        CrossProviderNormalizedName,
     }
     impl ::std::fmt::Display for AutomaticMatchReason {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
@@ -625,6 +784,11 @@ pub mod types {
                 Self::ViaParent => f.write_str("ViaParent"),
                 Self::NormalizedName => f.write_str("NormalizedName"),
                 Self::NormalizedAlternativeName => f.write_str("NormalizedAlternativeName"),
+                Self::Md5Hash => f.write_str("Md5Hash"),
+                Self::Sha1Hash => f.write_str("Sha1Hash"),
+                Self::CrcHash => f.write_str("CrcHash"),
+                Self::CrossProviderDirectName => f.write_str("CrossProviderDirectName"),
+                Self::CrossProviderNormalizedName => f.write_str("CrossProviderNormalizedName"),
             }
         }
     }
@@ -638,6 +802,11 @@ pub mod types {
                 "ViaParent" => Ok(Self::ViaParent),
                 "NormalizedName" => Ok(Self::NormalizedName),
                 "NormalizedAlternativeName" => Ok(Self::NormalizedAlternativeName),
+                "Md5Hash" => Ok(Self::Md5Hash),
+                "Sha1Hash" => Ok(Self::Sha1Hash),
+                "CrcHash" => Ok(Self::CrcHash),
+                "CrossProviderDirectName" => Ok(Self::CrossProviderDirectName),
+                "CrossProviderNormalizedName" => Ok(Self::CrossProviderNormalizedName),
                 _ => Err("invalid value".into()),
             }
         }
@@ -1792,6 +1961,14 @@ pub mod types {
     ///    "manualMatchType": {
     ///      "$ref": "#/components/schemas/ManualMatchMode"
     ///    },
+    ///    "matchedName": {
+    ///      "description": "Optional canonical title from the provider for
+    /// cross-provider name propagation.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
     ///    "name": {
     ///      "description": "Name of the Company or Platform to match.",
     ///      "type": "string"
@@ -1825,6 +2002,14 @@ pub mod types {
         pub comment: ::std::option::Option<::std::string::String>,
         #[serde(rename = "manualMatchType")]
         pub manual_match_type: ManualMatchMode,
+        ///Optional canonical title from the provider for cross-provider name
+        /// propagation.
+        #[serde(
+            rename = "matchedName",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub matched_name: ::std::option::Option<::std::string::String>,
         ///Name of the Company or Platform to match.
         pub name: ::std::string::String,
         pub provider: MetadataProvider,
@@ -3194,7 +3379,9 @@ pub mod types {
     ///  "type": "string",
     ///  "enum": [
     ///    "NoDirectMatch",
-    ///    "TooManyMatches"
+    ///    "TooManyMatches",
+    ///    "Ambiguous",
+    ///    "TooManyFiles"
     ///  ]
     ///}
     /// ```
@@ -3214,12 +3401,16 @@ pub mod types {
     pub enum FailedMatchReason {
         NoDirectMatch,
         TooManyMatches,
+        Ambiguous,
+        TooManyFiles,
     }
     impl ::std::fmt::Display for FailedMatchReason {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
                 Self::NoDirectMatch => f.write_str("NoDirectMatch"),
                 Self::TooManyMatches => f.write_str("TooManyMatches"),
+                Self::Ambiguous => f.write_str("Ambiguous"),
+                Self::TooManyFiles => f.write_str("TooManyFiles"),
             }
         }
     }
@@ -3229,6 +3420,8 @@ pub mod types {
             match value {
                 "NoDirectMatch" => Ok(Self::NoDirectMatch),
                 "TooManyMatches" => Ok(Self::TooManyMatches),
+                "Ambiguous" => Ok(Self::Ambiguous),
+                "TooManyFiles" => Ok(Self::TooManyFiles),
                 _ => Err("invalid value".into()),
             }
         }
@@ -4494,6 +4687,14 @@ pub mod types {
     ///    "manualMatchType": {
     ///      "$ref": "#/components/schemas/ManualMatchMode"
     ///    },
+    ///    "matchedName": {
+    ///      "description": "Optional canonical title from the provider for
+    /// cross-provider name propagation.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
     ///    "md5": {
     ///      "description": "MD5 hash of the game file.",
     ///      "type": [
@@ -4550,6 +4751,14 @@ pub mod types {
         pub comment: ::std::option::Option<::std::string::String>,
         #[serde(rename = "manualMatchType")]
         pub manual_match_type: ManualMatchMode,
+        ///Optional canonical title from the provider for cross-provider name
+        /// propagation.
+        #[serde(
+            rename = "matchedName",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub matched_name: ::std::option::Option<::std::string::String>,
         ///MD5 hash of the game file.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub md5: ::std::option::Option<::std::string::String>,
@@ -5857,6 +6066,386 @@ pub mod types {
             Default::default()
         }
     }
+    ///`LbGame`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "database_id",
+    ///    "name",
+    ///    "platform_name"
+    ///  ],
+    ///  "properties": {
+    ///    "community_rating": {
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "float"
+    ///    },
+    ///    "community_rating_count": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "cooperative": {
+    ///      "type": [
+    ///        "boolean",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "database_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "developer": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "esrb": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "genres": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "max_players": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "overview": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "platform_name": {
+    ///      "type": "string"
+    ///    },
+    ///    "publisher": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "release_date": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "release_type": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "release_year": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "status": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "video_url": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "wikipedia_url": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct LbGame {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub community_rating: ::std::option::Option<f32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub community_rating_count: ::std::option::Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cooperative: ::std::option::Option<bool>,
+        pub database_id: i64,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub developer: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub esrb: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub genres: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub max_players: ::std::option::Option<i32>,
+        pub name: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub overview: ::std::option::Option<::std::string::String>,
+        pub platform_name: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub publisher: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub release_date: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub release_type: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub release_year: ::std::option::Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub status: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub video_url: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub wikipedia_url: ::std::option::Option<::std::string::String>,
+    }
+    impl LbGame {
+        pub fn builder() -> builder::LbGame {
+            Default::default()
+        }
+    }
+    ///`LbGameAlternateName`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "launchbox_game_database_id",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "launchbox_game_database_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "region": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct LbGameAlternateName {
+        pub launchbox_game_database_id: i64,
+        pub name: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub region: ::std::option::Option<::std::string::String>,
+    }
+    impl LbGameAlternateName {
+        pub fn builder() -> builder::LbGameAlternateName {
+            Default::default()
+        }
+    }
+    ///`LbGameImage`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "file_name",
+    ///    "image_type",
+    ///    "launchbox_game_database_id"
+    ///  ],
+    ///  "properties": {
+    ///    "file_name": {
+    ///      "type": "string"
+    ///    },
+    ///    "image_type": {
+    ///      "type": "string"
+    ///    },
+    ///    "launchbox_game_database_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "region": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct LbGameImage {
+        pub file_name: ::std::string::String,
+        pub image_type: ::std::string::String,
+        pub launchbox_game_database_id: i64,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub region: ::std::option::Option<::std::string::String>,
+    }
+    impl LbGameImage {
+        pub fn builder() -> builder::LbGameImage {
+            Default::default()
+        }
+    }
+    ///`LbPlatform`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "category": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "cpu": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "developer": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "display": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "emulated": {
+    ///      "type": [
+    ///        "boolean",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "graphics": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "manufacturer": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "max_controllers": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "media": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "memory": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "notes": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "release_date": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "sound": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct LbPlatform {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub category: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cpu: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub developer: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub display: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub emulated: ::std::option::Option<bool>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub graphics: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub manufacturer: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub max_controllers: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub media: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub memory: ::std::option::Option<::std::string::String>,
+        pub name: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub notes: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub release_date: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sound: ::std::option::Option<::std::string::String>,
+    }
+    impl LbPlatform {
+        pub fn builder() -> builder::LbPlatform {
+            Default::default()
+        }
+    }
     ///How a game was manually matched.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6020,7 +6609,15 @@ pub mod types {
     ///  "description": "Metadata provider for game/platform/company.",
     ///  "type": "string",
     ///  "enum": [
-    ///    "IGDB"
+    ///    "IGDB",
+    ///    "SteamGridDB",
+    ///    "ScreenScraper",
+    ///    "MobyGames",
+    ///    "LaunchBox",
+    ///    "EmuReady",
+    ///    "OpenVGDB",
+    ///    "RetroAchievements",
+    ///    "TheGamesDB"
     ///  ]
     ///}
     /// ```
@@ -6040,11 +6637,30 @@ pub mod types {
     pub enum MetadataProvider {
         #[serde(rename = "IGDB")]
         Igdb,
+        #[serde(rename = "SteamGridDB")]
+        SteamGridDb,
+        ScreenScraper,
+        MobyGames,
+        LaunchBox,
+        EmuReady,
+        #[serde(rename = "OpenVGDB")]
+        OpenVgdb,
+        RetroAchievements,
+        #[serde(rename = "TheGamesDB")]
+        TheGamesDb,
     }
     impl ::std::fmt::Display for MetadataProvider {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
                 Self::Igdb => f.write_str("IGDB"),
+                Self::SteamGridDb => f.write_str("SteamGridDB"),
+                Self::ScreenScraper => f.write_str("ScreenScraper"),
+                Self::MobyGames => f.write_str("MobyGames"),
+                Self::LaunchBox => f.write_str("LaunchBox"),
+                Self::EmuReady => f.write_str("EmuReady"),
+                Self::OpenVgdb => f.write_str("OpenVGDB"),
+                Self::RetroAchievements => f.write_str("RetroAchievements"),
+                Self::TheGamesDb => f.write_str("TheGamesDB"),
             }
         }
     }
@@ -6053,6 +6669,14 @@ pub mod types {
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "IGDB" => Ok(Self::Igdb),
+                "SteamGridDB" => Ok(Self::SteamGridDb),
+                "ScreenScraper" => Ok(Self::ScreenScraper),
+                "MobyGames" => Ok(Self::MobyGames),
+                "LaunchBox" => Ok(Self::LaunchBox),
+                "EmuReady" => Ok(Self::EmuReady),
+                "OpenVGDB" => Ok(Self::OpenVgdb),
+                "RetroAchievements" => Ok(Self::RetroAchievements),
+                "TheGamesDB" => Ok(Self::TheGamesDb),
                 _ => Err("invalid value".into()),
             }
         }
@@ -6077,6 +6701,612 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+    ///`MgAltTitle`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "title"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "title": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgAltTitle {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        pub title: ::std::string::String,
+    }
+    impl MgAltTitle {
+        pub fn builder() -> builder::MgAltTitle {
+            Default::default()
+        }
+    }
+    ///`MgCover`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "image",
+    ///    "thumbnail_image"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "height": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "image": {
+    ///      "type": "string"
+    ///    },
+    ///    "scan_of": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "thumbnail_image": {
+    ///      "type": "string"
+    ///    },
+    ///    "width": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgCover {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub height: ::std::option::Option<i64>,
+        pub image: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub scan_of: ::std::option::Option<::std::string::String>,
+        pub thumbnail_image: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub width: ::std::option::Option<i64>,
+    }
+    impl MgCover {
+        pub fn builder() -> builder::MgCover {
+            Default::default()
+        }
+    }
+    ///`MgCoverGroup`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "covers"
+    ///  ],
+    ///  "properties": {
+    ///    "comments": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "countries": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "covers": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/MgCover"
+    ///      }
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgCoverGroup {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub comments: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub countries: ::std::vec::Vec<::std::string::String>,
+        pub covers: ::std::vec::Vec<MgCover>,
+    }
+    impl MgCoverGroup {
+        pub fn builder() -> builder::MgCoverGroup {
+            Default::default()
+        }
+    }
+    ///`MgCoversResp`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "cover_groups"
+    ///  ],
+    ///  "properties": {
+    ///    "cover_groups": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/MgCoverGroup"
+    ///      }
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgCoversResp {
+        pub cover_groups: ::std::vec::Vec<MgCoverGroup>,
+    }
+    impl MgCoversResp {
+        pub fn builder() -> builder::MgCoversResp {
+            Default::default()
+        }
+    }
+    ///`MgGame`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "game_id",
+    ///    "title"
+    ///  ],
+    ///  "properties": {
+    ///    "alternate_titles": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/MgAltTitle"
+    ///      }
+    ///    },
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "game_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "genres": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/MgGenre"
+    ///      }
+    ///    },
+    ///    "moby_score": {
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ],
+    ///      "format": "float"
+    ///    },
+    ///    "moby_score_count": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "moby_url": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "official_url": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "platforms": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/MgGamePlatformBrief"
+    ///      }
+    ///    },
+    ///    "sample_cover": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/MgSampleCover"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "sample_screenshots": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/MgSampleScreenshot"
+    ///      }
+    ///    },
+    ///    "title": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgGame {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub alternate_titles: ::std::option::Option<::std::vec::Vec<MgAltTitle>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        pub game_id: i64,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub genres: ::std::option::Option<::std::vec::Vec<MgGenre>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub moby_score: ::std::option::Option<f32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub moby_score_count: ::std::option::Option<i64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub moby_url: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub official_url: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub platforms: ::std::option::Option<::std::vec::Vec<MgGamePlatformBrief>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sample_cover: ::std::option::Option<MgSampleCover>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sample_screenshots: ::std::option::Option<::std::vec::Vec<MgSampleScreenshot>>,
+        pub title: ::std::string::String,
+    }
+    impl MgGame {
+        pub fn builder() -> builder::MgGame {
+            Default::default()
+        }
+    }
+    ///`MgGamePlatformBrief`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "platform_id",
+    ///    "platform_name"
+    ///  ],
+    ///  "properties": {
+    ///    "first_release_date": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "platform_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "platform_name": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgGamePlatformBrief {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub first_release_date: ::std::option::Option<::std::string::String>,
+        pub platform_id: i64,
+        pub platform_name: ::std::string::String,
+    }
+    impl MgGamePlatformBrief {
+        pub fn builder() -> builder::MgGamePlatformBrief {
+            Default::default()
+        }
+    }
+    ///`MgGenre`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "genre_category",
+    ///    "genre_category_id",
+    ///    "genre_id",
+    ///    "genre_name"
+    ///  ],
+    ///  "properties": {
+    ///    "genre_category": {
+    ///      "type": "string"
+    ///    },
+    ///    "genre_category_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "genre_description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "genre_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "genre_name": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgGenre {
+        pub genre_category: ::std::string::String,
+        pub genre_category_id: i64,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub genre_description: ::std::option::Option<::std::string::String>,
+        pub genre_id: i64,
+        pub genre_name: ::std::string::String,
+    }
+    impl MgGenre {
+        pub fn builder() -> builder::MgGenre {
+            Default::default()
+        }
+    }
+    ///`MgPlatform`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "platform_id",
+    ///    "platform_name"
+    ///  ],
+    ///  "properties": {
+    ///    "platform_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "platform_name": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgPlatform {
+        pub platform_id: i64,
+        pub platform_name: ::std::string::String,
+    }
+    impl MgPlatform {
+        pub fn builder() -> builder::MgPlatform {
+            Default::default()
+        }
+    }
+    ///`MgSampleCover`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "image",
+    ///    "thumbnail_image"
+    ///  ],
+    ///  "properties": {
+    ///    "image": {
+    ///      "type": "string"
+    ///    },
+    ///    "platforms": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "thumbnail_image": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgSampleCover {
+        pub image: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub platforms: ::std::vec::Vec<::std::string::String>,
+        pub thumbnail_image: ::std::string::String,
+    }
+    impl MgSampleCover {
+        pub fn builder() -> builder::MgSampleCover {
+            Default::default()
+        }
+    }
+    ///`MgSampleScreenshot`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "image",
+    ///    "thumbnail_image"
+    ///  ],
+    ///  "properties": {
+    ///    "caption": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "image": {
+    ///      "type": "string"
+    ///    },
+    ///    "thumbnail_image": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgSampleScreenshot {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub caption: ::std::option::Option<::std::string::String>,
+        pub image: ::std::string::String,
+        pub thumbnail_image: ::std::string::String,
+    }
+    impl MgSampleScreenshot {
+        pub fn builder() -> builder::MgSampleScreenshot {
+            Default::default()
+        }
+    }
+    ///`MgScreenshot`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "image",
+    ///    "thumbnail_image"
+    ///  ],
+    ///  "properties": {
+    ///    "caption": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "height": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "image": {
+    ///      "type": "string"
+    ///    },
+    ///    "thumbnail_image": {
+    ///      "type": "string"
+    ///    },
+    ///    "width": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgScreenshot {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub caption: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub height: ::std::option::Option<i64>,
+        pub image: ::std::string::String,
+        pub thumbnail_image: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub width: ::std::option::Option<i64>,
+    }
+    impl MgScreenshot {
+        pub fn builder() -> builder::MgScreenshot {
+            Default::default()
+        }
+    }
+    ///`MgScreenshotsResp`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "screenshots"
+    ///  ],
+    ///  "properties": {
+    ///    "screenshots": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/MgScreenshot"
+    ///      }
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct MgScreenshotsResp {
+        pub screenshots: ::std::vec::Vec<MgScreenshot>,
+    }
+    impl MgScreenshotsResp {
+        pub fn builder() -> builder::MgScreenshotsResp {
+            Default::default()
         }
     }
     ///`MultiplayerMode`
@@ -6256,6 +7486,274 @@ pub mod types {
     }
     impl NetworkType {
         pub fn builder() -> builder::NetworkType {
+            Default::default()
+        }
+    }
+    ///`OvgdbRelease`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "release_id",
+    ///    "rom_id",
+    ///    "title_name"
+    ///  ],
+    ///  "properties": {
+    ///    "cover_back": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "cover_front": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "developer": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "genre": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "publisher": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "reference_url": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "region_name": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "release_date": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "release_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "release_year": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "rom_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "system_name": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "title_name": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct OvgdbRelease {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cover_back: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cover_front: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub developer: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub genre: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub publisher: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub reference_url: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub region_name: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub release_date: ::std::option::Option<::std::string::String>,
+        pub release_id: i64,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub release_year: ::std::option::Option<i32>,
+        pub rom_id: i64,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub system_name: ::std::option::Option<::std::string::String>,
+        pub title_name: ::std::string::String,
+    }
+    impl OvgdbRelease {
+        pub fn builder() -> builder::OvgdbRelease {
+            Default::default()
+        }
+    }
+    ///`OvgdbRom`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "rom_id"
+    ///  ],
+    ///  "properties": {
+    ///    "region_id": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "rom_extensionless_file_name": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "rom_file_name": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "rom_hash_crc": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "rom_hash_md5": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "rom_hash_sha1": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "rom_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "rom_serial": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "rom_size": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "system_id": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct OvgdbRom {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub region_id: ::std::option::Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub rom_extensionless_file_name: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub rom_file_name: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub rom_hash_crc: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub rom_hash_md5: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub rom_hash_sha1: ::std::option::Option<::std::string::String>,
+        pub rom_id: i64,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub rom_serial: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub rom_size: ::std::option::Option<i64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub system_id: ::std::option::Option<i32>,
+    }
+    impl OvgdbRom {
+        pub fn builder() -> builder::OvgdbRom {
+            Default::default()
+        }
+    }
+    ///A rom matched by hash together with every release attached to it.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A rom matched by hash together with every release
+    /// attached to it.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "releases",
+    ///    "rom"
+    ///  ],
+    ///  "properties": {
+    ///    "releases": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/OvgdbRelease"
+    ///      }
+    ///    },
+    ///    "rom": {
+    ///      "$ref": "#/components/schemas/OvgdbRom"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct OvgdbRomMatch {
+        pub releases: ::std::vec::Vec<OvgdbRelease>,
+        pub rom: OvgdbRom,
+    }
+    impl OvgdbRomMatch {
+        pub fn builder() -> builder::OvgdbRomMatch {
             Default::default()
         }
     }
@@ -7949,6 +9447,196 @@ pub mod types {
             Default::default()
         }
     }
+    ///`RaGame`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "game_id",
+    ///    "num_achievements",
+    ///    "num_leaderboards",
+    ///    "points",
+    ///    "system_id",
+    ///    "system_name",
+    ///    "title"
+    ///  ],
+    ///  "properties": {
+    ///    "date_modified": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "forum_topic_id": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "game_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "image_icon": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "num_achievements": {
+    ///      "type": "integer",
+    ///      "format": "int32"
+    ///    },
+    ///    "num_leaderboards": {
+    ///      "type": "integer",
+    ///      "format": "int32"
+    ///    },
+    ///    "points": {
+    ///      "type": "integer",
+    ///      "format": "int32"
+    ///    },
+    ///    "system_id": {
+    ///      "type": "integer",
+    ///      "format": "int32"
+    ///    },
+    ///    "system_name": {
+    ///      "type": "string"
+    ///    },
+    ///    "title": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct RaGame {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub date_modified: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub forum_topic_id: ::std::option::Option<i64>,
+        pub game_id: i64,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub image_icon: ::std::option::Option<::std::string::String>,
+        pub num_achievements: i32,
+        pub num_leaderboards: i32,
+        pub points: i32,
+        pub system_id: i32,
+        pub system_name: ::std::string::String,
+        pub title: ::std::string::String,
+    }
+    impl RaGame {
+        pub fn builder() -> builder::RaGame {
+            Default::default()
+        }
+    }
+    ///`RaGameHash`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "game_id",
+    ///    "md5"
+    ///  ],
+    ///  "properties": {
+    ///    "game_id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "md5": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct RaGameHash {
+        pub game_id: i64,
+        pub md5: ::std::string::String,
+    }
+    impl RaGameHash {
+        pub fn builder() -> builder::RaGameHash {
+            Default::default()
+        }
+    }
+    ///Combined response: a matched game with all of its hashes.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Combined response: a matched game with all of its
+    /// hashes.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "game",
+    ///    "hashes"
+    ///  ],
+    ///  "properties": {
+    ///    "game": {
+    ///      "$ref": "#/components/schemas/RaGame"
+    ///    },
+    ///    "hashes": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/RaGameHash"
+    ///      }
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct RaGameMatch {
+        pub game: RaGame,
+        pub hashes: ::std::vec::Vec<RaGameHash>,
+    }
+    impl RaGameMatch {
+        pub fn builder() -> builder::RaGameMatch {
+            Default::default()
+        }
+    }
+    ///`RaSystem`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "name",
+    ///    "system_id"
+    ///  ],
+    ///  "properties": {
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "system_id": {
+    ///      "type": "integer",
+    ///      "format": "int32"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct RaSystem {
+        pub name: ::std::string::String,
+        pub system_id: i32,
+    }
+    impl RaSystem {
+        pub fn builder() -> builder::RaSystem {
+            Default::default()
+        }
+    }
     ///`Region`
     ///
     /// <details><summary>JSON schema</summary>
@@ -8469,6 +10157,1650 @@ pub mod types {
     }
     impl Screenshot {
         pub fn builder() -> builder::Screenshot {
+            Default::default()
+        }
+    }
+    ///Normalised asset record used for grids, heroes, logos, and icons. The
+    /// four SGDB asset endpoints return the same shape with slightly
+    /// different valid styles/dimensions/mimes; we keep them as one struct
+    /// and let the response stream them through unchanged.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Normalised asset record used for grids, heroes, logos,
+    /// and icons. The four\nSGDB asset endpoints return the same shape with
+    /// slightly different valid\nstyles/dimensions/mimes; we keep them as one
+    /// struct and let the response\nstream them through unchanged.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "author",
+    ///    "id",
+    ///    "score",
+    ///    "style",
+    ///    "thumb",
+    ///    "url"
+    ///  ],
+    ///  "properties": {
+    ///    "author": {
+    ///      "$ref": "#/components/schemas/SgdbAuthor"
+    ///    },
+    ///    "downvotes": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "epilepsy": {
+    ///      "type": [
+    ///        "boolean",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "height": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "humor": {
+    ///      "type": [
+    ///        "boolean",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "language": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "mime": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "nsfw": {
+    ///      "type": [
+    ///        "boolean",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "score": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "style": {
+    ///      "type": "string"
+    ///    },
+    ///    "tags": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "thumb": {
+    ///      "type": "string"
+    ///    },
+    ///    "upvotes": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "url": {
+    ///      "type": "string"
+    ///    },
+    ///    "width": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SgdbAsset {
+        pub author: SgdbAuthor,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub downvotes: ::std::option::Option<i64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub epilepsy: ::std::option::Option<bool>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub height: ::std::option::Option<i64>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub humor: ::std::option::Option<bool>,
+        pub id: i64,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub language: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub mime: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub nsfw: ::std::option::Option<bool>,
+        pub score: i64,
+        pub style: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub tags: ::std::vec::Vec<::std::string::String>,
+        pub thumb: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub upvotes: ::std::option::Option<i64>,
+        pub url: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub width: ::std::option::Option<i64>,
+    }
+    impl SgdbAsset {
+        pub fn builder() -> builder::SgdbAsset {
+            Default::default()
+        }
+    }
+    ///Optional filter knobs forwarded to SGDB on every asset endpoint.
+    ///Comma-separated string fields accept whatever values SGDB accepts; the
+    ///proxy does not pre-validate the enum values, so future SGDB additions
+    ///flow through without a code change.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Optional filter knobs forwarded to SGDB on every asset
+    /// endpoint.\nComma-separated string fields accept whatever values SGDB
+    /// accepts; the\nproxy does not pre-validate the enum values, so future
+    /// SGDB additions\nflow through without a code change.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "dimensions": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "epilepsy": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SgdbTriState"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "humor": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SgdbTriState"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "limit": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "mimes": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "nsfw": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SgdbTriState"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "oneoftag": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "page": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "styles": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "types": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SgdbAssetFilterQuery {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub dimensions: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub epilepsy: ::std::option::Option<SgdbTriState>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub humor: ::std::option::Option<SgdbTriState>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub limit: ::std::option::Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub mimes: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub nsfw: ::std::option::Option<SgdbTriState>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub oneoftag: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub page: ::std::option::Option<i32>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub styles: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub types: ::std::option::Option<::std::string::String>,
+    }
+    impl ::std::default::Default for SgdbAssetFilterQuery {
+        fn default() -> Self {
+            Self {
+                dimensions: Default::default(),
+                epilepsy: Default::default(),
+                humor: Default::default(),
+                limit: Default::default(),
+                mimes: Default::default(),
+                nsfw: Default::default(),
+                oneoftag: Default::default(),
+                page: Default::default(),
+                styles: Default::default(),
+                types: Default::default(),
+            }
+        }
+    }
+    impl SgdbAssetFilterQuery {
+        pub fn builder() -> builder::SgdbAssetFilterQuery {
+            Default::default()
+        }
+    }
+    ///`SgdbAssetMime`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "image/png",
+    ///    "image/jpeg",
+    ///    "image/webp",
+    ///    "image/vnd.microsoft.icon"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbAssetMime {
+        #[serde(rename = "image/png")]
+        ImagePng,
+        #[serde(rename = "image/jpeg")]
+        ImageJpeg,
+        #[serde(rename = "image/webp")]
+        ImageWebp,
+        #[serde(rename = "image/vnd.microsoft.icon")]
+        ImageVndMicrosoftIcon,
+    }
+    impl ::std::fmt::Display for SgdbAssetMime {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::ImagePng => f.write_str("image/png"),
+                Self::ImageJpeg => f.write_str("image/jpeg"),
+                Self::ImageWebp => f.write_str("image/webp"),
+                Self::ImageVndMicrosoftIcon => f.write_str("image/vnd.microsoft.icon"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbAssetMime {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "image/png" => Ok(Self::ImagePng),
+                "image/jpeg" => Ok(Self::ImageJpeg),
+                "image/webp" => Ok(Self::ImageWebp),
+                "image/vnd.microsoft.icon" => Ok(Self::ImageVndMicrosoftIcon),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbAssetMime {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbAssetMime {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbAssetMime {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`SgdbAssetType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "static",
+    ///    "animated"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbAssetType {
+        #[serde(rename = "static")]
+        Static,
+        #[serde(rename = "animated")]
+        Animated,
+    }
+    impl ::std::fmt::Display for SgdbAssetType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Static => f.write_str("static"),
+                Self::Animated => f.write_str("animated"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbAssetType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "static" => Ok(Self::Static),
+                "animated" => Ok(Self::Animated),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbAssetType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbAssetType {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbAssetType {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`SgdbAuthor`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "avatar",
+    ///    "name",
+    ///    "steam64"
+    ///  ],
+    ///  "properties": {
+    ///    "avatar": {
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "steam64": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SgdbAuthor {
+        pub avatar: ::std::string::String,
+        pub name: ::std::string::String,
+        pub steam64: ::std::string::String,
+    }
+    impl SgdbAuthor {
+        pub fn builder() -> builder::SgdbAuthor {
+            Default::default()
+        }
+    }
+    ///`SgdbContentTag`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "humor",
+    ///    "nsfw",
+    ///    "epilepsy"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbContentTag {
+        #[serde(rename = "humor")]
+        Humor,
+        #[serde(rename = "nsfw")]
+        Nsfw,
+        #[serde(rename = "epilepsy")]
+        Epilepsy,
+    }
+    impl ::std::fmt::Display for SgdbContentTag {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Humor => f.write_str("humor"),
+                Self::Nsfw => f.write_str("nsfw"),
+                Self::Epilepsy => f.write_str("epilepsy"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbContentTag {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "humor" => Ok(Self::Humor),
+                "nsfw" => Ok(Self::Nsfw),
+                "epilepsy" => Ok(Self::Epilepsy),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbContentTag {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbContentTag {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbContentTag {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///Game record returned by `/games/id/{id}`, `/games/{platform}/{id}`, and
+    /// the search autocomplete endpoint. Field set is small but stable.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Game record returned by `/games/id/{id}`,
+    /// `/games/{platform}/{id}`, and the\nsearch autocomplete endpoint. Field
+    /// set is small but stable.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "types": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "verified": {
+    ///      "type": "boolean"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SgdbGame {
+        pub id: i64,
+        pub name: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub types: ::std::vec::Vec<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub verified: ::std::option::Option<bool>,
+    }
+    impl SgdbGame {
+        pub fn builder() -> builder::SgdbGame {
+            Default::default()
+        }
+    }
+    ///`SgdbGridDimension`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "460x215",
+    ///    "920x430",
+    ///    "600x900",
+    ///    "342x482",
+    ///    "660x930",
+    ///    "512x512",
+    ///    "1024x1024"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbGridDimension {
+        #[serde(rename = "460x215")]
+        X460x215,
+        #[serde(rename = "920x430")]
+        X920x430,
+        #[serde(rename = "600x900")]
+        X600x900,
+        #[serde(rename = "342x482")]
+        X342x482,
+        #[serde(rename = "660x930")]
+        X660x930,
+        #[serde(rename = "512x512")]
+        X512x512,
+        #[serde(rename = "1024x1024")]
+        X1024x1024,
+    }
+    impl ::std::fmt::Display for SgdbGridDimension {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::X460x215 => f.write_str("460x215"),
+                Self::X920x430 => f.write_str("920x430"),
+                Self::X600x900 => f.write_str("600x900"),
+                Self::X342x482 => f.write_str("342x482"),
+                Self::X660x930 => f.write_str("660x930"),
+                Self::X512x512 => f.write_str("512x512"),
+                Self::X1024x1024 => f.write_str("1024x1024"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbGridDimension {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "460x215" => Ok(Self::X460x215),
+                "920x430" => Ok(Self::X920x430),
+                "600x900" => Ok(Self::X600x900),
+                "342x482" => Ok(Self::X342x482),
+                "660x930" => Ok(Self::X660x930),
+                "512x512" => Ok(Self::X512x512),
+                "1024x1024" => Ok(Self::X1024x1024),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbGridDimension {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbGridDimension {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbGridDimension {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`SgdbGridStyle`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "alternate",
+    ///    "blurred",
+    ///    "white_logo",
+    ///    "material",
+    ///    "no_logo"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbGridStyle {
+        #[serde(rename = "alternate")]
+        Alternate,
+        #[serde(rename = "blurred")]
+        Blurred,
+        #[serde(rename = "white_logo")]
+        WhiteLogo,
+        #[serde(rename = "material")]
+        Material,
+        #[serde(rename = "no_logo")]
+        NoLogo,
+    }
+    impl ::std::fmt::Display for SgdbGridStyle {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Alternate => f.write_str("alternate"),
+                Self::Blurred => f.write_str("blurred"),
+                Self::WhiteLogo => f.write_str("white_logo"),
+                Self::Material => f.write_str("material"),
+                Self::NoLogo => f.write_str("no_logo"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbGridStyle {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "alternate" => Ok(Self::Alternate),
+                "blurred" => Ok(Self::Blurred),
+                "white_logo" => Ok(Self::WhiteLogo),
+                "material" => Ok(Self::Material),
+                "no_logo" => Ok(Self::NoLogo),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbGridStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbGridStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbGridStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`SgdbHeroDimension`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "1920x620",
+    ///    "3840x1240",
+    ///    "1600x650"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbHeroDimension {
+        #[serde(rename = "1920x620")]
+        X1920x620,
+        #[serde(rename = "3840x1240")]
+        X3840x1240,
+        #[serde(rename = "1600x650")]
+        X1600x650,
+    }
+    impl ::std::fmt::Display for SgdbHeroDimension {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::X1920x620 => f.write_str("1920x620"),
+                Self::X3840x1240 => f.write_str("3840x1240"),
+                Self::X1600x650 => f.write_str("1600x650"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbHeroDimension {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "1920x620" => Ok(Self::X1920x620),
+                "3840x1240" => Ok(Self::X3840x1240),
+                "1600x650" => Ok(Self::X1600x650),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbHeroDimension {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbHeroDimension {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbHeroDimension {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`SgdbHeroStyle`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "alternate",
+    ///    "blurred",
+    ///    "material"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbHeroStyle {
+        #[serde(rename = "alternate")]
+        Alternate,
+        #[serde(rename = "blurred")]
+        Blurred,
+        #[serde(rename = "material")]
+        Material,
+    }
+    impl ::std::fmt::Display for SgdbHeroStyle {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Alternate => f.write_str("alternate"),
+                Self::Blurred => f.write_str("blurred"),
+                Self::Material => f.write_str("material"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbHeroStyle {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "alternate" => Ok(Self::Alternate),
+                "blurred" => Ok(Self::Blurred),
+                "material" => Ok(Self::Material),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbHeroStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbHeroStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbHeroStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`SgdbIconStyle`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "official",
+    ///    "custom"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbIconStyle {
+        #[serde(rename = "official")]
+        Official,
+        #[serde(rename = "custom")]
+        Custom,
+    }
+    impl ::std::fmt::Display for SgdbIconStyle {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Official => f.write_str("official"),
+                Self::Custom => f.write_str("custom"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbIconStyle {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "official" => Ok(Self::Official),
+                "custom" => Ok(Self::Custom),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbIconStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbIconStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbIconStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`SgdbLogoStyle`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "official",
+    ///    "white",
+    ///    "black",
+    ///    "custom"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbLogoStyle {
+        #[serde(rename = "official")]
+        Official,
+        #[serde(rename = "white")]
+        White,
+        #[serde(rename = "black")]
+        Black,
+        #[serde(rename = "custom")]
+        Custom,
+    }
+    impl ::std::fmt::Display for SgdbLogoStyle {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Official => f.write_str("official"),
+                Self::White => f.write_str("white"),
+                Self::Black => f.write_str("black"),
+                Self::Custom => f.write_str("custom"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbLogoStyle {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "official" => Ok(Self::Official),
+                "white" => Ok(Self::White),
+                "black" => Ok(Self::Black),
+                "custom" => Ok(Self::Custom),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbLogoStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbLogoStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbLogoStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`SgdbPlatform`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "steam",
+    ///    "origin",
+    ///    "egs",
+    ///    "bnet",
+    ///    "uplay",
+    ///    "flashpoint",
+    ///    "eshop"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbPlatform {
+        #[serde(rename = "steam")]
+        Steam,
+        #[serde(rename = "origin")]
+        Origin,
+        #[serde(rename = "egs")]
+        Egs,
+        #[serde(rename = "bnet")]
+        Bnet,
+        #[serde(rename = "uplay")]
+        Uplay,
+        #[serde(rename = "flashpoint")]
+        Flashpoint,
+        #[serde(rename = "eshop")]
+        Eshop,
+    }
+    impl ::std::fmt::Display for SgdbPlatform {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Steam => f.write_str("steam"),
+                Self::Origin => f.write_str("origin"),
+                Self::Egs => f.write_str("egs"),
+                Self::Bnet => f.write_str("bnet"),
+                Self::Uplay => f.write_str("uplay"),
+                Self::Flashpoint => f.write_str("flashpoint"),
+                Self::Eshop => f.write_str("eshop"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbPlatform {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "steam" => Ok(Self::Steam),
+                "origin" => Ok(Self::Origin),
+                "egs" => Ok(Self::Egs),
+                "bnet" => Ok(Self::Bnet),
+                "uplay" => Ok(Self::Uplay),
+                "flashpoint" => Ok(Self::Flashpoint),
+                "eshop" => Ok(Self::Eshop),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbPlatform {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbPlatform {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbPlatform {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///Tri-state filter SGDB accepts on `nsfw`, `humor`, and `epilepsy` query
+    ///params. Encoded as `"true"`, `"false"`, or `"any"` on the wire.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Tri-state filter SGDB accepts on `nsfw`, `humor`, and
+    /// `epilepsy` query\nparams. Encoded as `\"true\"`, `\"false\"`, or
+    /// `\"any\"` on the wire.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "true",
+    ///    "false",
+    ///    "any"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum SgdbTriState {
+        #[serde(rename = "true")]
+        True,
+        #[serde(rename = "false")]
+        False,
+        #[serde(rename = "any")]
+        Any,
+    }
+    impl ::std::fmt::Display for SgdbTriState {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::True => f.write_str("true"),
+                Self::False => f.write_str("false"),
+                Self::Any => f.write_str("any"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for SgdbTriState {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "true" => Ok(Self::True),
+                "false" => Ok(Self::False),
+                "any" => Ok(Self::Any),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for SgdbTriState {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for SgdbTriState {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for SgdbTriState {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`SsEntityRef`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "text": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SsEntityRef {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub id: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub text: ::std::option::Option<::std::string::String>,
+    }
+    impl ::std::default::Default for SsEntityRef {
+        fn default() -> Self {
+            Self {
+                id: Default::default(),
+                text: Default::default(),
+            }
+        }
+    }
+    impl SsEntityRef {
+        pub fn builder() -> builder::SsEntityRef {
+            Default::default()
+        }
+    }
+    ///`SsGame`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "developpeur": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SsEntityRef"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "editeur": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/SsEntityRef"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64"
+    ///    },
+    ///    "noms": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SsLocalizedName"
+    ///      }
+    ///    },
+    ///    "roms": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SsRom"
+    ///      }
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SsGame {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub developpeur: ::std::option::Option<SsEntityRef>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub editeur: ::std::option::Option<SsEntityRef>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub id: ::std::option::Option<i64>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub noms: ::std::vec::Vec<SsLocalizedName>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub roms: ::std::option::Option<::std::vec::Vec<SsRom>>,
+    }
+    impl ::std::default::Default for SsGame {
+        fn default() -> Self {
+            Self {
+                developpeur: Default::default(),
+                editeur: Default::default(),
+                id: Default::default(),
+                noms: Default::default(),
+                roms: Default::default(),
+            }
+        }
+    }
+    impl SsGame {
+        pub fn builder() -> builder::SsGame {
+            Default::default()
+        }
+    }
+    ///`SsLocalizedName`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "region",
+    ///    "text"
+    ///  ],
+    ///  "properties": {
+    ///    "region": {
+    ///      "type": "string"
+    ///    },
+    ///    "text": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SsLocalizedName {
+        pub region: ::std::string::String,
+        pub text: ::std::string::String,
+    }
+    impl SsLocalizedName {
+        pub fn builder() -> builder::SsLocalizedName {
+            Default::default()
+        }
+    }
+    ///`SsRom`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "romcrc": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "romfilename": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "rommd5": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "romsha1": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SsRom {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub romcrc: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub romfilename: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub rommd5: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub romsha1: ::std::option::Option<::std::string::String>,
+    }
+    impl ::std::default::Default for SsRom {
+        fn default() -> Self {
+            Self {
+                romcrc: Default::default(),
+                romfilename: Default::default(),
+                rommd5: Default::default(),
+                romsha1: Default::default(),
+            }
+        }
+    }
+    impl SsRom {
+        pub fn builder() -> builder::SsRom {
+            Default::default()
+        }
+    }
+    ///`SsSystem`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": "integer",
+    ///      "format": "int32"
+    ///    },
+    ///    "noms": {
+    ///      "$ref": "#/components/schemas/SsSystemNames"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SsSystem {
+        pub id: i32,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub noms: ::std::option::Option<SsSystemNames>,
+    }
+    impl SsSystem {
+        pub fn builder() -> builder::SsSystem {
+            Default::default()
+        }
+    }
+    ///`SsSystemNames`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "nom_eu": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "nom_hyperspin": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "nom_jp": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "nom_launchbox": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "nom_recalbox": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "nom_retropie": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "nom_us": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "noms_commun": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SsSystemNames {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub nom_eu: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub nom_hyperspin: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub nom_jp: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub nom_launchbox: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub nom_recalbox: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub nom_retropie: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub nom_us: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub noms_commun: ::std::option::Option<::std::string::String>,
+    }
+    impl ::std::default::Default for SsSystemNames {
+        fn default() -> Self {
+            Self {
+                nom_eu: Default::default(),
+                nom_hyperspin: Default::default(),
+                nom_jp: Default::default(),
+                nom_launchbox: Default::default(),
+                nom_recalbox: Default::default(),
+                nom_retropie: Default::default(),
+                nom_us: Default::default(),
+                noms_commun: Default::default(),
+            }
+        }
+    }
+    impl SsSystemNames {
+        pub fn builder() -> builder::SsSystemNames {
             Default::default()
         }
     }
@@ -10049,6 +13381,196 @@ pub mod types {
                     name: Ok(value.name),
                     slug: Ok(value.slug),
                     updated_at: Ok(value.updated_at),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct AssetFilters {
+            dimensions: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+            epilepsy: ::std::result::Result<
+                ::std::option::Option<super::SgdbTriState>,
+                ::std::string::String,
+            >,
+            humor: ::std::result::Result<
+                ::std::option::Option<super::SgdbTriState>,
+                ::std::string::String,
+            >,
+            limit: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            mimes: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+            nsfw: ::std::result::Result<
+                ::std::option::Option<super::SgdbTriState>,
+                ::std::string::String,
+            >,
+            oneoftag: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+            page: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            styles: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+            types: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for AssetFilters {
+            fn default() -> Self {
+                Self {
+                    dimensions: Ok(Default::default()),
+                    epilepsy: Ok(Default::default()),
+                    humor: Ok(Default::default()),
+                    limit: Ok(Default::default()),
+                    mimes: Ok(Default::default()),
+                    nsfw: Ok(Default::default()),
+                    oneoftag: Ok(Default::default()),
+                    page: Ok(Default::default()),
+                    styles: Ok(Default::default()),
+                    types: Ok(Default::default()),
+                }
+            }
+        }
+        impl AssetFilters {
+            pub fn dimensions<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.dimensions = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for dimensions: {e}"));
+                self
+            }
+            pub fn epilepsy<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::SgdbTriState>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.epilepsy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for epilepsy: {e}"));
+                self
+            }
+            pub fn humor<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::SgdbTriState>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.humor = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for humor: {e}"));
+                self
+            }
+            pub fn limit<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.limit = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for limit: {e}"));
+                self
+            }
+            pub fn mimes<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.mimes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mimes: {e}"));
+                self
+            }
+            pub fn nsfw<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::SgdbTriState>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nsfw = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nsfw: {e}"));
+                self
+            }
+            pub fn oneoftag<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.oneoftag = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for oneoftag: {e}"));
+                self
+            }
+            pub fn page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for page: {e}"));
+                self
+            }
+            pub fn styles<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.styles = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for styles: {e}"));
+                self
+            }
+            pub fn types<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.types = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for types: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<AssetFilters> for super::AssetFilters {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: AssetFilters,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    dimensions: value.dimensions?,
+                    epilepsy: value.epilepsy?,
+                    humor: value.humor?,
+                    limit: value.limit?,
+                    mimes: value.mimes?,
+                    nsfw: value.nsfw?,
+                    oneoftag: value.oneoftag?,
+                    page: value.page?,
+                    styles: value.styles?,
+                    types: value.types?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::AssetFilters> for AssetFilters {
+            fn from(value: super::AssetFilters) -> Self {
+                Self {
+                    dimensions: Ok(value.dimensions),
+                    epilepsy: Ok(value.epilepsy),
+                    humor: Ok(value.humor),
+                    limit: Ok(value.limit),
+                    mimes: Ok(value.mimes),
+                    nsfw: Ok(value.nsfw),
+                    oneoftag: Ok(value.oneoftag),
+                    page: Ok(value.page),
+                    styles: Ok(value.styles),
+                    types: Ok(value.types),
                 }
             }
         }
@@ -12061,6 +15583,10 @@ pub mod types {
                 ::std::string::String,
             >,
             manual_match_type: ::std::result::Result<super::ManualMatchMode, ::std::string::String>,
+            matched_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
             name: ::std::result::Result<::std::string::String, ::std::string::String>,
             provider: ::std::result::Result<super::MetadataProvider, ::std::string::String>,
             provider_id: ::std::result::Result<::std::string::String, ::std::string::String>,
@@ -12072,6 +15598,7 @@ pub mod types {
                 Self {
                     comment: Ok(Default::default()),
                     manual_match_type: Err("no value supplied for manual_match_type".to_string()),
+                    matched_name: Ok(Default::default()),
                     name: Err("no value supplied for name".to_string()),
                     provider: Err("no value supplied for provider".to_string()),
                     provider_id: Err("no value supplied for provider_id".to_string()),
@@ -12098,6 +15625,16 @@ pub mod types {
                 self.manual_match_type = value.try_into().map_err(|e| {
                     format!("error converting supplied value for manual_match_type: {e}")
                 });
+                self
+            }
+            pub fn matched_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.matched_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for matched_name: {e}"));
                 self
             }
             pub fn name<T>(mut self, value: T) -> Self
@@ -12151,6 +15688,7 @@ pub mod types {
                 Ok(Self {
                     comment: value.comment?,
                     manual_match_type: value.manual_match_type?,
+                    matched_name: value.matched_name?,
                     name: value.name?,
                     provider: value.provider?,
                     provider_id: value.provider_id?,
@@ -12163,6 +15701,7 @@ pub mod types {
                 Self {
                     comment: Ok(value.comment),
                     manual_match_type: Ok(value.manual_match_type),
+                    matched_name: Ok(value.matched_name),
                     name: Ok(value.name),
                     provider: Ok(value.provider),
                     provider_id: Ok(value.provider_id),
@@ -16350,6 +19889,10 @@ pub mod types {
                 ::std::string::String,
             >,
             manual_match_type: ::std::result::Result<super::ManualMatchMode, ::std::string::String>,
+            matched_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
             md5: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
                 ::std::string::String,
@@ -16376,6 +19919,7 @@ pub mod types {
                 Self {
                     comment: Ok(Default::default()),
                     manual_match_type: Err("no value supplied for manual_match_type".to_string()),
+                    matched_name: Ok(Default::default()),
                     md5: Ok(Default::default()),
                     name: Ok(Default::default()),
                     provider: Err("no value supplied for provider".to_string()),
@@ -16405,6 +19949,16 @@ pub mod types {
                 self.manual_match_type = value.try_into().map_err(|e| {
                     format!("error converting supplied value for manual_match_type: {e}")
                 });
+                self
+            }
+            pub fn matched_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.matched_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for matched_name: {e}"));
                 self
             }
             pub fn md5<T>(mut self, value: T) -> Self
@@ -16486,6 +20040,7 @@ pub mod types {
                 Ok(Self {
                     comment: value.comment?,
                     manual_match_type: value.manual_match_type?,
+                    matched_name: value.matched_name?,
                     md5: value.md5?,
                     name: value.name?,
                     provider: value.provider?,
@@ -16501,6 +20056,7 @@ pub mod types {
                 Self {
                     comment: Ok(value.comment),
                     manual_match_type: Ok(value.manual_match_type),
+                    matched_name: Ok(value.matched_name),
                     md5: Ok(value.md5),
                     name: Ok(value.name),
                     provider: Ok(value.provider),
@@ -18543,6 +22099,1753 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
+        pub struct LbGame {
+            community_rating:
+                ::std::result::Result<::std::option::Option<f32>, ::std::string::String>,
+            community_rating_count:
+                ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            cooperative: ::std::result::Result<::std::option::Option<bool>, ::std::string::String>,
+            database_id: ::std::result::Result<i64, ::std::string::String>,
+            developer: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            esrb: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            genres: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            max_players: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            overview: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            platform_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            publisher: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            release_date: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            release_type: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            release_year: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            status: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            video_url: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            wikipedia_url: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for LbGame {
+            fn default() -> Self {
+                Self {
+                    community_rating: Ok(Default::default()),
+                    community_rating_count: Ok(Default::default()),
+                    cooperative: Ok(Default::default()),
+                    database_id: Err("no value supplied for database_id".to_string()),
+                    developer: Ok(Default::default()),
+                    esrb: Ok(Default::default()),
+                    genres: Ok(Default::default()),
+                    max_players: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    overview: Ok(Default::default()),
+                    platform_name: Err("no value supplied for platform_name".to_string()),
+                    publisher: Ok(Default::default()),
+                    release_date: Ok(Default::default()),
+                    release_type: Ok(Default::default()),
+                    release_year: Ok(Default::default()),
+                    status: Ok(Default::default()),
+                    video_url: Ok(Default::default()),
+                    wikipedia_url: Ok(Default::default()),
+                }
+            }
+        }
+        impl LbGame {
+            pub fn community_rating<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<f32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.community_rating = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for community_rating: {e}")
+                });
+                self
+            }
+            pub fn community_rating_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.community_rating_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for community_rating_count: {e}")
+                });
+                self
+            }
+            pub fn cooperative<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<bool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.cooperative = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cooperative: {e}"));
+                self
+            }
+            pub fn database_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.database_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for database_id: {e}"));
+                self
+            }
+            pub fn developer<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.developer = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for developer: {e}"));
+                self
+            }
+            pub fn esrb<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.esrb = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for esrb: {e}"));
+                self
+            }
+            pub fn genres<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.genres = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for genres: {e}"));
+                self
+            }
+            pub fn max_players<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.max_players = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for max_players: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn overview<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.overview = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for overview: {e}"));
+                self
+            }
+            pub fn platform_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform_name: {e}"));
+                self
+            }
+            pub fn publisher<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.publisher = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for publisher: {e}"));
+                self
+            }
+            pub fn release_date<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.release_date = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for release_date: {e}"));
+                self
+            }
+            pub fn release_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.release_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for release_type: {e}"));
+                self
+            }
+            pub fn release_year<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.release_year = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for release_year: {e}"));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                self
+            }
+            pub fn video_url<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.video_url = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for video_url: {e}"));
+                self
+            }
+            pub fn wikipedia_url<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.wikipedia_url = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for wikipedia_url: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<LbGame> for super::LbGame {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: LbGame,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    community_rating: value.community_rating?,
+                    community_rating_count: value.community_rating_count?,
+                    cooperative: value.cooperative?,
+                    database_id: value.database_id?,
+                    developer: value.developer?,
+                    esrb: value.esrb?,
+                    genres: value.genres?,
+                    max_players: value.max_players?,
+                    name: value.name?,
+                    overview: value.overview?,
+                    platform_name: value.platform_name?,
+                    publisher: value.publisher?,
+                    release_date: value.release_date?,
+                    release_type: value.release_type?,
+                    release_year: value.release_year?,
+                    status: value.status?,
+                    video_url: value.video_url?,
+                    wikipedia_url: value.wikipedia_url?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::LbGame> for LbGame {
+            fn from(value: super::LbGame) -> Self {
+                Self {
+                    community_rating: Ok(value.community_rating),
+                    community_rating_count: Ok(value.community_rating_count),
+                    cooperative: Ok(value.cooperative),
+                    database_id: Ok(value.database_id),
+                    developer: Ok(value.developer),
+                    esrb: Ok(value.esrb),
+                    genres: Ok(value.genres),
+                    max_players: Ok(value.max_players),
+                    name: Ok(value.name),
+                    overview: Ok(value.overview),
+                    platform_name: Ok(value.platform_name),
+                    publisher: Ok(value.publisher),
+                    release_date: Ok(value.release_date),
+                    release_type: Ok(value.release_type),
+                    release_year: Ok(value.release_year),
+                    status: Ok(value.status),
+                    video_url: Ok(value.video_url),
+                    wikipedia_url: Ok(value.wikipedia_url),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct LbGameAlternateName {
+            launchbox_game_database_id: ::std::result::Result<i64, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            region: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for LbGameAlternateName {
+            fn default() -> Self {
+                Self {
+                    launchbox_game_database_id: Err(
+                        "no value supplied for launchbox_game_database_id".to_string(),
+                    ),
+                    name: Err("no value supplied for name".to_string()),
+                    region: Ok(Default::default()),
+                }
+            }
+        }
+        impl LbGameAlternateName {
+            pub fn launchbox_game_database_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.launchbox_game_database_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for launchbox_game_database_id: {e}")
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn region<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.region = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for region: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<LbGameAlternateName> for super::LbGameAlternateName {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: LbGameAlternateName,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    launchbox_game_database_id: value.launchbox_game_database_id?,
+                    name: value.name?,
+                    region: value.region?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::LbGameAlternateName> for LbGameAlternateName {
+            fn from(value: super::LbGameAlternateName) -> Self {
+                Self {
+                    launchbox_game_database_id: Ok(value.launchbox_game_database_id),
+                    name: Ok(value.name),
+                    region: Ok(value.region),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct LbGameImage {
+            file_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            image_type: ::std::result::Result<::std::string::String, ::std::string::String>,
+            launchbox_game_database_id: ::std::result::Result<i64, ::std::string::String>,
+            region: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for LbGameImage {
+            fn default() -> Self {
+                Self {
+                    file_name: Err("no value supplied for file_name".to_string()),
+                    image_type: Err("no value supplied for image_type".to_string()),
+                    launchbox_game_database_id: Err(
+                        "no value supplied for launchbox_game_database_id".to_string(),
+                    ),
+                    region: Ok(Default::default()),
+                }
+            }
+        }
+        impl LbGameImage {
+            pub fn file_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.file_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for file_name: {e}"));
+                self
+            }
+            pub fn image_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.image_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for image_type: {e}"));
+                self
+            }
+            pub fn launchbox_game_database_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.launchbox_game_database_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for launchbox_game_database_id: {e}")
+                });
+                self
+            }
+            pub fn region<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.region = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for region: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<LbGameImage> for super::LbGameImage {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: LbGameImage,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    file_name: value.file_name?,
+                    image_type: value.image_type?,
+                    launchbox_game_database_id: value.launchbox_game_database_id?,
+                    region: value.region?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::LbGameImage> for LbGameImage {
+            fn from(value: super::LbGameImage) -> Self {
+                Self {
+                    file_name: Ok(value.file_name),
+                    image_type: Ok(value.image_type),
+                    launchbox_game_database_id: Ok(value.launchbox_game_database_id),
+                    region: Ok(value.region),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct LbPlatform {
+            category: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            cpu: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            developer: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            display: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            emulated: ::std::result::Result<::std::option::Option<bool>, ::std::string::String>,
+            graphics: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            manufacturer: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            max_controllers: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            media: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            memory: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            notes: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            release_date: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            sound: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for LbPlatform {
+            fn default() -> Self {
+                Self {
+                    category: Ok(Default::default()),
+                    cpu: Ok(Default::default()),
+                    developer: Ok(Default::default()),
+                    display: Ok(Default::default()),
+                    emulated: Ok(Default::default()),
+                    graphics: Ok(Default::default()),
+                    manufacturer: Ok(Default::default()),
+                    max_controllers: Ok(Default::default()),
+                    media: Ok(Default::default()),
+                    memory: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    notes: Ok(Default::default()),
+                    release_date: Ok(Default::default()),
+                    sound: Ok(Default::default()),
+                }
+            }
+        }
+        impl LbPlatform {
+            pub fn category<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.category = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for category: {e}"));
+                self
+            }
+            pub fn cpu<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.cpu = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cpu: {e}"));
+                self
+            }
+            pub fn developer<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.developer = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for developer: {e}"));
+                self
+            }
+            pub fn display<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.display = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for display: {e}"));
+                self
+            }
+            pub fn emulated<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<bool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.emulated = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for emulated: {e}"));
+                self
+            }
+            pub fn graphics<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.graphics = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for graphics: {e}"));
+                self
+            }
+            pub fn manufacturer<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.manufacturer = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for manufacturer: {e}"));
+                self
+            }
+            pub fn max_controllers<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.max_controllers = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for max_controllers: {e}")
+                });
+                self
+            }
+            pub fn media<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.media = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for media: {e}"));
+                self
+            }
+            pub fn memory<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.memory = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for memory: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn notes<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.notes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for notes: {e}"));
+                self
+            }
+            pub fn release_date<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.release_date = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for release_date: {e}"));
+                self
+            }
+            pub fn sound<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sound = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sound: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<LbPlatform> for super::LbPlatform {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: LbPlatform,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    category: value.category?,
+                    cpu: value.cpu?,
+                    developer: value.developer?,
+                    display: value.display?,
+                    emulated: value.emulated?,
+                    graphics: value.graphics?,
+                    manufacturer: value.manufacturer?,
+                    max_controllers: value.max_controllers?,
+                    media: value.media?,
+                    memory: value.memory?,
+                    name: value.name?,
+                    notes: value.notes?,
+                    release_date: value.release_date?,
+                    sound: value.sound?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::LbPlatform> for LbPlatform {
+            fn from(value: super::LbPlatform) -> Self {
+                Self {
+                    category: Ok(value.category),
+                    cpu: Ok(value.cpu),
+                    developer: Ok(value.developer),
+                    display: Ok(value.display),
+                    emulated: Ok(value.emulated),
+                    graphics: Ok(value.graphics),
+                    manufacturer: Ok(value.manufacturer),
+                    max_controllers: Ok(value.max_controllers),
+                    media: Ok(value.media),
+                    memory: Ok(value.memory),
+                    name: Ok(value.name),
+                    notes: Ok(value.notes),
+                    release_date: Ok(value.release_date),
+                    sound: Ok(value.sound),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgAltTitle {
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            title: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgAltTitle {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    title: Err("no value supplied for title".to_string()),
+                }
+            }
+        }
+        impl MgAltTitle {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn title<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.title = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for title: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgAltTitle> for super::MgAltTitle {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgAltTitle,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    title: value.title?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgAltTitle> for MgAltTitle {
+            fn from(value: super::MgAltTitle) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    title: Ok(value.title),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgCover {
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            height: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            image: ::std::result::Result<::std::string::String, ::std::string::String>,
+            scan_of: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            thumbnail_image: ::std::result::Result<::std::string::String, ::std::string::String>,
+            width: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgCover {
+            fn default() -> Self {
+                Self {
+                    description: Ok(Default::default()),
+                    height: Ok(Default::default()),
+                    image: Err("no value supplied for image".to_string()),
+                    scan_of: Ok(Default::default()),
+                    thumbnail_image: Err("no value supplied for thumbnail_image".to_string()),
+                    width: Ok(Default::default()),
+                }
+            }
+        }
+        impl MgCover {
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn height<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.height = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for height: {e}"));
+                self
+            }
+            pub fn image<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.image = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for image: {e}"));
+                self
+            }
+            pub fn scan_of<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.scan_of = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for scan_of: {e}"));
+                self
+            }
+            pub fn thumbnail_image<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.thumbnail_image = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for thumbnail_image: {e}")
+                });
+                self
+            }
+            pub fn width<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.width = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for width: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgCover> for super::MgCover {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgCover,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    description: value.description?,
+                    height: value.height?,
+                    image: value.image?,
+                    scan_of: value.scan_of?,
+                    thumbnail_image: value.thumbnail_image?,
+                    width: value.width?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgCover> for MgCover {
+            fn from(value: super::MgCover) -> Self {
+                Self {
+                    description: Ok(value.description),
+                    height: Ok(value.height),
+                    image: Ok(value.image),
+                    scan_of: Ok(value.scan_of),
+                    thumbnail_image: Ok(value.thumbnail_image),
+                    width: Ok(value.width),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgCoverGroup {
+            comments: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            countries: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+            covers: ::std::result::Result<::std::vec::Vec<super::MgCover>, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgCoverGroup {
+            fn default() -> Self {
+                Self {
+                    comments: Ok(Default::default()),
+                    countries: Ok(Default::default()),
+                    covers: Err("no value supplied for covers".to_string()),
+                }
+            }
+        }
+        impl MgCoverGroup {
+            pub fn comments<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.comments = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for comments: {e}"));
+                self
+            }
+            pub fn countries<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.countries = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for countries: {e}"));
+                self
+            }
+            pub fn covers<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::MgCover>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.covers = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for covers: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgCoverGroup> for super::MgCoverGroup {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgCoverGroup,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    comments: value.comments?,
+                    countries: value.countries?,
+                    covers: value.covers?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgCoverGroup> for MgCoverGroup {
+            fn from(value: super::MgCoverGroup) -> Self {
+                Self {
+                    comments: Ok(value.comments),
+                    countries: Ok(value.countries),
+                    covers: Ok(value.covers),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgCoversResp {
+            cover_groups:
+                ::std::result::Result<::std::vec::Vec<super::MgCoverGroup>, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgCoversResp {
+            fn default() -> Self {
+                Self {
+                    cover_groups: Err("no value supplied for cover_groups".to_string()),
+                }
+            }
+        }
+        impl MgCoversResp {
+            pub fn cover_groups<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::MgCoverGroup>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.cover_groups = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cover_groups: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgCoversResp> for super::MgCoversResp {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgCoversResp,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    cover_groups: value.cover_groups?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgCoversResp> for MgCoversResp {
+            fn from(value: super::MgCoversResp) -> Self {
+                Self {
+                    cover_groups: Ok(value.cover_groups),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgGame {
+            alternate_titles: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::MgAltTitle>>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            game_id: ::std::result::Result<i64, ::std::string::String>,
+            genres: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::MgGenre>>,
+                ::std::string::String,
+            >,
+            moby_score: ::std::result::Result<::std::option::Option<f32>, ::std::string::String>,
+            moby_score_count:
+                ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            moby_url: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            official_url: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            platforms: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::MgGamePlatformBrief>>,
+                ::std::string::String,
+            >,
+            sample_cover: ::std::result::Result<
+                ::std::option::Option<super::MgSampleCover>,
+                ::std::string::String,
+            >,
+            sample_screenshots: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::MgSampleScreenshot>>,
+                ::std::string::String,
+            >,
+            title: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgGame {
+            fn default() -> Self {
+                Self {
+                    alternate_titles: Ok(Default::default()),
+                    description: Ok(Default::default()),
+                    game_id: Err("no value supplied for game_id".to_string()),
+                    genres: Ok(Default::default()),
+                    moby_score: Ok(Default::default()),
+                    moby_score_count: Ok(Default::default()),
+                    moby_url: Ok(Default::default()),
+                    official_url: Ok(Default::default()),
+                    platforms: Ok(Default::default()),
+                    sample_cover: Ok(Default::default()),
+                    sample_screenshots: Ok(Default::default()),
+                    title: Err("no value supplied for title".to_string()),
+                }
+            }
+        }
+        impl MgGame {
+            pub fn alternate_titles<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::MgAltTitle>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.alternate_titles = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for alternate_titles: {e}")
+                });
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn game_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.game_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for game_id: {e}"));
+                self
+            }
+            pub fn genres<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::vec::Vec<super::MgGenre>>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.genres = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for genres: {e}"));
+                self
+            }
+            pub fn moby_score<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<f32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.moby_score = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for moby_score: {e}"));
+                self
+            }
+            pub fn moby_score_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.moby_score_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for moby_score_count: {e}")
+                });
+                self
+            }
+            pub fn moby_url<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.moby_url = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for moby_url: {e}"));
+                self
+            }
+            pub fn official_url<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.official_url = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for official_url: {e}"));
+                self
+            }
+            pub fn platforms<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::MgGamePlatformBrief>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platforms = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platforms: {e}"));
+                self
+            }
+            pub fn sample_cover<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::MgSampleCover>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sample_cover = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sample_cover: {e}"));
+                self
+            }
+            pub fn sample_screenshots<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::MgSampleScreenshot>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sample_screenshots = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for sample_screenshots: {e}")
+                });
+                self
+            }
+            pub fn title<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.title = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for title: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgGame> for super::MgGame {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgGame,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    alternate_titles: value.alternate_titles?,
+                    description: value.description?,
+                    game_id: value.game_id?,
+                    genres: value.genres?,
+                    moby_score: value.moby_score?,
+                    moby_score_count: value.moby_score_count?,
+                    moby_url: value.moby_url?,
+                    official_url: value.official_url?,
+                    platforms: value.platforms?,
+                    sample_cover: value.sample_cover?,
+                    sample_screenshots: value.sample_screenshots?,
+                    title: value.title?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgGame> for MgGame {
+            fn from(value: super::MgGame) -> Self {
+                Self {
+                    alternate_titles: Ok(value.alternate_titles),
+                    description: Ok(value.description),
+                    game_id: Ok(value.game_id),
+                    genres: Ok(value.genres),
+                    moby_score: Ok(value.moby_score),
+                    moby_score_count: Ok(value.moby_score_count),
+                    moby_url: Ok(value.moby_url),
+                    official_url: Ok(value.official_url),
+                    platforms: Ok(value.platforms),
+                    sample_cover: Ok(value.sample_cover),
+                    sample_screenshots: Ok(value.sample_screenshots),
+                    title: Ok(value.title),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgGamePlatformBrief {
+            first_release_date: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            platform_id: ::std::result::Result<i64, ::std::string::String>,
+            platform_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgGamePlatformBrief {
+            fn default() -> Self {
+                Self {
+                    first_release_date: Ok(Default::default()),
+                    platform_id: Err("no value supplied for platform_id".to_string()),
+                    platform_name: Err("no value supplied for platform_name".to_string()),
+                }
+            }
+        }
+        impl MgGamePlatformBrief {
+            pub fn first_release_date<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.first_release_date = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for first_release_date: {e}")
+                });
+                self
+            }
+            pub fn platform_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform_id: {e}"));
+                self
+            }
+            pub fn platform_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform_name: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgGamePlatformBrief> for super::MgGamePlatformBrief {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgGamePlatformBrief,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    first_release_date: value.first_release_date?,
+                    platform_id: value.platform_id?,
+                    platform_name: value.platform_name?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgGamePlatformBrief> for MgGamePlatformBrief {
+            fn from(value: super::MgGamePlatformBrief) -> Self {
+                Self {
+                    first_release_date: Ok(value.first_release_date),
+                    platform_id: Ok(value.platform_id),
+                    platform_name: Ok(value.platform_name),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgGenre {
+            genre_category: ::std::result::Result<::std::string::String, ::std::string::String>,
+            genre_category_id: ::std::result::Result<i64, ::std::string::String>,
+            genre_description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            genre_id: ::std::result::Result<i64, ::std::string::String>,
+            genre_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgGenre {
+            fn default() -> Self {
+                Self {
+                    genre_category: Err("no value supplied for genre_category".to_string()),
+                    genre_category_id: Err("no value supplied for genre_category_id".to_string()),
+                    genre_description: Ok(Default::default()),
+                    genre_id: Err("no value supplied for genre_id".to_string()),
+                    genre_name: Err("no value supplied for genre_name".to_string()),
+                }
+            }
+        }
+        impl MgGenre {
+            pub fn genre_category<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.genre_category = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for genre_category: {e}")
+                });
+                self
+            }
+            pub fn genre_category_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.genre_category_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for genre_category_id: {e}")
+                });
+                self
+            }
+            pub fn genre_description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.genre_description = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for genre_description: {e}")
+                });
+                self
+            }
+            pub fn genre_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.genre_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for genre_id: {e}"));
+                self
+            }
+            pub fn genre_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.genre_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for genre_name: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgGenre> for super::MgGenre {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgGenre,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    genre_category: value.genre_category?,
+                    genre_category_id: value.genre_category_id?,
+                    genre_description: value.genre_description?,
+                    genre_id: value.genre_id?,
+                    genre_name: value.genre_name?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgGenre> for MgGenre {
+            fn from(value: super::MgGenre) -> Self {
+                Self {
+                    genre_category: Ok(value.genre_category),
+                    genre_category_id: Ok(value.genre_category_id),
+                    genre_description: Ok(value.genre_description),
+                    genre_id: Ok(value.genre_id),
+                    genre_name: Ok(value.genre_name),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgPlatform {
+            platform_id: ::std::result::Result<i64, ::std::string::String>,
+            platform_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgPlatform {
+            fn default() -> Self {
+                Self {
+                    platform_id: Err("no value supplied for platform_id".to_string()),
+                    platform_name: Err("no value supplied for platform_name".to_string()),
+                }
+            }
+        }
+        impl MgPlatform {
+            pub fn platform_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform_id: {e}"));
+                self
+            }
+            pub fn platform_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform_name: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgPlatform> for super::MgPlatform {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgPlatform,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    platform_id: value.platform_id?,
+                    platform_name: value.platform_name?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgPlatform> for MgPlatform {
+            fn from(value: super::MgPlatform) -> Self {
+                Self {
+                    platform_id: Ok(value.platform_id),
+                    platform_name: Ok(value.platform_name),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgSampleCover {
+            image: ::std::result::Result<::std::string::String, ::std::string::String>,
+            platforms: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+            thumbnail_image: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgSampleCover {
+            fn default() -> Self {
+                Self {
+                    image: Err("no value supplied for image".to_string()),
+                    platforms: Ok(Default::default()),
+                    thumbnail_image: Err("no value supplied for thumbnail_image".to_string()),
+                }
+            }
+        }
+        impl MgSampleCover {
+            pub fn image<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.image = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for image: {e}"));
+                self
+            }
+            pub fn platforms<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platforms = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platforms: {e}"));
+                self
+            }
+            pub fn thumbnail_image<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.thumbnail_image = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for thumbnail_image: {e}")
+                });
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgSampleCover> for super::MgSampleCover {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgSampleCover,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    image: value.image?,
+                    platforms: value.platforms?,
+                    thumbnail_image: value.thumbnail_image?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgSampleCover> for MgSampleCover {
+            fn from(value: super::MgSampleCover) -> Self {
+                Self {
+                    image: Ok(value.image),
+                    platforms: Ok(value.platforms),
+                    thumbnail_image: Ok(value.thumbnail_image),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgSampleScreenshot {
+            caption: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            image: ::std::result::Result<::std::string::String, ::std::string::String>,
+            thumbnail_image: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgSampleScreenshot {
+            fn default() -> Self {
+                Self {
+                    caption: Ok(Default::default()),
+                    image: Err("no value supplied for image".to_string()),
+                    thumbnail_image: Err("no value supplied for thumbnail_image".to_string()),
+                }
+            }
+        }
+        impl MgSampleScreenshot {
+            pub fn caption<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.caption = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for caption: {e}"));
+                self
+            }
+            pub fn image<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.image = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for image: {e}"));
+                self
+            }
+            pub fn thumbnail_image<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.thumbnail_image = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for thumbnail_image: {e}")
+                });
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgSampleScreenshot> for super::MgSampleScreenshot {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgSampleScreenshot,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    caption: value.caption?,
+                    image: value.image?,
+                    thumbnail_image: value.thumbnail_image?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgSampleScreenshot> for MgSampleScreenshot {
+            fn from(value: super::MgSampleScreenshot) -> Self {
+                Self {
+                    caption: Ok(value.caption),
+                    image: Ok(value.image),
+                    thumbnail_image: Ok(value.thumbnail_image),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgScreenshot {
+            caption: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            height: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            image: ::std::result::Result<::std::string::String, ::std::string::String>,
+            thumbnail_image: ::std::result::Result<::std::string::String, ::std::string::String>,
+            width: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgScreenshot {
+            fn default() -> Self {
+                Self {
+                    caption: Ok(Default::default()),
+                    height: Ok(Default::default()),
+                    image: Err("no value supplied for image".to_string()),
+                    thumbnail_image: Err("no value supplied for thumbnail_image".to_string()),
+                    width: Ok(Default::default()),
+                }
+            }
+        }
+        impl MgScreenshot {
+            pub fn caption<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.caption = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for caption: {e}"));
+                self
+            }
+            pub fn height<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.height = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for height: {e}"));
+                self
+            }
+            pub fn image<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.image = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for image: {e}"));
+                self
+            }
+            pub fn thumbnail_image<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.thumbnail_image = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for thumbnail_image: {e}")
+                });
+                self
+            }
+            pub fn width<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.width = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for width: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgScreenshot> for super::MgScreenshot {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgScreenshot,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    caption: value.caption?,
+                    height: value.height?,
+                    image: value.image?,
+                    thumbnail_image: value.thumbnail_image?,
+                    width: value.width?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgScreenshot> for MgScreenshot {
+            fn from(value: super::MgScreenshot) -> Self {
+                Self {
+                    caption: Ok(value.caption),
+                    height: Ok(value.height),
+                    image: Ok(value.image),
+                    thumbnail_image: Ok(value.thumbnail_image),
+                    width: Ok(value.width),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct MgScreenshotsResp {
+            screenshots:
+                ::std::result::Result<::std::vec::Vec<super::MgScreenshot>, ::std::string::String>,
+        }
+        impl ::std::default::Default for MgScreenshotsResp {
+            fn default() -> Self {
+                Self {
+                    screenshots: Err("no value supplied for screenshots".to_string()),
+                }
+            }
+        }
+        impl MgScreenshotsResp {
+            pub fn screenshots<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::MgScreenshot>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.screenshots = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for screenshots: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<MgScreenshotsResp> for super::MgScreenshotsResp {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: MgScreenshotsResp,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    screenshots: value.screenshots?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::MgScreenshotsResp> for MgScreenshotsResp {
+            fn from(value: super::MgScreenshotsResp) -> Self {
+                Self {
+                    screenshots: Ok(value.screenshots),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
         pub struct MultiplayerMode {
             campaigncoop: ::std::result::Result<bool, ::std::string::String>,
             checksum: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -18889,6 +24192,497 @@ pub mod types {
                     id: Ok(value.id),
                     name: Ok(value.name),
                     updated_at: Ok(value.updated_at),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct OvgdbRelease {
+            cover_back: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            cover_front: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            developer: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            genre: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            publisher: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            reference_url: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            region_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            release_date: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            release_id: ::std::result::Result<i64, ::std::string::String>,
+            release_year: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            rom_id: ::std::result::Result<i64, ::std::string::String>,
+            system_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            title_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for OvgdbRelease {
+            fn default() -> Self {
+                Self {
+                    cover_back: Ok(Default::default()),
+                    cover_front: Ok(Default::default()),
+                    description: Ok(Default::default()),
+                    developer: Ok(Default::default()),
+                    genre: Ok(Default::default()),
+                    publisher: Ok(Default::default()),
+                    reference_url: Ok(Default::default()),
+                    region_name: Ok(Default::default()),
+                    release_date: Ok(Default::default()),
+                    release_id: Err("no value supplied for release_id".to_string()),
+                    release_year: Ok(Default::default()),
+                    rom_id: Err("no value supplied for rom_id".to_string()),
+                    system_name: Ok(Default::default()),
+                    title_name: Err("no value supplied for title_name".to_string()),
+                }
+            }
+        }
+        impl OvgdbRelease {
+            pub fn cover_back<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.cover_back = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cover_back: {e}"));
+                self
+            }
+            pub fn cover_front<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.cover_front = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cover_front: {e}"));
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn developer<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.developer = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for developer: {e}"));
+                self
+            }
+            pub fn genre<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.genre = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for genre: {e}"));
+                self
+            }
+            pub fn publisher<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.publisher = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for publisher: {e}"));
+                self
+            }
+            pub fn reference_url<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.reference_url = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for reference_url: {e}"));
+                self
+            }
+            pub fn region_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.region_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for region_name: {e}"));
+                self
+            }
+            pub fn release_date<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.release_date = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for release_date: {e}"));
+                self
+            }
+            pub fn release_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.release_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for release_id: {e}"));
+                self
+            }
+            pub fn release_year<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.release_year = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for release_year: {e}"));
+                self
+            }
+            pub fn rom_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rom_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rom_id: {e}"));
+                self
+            }
+            pub fn system_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.system_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for system_name: {e}"));
+                self
+            }
+            pub fn title_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.title_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for title_name: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<OvgdbRelease> for super::OvgdbRelease {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: OvgdbRelease,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    cover_back: value.cover_back?,
+                    cover_front: value.cover_front?,
+                    description: value.description?,
+                    developer: value.developer?,
+                    genre: value.genre?,
+                    publisher: value.publisher?,
+                    reference_url: value.reference_url?,
+                    region_name: value.region_name?,
+                    release_date: value.release_date?,
+                    release_id: value.release_id?,
+                    release_year: value.release_year?,
+                    rom_id: value.rom_id?,
+                    system_name: value.system_name?,
+                    title_name: value.title_name?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::OvgdbRelease> for OvgdbRelease {
+            fn from(value: super::OvgdbRelease) -> Self {
+                Self {
+                    cover_back: Ok(value.cover_back),
+                    cover_front: Ok(value.cover_front),
+                    description: Ok(value.description),
+                    developer: Ok(value.developer),
+                    genre: Ok(value.genre),
+                    publisher: Ok(value.publisher),
+                    reference_url: Ok(value.reference_url),
+                    region_name: Ok(value.region_name),
+                    release_date: Ok(value.release_date),
+                    release_id: Ok(value.release_id),
+                    release_year: Ok(value.release_year),
+                    rom_id: Ok(value.rom_id),
+                    system_name: Ok(value.system_name),
+                    title_name: Ok(value.title_name),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct OvgdbRom {
+            region_id: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            rom_extensionless_file_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            rom_file_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            rom_hash_crc: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            rom_hash_md5: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            rom_hash_sha1: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            rom_id: ::std::result::Result<i64, ::std::string::String>,
+            rom_serial: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            rom_size: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            system_id: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+        }
+        impl ::std::default::Default for OvgdbRom {
+            fn default() -> Self {
+                Self {
+                    region_id: Ok(Default::default()),
+                    rom_extensionless_file_name: Ok(Default::default()),
+                    rom_file_name: Ok(Default::default()),
+                    rom_hash_crc: Ok(Default::default()),
+                    rom_hash_md5: Ok(Default::default()),
+                    rom_hash_sha1: Ok(Default::default()),
+                    rom_id: Err("no value supplied for rom_id".to_string()),
+                    rom_serial: Ok(Default::default()),
+                    rom_size: Ok(Default::default()),
+                    system_id: Ok(Default::default()),
+                }
+            }
+        }
+        impl OvgdbRom {
+            pub fn region_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.region_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for region_id: {e}"));
+                self
+            }
+            pub fn rom_extensionless_file_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rom_extensionless_file_name = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for rom_extensionless_file_name: {e}")
+                });
+                self
+            }
+            pub fn rom_file_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rom_file_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rom_file_name: {e}"));
+                self
+            }
+            pub fn rom_hash_crc<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rom_hash_crc = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rom_hash_crc: {e}"));
+                self
+            }
+            pub fn rom_hash_md5<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rom_hash_md5 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rom_hash_md5: {e}"));
+                self
+            }
+            pub fn rom_hash_sha1<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rom_hash_sha1 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rom_hash_sha1: {e}"));
+                self
+            }
+            pub fn rom_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rom_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rom_id: {e}"));
+                self
+            }
+            pub fn rom_serial<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rom_serial = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rom_serial: {e}"));
+                self
+            }
+            pub fn rom_size<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rom_size = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rom_size: {e}"));
+                self
+            }
+            pub fn system_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.system_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for system_id: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<OvgdbRom> for super::OvgdbRom {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: OvgdbRom,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    region_id: value.region_id?,
+                    rom_extensionless_file_name: value.rom_extensionless_file_name?,
+                    rom_file_name: value.rom_file_name?,
+                    rom_hash_crc: value.rom_hash_crc?,
+                    rom_hash_md5: value.rom_hash_md5?,
+                    rom_hash_sha1: value.rom_hash_sha1?,
+                    rom_id: value.rom_id?,
+                    rom_serial: value.rom_serial?,
+                    rom_size: value.rom_size?,
+                    system_id: value.system_id?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::OvgdbRom> for OvgdbRom {
+            fn from(value: super::OvgdbRom) -> Self {
+                Self {
+                    region_id: Ok(value.region_id),
+                    rom_extensionless_file_name: Ok(value.rom_extensionless_file_name),
+                    rom_file_name: Ok(value.rom_file_name),
+                    rom_hash_crc: Ok(value.rom_hash_crc),
+                    rom_hash_md5: Ok(value.rom_hash_md5),
+                    rom_hash_sha1: Ok(value.rom_hash_sha1),
+                    rom_id: Ok(value.rom_id),
+                    rom_serial: Ok(value.rom_serial),
+                    rom_size: Ok(value.rom_size),
+                    system_id: Ok(value.system_id),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct OvgdbRomMatch {
+            releases:
+                ::std::result::Result<::std::vec::Vec<super::OvgdbRelease>, ::std::string::String>,
+            rom: ::std::result::Result<super::OvgdbRom, ::std::string::String>,
+        }
+        impl ::std::default::Default for OvgdbRomMatch {
+            fn default() -> Self {
+                Self {
+                    releases: Err("no value supplied for releases".to_string()),
+                    rom: Err("no value supplied for rom".to_string()),
+                }
+            }
+        }
+        impl OvgdbRomMatch {
+            pub fn releases<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::OvgdbRelease>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.releases = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for releases: {e}"));
+                self
+            }
+            pub fn rom<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::OvgdbRom>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rom = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rom: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<OvgdbRomMatch> for super::OvgdbRomMatch {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: OvgdbRomMatch,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    releases: value.releases?,
+                    rom: value.rom?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::OvgdbRomMatch> for OvgdbRomMatch {
+            fn from(value: super::OvgdbRomMatch) -> Self {
+                Self {
+                    releases: Ok(value.releases),
+                    rom: Ok(value.rom),
                 }
             }
         }
@@ -21790,6 +27584,342 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
+        pub struct RaGame {
+            date_modified: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            forum_topic_id:
+                ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            game_id: ::std::result::Result<i64, ::std::string::String>,
+            image_icon: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            num_achievements: ::std::result::Result<i32, ::std::string::String>,
+            num_leaderboards: ::std::result::Result<i32, ::std::string::String>,
+            points: ::std::result::Result<i32, ::std::string::String>,
+            system_id: ::std::result::Result<i32, ::std::string::String>,
+            system_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            title: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for RaGame {
+            fn default() -> Self {
+                Self {
+                    date_modified: Ok(Default::default()),
+                    forum_topic_id: Ok(Default::default()),
+                    game_id: Err("no value supplied for game_id".to_string()),
+                    image_icon: Ok(Default::default()),
+                    num_achievements: Err("no value supplied for num_achievements".to_string()),
+                    num_leaderboards: Err("no value supplied for num_leaderboards".to_string()),
+                    points: Err("no value supplied for points".to_string()),
+                    system_id: Err("no value supplied for system_id".to_string()),
+                    system_name: Err("no value supplied for system_name".to_string()),
+                    title: Err("no value supplied for title".to_string()),
+                }
+            }
+        }
+        impl RaGame {
+            pub fn date_modified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.date_modified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for date_modified: {e}"));
+                self
+            }
+            pub fn forum_topic_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.forum_topic_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for forum_topic_id: {e}")
+                });
+                self
+            }
+            pub fn game_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.game_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for game_id: {e}"));
+                self
+            }
+            pub fn image_icon<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.image_icon = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for image_icon: {e}"));
+                self
+            }
+            pub fn num_achievements<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i32>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.num_achievements = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for num_achievements: {e}")
+                });
+                self
+            }
+            pub fn num_leaderboards<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i32>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.num_leaderboards = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for num_leaderboards: {e}")
+                });
+                self
+            }
+            pub fn points<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i32>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.points = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for points: {e}"));
+                self
+            }
+            pub fn system_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i32>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.system_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for system_id: {e}"));
+                self
+            }
+            pub fn system_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.system_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for system_name: {e}"));
+                self
+            }
+            pub fn title<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.title = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for title: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<RaGame> for super::RaGame {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: RaGame,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    date_modified: value.date_modified?,
+                    forum_topic_id: value.forum_topic_id?,
+                    game_id: value.game_id?,
+                    image_icon: value.image_icon?,
+                    num_achievements: value.num_achievements?,
+                    num_leaderboards: value.num_leaderboards?,
+                    points: value.points?,
+                    system_id: value.system_id?,
+                    system_name: value.system_name?,
+                    title: value.title?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::RaGame> for RaGame {
+            fn from(value: super::RaGame) -> Self {
+                Self {
+                    date_modified: Ok(value.date_modified),
+                    forum_topic_id: Ok(value.forum_topic_id),
+                    game_id: Ok(value.game_id),
+                    image_icon: Ok(value.image_icon),
+                    num_achievements: Ok(value.num_achievements),
+                    num_leaderboards: Ok(value.num_leaderboards),
+                    points: Ok(value.points),
+                    system_id: Ok(value.system_id),
+                    system_name: Ok(value.system_name),
+                    title: Ok(value.title),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct RaGameHash {
+            game_id: ::std::result::Result<i64, ::std::string::String>,
+            md5: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for RaGameHash {
+            fn default() -> Self {
+                Self {
+                    game_id: Err("no value supplied for game_id".to_string()),
+                    md5: Err("no value supplied for md5".to_string()),
+                }
+            }
+        }
+        impl RaGameHash {
+            pub fn game_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.game_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for game_id: {e}"));
+                self
+            }
+            pub fn md5<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.md5 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for md5: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<RaGameHash> for super::RaGameHash {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: RaGameHash,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    game_id: value.game_id?,
+                    md5: value.md5?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::RaGameHash> for RaGameHash {
+            fn from(value: super::RaGameHash) -> Self {
+                Self {
+                    game_id: Ok(value.game_id),
+                    md5: Ok(value.md5),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct RaGameMatch {
+            game: ::std::result::Result<super::RaGame, ::std::string::String>,
+            hashes:
+                ::std::result::Result<::std::vec::Vec<super::RaGameHash>, ::std::string::String>,
+        }
+        impl ::std::default::Default for RaGameMatch {
+            fn default() -> Self {
+                Self {
+                    game: Err("no value supplied for game".to_string()),
+                    hashes: Err("no value supplied for hashes".to_string()),
+                }
+            }
+        }
+        impl RaGameMatch {
+            pub fn game<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::RaGame>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.game = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for game: {e}"));
+                self
+            }
+            pub fn hashes<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::RaGameHash>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.hashes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for hashes: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<RaGameMatch> for super::RaGameMatch {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: RaGameMatch,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    game: value.game?,
+                    hashes: value.hashes?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::RaGameMatch> for RaGameMatch {
+            fn from(value: super::RaGameMatch) -> Self {
+                Self {
+                    game: Ok(value.game),
+                    hashes: Ok(value.hashes),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct RaSystem {
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            system_id: ::std::result::Result<i32, ::std::string::String>,
+        }
+        impl ::std::default::Default for RaSystem {
+            fn default() -> Self {
+                Self {
+                    name: Err("no value supplied for name".to_string()),
+                    system_id: Err("no value supplied for system_id".to_string()),
+                }
+            }
+        }
+        impl RaSystem {
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn system_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i32>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.system_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for system_id: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<RaSystem> for super::RaSystem {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: RaSystem,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    name: value.name?,
+                    system_id: value.system_id?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::RaSystem> for RaSystem {
+            fn from(value: super::RaSystem) -> Self {
+                Self {
+                    name: Ok(value.name),
+                    system_id: Ok(value.system_id),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
         pub struct Region {
             category: ::std::result::Result<::std::string::String, ::std::string::String>,
             checksum: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
@@ -22756,6 +28886,1143 @@ pub mod types {
                     image_id: Ok(value.image_id),
                     url: Ok(value.url),
                     width: Ok(value.width),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SgdbAsset {
+            author: ::std::result::Result<super::SgdbAuthor, ::std::string::String>,
+            downvotes: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            epilepsy: ::std::result::Result<::std::option::Option<bool>, ::std::string::String>,
+            height: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            humor: ::std::result::Result<::std::option::Option<bool>, ::std::string::String>,
+            id: ::std::result::Result<i64, ::std::string::String>,
+            language: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            mime: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            nsfw: ::std::result::Result<::std::option::Option<bool>, ::std::string::String>,
+            score: ::std::result::Result<i64, ::std::string::String>,
+            style: ::std::result::Result<::std::string::String, ::std::string::String>,
+            tags: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+            thumb: ::std::result::Result<::std::string::String, ::std::string::String>,
+            upvotes: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            url: ::std::result::Result<::std::string::String, ::std::string::String>,
+            width: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+        }
+        impl ::std::default::Default for SgdbAsset {
+            fn default() -> Self {
+                Self {
+                    author: Err("no value supplied for author".to_string()),
+                    downvotes: Ok(Default::default()),
+                    epilepsy: Ok(Default::default()),
+                    height: Ok(Default::default()),
+                    humor: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    language: Ok(Default::default()),
+                    mime: Ok(Default::default()),
+                    nsfw: Ok(Default::default()),
+                    score: Err("no value supplied for score".to_string()),
+                    style: Err("no value supplied for style".to_string()),
+                    tags: Ok(Default::default()),
+                    thumb: Err("no value supplied for thumb".to_string()),
+                    upvotes: Ok(Default::default()),
+                    url: Err("no value supplied for url".to_string()),
+                    width: Ok(Default::default()),
+                }
+            }
+        }
+        impl SgdbAsset {
+            pub fn author<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::SgdbAuthor>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.author = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for author: {e}"));
+                self
+            }
+            pub fn downvotes<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.downvotes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for downvotes: {e}"));
+                self
+            }
+            pub fn epilepsy<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<bool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.epilepsy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for epilepsy: {e}"));
+                self
+            }
+            pub fn height<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.height = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for height: {e}"));
+                self
+            }
+            pub fn humor<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<bool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.humor = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for humor: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn language<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.language = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for language: {e}"));
+                self
+            }
+            pub fn mime<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.mime = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mime: {e}"));
+                self
+            }
+            pub fn nsfw<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<bool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nsfw = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nsfw: {e}"));
+                self
+            }
+            pub fn score<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.score = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for score: {e}"));
+                self
+            }
+            pub fn style<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.style = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for style: {e}"));
+                self
+            }
+            pub fn tags<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.tags = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for tags: {e}"));
+                self
+            }
+            pub fn thumb<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.thumb = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for thumb: {e}"));
+                self
+            }
+            pub fn upvotes<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.upvotes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for upvotes: {e}"));
+                self
+            }
+            pub fn url<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.url = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for url: {e}"));
+                self
+            }
+            pub fn width<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.width = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for width: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SgdbAsset> for super::SgdbAsset {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SgdbAsset,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    author: value.author?,
+                    downvotes: value.downvotes?,
+                    epilepsy: value.epilepsy?,
+                    height: value.height?,
+                    humor: value.humor?,
+                    id: value.id?,
+                    language: value.language?,
+                    mime: value.mime?,
+                    nsfw: value.nsfw?,
+                    score: value.score?,
+                    style: value.style?,
+                    tags: value.tags?,
+                    thumb: value.thumb?,
+                    upvotes: value.upvotes?,
+                    url: value.url?,
+                    width: value.width?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SgdbAsset> for SgdbAsset {
+            fn from(value: super::SgdbAsset) -> Self {
+                Self {
+                    author: Ok(value.author),
+                    downvotes: Ok(value.downvotes),
+                    epilepsy: Ok(value.epilepsy),
+                    height: Ok(value.height),
+                    humor: Ok(value.humor),
+                    id: Ok(value.id),
+                    language: Ok(value.language),
+                    mime: Ok(value.mime),
+                    nsfw: Ok(value.nsfw),
+                    score: Ok(value.score),
+                    style: Ok(value.style),
+                    tags: Ok(value.tags),
+                    thumb: Ok(value.thumb),
+                    upvotes: Ok(value.upvotes),
+                    url: Ok(value.url),
+                    width: Ok(value.width),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SgdbAssetFilterQuery {
+            dimensions: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            epilepsy: ::std::result::Result<
+                ::std::option::Option<super::SgdbTriState>,
+                ::std::string::String,
+            >,
+            humor: ::std::result::Result<
+                ::std::option::Option<super::SgdbTriState>,
+                ::std::string::String,
+            >,
+            limit: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            mimes: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            nsfw: ::std::result::Result<
+                ::std::option::Option<super::SgdbTriState>,
+                ::std::string::String,
+            >,
+            oneoftag: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            page: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            styles: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            types: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for SgdbAssetFilterQuery {
+            fn default() -> Self {
+                Self {
+                    dimensions: Ok(Default::default()),
+                    epilepsy: Ok(Default::default()),
+                    humor: Ok(Default::default()),
+                    limit: Ok(Default::default()),
+                    mimes: Ok(Default::default()),
+                    nsfw: Ok(Default::default()),
+                    oneoftag: Ok(Default::default()),
+                    page: Ok(Default::default()),
+                    styles: Ok(Default::default()),
+                    types: Ok(Default::default()),
+                }
+            }
+        }
+        impl SgdbAssetFilterQuery {
+            pub fn dimensions<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.dimensions = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for dimensions: {e}"));
+                self
+            }
+            pub fn epilepsy<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::SgdbTriState>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.epilepsy = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for epilepsy: {e}"));
+                self
+            }
+            pub fn humor<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::SgdbTriState>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.humor = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for humor: {e}"));
+                self
+            }
+            pub fn limit<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.limit = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for limit: {e}"));
+                self
+            }
+            pub fn mimes<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.mimes = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for mimes: {e}"));
+                self
+            }
+            pub fn nsfw<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::SgdbTriState>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nsfw = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nsfw: {e}"));
+                self
+            }
+            pub fn oneoftag<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.oneoftag = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for oneoftag: {e}"));
+                self
+            }
+            pub fn page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for page: {e}"));
+                self
+            }
+            pub fn styles<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.styles = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for styles: {e}"));
+                self
+            }
+            pub fn types<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.types = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for types: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SgdbAssetFilterQuery> for super::SgdbAssetFilterQuery {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SgdbAssetFilterQuery,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    dimensions: value.dimensions?,
+                    epilepsy: value.epilepsy?,
+                    humor: value.humor?,
+                    limit: value.limit?,
+                    mimes: value.mimes?,
+                    nsfw: value.nsfw?,
+                    oneoftag: value.oneoftag?,
+                    page: value.page?,
+                    styles: value.styles?,
+                    types: value.types?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SgdbAssetFilterQuery> for SgdbAssetFilterQuery {
+            fn from(value: super::SgdbAssetFilterQuery) -> Self {
+                Self {
+                    dimensions: Ok(value.dimensions),
+                    epilepsy: Ok(value.epilepsy),
+                    humor: Ok(value.humor),
+                    limit: Ok(value.limit),
+                    mimes: Ok(value.mimes),
+                    nsfw: Ok(value.nsfw),
+                    oneoftag: Ok(value.oneoftag),
+                    page: Ok(value.page),
+                    styles: Ok(value.styles),
+                    types: Ok(value.types),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SgdbAuthor {
+            avatar: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            steam64: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for SgdbAuthor {
+            fn default() -> Self {
+                Self {
+                    avatar: Err("no value supplied for avatar".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    steam64: Err("no value supplied for steam64".to_string()),
+                }
+            }
+        }
+        impl SgdbAuthor {
+            pub fn avatar<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.avatar = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for avatar: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn steam64<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.steam64 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for steam64: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SgdbAuthor> for super::SgdbAuthor {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SgdbAuthor,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    avatar: value.avatar?,
+                    name: value.name?,
+                    steam64: value.steam64?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SgdbAuthor> for SgdbAuthor {
+            fn from(value: super::SgdbAuthor) -> Self {
+                Self {
+                    avatar: Ok(value.avatar),
+                    name: Ok(value.name),
+                    steam64: Ok(value.steam64),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SgdbGame {
+            id: ::std::result::Result<i64, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            types: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+            verified: ::std::result::Result<::std::option::Option<bool>, ::std::string::String>,
+        }
+        impl ::std::default::Default for SgdbGame {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    types: Ok(Default::default()),
+                    verified: Ok(Default::default()),
+                }
+            }
+        }
+        impl SgdbGame {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn types<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.types = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for types: {e}"));
+                self
+            }
+            pub fn verified<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<bool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.verified = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for verified: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SgdbGame> for super::SgdbGame {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SgdbGame,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    name: value.name?,
+                    types: value.types?,
+                    verified: value.verified?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SgdbGame> for SgdbGame {
+            fn from(value: super::SgdbGame) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    types: Ok(value.types),
+                    verified: Ok(value.verified),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SsEntityRef {
+            id: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            text: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for SsEntityRef {
+            fn default() -> Self {
+                Self {
+                    id: Ok(Default::default()),
+                    text: Ok(Default::default()),
+                }
+            }
+        }
+        impl SsEntityRef {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn text<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.text = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for text: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SsEntityRef> for super::SsEntityRef {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SsEntityRef,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    text: value.text?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SsEntityRef> for SsEntityRef {
+            fn from(value: super::SsEntityRef) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    text: Ok(value.text),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SsGame {
+            developpeur: ::std::result::Result<
+                ::std::option::Option<super::SsEntityRef>,
+                ::std::string::String,
+            >,
+            editeur: ::std::result::Result<
+                ::std::option::Option<super::SsEntityRef>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+            noms: ::std::result::Result<
+                ::std::vec::Vec<super::SsLocalizedName>,
+                ::std::string::String,
+            >,
+            roms: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::SsRom>>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for SsGame {
+            fn default() -> Self {
+                Self {
+                    developpeur: Ok(Default::default()),
+                    editeur: Ok(Default::default()),
+                    id: Ok(Default::default()),
+                    noms: Ok(Default::default()),
+                    roms: Ok(Default::default()),
+                }
+            }
+        }
+        impl SsGame {
+            pub fn developpeur<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::SsEntityRef>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.developpeur = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for developpeur: {e}"));
+                self
+            }
+            pub fn editeur<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::SsEntityRef>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.editeur = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for editeur: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn noms<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::SsLocalizedName>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.noms = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for noms: {e}"));
+                self
+            }
+            pub fn roms<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::vec::Vec<super::SsRom>>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.roms = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for roms: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SsGame> for super::SsGame {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SsGame,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    developpeur: value.developpeur?,
+                    editeur: value.editeur?,
+                    id: value.id?,
+                    noms: value.noms?,
+                    roms: value.roms?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SsGame> for SsGame {
+            fn from(value: super::SsGame) -> Self {
+                Self {
+                    developpeur: Ok(value.developpeur),
+                    editeur: Ok(value.editeur),
+                    id: Ok(value.id),
+                    noms: Ok(value.noms),
+                    roms: Ok(value.roms),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SsLocalizedName {
+            region: ::std::result::Result<::std::string::String, ::std::string::String>,
+            text: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for SsLocalizedName {
+            fn default() -> Self {
+                Self {
+                    region: Err("no value supplied for region".to_string()),
+                    text: Err("no value supplied for text".to_string()),
+                }
+            }
+        }
+        impl SsLocalizedName {
+            pub fn region<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.region = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for region: {e}"));
+                self
+            }
+            pub fn text<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.text = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for text: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SsLocalizedName> for super::SsLocalizedName {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SsLocalizedName,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    region: value.region?,
+                    text: value.text?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SsLocalizedName> for SsLocalizedName {
+            fn from(value: super::SsLocalizedName) -> Self {
+                Self {
+                    region: Ok(value.region),
+                    text: Ok(value.text),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SsRom {
+            romcrc: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            romfilename: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            rommd5: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            romsha1: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for SsRom {
+            fn default() -> Self {
+                Self {
+                    romcrc: Ok(Default::default()),
+                    romfilename: Ok(Default::default()),
+                    rommd5: Ok(Default::default()),
+                    romsha1: Ok(Default::default()),
+                }
+            }
+        }
+        impl SsRom {
+            pub fn romcrc<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.romcrc = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for romcrc: {e}"));
+                self
+            }
+            pub fn romfilename<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.romfilename = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for romfilename: {e}"));
+                self
+            }
+            pub fn rommd5<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.rommd5 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for rommd5: {e}"));
+                self
+            }
+            pub fn romsha1<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.romsha1 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for romsha1: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SsRom> for super::SsRom {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SsRom,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    romcrc: value.romcrc?,
+                    romfilename: value.romfilename?,
+                    rommd5: value.rommd5?,
+                    romsha1: value.romsha1?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SsRom> for SsRom {
+            fn from(value: super::SsRom) -> Self {
+                Self {
+                    romcrc: Ok(value.romcrc),
+                    romfilename: Ok(value.romfilename),
+                    rommd5: Ok(value.rommd5),
+                    romsha1: Ok(value.romsha1),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SsSystem {
+            id: ::std::result::Result<i32, ::std::string::String>,
+            noms: ::std::result::Result<
+                ::std::option::Option<super::SsSystemNames>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for SsSystem {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    noms: Ok(Default::default()),
+                }
+            }
+        }
+        impl SsSystem {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i32>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn noms<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::SsSystemNames>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.noms = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for noms: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SsSystem> for super::SsSystem {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SsSystem,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    noms: value.noms?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SsSystem> for SsSystem {
+            fn from(value: super::SsSystem) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    noms: Ok(value.noms),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SsSystemNames {
+            nom_eu: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            nom_hyperspin: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            nom_jp: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            nom_launchbox: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            nom_recalbox: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            nom_retropie: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            nom_us: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            noms_commun: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for SsSystemNames {
+            fn default() -> Self {
+                Self {
+                    nom_eu: Ok(Default::default()),
+                    nom_hyperspin: Ok(Default::default()),
+                    nom_jp: Ok(Default::default()),
+                    nom_launchbox: Ok(Default::default()),
+                    nom_recalbox: Ok(Default::default()),
+                    nom_retropie: Ok(Default::default()),
+                    nom_us: Ok(Default::default()),
+                    noms_commun: Ok(Default::default()),
+                }
+            }
+        }
+        impl SsSystemNames {
+            pub fn nom_eu<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nom_eu = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nom_eu: {e}"));
+                self
+            }
+            pub fn nom_hyperspin<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nom_hyperspin = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nom_hyperspin: {e}"));
+                self
+            }
+            pub fn nom_jp<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nom_jp = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nom_jp: {e}"));
+                self
+            }
+            pub fn nom_launchbox<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nom_launchbox = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nom_launchbox: {e}"));
+                self
+            }
+            pub fn nom_recalbox<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nom_recalbox = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nom_recalbox: {e}"));
+                self
+            }
+            pub fn nom_retropie<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nom_retropie = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nom_retropie: {e}"));
+                self
+            }
+            pub fn nom_us<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.nom_us = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for nom_us: {e}"));
+                self
+            }
+            pub fn noms_commun<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.noms_commun = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for noms_commun: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SsSystemNames> for super::SsSystemNames {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SsSystemNames,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    nom_eu: value.nom_eu?,
+                    nom_hyperspin: value.nom_hyperspin?,
+                    nom_jp: value.nom_jp?,
+                    nom_launchbox: value.nom_launchbox?,
+                    nom_recalbox: value.nom_recalbox?,
+                    nom_retropie: value.nom_retropie?,
+                    nom_us: value.nom_us?,
+                    noms_commun: value.noms_commun?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SsSystemNames> for SsSystemNames {
+            fn from(value: super::SsSystemNames) -> Self {
+                Self {
+                    nom_eu: Ok(value.nom_eu),
+                    nom_hyperspin: Ok(value.nom_hyperspin),
+                    nom_jp: Ok(value.nom_jp),
+                    nom_launchbox: Ok(value.nom_launchbox),
+                    nom_recalbox: Ok(value.nom_recalbox),
+                    nom_retropie: Ok(value.nom_retropie),
+                    nom_us: Ok(value.nom_us),
+                    noms_commun: Ok(value.noms_commun),
                 }
             }
         }
@@ -25487,6 +32754,71 @@ impl Client {
     pub fn get_igdb_websites_by_ids(&self) -> builder::GetIgdbWebsitesByIds<'_> {
         builder::GetIgdbWebsitesByIds::new(self)
     }
+    ///Look up a LaunchBox game by its database id
+    ///
+    ///Sends a `GET` request to `/api/launchbox/game`
+    ///
+    ///```ignore
+    /// let response = client.get_lb_game_by_id()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_lb_game_by_id(&self) -> builder::GetLbGameById<'_> {
+        builder::GetLbGameById::new(self)
+    }
+    ///Fetch every alternate name LaunchBox has for a given game
+    ///
+    ///Sends a `GET` request to `/api/launchbox/game/alternate-names`
+    ///
+    ///```ignore
+    /// let response = client.get_lb_game_alternate_names()
+    ///    .game_id(game_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_lb_game_alternate_names(&self) -> builder::GetLbGameAlternateNames<'_> {
+        builder::GetLbGameAlternateNames::new(self)
+    }
+    ///Fetch every image LaunchBox has for a given game
+    ///
+    ///Sends a `GET` request to `/api/launchbox/game/images`
+    ///
+    ///```ignore
+    /// let response = client.get_lb_game_images()
+    ///    .game_id(game_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_lb_game_images(&self) -> builder::GetLbGameImages<'_> {
+        builder::GetLbGameImages::new(self)
+    }
+    ///Search LaunchBox games by name, optionally narrowed to a platform
+    ///
+    ///Sends a `GET` request to `/api/launchbox/game/search`
+    ///
+    ///```ignore
+    /// let response = client.search_lb_games()
+    ///    .platform_name(platform_name)
+    ///    .query(query)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn search_lb_games(&self) -> builder::SearchLbGames<'_> {
+        builder::SearchLbGames::new(self)
+    }
+    ///List every platform LaunchBox knows about
+    ///
+    ///Sends a `GET` request to `/api/launchbox/platforms`
+    ///
+    ///```ignore
+    /// let response = client.list_lb_platforms()
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_lb_platforms(&self) -> builder::ListLbPlatforms<'_> {
+        builder::ListLbPlatforms::new(self)
+    }
     ///Manually match a Company by its name, returning the matched
     /// ExternalMetadata
     ///
@@ -25547,6 +32879,116 @@ impl Client {
     pub fn manually_match_platform(&self) -> builder::ManuallyMatchPlatform<'_> {
         builder::ManuallyMatchPlatform::new(self)
     }
+    ///Look up a MobyGames game by its game id
+    ///
+    ///Sends a `GET` request to `/api/mobygames/game`
+    ///
+    ///```ignore
+    /// let response = client.get_mg_game_by_id()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_mg_game_by_id(&self) -> builder::GetMgGameById<'_> {
+        builder::GetMgGameById::new(self)
+    }
+    ///Fetch MobyGames cover groups for a given game/platform combination
+    ///
+    ///Sends a `GET` request to `/api/mobygames/game/covers`
+    ///
+    ///```ignore
+    /// let response = client.get_mg_game_covers()
+    ///    .game_id(game_id)
+    ///    .platform_id(platform_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_mg_game_covers(&self) -> builder::GetMgGameCovers<'_> {
+        builder::GetMgGameCovers::new(self)
+    }
+    ///Fetch MobyGames screenshots for a given game/platform combination
+    ///
+    ///Sends a `GET` request to `/api/mobygames/game/screenshots`
+    ///
+    ///```ignore
+    /// let response = client.get_mg_game_screenshots()
+    ///    .game_id(game_id)
+    ///    .platform_id(platform_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_mg_game_screenshots(&self) -> builder::GetMgGameScreenshots<'_> {
+        builder::GetMgGameScreenshots::new(self)
+    }
+    ///Search MobyGames games by title, optionally narrowed to a platform
+    ///
+    ///Sends a `GET` request to `/api/mobygames/game/search`
+    ///
+    ///```ignore
+    /// let response = client.search_mg_games()
+    ///    .platform_id(platform_id)
+    ///    .query(query)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn search_mg_games(&self) -> builder::SearchMgGames<'_> {
+        builder::SearchMgGames::new(self)
+    }
+    ///List every genre MobyGames knows about
+    ///
+    ///Sends a `GET` request to `/api/mobygames/genres`
+    ///
+    ///```ignore
+    /// let response = client.list_mg_genres()
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_mg_genres(&self) -> builder::ListMgGenres<'_> {
+        builder::ListMgGenres::new(self)
+    }
+    ///List every platform MobyGames knows about
+    ///
+    ///Sends a `GET` request to `/api/mobygames/platforms`
+    ///
+    ///```ignore
+    /// let response = client.list_mg_platforms()
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_mg_platforms(&self) -> builder::ListMgPlatforms<'_> {
+        builder::ListMgPlatforms::new(self)
+    }
+    ///Look up an OpenVGDB release by its release id
+    ///
+    ///Sends a `GET` request to `/api/openvgdb/release`
+    ///
+    ///```ignore
+    /// let response = client.get_ovgdb_release_by_id()
+    ///    .release_id(release_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_ovgdb_release_by_id(&self) -> builder::GetOvgdbReleaseById<'_> {
+        builder::GetOvgdbReleaseById::new(self)
+    }
+    ///Look up an OpenVGDB rom by a file hash (sha1, md5 or crc) and return it
+    ///
+    ///together with every release attached to it. At least one hash query
+    ///parameter must be supplied; sha1 is preferred, then md5, then crc.
+    ///
+    ///Sends a `GET` request to `/api/openvgdb/rom/by-hash`
+    ///
+    ///```ignore
+    /// let response = client.get_ovgdb_rom_by_hash()
+    ///    .crc(crc)
+    ///    .md5(md5)
+    ///    .sha1(sha1)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_ovgdb_rom_by_hash(&self) -> builder::GetOvgdbRomByHash<'_> {
+        builder::GetOvgdbRomByHash::new(self)
+    }
     ///Returns all platforms with its company and its external metadata
     /// mappings
     ///
@@ -25582,6 +33024,326 @@ impl Client {
     /// ```
     pub fn ready(&self) -> builder::Ready<'_> {
         builder::Ready::new(self)
+    }
+    ///Look up a RetroAchievements game by its game id
+    ///
+    ///Sends a `GET` request to `/api/retroachievements/game`
+    ///
+    ///```ignore
+    /// let response = client.get_ra_game_by_id()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_ra_game_by_id(&self) -> builder::GetRaGameById<'_> {
+        builder::GetRaGameById::new(self)
+    }
+    ///Look up a RetroAchievements game by one of its MD5 hashes and return the
+    ///
+    ///game record together with every other hash RetroAchievements has for it.
+    ///
+    ///Sends a `GET` request to `/api/retroachievements/game/by-hash`
+    ///
+    ///```ignore
+    /// let response = client.get_ra_game_by_hash()
+    ///    .md5(md5)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_ra_game_by_hash(&self) -> builder::GetRaGameByHash<'_> {
+        builder::GetRaGameByHash::new(self)
+    }
+    ///Search RetroAchievements games by title, optionally narrowed to a system
+    ///
+    ///Sends a `GET` request to `/api/retroachievements/game/search`
+    ///
+    ///```ignore
+    /// let response = client.search_ra_games()
+    ///    .query(query)
+    ///    .system_name(system_name)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn search_ra_games(&self) -> builder::SearchRaGames<'_> {
+        builder::SearchRaGames::new(self)
+    }
+    ///List every console RetroAchievements knows about
+    ///
+    ///Sends a `GET` request to `/api/retroachievements/systems`
+    ///
+    ///```ignore
+    /// let response = client.list_ra_systems()
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_ra_systems(&self) -> builder::ListRaSystems<'_> {
+        builder::ListRaSystems::new(self)
+    }
+    ///Look up a ScreenScraper game by its SS game id
+    ///
+    ///Sends a `GET` request to `/api/screenscraper/game`
+    ///
+    ///```ignore
+    /// let response = client.get_ss_game_by_id()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_ss_game_by_id(&self) -> builder::GetSsGameById<'_> {
+        builder::GetSsGameById::new(self)
+    }
+    ///Look up a ScreenScraper game by an exact rom file name within a system
+    ///
+    ///Sends a `GET` request to `/api/screenscraper/game/by-rom`
+    ///
+    ///```ignore
+    /// let response = client.get_ss_game_by_rom_name()
+    ///    .rom_name(rom_name)
+    ///    .system_id(system_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_ss_game_by_rom_name(&self) -> builder::GetSsGameByRomName<'_> {
+        builder::GetSsGameByRomName::new(self)
+    }
+    ///Search ScreenScraper games by name within a system
+    ///
+    ///Sends a `GET` request to `/api/screenscraper/game/search`
+    ///
+    ///```ignore
+    /// let response = client.search_ss_games()
+    ///    .query(query)
+    ///    .system_id(system_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn search_ss_games(&self) -> builder::SearchSsGames<'_> {
+        builder::SearchSsGames::new(self)
+    }
+    ///List every system (platform) ScreenScraper knows about
+    ///
+    ///Sends a `GET` request to `/api/screenscraper/systems`
+    ///
+    ///```ignore
+    /// let response = client.list_ss_systems()
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_ss_systems(&self) -> builder::ListSsSystems<'_> {
+        builder::ListSsSystems::new(self)
+    }
+    ///Look up a SteamGridDB game by its SGDB id
+    ///
+    ///Sends a `GET` request to `/api/sgdb/game`
+    ///
+    ///```ignore
+    /// let response = client.get_sgdb_game_by_id()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_sgdb_game_by_id(&self) -> builder::GetSgdbGameById<'_> {
+        builder::GetSgdbGameById::new(self)
+    }
+    ///Look up a SteamGridDB game by an external platform id (steam, origin,
+    /// egs, etc.)
+    ///
+    ///Sends a `GET` request to `/api/sgdb/game/by-platform`
+    ///
+    ///```ignore
+    /// let response = client.get_sgdb_game_by_platform()
+    ///    .platform(platform)
+    ///    .platform_id(platform_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_sgdb_game_by_platform(&self) -> builder::GetSgdbGameByPlatform<'_> {
+        builder::GetSgdbGameByPlatform::new(self)
+    }
+    ///Search SteamGridDB games via its autocomplete endpoint
+    ///
+    ///Sends a `GET` request to `/api/sgdb/game/search`
+    ///
+    ///```ignore
+    /// let response = client.search_sgdb_games()
+    ///    .query(query)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn search_sgdb_games(&self) -> builder::SearchSgdbGames<'_> {
+        builder::SearchSgdbGames::new(self)
+    }
+    ///Sends a `GET` request to `/api/sgdb/grids`
+    ///
+    ///```ignore
+    /// let response = client.get_sgdb_grids_by_game()
+    ///    .dimensions(dimensions)
+    ///    .epilepsy(epilepsy)
+    ///    .game_id(game_id)
+    ///    .humor(humor)
+    ///    .limit(limit)
+    ///    .mimes(mimes)
+    ///    .nsfw(nsfw)
+    ///    .oneoftag(oneoftag)
+    ///    .page(page)
+    ///    .styles(styles)
+    ///    .types(types)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_sgdb_grids_by_game(&self) -> builder::GetSgdbGridsByGame<'_> {
+        builder::GetSgdbGridsByGame::new(self)
+    }
+    ///Sends a `GET` request to `/api/sgdb/grids/by-platform`
+    ///
+    ///```ignore
+    /// let response = client.get_sgdb_grids_by_platform()
+    ///    .dimensions(dimensions)
+    ///    .epilepsy(epilepsy)
+    ///    .humor(humor)
+    ///    .limit(limit)
+    ///    .mimes(mimes)
+    ///    .nsfw(nsfw)
+    ///    .oneoftag(oneoftag)
+    ///    .page(page)
+    ///    .platform(platform)
+    ///    .platform_id(platform_id)
+    ///    .styles(styles)
+    ///    .types(types)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_sgdb_grids_by_platform(&self) -> builder::GetSgdbGridsByPlatform<'_> {
+        builder::GetSgdbGridsByPlatform::new(self)
+    }
+    ///Sends a `GET` request to `/api/sgdb/heroes`
+    ///
+    ///```ignore
+    /// let response = client.get_sgdb_heroes_by_game()
+    ///    .dimensions(dimensions)
+    ///    .epilepsy(epilepsy)
+    ///    .game_id(game_id)
+    ///    .humor(humor)
+    ///    .limit(limit)
+    ///    .mimes(mimes)
+    ///    .nsfw(nsfw)
+    ///    .oneoftag(oneoftag)
+    ///    .page(page)
+    ///    .styles(styles)
+    ///    .types(types)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_sgdb_heroes_by_game(&self) -> builder::GetSgdbHeroesByGame<'_> {
+        builder::GetSgdbHeroesByGame::new(self)
+    }
+    ///Sends a `GET` request to `/api/sgdb/heroes/by-platform`
+    ///
+    ///```ignore
+    /// let response = client.get_sgdb_heroes_by_platform()
+    ///    .dimensions(dimensions)
+    ///    .epilepsy(epilepsy)
+    ///    .humor(humor)
+    ///    .limit(limit)
+    ///    .mimes(mimes)
+    ///    .nsfw(nsfw)
+    ///    .oneoftag(oneoftag)
+    ///    .page(page)
+    ///    .platform(platform)
+    ///    .platform_id(platform_id)
+    ///    .styles(styles)
+    ///    .types(types)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_sgdb_heroes_by_platform(&self) -> builder::GetSgdbHeroesByPlatform<'_> {
+        builder::GetSgdbHeroesByPlatform::new(self)
+    }
+    ///Sends a `GET` request to `/api/sgdb/icons`
+    ///
+    ///```ignore
+    /// let response = client.get_sgdb_icons_by_game()
+    ///    .dimensions(dimensions)
+    ///    .epilepsy(epilepsy)
+    ///    .game_id(game_id)
+    ///    .humor(humor)
+    ///    .limit(limit)
+    ///    .mimes(mimes)
+    ///    .nsfw(nsfw)
+    ///    .oneoftag(oneoftag)
+    ///    .page(page)
+    ///    .styles(styles)
+    ///    .types(types)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_sgdb_icons_by_game(&self) -> builder::GetSgdbIconsByGame<'_> {
+        builder::GetSgdbIconsByGame::new(self)
+    }
+    ///Sends a `GET` request to `/api/sgdb/icons/by-platform`
+    ///
+    ///```ignore
+    /// let response = client.get_sgdb_icons_by_platform()
+    ///    .dimensions(dimensions)
+    ///    .epilepsy(epilepsy)
+    ///    .humor(humor)
+    ///    .limit(limit)
+    ///    .mimes(mimes)
+    ///    .nsfw(nsfw)
+    ///    .oneoftag(oneoftag)
+    ///    .page(page)
+    ///    .platform(platform)
+    ///    .platform_id(platform_id)
+    ///    .styles(styles)
+    ///    .types(types)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_sgdb_icons_by_platform(&self) -> builder::GetSgdbIconsByPlatform<'_> {
+        builder::GetSgdbIconsByPlatform::new(self)
+    }
+    ///Sends a `GET` request to `/api/sgdb/logos`
+    ///
+    ///```ignore
+    /// let response = client.get_sgdb_logos_by_game()
+    ///    .dimensions(dimensions)
+    ///    .epilepsy(epilepsy)
+    ///    .game_id(game_id)
+    ///    .humor(humor)
+    ///    .limit(limit)
+    ///    .mimes(mimes)
+    ///    .nsfw(nsfw)
+    ///    .oneoftag(oneoftag)
+    ///    .page(page)
+    ///    .styles(styles)
+    ///    .types(types)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_sgdb_logos_by_game(&self) -> builder::GetSgdbLogosByGame<'_> {
+        builder::GetSgdbLogosByGame::new(self)
+    }
+    ///Sends a `GET` request to `/api/sgdb/logos/by-platform`
+    ///
+    ///```ignore
+    /// let response = client.get_sgdb_logos_by_platform()
+    ///    .dimensions(dimensions)
+    ///    .epilepsy(epilepsy)
+    ///    .humor(humor)
+    ///    .limit(limit)
+    ///    .mimes(mimes)
+    ///    .nsfw(nsfw)
+    ///    .oneoftag(oneoftag)
+    ///    .page(page)
+    ///    .platform(platform)
+    ///    .platform_id(platform_id)
+    ///    .styles(styles)
+    ///    .types(types)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_sgdb_logos_by_platform(&self) -> builder::GetSgdbLogosByPlatform<'_> {
+        builder::GetSgdbLogosByPlatform::new(self)
     }
     ///Gets all currently pending suggestions
     ///
@@ -35442,6 +43204,310 @@ pub mod builder {
             }
         }
     }
+    ///Builder for [`Client::get_lb_game_by_id`]
+    ///
+    ///[`Client::get_lb_game_by_id`]: super::Client::get_lb_game_by_id
+    #[derive(Debug, Clone)]
+    pub struct GetLbGameById<'a> {
+        client: &'a super::Client,
+        id: Result<i64, String>,
+    }
+    impl<'a> GetLbGameById<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/launchbox/game`
+        pub async fn send(self) -> Result<ResponseValue<types::LbGame>, Error<()>> {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/launchbox/game", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("id", &id))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_lb_game_by_id",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_lb_game_alternate_names`]
+    ///
+    ///[`Client::get_lb_game_alternate_names`]: super::Client::get_lb_game_alternate_names
+    #[derive(Debug, Clone)]
+    pub struct GetLbGameAlternateNames<'a> {
+        client: &'a super::Client,
+        game_id: Result<i64, String>,
+    }
+    impl<'a> GetLbGameAlternateNames<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                game_id: Err("game_id was not initialized".to_string()),
+            }
+        }
+        pub fn game_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.game_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for game_id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/launchbox/game/alternate-names`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::LbGameAlternateName>>, Error<()>> {
+            let Self { client, game_id } = self;
+            let game_id = game_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/launchbox/game/alternate-names", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("game_id", &game_id))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_lb_game_alternate_names",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_lb_game_images`]
+    ///
+    ///[`Client::get_lb_game_images`]: super::Client::get_lb_game_images
+    #[derive(Debug, Clone)]
+    pub struct GetLbGameImages<'a> {
+        client: &'a super::Client,
+        game_id: Result<i64, String>,
+    }
+    impl<'a> GetLbGameImages<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                game_id: Err("game_id was not initialized".to_string()),
+            }
+        }
+        pub fn game_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.game_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for game_id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/launchbox/game/images`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::LbGameImage>>, Error<()>> {
+            let Self { client, game_id } = self;
+            let game_id = game_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/launchbox/game/images", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("game_id", &game_id))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_lb_game_images",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::search_lb_games`]
+    ///
+    ///[`Client::search_lb_games`]: super::Client::search_lb_games
+    #[derive(Debug, Clone)]
+    pub struct SearchLbGames<'a> {
+        client: &'a super::Client,
+        platform_name: Result<Option<::std::string::String>, String>,
+        query: Result<::std::string::String, String>,
+    }
+    impl<'a> SearchLbGames<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                platform_name: Ok(None),
+                query: Err("query was not initialized".to_string()),
+            }
+        }
+        pub fn platform_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.platform_name = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for platform_name failed".to_string()
+            });
+            self
+        }
+        pub fn query<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.query = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for query failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/launchbox/game/search`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::LbGame>>, Error<()>> {
+            let Self {
+                client,
+                platform_name,
+                query,
+            } = self;
+            let platform_name = platform_name.map_err(Error::InvalidRequest)?;
+            let query = query.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/launchbox/game/search", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "platform_name",
+                    &platform_name,
+                ))
+                .query(&progenitor_client::QueryParam::new("query", &query))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "search_lb_games",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_lb_platforms`]
+    ///
+    ///[`Client::list_lb_platforms`]: super::Client::list_lb_platforms
+    #[derive(Debug, Clone)]
+    pub struct ListLbPlatforms<'a> {
+        client: &'a super::Client,
+    }
+    impl<'a> ListLbPlatforms<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+        ///Sends a `GET` request to `/api/launchbox/platforms`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::LbPlatform>>, Error<()>> {
+            let Self { client } = self;
+            let url = format!("{}/api/launchbox/platforms", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_lb_platforms",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
     ///Builder for [`Client::manually_match_company`]
     ///
     ///[`Client::manually_match_company`]: super::Client::manually_match_company
@@ -35677,6 +43743,545 @@ pub mod builder {
             }
         }
     }
+    ///Builder for [`Client::get_mg_game_by_id`]
+    ///
+    ///[`Client::get_mg_game_by_id`]: super::Client::get_mg_game_by_id
+    #[derive(Debug, Clone)]
+    pub struct GetMgGameById<'a> {
+        client: &'a super::Client,
+        id: Result<i64, String>,
+    }
+    impl<'a> GetMgGameById<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/mobygames/game`
+        pub async fn send(self) -> Result<ResponseValue<types::MgGame>, Error<()>> {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/mobygames/game", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("id", &id))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_mg_game_by_id",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_mg_game_covers`]
+    ///
+    ///[`Client::get_mg_game_covers`]: super::Client::get_mg_game_covers
+    #[derive(Debug, Clone)]
+    pub struct GetMgGameCovers<'a> {
+        client: &'a super::Client,
+        game_id: Result<i64, String>,
+        platform_id: Result<i64, String>,
+    }
+    impl<'a> GetMgGameCovers<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                game_id: Err("game_id was not initialized".to_string()),
+                platform_id: Err("platform_id was not initialized".to_string()),
+            }
+        }
+        pub fn game_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.game_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for game_id failed".to_string());
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.platform_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for platform_id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/mobygames/game/covers`
+        pub async fn send(self) -> Result<ResponseValue<types::MgCoversResp>, Error<()>> {
+            let Self {
+                client,
+                game_id,
+                platform_id,
+            } = self;
+            let game_id = game_id.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/mobygames/game/covers", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("game_id", &game_id))
+                .query(&progenitor_client::QueryParam::new(
+                    "platform_id",
+                    &platform_id,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_mg_game_covers",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_mg_game_screenshots`]
+    ///
+    ///[`Client::get_mg_game_screenshots`]: super::Client::get_mg_game_screenshots
+    #[derive(Debug, Clone)]
+    pub struct GetMgGameScreenshots<'a> {
+        client: &'a super::Client,
+        game_id: Result<i64, String>,
+        platform_id: Result<i64, String>,
+    }
+    impl<'a> GetMgGameScreenshots<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                game_id: Err("game_id was not initialized".to_string()),
+                platform_id: Err("platform_id was not initialized".to_string()),
+            }
+        }
+        pub fn game_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.game_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for game_id failed".to_string());
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.platform_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for platform_id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/mobygames/game/screenshots`
+        pub async fn send(self) -> Result<ResponseValue<types::MgScreenshotsResp>, Error<()>> {
+            let Self {
+                client,
+                game_id,
+                platform_id,
+            } = self;
+            let game_id = game_id.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/mobygames/game/screenshots", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("game_id", &game_id))
+                .query(&progenitor_client::QueryParam::new(
+                    "platform_id",
+                    &platform_id,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_mg_game_screenshots",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::search_mg_games`]
+    ///
+    ///[`Client::search_mg_games`]: super::Client::search_mg_games
+    #[derive(Debug, Clone)]
+    pub struct SearchMgGames<'a> {
+        client: &'a super::Client,
+        platform_id: Result<Option<i64>, String>,
+        query: Result<::std::string::String, String>,
+    }
+    impl<'a> SearchMgGames<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                platform_id: Ok(None),
+                query: Err("query was not initialized".to_string()),
+            }
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.platform_id = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i64` for platform_id failed".to_string());
+            self
+        }
+        pub fn query<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.query = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for query failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/mobygames/game/search`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::MgGame>>, Error<()>> {
+            let Self {
+                client,
+                platform_id,
+                query,
+            } = self;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let query = query.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/mobygames/game/search", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "platform_id",
+                    &platform_id,
+                ))
+                .query(&progenitor_client::QueryParam::new("query", &query))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "search_mg_games",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_mg_genres`]
+    ///
+    ///[`Client::list_mg_genres`]: super::Client::list_mg_genres
+    #[derive(Debug, Clone)]
+    pub struct ListMgGenres<'a> {
+        client: &'a super::Client,
+    }
+    impl<'a> ListMgGenres<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+        ///Sends a `GET` request to `/api/mobygames/genres`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::MgGenre>>, Error<()>> {
+            let Self { client } = self;
+            let url = format!("{}/api/mobygames/genres", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_mg_genres",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_mg_platforms`]
+    ///
+    ///[`Client::list_mg_platforms`]: super::Client::list_mg_platforms
+    #[derive(Debug, Clone)]
+    pub struct ListMgPlatforms<'a> {
+        client: &'a super::Client,
+    }
+    impl<'a> ListMgPlatforms<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+        ///Sends a `GET` request to `/api/mobygames/platforms`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::MgPlatform>>, Error<()>> {
+            let Self { client } = self;
+            let url = format!("{}/api/mobygames/platforms", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_mg_platforms",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_ovgdb_release_by_id`]
+    ///
+    ///[`Client::get_ovgdb_release_by_id`]: super::Client::get_ovgdb_release_by_id
+    #[derive(Debug, Clone)]
+    pub struct GetOvgdbReleaseById<'a> {
+        client: &'a super::Client,
+        release_id: Result<i64, String>,
+    }
+    impl<'a> GetOvgdbReleaseById<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                release_id: Err("release_id was not initialized".to_string()),
+            }
+        }
+        pub fn release_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.release_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for release_id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/openvgdb/release`
+        pub async fn send(self) -> Result<ResponseValue<types::OvgdbRelease>, Error<()>> {
+            let Self { client, release_id } = self;
+            let release_id = release_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/openvgdb/release", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "release_id",
+                    &release_id,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_ovgdb_release_by_id",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_ovgdb_rom_by_hash`]
+    ///
+    ///[`Client::get_ovgdb_rom_by_hash`]: super::Client::get_ovgdb_rom_by_hash
+    #[derive(Debug, Clone)]
+    pub struct GetOvgdbRomByHash<'a> {
+        client: &'a super::Client,
+        crc: Result<Option<::std::string::String>, String>,
+        md5: Result<Option<::std::string::String>, String>,
+        sha1: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> GetOvgdbRomByHash<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                crc: Ok(None),
+                md5: Ok(None),
+                sha1: Ok(None),
+            }
+        }
+        pub fn crc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.crc = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for crc failed".to_string()
+            });
+            self
+        }
+        pub fn md5<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.md5 = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for md5 failed".to_string()
+            });
+            self
+        }
+        pub fn sha1<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.sha1 = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for sha1 failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/openvgdb/rom/by-hash`
+        pub async fn send(self) -> Result<ResponseValue<types::OvgdbRomMatch>, Error<()>> {
+            let Self {
+                client,
+                crc,
+                md5,
+                sha1,
+            } = self;
+            let crc = crc.map_err(Error::InvalidRequest)?;
+            let md5 = md5.map_err(Error::InvalidRequest)?;
+            let sha1 = sha1.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/openvgdb/rom/by-hash", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("crc", &crc))
+                .query(&progenitor_client::QueryParam::new("md5", &md5))
+                .query(&progenitor_client::QueryParam::new("sha1", &sha1))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_ovgdb_rom_by_hash",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
     ///Builder for [`Client::get_all_platforms`]
     ///
     ///[`Client::get_all_platforms`]: super::Client::get_all_platforms
@@ -35819,6 +44424,2460 @@ pub mod builder {
             match response.status().as_u16() {
                 200u16 => Ok(ResponseValue::empty(response)),
                 503u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_ra_game_by_id`]
+    ///
+    ///[`Client::get_ra_game_by_id`]: super::Client::get_ra_game_by_id
+    #[derive(Debug, Clone)]
+    pub struct GetRaGameById<'a> {
+        client: &'a super::Client,
+        id: Result<i64, String>,
+    }
+    impl<'a> GetRaGameById<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/retroachievements/game`
+        pub async fn send(self) -> Result<ResponseValue<types::RaGame>, Error<()>> {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/retroachievements/game", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("id", &id))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_ra_game_by_id",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_ra_game_by_hash`]
+    ///
+    ///[`Client::get_ra_game_by_hash`]: super::Client::get_ra_game_by_hash
+    #[derive(Debug, Clone)]
+    pub struct GetRaGameByHash<'a> {
+        client: &'a super::Client,
+        md5: Result<::std::string::String, String>,
+    }
+    impl<'a> GetRaGameByHash<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                md5: Err("md5 was not initialized".to_string()),
+            }
+        }
+        pub fn md5<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.md5 = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for md5 failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/retroachievements/game/by-hash`
+        pub async fn send(self) -> Result<ResponseValue<types::RaGameMatch>, Error<()>> {
+            let Self { client, md5 } = self;
+            let md5 = md5.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/retroachievements/game/by-hash", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("md5", &md5))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_ra_game_by_hash",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::search_ra_games`]
+    ///
+    ///[`Client::search_ra_games`]: super::Client::search_ra_games
+    #[derive(Debug, Clone)]
+    pub struct SearchRaGames<'a> {
+        client: &'a super::Client,
+        query: Result<::std::string::String, String>,
+        system_name: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> SearchRaGames<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                query: Err("query was not initialized".to_string()),
+                system_name: Ok(None),
+            }
+        }
+        pub fn query<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.query = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for query failed".to_string()
+            });
+            self
+        }
+        pub fn system_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.system_name = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for system_name failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/retroachievements/game/search`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::RaGame>>, Error<()>> {
+            let Self {
+                client,
+                query,
+                system_name,
+            } = self;
+            let query = query.map_err(Error::InvalidRequest)?;
+            let system_name = system_name.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/retroachievements/game/search", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("query", &query))
+                .query(&progenitor_client::QueryParam::new(
+                    "system_name",
+                    &system_name,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "search_ra_games",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_ra_systems`]
+    ///
+    ///[`Client::list_ra_systems`]: super::Client::list_ra_systems
+    #[derive(Debug, Clone)]
+    pub struct ListRaSystems<'a> {
+        client: &'a super::Client,
+    }
+    impl<'a> ListRaSystems<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+        ///Sends a `GET` request to `/api/retroachievements/systems`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::RaSystem>>, Error<()>> {
+            let Self { client } = self;
+            let url = format!("{}/api/retroachievements/systems", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_ra_systems",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_ss_game_by_id`]
+    ///
+    ///[`Client::get_ss_game_by_id`]: super::Client::get_ss_game_by_id
+    #[derive(Debug, Clone)]
+    pub struct GetSsGameById<'a> {
+        client: &'a super::Client,
+        id: Result<i64, String>,
+    }
+    impl<'a> GetSsGameById<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/screenscraper/game`
+        pub async fn send(self) -> Result<ResponseValue<types::SsGame>, Error<()>> {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/screenscraper/game", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("id", &id))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_ss_game_by_id",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_ss_game_by_rom_name`]
+    ///
+    ///[`Client::get_ss_game_by_rom_name`]: super::Client::get_ss_game_by_rom_name
+    #[derive(Debug, Clone)]
+    pub struct GetSsGameByRomName<'a> {
+        client: &'a super::Client,
+        rom_name: Result<::std::string::String, String>,
+        system_id: Result<i32, String>,
+    }
+    impl<'a> GetSsGameByRomName<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                rom_name: Err("rom_name was not initialized".to_string()),
+                system_id: Err("system_id was not initialized".to_string()),
+            }
+        }
+        pub fn rom_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.rom_name = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for rom_name failed".to_string()
+            });
+            self
+        }
+        pub fn system_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.system_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i32` for system_id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/screenscraper/game/by-rom`
+        pub async fn send(self) -> Result<ResponseValue<types::SsGame>, Error<()>> {
+            let Self {
+                client,
+                rom_name,
+                system_id,
+            } = self;
+            let rom_name = rom_name.map_err(Error::InvalidRequest)?;
+            let system_id = system_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/screenscraper/game/by-rom", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("rom_name", &rom_name))
+                .query(&progenitor_client::QueryParam::new("system_id", &system_id))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_ss_game_by_rom_name",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::search_ss_games`]
+    ///
+    ///[`Client::search_ss_games`]: super::Client::search_ss_games
+    #[derive(Debug, Clone)]
+    pub struct SearchSsGames<'a> {
+        client: &'a super::Client,
+        query: Result<::std::string::String, String>,
+        system_id: Result<i32, String>,
+    }
+    impl<'a> SearchSsGames<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                query: Err("query was not initialized".to_string()),
+                system_id: Err("system_id was not initialized".to_string()),
+            }
+        }
+        pub fn query<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.query = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for query failed".to_string()
+            });
+            self
+        }
+        pub fn system_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.system_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i32` for system_id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/screenscraper/game/search`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SsGame>>, Error<()>> {
+            let Self {
+                client,
+                query,
+                system_id,
+            } = self;
+            let query = query.map_err(Error::InvalidRequest)?;
+            let system_id = system_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/screenscraper/game/search", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("query", &query))
+                .query(&progenitor_client::QueryParam::new("system_id", &system_id))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "search_ss_games",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_ss_systems`]
+    ///
+    ///[`Client::list_ss_systems`]: super::Client::list_ss_systems
+    #[derive(Debug, Clone)]
+    pub struct ListSsSystems<'a> {
+        client: &'a super::Client,
+    }
+    impl<'a> ListSsSystems<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+        ///Sends a `GET` request to `/api/screenscraper/systems`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SsSystem>>, Error<()>> {
+            let Self { client } = self;
+            let url = format!("{}/api/screenscraper/systems", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_ss_systems",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_sgdb_game_by_id`]
+    ///
+    ///[`Client::get_sgdb_game_by_id`]: super::Client::get_sgdb_game_by_id
+    #[derive(Debug, Clone)]
+    pub struct GetSgdbGameById<'a> {
+        client: &'a super::Client,
+        id: Result<i64, String>,
+    }
+    impl<'a> GetSgdbGameById<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/game`
+        pub async fn send(self) -> Result<ResponseValue<types::SgdbGame>, Error<()>> {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/game", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("id", &id))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_sgdb_game_by_id",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_sgdb_game_by_platform`]
+    ///
+    ///[`Client::get_sgdb_game_by_platform`]: super::Client::get_sgdb_game_by_platform
+    #[derive(Debug, Clone)]
+    pub struct GetSgdbGameByPlatform<'a> {
+        client: &'a super::Client,
+        platform: Result<types::SgdbPlatform, String>,
+        platform_id: Result<::std::string::String, String>,
+    }
+    impl<'a> GetSgdbGameByPlatform<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                platform: Err("platform was not initialized".to_string()),
+                platform_id: Err("platform_id was not initialized".to_string()),
+            }
+        }
+        pub fn platform<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbPlatform>,
+        {
+            self.platform = value
+                .try_into()
+                .map_err(|_| "conversion to `SgdbPlatform` for platform failed".to_string());
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.platform_id = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for platform_id failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/game/by-platform`
+        pub async fn send(self) -> Result<ResponseValue<types::SgdbGame>, Error<()>> {
+            let Self {
+                client,
+                platform,
+                platform_id,
+            } = self;
+            let platform = platform.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/game/by-platform", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("platform", &platform))
+                .query(&progenitor_client::QueryParam::new(
+                    "platform_id",
+                    &platform_id,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_sgdb_game_by_platform",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::search_sgdb_games`]
+    ///
+    ///[`Client::search_sgdb_games`]: super::Client::search_sgdb_games
+    #[derive(Debug, Clone)]
+    pub struct SearchSgdbGames<'a> {
+        client: &'a super::Client,
+        query: Result<::std::string::String, String>,
+    }
+    impl<'a> SearchSgdbGames<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                query: Err("query was not initialized".to_string()),
+            }
+        }
+        pub fn query<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.query = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for query failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/game/search`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbGame>>, Error<()>> {
+            let Self { client, query } = self;
+            let query = query.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/game/search", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("query", &query))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "search_sgdb_games",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_sgdb_grids_by_game`]
+    ///
+    ///[`Client::get_sgdb_grids_by_game`]: super::Client::get_sgdb_grids_by_game
+    #[derive(Debug, Clone)]
+    pub struct GetSgdbGridsByGame<'a> {
+        client: &'a super::Client,
+        dimensions: Result<Option<::std::string::String>, String>,
+        epilepsy: Result<Option<types::SgdbTriState>, String>,
+        game_id: Result<i64, String>,
+        humor: Result<Option<types::SgdbTriState>, String>,
+        limit: Result<Option<i32>, String>,
+        mimes: Result<Option<::std::string::String>, String>,
+        nsfw: Result<Option<types::SgdbTriState>, String>,
+        oneoftag: Result<Option<::std::string::String>, String>,
+        page: Result<Option<i32>, String>,
+        styles: Result<Option<::std::string::String>, String>,
+        types: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> GetSgdbGridsByGame<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                dimensions: Ok(None),
+                epilepsy: Ok(None),
+                game_id: Err("game_id was not initialized".to_string()),
+                humor: Ok(None),
+                limit: Ok(None),
+                mimes: Ok(None),
+                nsfw: Ok(None),
+                oneoftag: Ok(None),
+                page: Ok(None),
+                styles: Ok(None),
+                types: Ok(None),
+            }
+        }
+        pub fn dimensions<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.dimensions = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for dimensions failed".to_string()
+            });
+            self
+        }
+        pub fn epilepsy<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.epilepsy = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for epilepsy failed".to_string());
+            self
+        }
+        pub fn game_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.game_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for game_id failed".to_string());
+            self
+        }
+        pub fn humor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.humor = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for humor failed".to_string());
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.limit = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for limit failed".to_string());
+            self
+        }
+        pub fn mimes<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.mimes = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for mimes failed".to_string()
+            });
+            self
+        }
+        pub fn nsfw<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.nsfw = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for nsfw failed".to_string());
+            self
+        }
+        pub fn oneoftag<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.oneoftag = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for oneoftag failed".to_string()
+            });
+            self
+        }
+        pub fn page<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.page = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for page failed".to_string());
+            self
+        }
+        pub fn styles<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.styles = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for styles failed".to_string()
+            });
+            self
+        }
+        pub fn types<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.types = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for types failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/grids`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
+            let Self {
+                client,
+                dimensions,
+                epilepsy,
+                game_id,
+                humor,
+                limit,
+                mimes,
+                nsfw,
+                oneoftag,
+                page,
+                styles,
+                types,
+            } = self;
+            let dimensions = dimensions.map_err(Error::InvalidRequest)?;
+            let epilepsy = epilepsy.map_err(Error::InvalidRequest)?;
+            let game_id = game_id.map_err(Error::InvalidRequest)?;
+            let humor = humor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let mimes = mimes.map_err(Error::InvalidRequest)?;
+            let nsfw = nsfw.map_err(Error::InvalidRequest)?;
+            let oneoftag = oneoftag.map_err(Error::InvalidRequest)?;
+            let page = page.map_err(Error::InvalidRequest)?;
+            let styles = styles.map_err(Error::InvalidRequest)?;
+            let types = types.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/grids", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "dimensions",
+                    &dimensions,
+                ))
+                .query(&progenitor_client::QueryParam::new("epilepsy", &epilepsy))
+                .query(&progenitor_client::QueryParam::new("game_id", &game_id))
+                .query(&progenitor_client::QueryParam::new("humor", &humor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("mimes", &mimes))
+                .query(&progenitor_client::QueryParam::new("nsfw", &nsfw))
+                .query(&progenitor_client::QueryParam::new("oneoftag", &oneoftag))
+                .query(&progenitor_client::QueryParam::new("page", &page))
+                .query(&progenitor_client::QueryParam::new("styles", &styles))
+                .query(&progenitor_client::QueryParam::new("types", &types))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_sgdb_grids_by_game",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_sgdb_grids_by_platform`]
+    ///
+    ///[`Client::get_sgdb_grids_by_platform`]: super::Client::get_sgdb_grids_by_platform
+    #[derive(Debug, Clone)]
+    pub struct GetSgdbGridsByPlatform<'a> {
+        client: &'a super::Client,
+        dimensions: Result<Option<::std::string::String>, String>,
+        epilepsy: Result<Option<types::SgdbTriState>, String>,
+        humor: Result<Option<types::SgdbTriState>, String>,
+        limit: Result<Option<i32>, String>,
+        mimes: Result<Option<::std::string::String>, String>,
+        nsfw: Result<Option<types::SgdbTriState>, String>,
+        oneoftag: Result<Option<::std::string::String>, String>,
+        page: Result<Option<i32>, String>,
+        platform: Result<types::SgdbPlatform, String>,
+        platform_id: Result<::std::string::String, String>,
+        styles: Result<Option<::std::string::String>, String>,
+        types: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> GetSgdbGridsByPlatform<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                dimensions: Ok(None),
+                epilepsy: Ok(None),
+                humor: Ok(None),
+                limit: Ok(None),
+                mimes: Ok(None),
+                nsfw: Ok(None),
+                oneoftag: Ok(None),
+                page: Ok(None),
+                platform: Err("platform was not initialized".to_string()),
+                platform_id: Err("platform_id was not initialized".to_string()),
+                styles: Ok(None),
+                types: Ok(None),
+            }
+        }
+        pub fn dimensions<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.dimensions = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for dimensions failed".to_string()
+            });
+            self
+        }
+        pub fn epilepsy<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.epilepsy = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for epilepsy failed".to_string());
+            self
+        }
+        pub fn humor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.humor = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for humor failed".to_string());
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.limit = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for limit failed".to_string());
+            self
+        }
+        pub fn mimes<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.mimes = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for mimes failed".to_string()
+            });
+            self
+        }
+        pub fn nsfw<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.nsfw = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for nsfw failed".to_string());
+            self
+        }
+        pub fn oneoftag<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.oneoftag = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for oneoftag failed".to_string()
+            });
+            self
+        }
+        pub fn page<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.page = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for page failed".to_string());
+            self
+        }
+        pub fn platform<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbPlatform>,
+        {
+            self.platform = value
+                .try_into()
+                .map_err(|_| "conversion to `SgdbPlatform` for platform failed".to_string());
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.platform_id = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for platform_id failed".to_string()
+            });
+            self
+        }
+        pub fn styles<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.styles = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for styles failed".to_string()
+            });
+            self
+        }
+        pub fn types<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.types = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for types failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/grids/by-platform`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
+            let Self {
+                client,
+                dimensions,
+                epilepsy,
+                humor,
+                limit,
+                mimes,
+                nsfw,
+                oneoftag,
+                page,
+                platform,
+                platform_id,
+                styles,
+                types,
+            } = self;
+            let dimensions = dimensions.map_err(Error::InvalidRequest)?;
+            let epilepsy = epilepsy.map_err(Error::InvalidRequest)?;
+            let humor = humor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let mimes = mimes.map_err(Error::InvalidRequest)?;
+            let nsfw = nsfw.map_err(Error::InvalidRequest)?;
+            let oneoftag = oneoftag.map_err(Error::InvalidRequest)?;
+            let page = page.map_err(Error::InvalidRequest)?;
+            let platform = platform.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let styles = styles.map_err(Error::InvalidRequest)?;
+            let types = types.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/grids/by-platform", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "dimensions",
+                    &dimensions,
+                ))
+                .query(&progenitor_client::QueryParam::new("epilepsy", &epilepsy))
+                .query(&progenitor_client::QueryParam::new("humor", &humor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("mimes", &mimes))
+                .query(&progenitor_client::QueryParam::new("nsfw", &nsfw))
+                .query(&progenitor_client::QueryParam::new("oneoftag", &oneoftag))
+                .query(&progenitor_client::QueryParam::new("page", &page))
+                .query(&progenitor_client::QueryParam::new("platform", &platform))
+                .query(&progenitor_client::QueryParam::new(
+                    "platform_id",
+                    &platform_id,
+                ))
+                .query(&progenitor_client::QueryParam::new("styles", &styles))
+                .query(&progenitor_client::QueryParam::new("types", &types))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_sgdb_grids_by_platform",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_sgdb_heroes_by_game`]
+    ///
+    ///[`Client::get_sgdb_heroes_by_game`]: super::Client::get_sgdb_heroes_by_game
+    #[derive(Debug, Clone)]
+    pub struct GetSgdbHeroesByGame<'a> {
+        client: &'a super::Client,
+        dimensions: Result<Option<::std::string::String>, String>,
+        epilepsy: Result<Option<types::SgdbTriState>, String>,
+        game_id: Result<i64, String>,
+        humor: Result<Option<types::SgdbTriState>, String>,
+        limit: Result<Option<i32>, String>,
+        mimes: Result<Option<::std::string::String>, String>,
+        nsfw: Result<Option<types::SgdbTriState>, String>,
+        oneoftag: Result<Option<::std::string::String>, String>,
+        page: Result<Option<i32>, String>,
+        styles: Result<Option<::std::string::String>, String>,
+        types: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> GetSgdbHeroesByGame<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                dimensions: Ok(None),
+                epilepsy: Ok(None),
+                game_id: Err("game_id was not initialized".to_string()),
+                humor: Ok(None),
+                limit: Ok(None),
+                mimes: Ok(None),
+                nsfw: Ok(None),
+                oneoftag: Ok(None),
+                page: Ok(None),
+                styles: Ok(None),
+                types: Ok(None),
+            }
+        }
+        pub fn dimensions<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.dimensions = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for dimensions failed".to_string()
+            });
+            self
+        }
+        pub fn epilepsy<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.epilepsy = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for epilepsy failed".to_string());
+            self
+        }
+        pub fn game_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.game_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for game_id failed".to_string());
+            self
+        }
+        pub fn humor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.humor = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for humor failed".to_string());
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.limit = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for limit failed".to_string());
+            self
+        }
+        pub fn mimes<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.mimes = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for mimes failed".to_string()
+            });
+            self
+        }
+        pub fn nsfw<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.nsfw = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for nsfw failed".to_string());
+            self
+        }
+        pub fn oneoftag<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.oneoftag = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for oneoftag failed".to_string()
+            });
+            self
+        }
+        pub fn page<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.page = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for page failed".to_string());
+            self
+        }
+        pub fn styles<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.styles = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for styles failed".to_string()
+            });
+            self
+        }
+        pub fn types<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.types = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for types failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/heroes`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
+            let Self {
+                client,
+                dimensions,
+                epilepsy,
+                game_id,
+                humor,
+                limit,
+                mimes,
+                nsfw,
+                oneoftag,
+                page,
+                styles,
+                types,
+            } = self;
+            let dimensions = dimensions.map_err(Error::InvalidRequest)?;
+            let epilepsy = epilepsy.map_err(Error::InvalidRequest)?;
+            let game_id = game_id.map_err(Error::InvalidRequest)?;
+            let humor = humor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let mimes = mimes.map_err(Error::InvalidRequest)?;
+            let nsfw = nsfw.map_err(Error::InvalidRequest)?;
+            let oneoftag = oneoftag.map_err(Error::InvalidRequest)?;
+            let page = page.map_err(Error::InvalidRequest)?;
+            let styles = styles.map_err(Error::InvalidRequest)?;
+            let types = types.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/heroes", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "dimensions",
+                    &dimensions,
+                ))
+                .query(&progenitor_client::QueryParam::new("epilepsy", &epilepsy))
+                .query(&progenitor_client::QueryParam::new("game_id", &game_id))
+                .query(&progenitor_client::QueryParam::new("humor", &humor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("mimes", &mimes))
+                .query(&progenitor_client::QueryParam::new("nsfw", &nsfw))
+                .query(&progenitor_client::QueryParam::new("oneoftag", &oneoftag))
+                .query(&progenitor_client::QueryParam::new("page", &page))
+                .query(&progenitor_client::QueryParam::new("styles", &styles))
+                .query(&progenitor_client::QueryParam::new("types", &types))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_sgdb_heroes_by_game",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_sgdb_heroes_by_platform`]
+    ///
+    ///[`Client::get_sgdb_heroes_by_platform`]: super::Client::get_sgdb_heroes_by_platform
+    #[derive(Debug, Clone)]
+    pub struct GetSgdbHeroesByPlatform<'a> {
+        client: &'a super::Client,
+        dimensions: Result<Option<::std::string::String>, String>,
+        epilepsy: Result<Option<types::SgdbTriState>, String>,
+        humor: Result<Option<types::SgdbTriState>, String>,
+        limit: Result<Option<i32>, String>,
+        mimes: Result<Option<::std::string::String>, String>,
+        nsfw: Result<Option<types::SgdbTriState>, String>,
+        oneoftag: Result<Option<::std::string::String>, String>,
+        page: Result<Option<i32>, String>,
+        platform: Result<types::SgdbPlatform, String>,
+        platform_id: Result<::std::string::String, String>,
+        styles: Result<Option<::std::string::String>, String>,
+        types: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> GetSgdbHeroesByPlatform<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                dimensions: Ok(None),
+                epilepsy: Ok(None),
+                humor: Ok(None),
+                limit: Ok(None),
+                mimes: Ok(None),
+                nsfw: Ok(None),
+                oneoftag: Ok(None),
+                page: Ok(None),
+                platform: Err("platform was not initialized".to_string()),
+                platform_id: Err("platform_id was not initialized".to_string()),
+                styles: Ok(None),
+                types: Ok(None),
+            }
+        }
+        pub fn dimensions<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.dimensions = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for dimensions failed".to_string()
+            });
+            self
+        }
+        pub fn epilepsy<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.epilepsy = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for epilepsy failed".to_string());
+            self
+        }
+        pub fn humor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.humor = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for humor failed".to_string());
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.limit = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for limit failed".to_string());
+            self
+        }
+        pub fn mimes<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.mimes = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for mimes failed".to_string()
+            });
+            self
+        }
+        pub fn nsfw<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.nsfw = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for nsfw failed".to_string());
+            self
+        }
+        pub fn oneoftag<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.oneoftag = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for oneoftag failed".to_string()
+            });
+            self
+        }
+        pub fn page<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.page = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for page failed".to_string());
+            self
+        }
+        pub fn platform<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbPlatform>,
+        {
+            self.platform = value
+                .try_into()
+                .map_err(|_| "conversion to `SgdbPlatform` for platform failed".to_string());
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.platform_id = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for platform_id failed".to_string()
+            });
+            self
+        }
+        pub fn styles<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.styles = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for styles failed".to_string()
+            });
+            self
+        }
+        pub fn types<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.types = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for types failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/heroes/by-platform`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
+            let Self {
+                client,
+                dimensions,
+                epilepsy,
+                humor,
+                limit,
+                mimes,
+                nsfw,
+                oneoftag,
+                page,
+                platform,
+                platform_id,
+                styles,
+                types,
+            } = self;
+            let dimensions = dimensions.map_err(Error::InvalidRequest)?;
+            let epilepsy = epilepsy.map_err(Error::InvalidRequest)?;
+            let humor = humor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let mimes = mimes.map_err(Error::InvalidRequest)?;
+            let nsfw = nsfw.map_err(Error::InvalidRequest)?;
+            let oneoftag = oneoftag.map_err(Error::InvalidRequest)?;
+            let page = page.map_err(Error::InvalidRequest)?;
+            let platform = platform.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let styles = styles.map_err(Error::InvalidRequest)?;
+            let types = types.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/heroes/by-platform", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "dimensions",
+                    &dimensions,
+                ))
+                .query(&progenitor_client::QueryParam::new("epilepsy", &epilepsy))
+                .query(&progenitor_client::QueryParam::new("humor", &humor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("mimes", &mimes))
+                .query(&progenitor_client::QueryParam::new("nsfw", &nsfw))
+                .query(&progenitor_client::QueryParam::new("oneoftag", &oneoftag))
+                .query(&progenitor_client::QueryParam::new("page", &page))
+                .query(&progenitor_client::QueryParam::new("platform", &platform))
+                .query(&progenitor_client::QueryParam::new(
+                    "platform_id",
+                    &platform_id,
+                ))
+                .query(&progenitor_client::QueryParam::new("styles", &styles))
+                .query(&progenitor_client::QueryParam::new("types", &types))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_sgdb_heroes_by_platform",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_sgdb_icons_by_game`]
+    ///
+    ///[`Client::get_sgdb_icons_by_game`]: super::Client::get_sgdb_icons_by_game
+    #[derive(Debug, Clone)]
+    pub struct GetSgdbIconsByGame<'a> {
+        client: &'a super::Client,
+        dimensions: Result<Option<::std::string::String>, String>,
+        epilepsy: Result<Option<types::SgdbTriState>, String>,
+        game_id: Result<i64, String>,
+        humor: Result<Option<types::SgdbTriState>, String>,
+        limit: Result<Option<i32>, String>,
+        mimes: Result<Option<::std::string::String>, String>,
+        nsfw: Result<Option<types::SgdbTriState>, String>,
+        oneoftag: Result<Option<::std::string::String>, String>,
+        page: Result<Option<i32>, String>,
+        styles: Result<Option<::std::string::String>, String>,
+        types: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> GetSgdbIconsByGame<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                dimensions: Ok(None),
+                epilepsy: Ok(None),
+                game_id: Err("game_id was not initialized".to_string()),
+                humor: Ok(None),
+                limit: Ok(None),
+                mimes: Ok(None),
+                nsfw: Ok(None),
+                oneoftag: Ok(None),
+                page: Ok(None),
+                styles: Ok(None),
+                types: Ok(None),
+            }
+        }
+        pub fn dimensions<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.dimensions = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for dimensions failed".to_string()
+            });
+            self
+        }
+        pub fn epilepsy<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.epilepsy = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for epilepsy failed".to_string());
+            self
+        }
+        pub fn game_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.game_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for game_id failed".to_string());
+            self
+        }
+        pub fn humor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.humor = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for humor failed".to_string());
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.limit = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for limit failed".to_string());
+            self
+        }
+        pub fn mimes<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.mimes = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for mimes failed".to_string()
+            });
+            self
+        }
+        pub fn nsfw<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.nsfw = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for nsfw failed".to_string());
+            self
+        }
+        pub fn oneoftag<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.oneoftag = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for oneoftag failed".to_string()
+            });
+            self
+        }
+        pub fn page<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.page = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for page failed".to_string());
+            self
+        }
+        pub fn styles<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.styles = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for styles failed".to_string()
+            });
+            self
+        }
+        pub fn types<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.types = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for types failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/icons`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
+            let Self {
+                client,
+                dimensions,
+                epilepsy,
+                game_id,
+                humor,
+                limit,
+                mimes,
+                nsfw,
+                oneoftag,
+                page,
+                styles,
+                types,
+            } = self;
+            let dimensions = dimensions.map_err(Error::InvalidRequest)?;
+            let epilepsy = epilepsy.map_err(Error::InvalidRequest)?;
+            let game_id = game_id.map_err(Error::InvalidRequest)?;
+            let humor = humor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let mimes = mimes.map_err(Error::InvalidRequest)?;
+            let nsfw = nsfw.map_err(Error::InvalidRequest)?;
+            let oneoftag = oneoftag.map_err(Error::InvalidRequest)?;
+            let page = page.map_err(Error::InvalidRequest)?;
+            let styles = styles.map_err(Error::InvalidRequest)?;
+            let types = types.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/icons", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "dimensions",
+                    &dimensions,
+                ))
+                .query(&progenitor_client::QueryParam::new("epilepsy", &epilepsy))
+                .query(&progenitor_client::QueryParam::new("game_id", &game_id))
+                .query(&progenitor_client::QueryParam::new("humor", &humor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("mimes", &mimes))
+                .query(&progenitor_client::QueryParam::new("nsfw", &nsfw))
+                .query(&progenitor_client::QueryParam::new("oneoftag", &oneoftag))
+                .query(&progenitor_client::QueryParam::new("page", &page))
+                .query(&progenitor_client::QueryParam::new("styles", &styles))
+                .query(&progenitor_client::QueryParam::new("types", &types))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_sgdb_icons_by_game",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_sgdb_icons_by_platform`]
+    ///
+    ///[`Client::get_sgdb_icons_by_platform`]: super::Client::get_sgdb_icons_by_platform
+    #[derive(Debug, Clone)]
+    pub struct GetSgdbIconsByPlatform<'a> {
+        client: &'a super::Client,
+        dimensions: Result<Option<::std::string::String>, String>,
+        epilepsy: Result<Option<types::SgdbTriState>, String>,
+        humor: Result<Option<types::SgdbTriState>, String>,
+        limit: Result<Option<i32>, String>,
+        mimes: Result<Option<::std::string::String>, String>,
+        nsfw: Result<Option<types::SgdbTriState>, String>,
+        oneoftag: Result<Option<::std::string::String>, String>,
+        page: Result<Option<i32>, String>,
+        platform: Result<types::SgdbPlatform, String>,
+        platform_id: Result<::std::string::String, String>,
+        styles: Result<Option<::std::string::String>, String>,
+        types: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> GetSgdbIconsByPlatform<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                dimensions: Ok(None),
+                epilepsy: Ok(None),
+                humor: Ok(None),
+                limit: Ok(None),
+                mimes: Ok(None),
+                nsfw: Ok(None),
+                oneoftag: Ok(None),
+                page: Ok(None),
+                platform: Err("platform was not initialized".to_string()),
+                platform_id: Err("platform_id was not initialized".to_string()),
+                styles: Ok(None),
+                types: Ok(None),
+            }
+        }
+        pub fn dimensions<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.dimensions = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for dimensions failed".to_string()
+            });
+            self
+        }
+        pub fn epilepsy<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.epilepsy = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for epilepsy failed".to_string());
+            self
+        }
+        pub fn humor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.humor = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for humor failed".to_string());
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.limit = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for limit failed".to_string());
+            self
+        }
+        pub fn mimes<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.mimes = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for mimes failed".to_string()
+            });
+            self
+        }
+        pub fn nsfw<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.nsfw = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for nsfw failed".to_string());
+            self
+        }
+        pub fn oneoftag<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.oneoftag = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for oneoftag failed".to_string()
+            });
+            self
+        }
+        pub fn page<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.page = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for page failed".to_string());
+            self
+        }
+        pub fn platform<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbPlatform>,
+        {
+            self.platform = value
+                .try_into()
+                .map_err(|_| "conversion to `SgdbPlatform` for platform failed".to_string());
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.platform_id = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for platform_id failed".to_string()
+            });
+            self
+        }
+        pub fn styles<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.styles = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for styles failed".to_string()
+            });
+            self
+        }
+        pub fn types<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.types = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for types failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/icons/by-platform`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
+            let Self {
+                client,
+                dimensions,
+                epilepsy,
+                humor,
+                limit,
+                mimes,
+                nsfw,
+                oneoftag,
+                page,
+                platform,
+                platform_id,
+                styles,
+                types,
+            } = self;
+            let dimensions = dimensions.map_err(Error::InvalidRequest)?;
+            let epilepsy = epilepsy.map_err(Error::InvalidRequest)?;
+            let humor = humor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let mimes = mimes.map_err(Error::InvalidRequest)?;
+            let nsfw = nsfw.map_err(Error::InvalidRequest)?;
+            let oneoftag = oneoftag.map_err(Error::InvalidRequest)?;
+            let page = page.map_err(Error::InvalidRequest)?;
+            let platform = platform.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let styles = styles.map_err(Error::InvalidRequest)?;
+            let types = types.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/icons/by-platform", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "dimensions",
+                    &dimensions,
+                ))
+                .query(&progenitor_client::QueryParam::new("epilepsy", &epilepsy))
+                .query(&progenitor_client::QueryParam::new("humor", &humor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("mimes", &mimes))
+                .query(&progenitor_client::QueryParam::new("nsfw", &nsfw))
+                .query(&progenitor_client::QueryParam::new("oneoftag", &oneoftag))
+                .query(&progenitor_client::QueryParam::new("page", &page))
+                .query(&progenitor_client::QueryParam::new("platform", &platform))
+                .query(&progenitor_client::QueryParam::new(
+                    "platform_id",
+                    &platform_id,
+                ))
+                .query(&progenitor_client::QueryParam::new("styles", &styles))
+                .query(&progenitor_client::QueryParam::new("types", &types))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_sgdb_icons_by_platform",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_sgdb_logos_by_game`]
+    ///
+    ///[`Client::get_sgdb_logos_by_game`]: super::Client::get_sgdb_logos_by_game
+    #[derive(Debug, Clone)]
+    pub struct GetSgdbLogosByGame<'a> {
+        client: &'a super::Client,
+        dimensions: Result<Option<::std::string::String>, String>,
+        epilepsy: Result<Option<types::SgdbTriState>, String>,
+        game_id: Result<i64, String>,
+        humor: Result<Option<types::SgdbTriState>, String>,
+        limit: Result<Option<i32>, String>,
+        mimes: Result<Option<::std::string::String>, String>,
+        nsfw: Result<Option<types::SgdbTriState>, String>,
+        oneoftag: Result<Option<::std::string::String>, String>,
+        page: Result<Option<i32>, String>,
+        styles: Result<Option<::std::string::String>, String>,
+        types: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> GetSgdbLogosByGame<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                dimensions: Ok(None),
+                epilepsy: Ok(None),
+                game_id: Err("game_id was not initialized".to_string()),
+                humor: Ok(None),
+                limit: Ok(None),
+                mimes: Ok(None),
+                nsfw: Ok(None),
+                oneoftag: Ok(None),
+                page: Ok(None),
+                styles: Ok(None),
+                types: Ok(None),
+            }
+        }
+        pub fn dimensions<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.dimensions = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for dimensions failed".to_string()
+            });
+            self
+        }
+        pub fn epilepsy<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.epilepsy = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for epilepsy failed".to_string());
+            self
+        }
+        pub fn game_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.game_id = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for game_id failed".to_string());
+            self
+        }
+        pub fn humor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.humor = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for humor failed".to_string());
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.limit = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for limit failed".to_string());
+            self
+        }
+        pub fn mimes<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.mimes = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for mimes failed".to_string()
+            });
+            self
+        }
+        pub fn nsfw<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.nsfw = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for nsfw failed".to_string());
+            self
+        }
+        pub fn oneoftag<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.oneoftag = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for oneoftag failed".to_string()
+            });
+            self
+        }
+        pub fn page<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.page = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for page failed".to_string());
+            self
+        }
+        pub fn styles<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.styles = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for styles failed".to_string()
+            });
+            self
+        }
+        pub fn types<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.types = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for types failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/logos`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
+            let Self {
+                client,
+                dimensions,
+                epilepsy,
+                game_id,
+                humor,
+                limit,
+                mimes,
+                nsfw,
+                oneoftag,
+                page,
+                styles,
+                types,
+            } = self;
+            let dimensions = dimensions.map_err(Error::InvalidRequest)?;
+            let epilepsy = epilepsy.map_err(Error::InvalidRequest)?;
+            let game_id = game_id.map_err(Error::InvalidRequest)?;
+            let humor = humor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let mimes = mimes.map_err(Error::InvalidRequest)?;
+            let nsfw = nsfw.map_err(Error::InvalidRequest)?;
+            let oneoftag = oneoftag.map_err(Error::InvalidRequest)?;
+            let page = page.map_err(Error::InvalidRequest)?;
+            let styles = styles.map_err(Error::InvalidRequest)?;
+            let types = types.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/logos", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "dimensions",
+                    &dimensions,
+                ))
+                .query(&progenitor_client::QueryParam::new("epilepsy", &epilepsy))
+                .query(&progenitor_client::QueryParam::new("game_id", &game_id))
+                .query(&progenitor_client::QueryParam::new("humor", &humor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("mimes", &mimes))
+                .query(&progenitor_client::QueryParam::new("nsfw", &nsfw))
+                .query(&progenitor_client::QueryParam::new("oneoftag", &oneoftag))
+                .query(&progenitor_client::QueryParam::new("page", &page))
+                .query(&progenitor_client::QueryParam::new("styles", &styles))
+                .query(&progenitor_client::QueryParam::new("types", &types))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_sgdb_logos_by_game",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_sgdb_logos_by_platform`]
+    ///
+    ///[`Client::get_sgdb_logos_by_platform`]: super::Client::get_sgdb_logos_by_platform
+    #[derive(Debug, Clone)]
+    pub struct GetSgdbLogosByPlatform<'a> {
+        client: &'a super::Client,
+        dimensions: Result<Option<::std::string::String>, String>,
+        epilepsy: Result<Option<types::SgdbTriState>, String>,
+        humor: Result<Option<types::SgdbTriState>, String>,
+        limit: Result<Option<i32>, String>,
+        mimes: Result<Option<::std::string::String>, String>,
+        nsfw: Result<Option<types::SgdbTriState>, String>,
+        oneoftag: Result<Option<::std::string::String>, String>,
+        page: Result<Option<i32>, String>,
+        platform: Result<types::SgdbPlatform, String>,
+        platform_id: Result<::std::string::String, String>,
+        styles: Result<Option<::std::string::String>, String>,
+        types: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> GetSgdbLogosByPlatform<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                dimensions: Ok(None),
+                epilepsy: Ok(None),
+                humor: Ok(None),
+                limit: Ok(None),
+                mimes: Ok(None),
+                nsfw: Ok(None),
+                oneoftag: Ok(None),
+                page: Ok(None),
+                platform: Err("platform was not initialized".to_string()),
+                platform_id: Err("platform_id was not initialized".to_string()),
+                styles: Ok(None),
+                types: Ok(None),
+            }
+        }
+        pub fn dimensions<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.dimensions = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for dimensions failed".to_string()
+            });
+            self
+        }
+        pub fn epilepsy<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.epilepsy = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for epilepsy failed".to_string());
+            self
+        }
+        pub fn humor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.humor = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for humor failed".to_string());
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.limit = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for limit failed".to_string());
+            self
+        }
+        pub fn mimes<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.mimes = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for mimes failed".to_string()
+            });
+            self
+        }
+        pub fn nsfw<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbTriState>,
+        {
+            self.nsfw = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `SgdbTriState` for nsfw failed".to_string());
+            self
+        }
+        pub fn oneoftag<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.oneoftag = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for oneoftag failed".to_string()
+            });
+            self
+        }
+        pub fn page<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i32>,
+        {
+            self.page = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `i32` for page failed".to_string());
+            self
+        }
+        pub fn platform<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::SgdbPlatform>,
+        {
+            self.platform = value
+                .try_into()
+                .map_err(|_| "conversion to `SgdbPlatform` for platform failed".to_string());
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.platform_id = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for platform_id failed".to_string()
+            });
+            self
+        }
+        pub fn styles<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.styles = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for styles failed".to_string()
+            });
+            self
+        }
+        pub fn types<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.types = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for types failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/api/sgdb/logos/by-platform`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
+            let Self {
+                client,
+                dimensions,
+                epilepsy,
+                humor,
+                limit,
+                mimes,
+                nsfw,
+                oneoftag,
+                page,
+                platform,
+                platform_id,
+                styles,
+                types,
+            } = self;
+            let dimensions = dimensions.map_err(Error::InvalidRequest)?;
+            let epilepsy = epilepsy.map_err(Error::InvalidRequest)?;
+            let humor = humor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let mimes = mimes.map_err(Error::InvalidRequest)?;
+            let nsfw = nsfw.map_err(Error::InvalidRequest)?;
+            let oneoftag = oneoftag.map_err(Error::InvalidRequest)?;
+            let page = page.map_err(Error::InvalidRequest)?;
+            let platform = platform.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let styles = styles.map_err(Error::InvalidRequest)?;
+            let types = types.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/api/sgdb/logos/by-platform", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "dimensions",
+                    &dimensions,
+                ))
+                .query(&progenitor_client::QueryParam::new("epilepsy", &epilepsy))
+                .query(&progenitor_client::QueryParam::new("humor", &humor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("mimes", &mimes))
+                .query(&progenitor_client::QueryParam::new("nsfw", &nsfw))
+                .query(&progenitor_client::QueryParam::new("oneoftag", &oneoftag))
+                .query(&progenitor_client::QueryParam::new("page", &page))
+                .query(&progenitor_client::QueryParam::new("platform", &platform))
+                .query(&progenitor_client::QueryParam::new(
+                    "platform_id",
+                    &platform_id,
+                ))
+                .query(&progenitor_client::QueryParam::new("styles", &styles))
+                .query(&progenitor_client::QueryParam::new("types", &types))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_sgdb_logos_by_platform",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
