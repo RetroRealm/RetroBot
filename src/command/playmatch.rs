@@ -608,6 +608,7 @@ pub async fn manual_match_platform(
 			provider_id: igdb_id.to_string(),
 			provider: Igdb,
 			name,
+			matched_name: None,
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
@@ -658,6 +659,7 @@ pub async fn manual_match_company(
 			provider_id: igdb_id.to_string(),
 			provider: Igdb,
 			name,
+			matched_name: None,
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
@@ -725,6 +727,7 @@ pub async fn manual_match_game(
 			sha1: sha1_hash,
 			sha256: sha256_hash,
 			name,
+			matched_name: None,
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
