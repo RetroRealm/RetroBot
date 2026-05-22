@@ -386,19 +386,22 @@ pub async fn create_game_suggestion(
 		let platform = game_response.platform.name.clone();
 		let company = game_response.company.clone().map(|c| c.name);
 		async move {
-			handle_suggestion_message(SuggestionMessageHandleData {
-				playmatch_client,
-				serenity_ctx,
-				suggestion_id: suggestion.id,
-				owners,
-				author_id,
-				r#type: SuggestionType::Game,
-				provider: provider_meta,
-				name: game_name,
-				platform: Some(platform),
-				company,
-				comment: suggestion.comment,
-			})
+			handle_suggestion_message(
+				SuggestionMessageHandleData {
+					playmatch_client,
+					serenity_ctx,
+					suggestion_id: suggestion.id,
+					owners,
+					submitter: SuggestionSubmitter::DiscordUser(author_id),
+					r#type: SuggestionType::Game,
+					provider: provider_meta,
+					name: game_name,
+					platform: Some(platform),
+					company,
+					comment: suggestion.comment,
+				},
+				None,
+			)
 			.await
 		}
 	});
@@ -472,19 +475,22 @@ pub async fn create_company_suggestion(
 		let author_id = ctx.author().id;
 		let company_name = name.clone();
 		async move {
-			handle_suggestion_message(SuggestionMessageHandleData {
-				playmatch_client,
-				serenity_ctx,
-				suggestion_id: suggestion.id,
-				owners,
-				author_id,
-				r#type: SuggestionType::Company,
-				provider: provider_meta,
-				name: company_name,
-				platform: None,
-				company: None,
-				comment: suggestion.comment,
-			})
+			handle_suggestion_message(
+				SuggestionMessageHandleData {
+					playmatch_client,
+					serenity_ctx,
+					suggestion_id: suggestion.id,
+					owners,
+					submitter: SuggestionSubmitter::DiscordUser(author_id),
+					r#type: SuggestionType::Company,
+					provider: provider_meta,
+					name: company_name,
+					platform: None,
+					company: None,
+					comment: suggestion.comment,
+				},
+				None,
+			)
 			.await
 		}
 	});
@@ -581,19 +587,22 @@ pub async fn create_platform_suggestion(
 		let platform_name = name.clone();
 		let company = platform.company_name.clone();
 		async move {
-			handle_suggestion_message(SuggestionMessageHandleData {
-				playmatch_client,
-				serenity_ctx,
-				suggestion_id: suggestion.id,
-				owners,
-				author_id,
-				r#type: SuggestionType::Platform,
-				provider: provider_meta,
-				name: platform_name,
-				platform: None,
-				company,
-				comment: suggestion.comment,
-			})
+			handle_suggestion_message(
+				SuggestionMessageHandleData {
+					playmatch_client,
+					serenity_ctx,
+					suggestion_id: suggestion.id,
+					owners,
+					submitter: SuggestionSubmitter::DiscordUser(author_id),
+					r#type: SuggestionType::Platform,
+					provider: provider_meta,
+					name: platform_name,
+					platform: None,
+					company,
+					comment: suggestion.comment,
+				},
+				None,
+			)
 			.await
 		}
 	});
@@ -838,27 +847,38 @@ impl PlaymatchUserCtx {
 	}
 }
 
-enum SuggestionType {
+pub(crate) enum SuggestionType {
 	Platform,
 	Company,
 	Game,
 }
 
-struct SuggestionMessageHandleData {
-	playmatch_client: Arc<playmatch_client::Client>,
-	serenity_ctx: Context,
-	suggestion_id: Uuid,
-	owners: HashSet<UserId>,
-	author_id: UserId,
-	r#type: SuggestionType,
-	provider: MetadataProvider,
-	name: String,
-	platform: Option<String>,
-	company: Option<String>,
-	comment: Option<String>,
+pub(crate) enum SuggestionSubmitter {
+	DiscordUser(UserId),
+	External { source: String },
 }
 
-async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> CommandResult {
+pub(crate) struct SuggestionMessageHandleData {
+	pub playmatch_client: Arc<playmatch_client::Client>,
+	pub serenity_ctx: Context,
+	pub suggestion_id: Uuid,
+	pub owners: HashSet<UserId>,
+	pub submitter: SuggestionSubmitter,
+	pub r#type: SuggestionType,
+	pub provider: MetadataProvider,
+	pub name: String,
+	pub platform: Option<String>,
+	pub company: Option<String>,
+	pub comment: Option<String>,
+}
+
+/// Posts the staff card (if `existing_message_id` is None) and then waits on the Approve/Decline
+/// buttons. Called inline from the suggest commands (with `None`) and from the external-suggestion
+/// poller (with `None` for new posts and `Some(id)` to re-attach to a pre-restart message).
+pub(crate) async fn handle_suggestion_message(
+	data: SuggestionMessageHandleData,
+	existing_message_id: Option<serenity::all::MessageId>,
+) -> CommandResult {
 	let http: &Http = data.serenity_ctx.http.as_ref();
 	let cache: Arc<Cache> = data.serenity_ctx.cache.clone();
 
@@ -880,7 +900,13 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		.send()
 		.await?;
 
-	let author = http.get_user(data.author_id).await?;
+	let (author_label, dm_target): (String, Option<UserId>) = match &data.submitter {
+		SuggestionSubmitter::DiscordUser(id) => {
+			let user = http.get_user(*id).await?;
+			(format!("<@{}> ({})", user.id, user.name), Some(user.id))
+		}
+		SuggestionSubmitter::External { source } => (format!("External ({source})"), None),
+	};
 
 	let display_type = match data.r#type {
 		SuggestionType::Platform => "Platform",
@@ -909,10 +935,7 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 	let provider_label = display_name(data.provider);
 
 	let build_card = |status: Status, heading: String| -> Card<'static> {
-		let mut card = Card::new(status, heading).row(
-			"Suggested by",
-			format!("<@{}> ({})", author.id, author.name),
-		);
+		let mut card = Card::new(status, heading).row("Suggested by", author_label.clone());
 		card = card.row(display_type.to_string(), data.name.clone());
 		if let Some(platform) = data.platform.clone() {
 			card = card.row("Platform", platform);
@@ -931,34 +954,41 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		card
 	};
 
-	let mut staff_card = build_card(
-		Status::Info,
-		format!("New {display_type} Metadata Suggestion"),
-	);
-	if let Some(url) = provider_page_url.clone() {
-		staff_card = staff_card.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
-	}
-	staff_card = staff_card
-		.link(
-			CreateButton::new("approve")
-				.label("Approve")
-				.style(ButtonStyle::Success),
-		)
-		.link(
-			CreateButton::new("decline")
-				.label("Decline")
-				.style(ButtonStyle::Danger),
-		)
-		.footer("Only bot owners can approve or decline.");
+	let message_id = match existing_message_id {
+		Some(id) => id,
+		None => {
+			let mut staff_card = build_card(
+				Status::Info,
+				format!("New {display_type} Metadata Suggestion"),
+			);
+			if let Some(url) = provider_page_url.clone() {
+				staff_card =
+					staff_card.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
+			}
+			staff_card = staff_card
+				.link(
+					CreateButton::new(format!("approve:{}", data.suggestion_id))
+						.label("Approve")
+						.style(ButtonStyle::Success),
+				)
+				.link(
+					CreateButton::new(format!("decline:{}", data.suggestion_id))
+						.label("Decline")
+						.style(ButtonStyle::Danger),
+				)
+				.footer("Only bot owners can approve or decline.");
 
-	let message = channel_id
-		.widen()
-		.send_message(http, staff_card.into_message())
-		.await?;
+			let message = channel_id
+				.widen()
+				.send_message(http, staff_card.into_message())
+				.await?;
+			message.id
+		}
+	};
 
 	let owners = data.owners.clone();
 	let interaction_opt = ComponentInteractionCollector::new(&data.serenity_ctx)
-		.message_id(message.id)
+		.message_id(message_id)
 		.timeout(Duration::from_secs(7 * 24 * 60 * 60))
 		.filter(move |i| owners.contains(&i.user.id))
 		.await;
@@ -970,7 +1000,7 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		let edit = EditMessage::new()
 			.flags(MessageFlags::IS_COMPONENTS_V2)
 			.components(vec![CreateComponent::Container(expired.into_container())]);
-		if let Err(e) = message.clone().edit(http, edit).await {
+		if let Err(e) = channel_id.widen().edit_message(http, message_id, edit).await {
 			error!("failed to edit expired suggestion message: {e}");
 		}
 		return Ok(());
@@ -978,7 +1008,14 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 
 	let staff_id = interaction.user.id;
 
-	match interaction.data.custom_id.as_str() {
+	let action = interaction
+		.data
+		.custom_id
+		.split(':')
+		.next()
+		.unwrap_or("");
+
+	match action {
 		"approve" => {
 			let updated = data
 				.playmatch_client
@@ -1010,14 +1047,16 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 				)
 				.await?;
 
-			let mut dm = Card::new(Status::Success, "Suggestion Approved")
-				.row(display_type.to_string(), data.name.clone());
-			if matches!(data.r#type, SuggestionType::Game) {
-				dm = dm.row("ROMs updated", updated.updated.to_string());
-			}
-			dm = dm.text("Thanks for contributing.");
-			if let Err(e) = author.id.dm(http, dm.into_message()).await {
-				error!("failed to DM submitter on approval: {e}");
+			if let Some(dm_id) = dm_target {
+				let mut dm = Card::new(Status::Success, "Suggestion Approved")
+					.row(display_type.to_string(), data.name.clone());
+				if matches!(data.r#type, SuggestionType::Game) {
+					dm = dm.row("ROMs updated", updated.updated.to_string());
+				}
+				dm = dm.text("Thanks for contributing.");
+				if let Err(e) = dm_id.dm(http, dm.into_message()).await {
+					error!("failed to DM submitter on approval: {e}");
+				}
 			}
 		}
 		"decline" => {
@@ -1047,15 +1086,20 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 				)
 				.await?;
 
-			let dm = Card::new(Status::Error, "Suggestion Declined")
-				.row(display_type.to_string(), data.name.clone())
-				.text("If you'd like context, reach out to the Playmatch team.");
-			if let Err(e) = author.id.dm(http, dm.into_message()).await {
-				error!("failed to DM submitter on decline: {e}");
+			if let Some(dm_id) = dm_target {
+				let dm = Card::new(Status::Error, "Suggestion Declined")
+					.row(display_type.to_string(), data.name.clone())
+					.text("If you'd like context, reach out to the Playmatch team.");
+				if let Err(e) = dm_id.dm(http, dm.into_message()).await {
+					error!("failed to DM submitter on decline: {e}");
+				}
 			}
 		}
 		_ => {
-			warn!("Unexpected button interaction");
+			warn!(
+				"Unexpected button interaction custom_id: {}",
+				interaction.data.custom_id
+			);
 		}
 	}
 

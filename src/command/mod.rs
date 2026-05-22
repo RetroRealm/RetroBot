@@ -1,4 +1,4 @@
-mod playmatch;
+pub(crate) mod playmatch;
 mod role;
 mod util;
 
@@ -16,7 +16,7 @@ lazy_static! {
 		.unwrap();
 	static ref UPDATE_ROLE_ID: String =
 		std::env::var("DISCORD_RETROREALM_UPDATE_ROLE_ID").unwrap_or_default();
-	static ref SUGGESTION_CHANNEL_ID: u64 =
+	pub(crate) static ref SUGGESTION_CHANNEL_ID: u64 =
 		std::env::var("DISCORD_RETROREALM_SUGGESTION_CHANNEL_ID")
 			.unwrap_or_default()
 			.parse()
