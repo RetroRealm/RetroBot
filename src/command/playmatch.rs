@@ -2,19 +2,18 @@ use crate::abstraction::command::{
 	CommandContext, CommandResult, TRUSTED_ROLE_IDS, is_user_trusted_or_above,
 };
 use crate::abstraction::components_v2::{self, Card, Status};
-use crate::abstraction::igdb;
 use crate::abstraction::playmatch::{
 	ApiErrorAction, paginate_playmatch_response, send_playmatch_api_error,
 };
+use crate::abstraction::providers::{self, ENRICHMENT_PRIORITY, ProviderChoice, display_name};
 use crate::command::SUGGESTION_CHANNEL_ID;
 use anyhow::anyhow;
 use log::{debug, error, warn};
 use playmatch_client::types::ManualMatchMode::{Admin, Trusted};
-use playmatch_client::types::MetadataProvider::Igdb;
 use playmatch_client::types::{
 	CompanyOrPlatformMatchRequest, CompanyOrPlatformSuggestionRequest, CreateOrGetUserRequest,
 	GameMatchRequest, GameMatchType, GameSuggestionRequest, ManualMatchMode, MetadataMatchType,
-	UpdateUserPermissionsRequest, UserPermissions,
+	MetadataProvider, UpdateUserPermissionsRequest, UserPermissions,
 };
 use serenity::all::{
 	ButtonStyle, Cache, ChannelId, ComponentInteractionCollector, Context, CreateButton,
@@ -144,21 +143,29 @@ pub async fn get_game_metadata(
 		"No signature group found for the provided hashes or file name"
 	))?;
 
-	let igdb_provider_id = metadata_mappings
-		.iter()
-		.find(|m| {
-			m.provider_name == Igdb
+	let mut enriched_info = None;
+	for &priority_provider in ENRICHMENT_PRIORITY {
+		let Some(provider_id) = metadata_mappings.iter().find_map(|m| {
+			if m.provider_name == priority_provider
 				&& matches!(
 					m.match_type,
 					MetadataMatchType::Automatic | MetadataMatchType::Manual
-				)
-		})
-		.and_then(|m| m.provider_id.clone());
-
-	let igdb_info = match igdb_provider_id.as_deref() {
-		Some(pid) => igdb::fetch_game(&ctx.data().playmatch_client, pid).await,
-		None => None,
-	};
+				) {
+				m.provider_id.clone()
+			} else {
+				None
+			}
+		}) else {
+			continue;
+		};
+		if let Some(info) =
+			providers::fetch_game(&ctx.data().playmatch_client, priority_provider, &provider_id)
+				.await
+		{
+			enriched_info = Some(info);
+			break;
+		}
+	}
 
 	let total_files = game_files.len();
 	let mut files_info = game_files
@@ -215,7 +222,7 @@ pub async fn get_game_metadata(
 
 	let mut card = Card::new(Status::Success, game.name.clone());
 
-	if let Some(info) = igdb_info.as_ref() {
+	if let Some(info) = enriched_info.as_ref() {
 		if let Some(cover_url) = info.cover_url.clone() {
 			card = card.thumbnail(cover_url);
 		}
@@ -275,14 +282,18 @@ pub async fn get_game_metadata(
 		}
 	}
 
-	if let Some(info) = igdb_info.as_ref()
+	if let Some(info) = enriched_info.as_ref()
 		&& !info.screenshot_urls.is_empty()
 	{
 		card = card.media(info.screenshot_urls.clone());
 	}
 
-	if let Some(info) = igdb_info.as_ref() {
-		card = card.link(CreateButton::new_link(info.page_url.clone()).label("View on IGDB"));
+	if let Some(info) = enriched_info.as_ref()
+		&& let Some(page_url) = info.page_url.clone()
+	{
+		card = card.link(
+			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+		);
 	}
 	if let Some(link) = signature_group.website_link.clone() {
 		card = card.link(CreateButton::new_link(link).label("Signature Group"));
@@ -295,11 +306,12 @@ pub async fn get_game_metadata(
 	Ok(())
 }
 
-/// Creates a metadata match suggestion for a Game by hashes or name to the IGDB database.
+/// Creates a metadata match suggestion for a Game by hashes or name.
 #[poise::command(slash_command, category = "Playmatch", rename = "game")]
 pub async fn create_game_suggestion(
 	ctx: CommandContext<'_>,
-	igdb_id: i64,
+	provider: ProviderChoice,
+	provider_id: String,
 	md5_hash: Option<String>,
 	sha1_hash: Option<String>,
 	sha256_hash: Option<String>,
@@ -315,6 +327,7 @@ pub async fn create_game_suggestion(
 		return Ok(());
 	}
 
+	let provider_meta = provider.to_metadata_provider();
 	let playmatch_user_ctx = get_playmatch_user_ctx(ctx).await?;
 
 	let result = ctx
@@ -322,9 +335,9 @@ pub async fn create_game_suggestion(
 		.playmatch_client
 		.create_game_suggestion()
 		.body(GameSuggestionRequest {
-			provider_id: igdb_id.to_string(),
+			provider_id: provider_id.clone(),
 			sha1: sha1_hash,
-			provider: Igdb,
+			provider: provider_meta,
 			name: name.clone(),
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
@@ -380,6 +393,7 @@ pub async fn create_game_suggestion(
 				owners,
 				author_id,
 				r#type: SuggestionType::Game,
+				provider: provider_meta,
 				name: game_name,
 				platform: Some(platform),
 				company,
@@ -389,8 +403,7 @@ pub async fn create_game_suggestion(
 		}
 	});
 
-	let igdb_id_str = igdb_id.to_string();
-	let info = igdb::fetch_game(&ctx.data().playmatch_client, &igdb_id_str).await;
+	let info = providers::fetch_game(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Suggestion Submitted");
 	if let Some(info) = info.as_ref()
@@ -400,10 +413,17 @@ pub async fn create_game_suggestion(
 	}
 	card = card
 		.row("Game", game_response.game.name.clone())
-		.row("IGDB ID", format!("`{igdb_id_str}`"))
+		.row(
+			format!("{} ID", display_name(provider_meta)),
+			format!("`{provider_id}`"),
+		)
 		.text("We'll DM you when a maintainer approves or declines this.");
-	if let Some(info) = info.as_ref() {
-		card = card.link(CreateButton::new_link(info.page_url.clone()).label("View on IGDB"));
+	if let Some(info) = info.as_ref()
+		&& let Some(page_url) = info.page_url.clone()
+	{
+		card = card.link(
+			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+		);
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -411,14 +431,16 @@ pub async fn create_game_suggestion(
 	Ok(())
 }
 
-/// Creates a metadata match suggestion for a Company by name to the IGDB database.
+/// Creates a metadata match suggestion for a Company by name.
 #[poise::command(slash_command, category = "Playmatch", rename = "company")]
 pub async fn create_company_suggestion(
 	ctx: CommandContext<'_>,
-	igdb_id: i64,
+	provider: ProviderChoice,
+	provider_id: String,
 	name: String,
 	comment: Option<String>,
 ) -> CommandResult {
+	let provider_meta = provider.to_metadata_provider();
 	let playmatch_user_ctx = get_playmatch_user_ctx(ctx).await?;
 
 	let result = ctx
@@ -426,8 +448,8 @@ pub async fn create_company_suggestion(
 		.playmatch_client
 		.create_company_suggestion()
 		.body(CompanyOrPlatformSuggestionRequest {
-			provider_id: igdb_id.to_string(),
-			provider: Igdb,
+			provider_id: provider_id.clone(),
+			provider: provider_meta,
 			name: name.clone(),
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
@@ -457,6 +479,7 @@ pub async fn create_company_suggestion(
 				owners,
 				author_id,
 				r#type: SuggestionType::Company,
+				provider: provider_meta,
 				name: company_name,
 				platform: None,
 				company: None,
@@ -466,8 +489,8 @@ pub async fn create_company_suggestion(
 		}
 	});
 
-	let igdb_id_str = igdb_id.to_string();
-	let info = igdb::fetch_company(&ctx.data().playmatch_client, &igdb_id_str).await;
+	let info =
+		providers::fetch_company(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Suggestion Submitted");
 	if let Some(info) = info.as_ref()
@@ -477,12 +500,17 @@ pub async fn create_company_suggestion(
 	}
 	card = card
 		.row("Company", name.clone())
-		.row("IGDB ID", format!("`{igdb_id_str}`"))
+		.row(
+			format!("{} ID", display_name(provider_meta)),
+			format!("`{provider_id}`"),
+		)
 		.text("We'll DM you when a maintainer approves or declines this.");
 	if let Some(info) = info.as_ref()
 		&& let Some(page_url) = info.page_url.clone()
 	{
-		card = card.link(CreateButton::new_link(page_url).label("View on IGDB"));
+		card = card.link(
+			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+		);
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -490,14 +518,16 @@ pub async fn create_company_suggestion(
 	Ok(())
 }
 
-/// Creates a metadata match suggestion for a Platform by name to the IGDB database.
+/// Creates a metadata match suggestion for a Platform by name.
 #[poise::command(slash_command, category = "Playmatch", rename = "platform")]
 pub async fn create_platform_suggestion(
 	ctx: CommandContext<'_>,
-	igdb_id: i64,
+	provider: ProviderChoice,
+	provider_id: String,
 	name: String,
 	comment: Option<String>,
 ) -> CommandResult {
+	let provider_meta = provider.to_metadata_provider();
 	let playmatch_user_ctx = get_playmatch_user_ctx(ctx).await?;
 
 	let result = ctx
@@ -505,8 +535,8 @@ pub async fn create_platform_suggestion(
 		.playmatch_client
 		.create_platform_suggestion()
 		.body(CompanyOrPlatformSuggestionRequest {
-			provider_id: igdb_id.to_string(),
-			provider: Igdb,
+			provider_id: provider_id.clone(),
+			provider: provider_meta,
 			name: name.clone(),
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
@@ -558,6 +588,7 @@ pub async fn create_platform_suggestion(
 				owners,
 				author_id,
 				r#type: SuggestionType::Platform,
+				provider: provider_meta,
 				name: platform_name,
 				platform: None,
 				company,
@@ -567,8 +598,8 @@ pub async fn create_platform_suggestion(
 		}
 	});
 
-	let igdb_id_str = igdb_id.to_string();
-	let info = igdb::fetch_platform(&ctx.data().playmatch_client, &igdb_id_str).await;
+	let info =
+		providers::fetch_platform(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Suggestion Submitted");
 	if let Some(info) = info.as_ref()
@@ -578,10 +609,17 @@ pub async fn create_platform_suggestion(
 	}
 	card = card
 		.row("Platform", name.clone())
-		.row("IGDB ID", format!("`{igdb_id_str}`"))
+		.row(
+			format!("{} ID", display_name(provider_meta)),
+			format!("`{provider_id}`"),
+		)
 		.text("We'll DM you when a maintainer approves or declines this.");
-	if let Some(info) = info.as_ref() {
-		card = card.link(CreateButton::new_link(info.page_url.clone()).label("View on IGDB"));
+	if let Some(info) = info.as_ref()
+		&& let Some(page_url) = info.page_url.clone()
+	{
+		card = card.link(
+			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+		);
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -589,14 +627,16 @@ pub async fn create_platform_suggestion(
 	Ok(())
 }
 
-/// Manually matches a Platform by name to the IGDB database.
+/// Manually matches a Platform by name.
 #[poise::command(slash_command, category = "Playmatch", rename = "platform", check = is_user_trusted_or_above)]
 pub async fn manual_match_platform(
 	ctx: CommandContext<'_>,
-	igdb_id: i64,
+	provider: ProviderChoice,
+	provider_id: String,
 	name: String,
 	comment: Option<String>,
 ) -> CommandResult {
+	let provider_meta = provider.to_metadata_provider();
 	let playmatch_user_ctx = get_playmatch_user_ctx(ctx).await?;
 
 	let result = ctx
@@ -605,8 +645,8 @@ pub async fn manual_match_platform(
 		.manually_match_platform()
 		.body(CompanyOrPlatformMatchRequest {
 			manual_match_type: playmatch_user_ctx.manual_match_mode(),
-			provider_id: igdb_id.to_string(),
-			provider: Igdb,
+			provider_id: provider_id.clone(),
+			provider: provider_meta,
 			name,
 			matched_name: None,
 			comment,
@@ -620,8 +660,8 @@ pub async fn manual_match_platform(
 		return Ok(());
 	}
 
-	let igdb_id_str = igdb_id.to_string();
-	let info = igdb::fetch_platform(&ctx.data().playmatch_client, &igdb_id_str).await;
+	let info =
+		providers::fetch_platform(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Matched Platform");
 	if let Some(info) = info.as_ref() {
@@ -630,9 +670,16 @@ pub async fn manual_match_platform(
 		}
 		card = card.subheading(info.name.clone());
 	}
-	card = card.row("IGDB ID", format!("`{igdb_id_str}`"));
-	if let Some(info) = info.as_ref() {
-		card = card.link(CreateButton::new_link(info.page_url.clone()).label("View on IGDB"));
+	card = card.row(
+		format!("{} ID", display_name(provider_meta)),
+		format!("`{provider_id}`"),
+	);
+	if let Some(info) = info.as_ref()
+		&& let Some(page_url) = info.page_url.clone()
+	{
+		card = card.link(
+			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+		);
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -640,14 +687,16 @@ pub async fn manual_match_platform(
 	Ok(())
 }
 
-/// Manually matches a Company by name to the IGDB database.
+/// Manually matches a Company by name.
 #[poise::command(slash_command, category = "Playmatch", rename = "company", check = is_user_trusted_or_above)]
 pub async fn manual_match_company(
 	ctx: CommandContext<'_>,
-	igdb_id: i64,
+	provider: ProviderChoice,
+	provider_id: String,
 	name: String,
 	comment: Option<String>,
 ) -> CommandResult {
+	let provider_meta = provider.to_metadata_provider();
 	let playmatch_user_ctx = get_playmatch_user_ctx(ctx).await?;
 
 	let result = ctx
@@ -656,8 +705,8 @@ pub async fn manual_match_company(
 		.manually_match_company()
 		.body(CompanyOrPlatformMatchRequest {
 			manual_match_type: playmatch_user_ctx.manual_match_mode(),
-			provider_id: igdb_id.to_string(),
-			provider: Igdb,
+			provider_id: provider_id.clone(),
+			provider: provider_meta,
 			name,
 			matched_name: None,
 			comment,
@@ -671,8 +720,8 @@ pub async fn manual_match_company(
 		return Ok(());
 	}
 
-	let igdb_id_str = igdb_id.to_string();
-	let info = igdb::fetch_company(&ctx.data().playmatch_client, &igdb_id_str).await;
+	let info =
+		providers::fetch_company(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Matched Company");
 	if let Some(info) = info.as_ref() {
@@ -681,11 +730,16 @@ pub async fn manual_match_company(
 		}
 		card = card.subheading(info.name.clone());
 	}
-	card = card.row("IGDB ID", format!("`{igdb_id_str}`"));
+	card = card.row(
+		format!("{} ID", display_name(provider_meta)),
+		format!("`{provider_id}`"),
+	);
 	if let Some(info) = info.as_ref()
 		&& let Some(page_url) = info.page_url.clone()
 	{
-		card = card.link(CreateButton::new_link(page_url).label("View on IGDB"));
+		card = card.link(
+			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+		);
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -693,11 +747,12 @@ pub async fn manual_match_company(
 	Ok(())
 }
 
-/// Manually matches a game with provided hashes or name to the IGDB database.
+/// Manually matches a game with provided hashes or name.
 #[poise::command(slash_command, category = "Playmatch", rename = "game", check = is_user_trusted_or_above)]
 pub async fn manual_match_game(
 	ctx: CommandContext<'_>,
-	igdb_id: i64,
+	provider: ProviderChoice,
+	provider_id: String,
 	md5_hash: Option<String>,
 	sha1_hash: Option<String>,
 	sha256_hash: Option<String>,
@@ -713,6 +768,7 @@ pub async fn manual_match_game(
 		return Ok(());
 	}
 
+	let provider_meta = provider.to_metadata_provider();
 	let playmatch_user_ctx = get_playmatch_user_ctx(ctx).await?;
 
 	let result = ctx
@@ -721,8 +777,8 @@ pub async fn manual_match_game(
 		.manually_match_game()
 		.body(GameMatchRequest {
 			manual_match_type: playmatch_user_ctx.manual_match_mode(),
-			provider_id: igdb_id.to_string(),
-			provider: Igdb,
+			provider_id: provider_id.clone(),
+			provider: provider_meta,
 			md5: md5_hash,
 			sha1: sha1_hash,
 			sha256: sha256_hash,
@@ -743,8 +799,7 @@ pub async fn manual_match_game(
 		Ok(value) => value.into_inner().len(),
 	};
 
-	let igdb_id_str = igdb_id.to_string();
-	let info = igdb::fetch_game(&ctx.data().playmatch_client, &igdb_id_str).await;
+	let info = providers::fetch_game(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Matched Game");
 	if let Some(info) = info.as_ref() {
@@ -754,10 +809,17 @@ pub async fn manual_match_game(
 		card = card.subheading(info.name.clone());
 	}
 	card = card
-		.row("IGDB ID", format!("`{igdb_id_str}`"))
+		.row(
+			format!("{} ID", display_name(provider_meta)),
+			format!("`{provider_id}`"),
+		)
 		.row("ROMs updated", matched.to_string());
-	if let Some(info) = info.as_ref() {
-		card = card.link(CreateButton::new_link(info.page_url.clone()).label("View on IGDB"));
+	if let Some(info) = info.as_ref()
+		&& let Some(page_url) = info.page_url.clone()
+	{
+		card = card.link(
+			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+		);
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -789,6 +851,7 @@ struct SuggestionMessageHandleData {
 	owners: HashSet<UserId>,
 	author_id: UserId,
 	r#type: SuggestionType,
+	provider: MetadataProvider,
 	name: String,
 	platform: Option<String>,
 	company: Option<String>,
@@ -825,21 +888,25 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		SuggestionType::Game => "Game",
 	};
 
-	let igdb_page_url: Option<String> = match data.r#type {
-		SuggestionType::Game => igdb::fetch_game(&data.playmatch_client, &suggestion.provider_id)
-			.await
-			.map(|i| i.page_url),
+	let provider_page_url: Option<String> = match data.r#type {
+		SuggestionType::Game => {
+			providers::fetch_game(&data.playmatch_client, data.provider, &suggestion.provider_id)
+				.await
+				.and_then(|i| i.page_url)
+		}
 		SuggestionType::Company => {
-			igdb::fetch_company(&data.playmatch_client, &suggestion.provider_id)
+			providers::fetch_company(&data.playmatch_client, data.provider, &suggestion.provider_id)
 				.await
 				.and_then(|i| i.page_url)
 		}
 		SuggestionType::Platform => {
-			igdb::fetch_platform(&data.playmatch_client, &suggestion.provider_id)
+			providers::fetch_platform(&data.playmatch_client, data.provider, &suggestion.provider_id)
 				.await
-				.map(|i| i.page_url)
+				.and_then(|i| i.page_url)
 		}
 	};
+
+	let provider_label = display_name(data.provider);
 
 	let build_card = |status: Status, heading: String| -> Card<'static> {
 		let mut card = Card::new(status, heading).row(
@@ -853,7 +920,10 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		if let Some(company) = data.company.clone() {
 			card = card.row("Company", company);
 		}
-		card = card.row("IGDB ID", format!("`{}`", suggestion.provider_id.clone()));
+		card = card.row(
+			format!("{provider_label} ID"),
+			format!("`{}`", suggestion.provider_id.clone()),
+		);
 		card = card.row(
 			"Comment",
 			data.comment.clone().unwrap_or_else(|| "—".to_string()),
@@ -865,8 +935,8 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 		Status::Info,
 		format!("New {display_type} Metadata Suggestion"),
 	);
-	if let Some(url) = igdb_page_url.clone() {
-		staff_card = staff_card.link(CreateButton::new_link(url).label("View on IGDB"));
+	if let Some(url) = provider_page_url.clone() {
+		staff_card = staff_card.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
 	}
 	staff_card = staff_card
 		.link(
@@ -922,8 +992,9 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 			if matches!(data.r#type, SuggestionType::Game) {
 				resolution = resolution.row("ROMs updated", updated.updated.to_string());
 			}
-			if let Some(url) = igdb_page_url.clone() {
-				resolution = resolution.link(CreateButton::new_link(url).label("View on IGDB"));
+			if let Some(url) = provider_page_url.clone() {
+				resolution =
+					resolution.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
 			}
 
 			interaction
@@ -958,8 +1029,9 @@ async fn handle_suggestion_message(data: SuggestionMessageHandleData) -> Command
 
 			let mut resolution = build_card(Status::Error, "Suggestion Declined".to_string())
 				.row("Handled by", format!("<@{staff_id}>"));
-			if let Some(url) = igdb_page_url.clone() {
-				resolution = resolution.link(CreateButton::new_link(url).label("View on IGDB"));
+			if let Some(url) = provider_page_url.clone() {
+				resolution =
+					resolution.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
 			}
 
 			interaction

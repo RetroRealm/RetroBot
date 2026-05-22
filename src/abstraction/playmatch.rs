@@ -1,11 +1,11 @@
 use crate::abstraction::command::{CommandContext, paginate};
 use crate::abstraction::components_v2::{self, Status};
+use crate::abstraction::providers::{ALL_PROVIDERS, short_label};
 use crate::util::create_discord_markdown_table;
 use log::warn;
 use playmatch_client::Error;
 use playmatch_client::types::{
-	CompanyMetadataResponse, ExternalMetadata, MetadataMatchType, MetadataProvider,
-	PlatformMetadataResponse,
+	CompanyMetadataResponse, ExternalMetadata, MetadataMatchType, PlatformMetadataResponse,
 };
 use reqwest::StatusCode;
 use uuid::Uuid;
@@ -99,43 +99,29 @@ where
 	const SUCCESS_EMOJI: &str = "✅";
 	const FAILURE_EMOJI: &str = "❌";
 
-	let default_headers: Vec<String> = vec![
-		"Name".to_string(),
-		"IGDB Match".to_string(),
-		"IGDB ID".to_string(),
-	];
+	let mut default_headers: Vec<String> = Vec::with_capacity(1 + ALL_PROVIDERS.len());
+	default_headers.push("Name".to_string());
+	for &provider in ALL_PROVIDERS {
+		default_headers.push(short_label(provider).to_string());
+	}
 
 	let mapped_markdown_rows = input
 		.into_iter()
 		.map(|c| {
 			let external_metadata = c.get_external_metadata();
-			let igdb_mapping = external_metadata
-				.iter()
-				.find(|ex| ex.provider_name == MetadataProvider::Igdb);
-
-			let is_igdb_matched = if let Some(igdb_mapping) = igdb_mapping {
-				match igdb_mapping.match_type {
-					MetadataMatchType::Automatic | MetadataMatchType::Manual => true,
-					MetadataMatchType::Failed | MetadataMatchType::None => false,
-				}
-			} else {
-				false
-			};
-
-			let igdb_id = igdb_mapping
-				.and_then(|ex| ex.provider_id.clone())
-				.unwrap_or("".to_string());
-
-			vec![
-				c.get_name(),
-				if is_igdb_matched {
-					SUCCESS_EMOJI
-				} else {
-					FAILURE_EMOJI
-				}
-				.to_string(),
-				igdb_id,
-			]
+			let mut row = Vec::with_capacity(1 + ALL_PROVIDERS.len());
+			row.push(c.get_name());
+			for &provider in ALL_PROVIDERS {
+				let matched = external_metadata.iter().any(|ex| {
+					ex.provider_name == provider
+						&& matches!(
+							ex.match_type,
+							MetadataMatchType::Automatic | MetadataMatchType::Manual
+						)
+				});
+				row.push(if matched { SUCCESS_EMOJI } else { FAILURE_EMOJI }.to_string());
+			}
+			row
 		})
 		.collect::<Vec<Vec<String>>>();
 

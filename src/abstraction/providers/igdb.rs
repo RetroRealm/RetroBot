@@ -1,31 +1,9 @@
 use chrono::{DateTime, Utc};
 use log::{debug, warn};
 use playmatch_client::Client;
+use playmatch_client::types::MetadataProvider;
 
-pub struct IgdbGameInfo {
-	pub name: String,
-	pub page_url: String,
-	pub summary: Option<String>,
-	pub first_release_date: Option<DateTime<Utc>>,
-	pub cover_url: Option<String>,
-	pub screenshot_urls: Vec<String>,
-}
-
-pub struct IgdbCompanyInfo {
-	pub name: String,
-	pub page_url: Option<String>,
-	pub logo_url: Option<String>,
-	pub description: Option<String>,
-}
-
-pub struct IgdbPlatformInfo {
-	pub name: String,
-	pub page_url: String,
-	pub logo_url: Option<String>,
-	pub summary: Option<String>,
-}
-
-const SUMMARY_MAX: usize = 280;
+use super::{ProviderCompanyInfo, ProviderGameInfo, ProviderPlatformInfo, truncate_summary};
 
 fn normalize_image_url(raw: &str, size: &str) -> String {
 	let https = if let Some(rest) = raw.strip_prefix("//") {
@@ -38,20 +16,11 @@ fn normalize_image_url(raw: &str, size: &str) -> String {
 	https.replacen("t_thumb", size, 1)
 }
 
-fn truncate_summary(s: &str) -> String {
-	if s.chars().count() <= SUMMARY_MAX {
-		s.to_string()
-	} else {
-		let truncated: String = s.chars().take(SUMMARY_MAX - 1).collect();
-		format!("{truncated}…")
-	}
-}
-
 fn timestamp_to_datetime(ts: i64) -> Option<DateTime<Utc>> {
 	DateTime::<Utc>::from_timestamp(ts, 0)
 }
 
-pub async fn fetch_game(client: &Client, provider_id: &str) -> Option<IgdbGameInfo> {
+pub async fn fetch_game(client: &Client, provider_id: &str) -> Option<ProviderGameInfo> {
 	let id: i32 = match provider_id.parse() {
 		Ok(id) => id,
 		Err(e) => {
@@ -110,9 +79,10 @@ pub async fn fetch_game(client: &Client, provider_id: &str) -> Option<IgdbGameIn
 		}
 	}
 
-	Some(IgdbGameInfo {
+	Some(ProviderGameInfo {
+		provider: MetadataProvider::Igdb,
 		name: game.name,
-		page_url: game.url,
+		page_url: Some(game.url),
 		summary: game.summary.map(|s| truncate_summary(&s)),
 		first_release_date: game.first_release_date.and_then(timestamp_to_datetime),
 		cover_url,
@@ -120,7 +90,7 @@ pub async fn fetch_game(client: &Client, provider_id: &str) -> Option<IgdbGameIn
 	})
 }
 
-pub async fn fetch_company(client: &Client, provider_id: &str) -> Option<IgdbCompanyInfo> {
+pub async fn fetch_company(client: &Client, provider_id: &str) -> Option<ProviderCompanyInfo> {
 	let id: i32 = match provider_id.parse() {
 		Ok(id) => id,
 		Err(e) => {
@@ -157,7 +127,8 @@ pub async fn fetch_company(client: &Client, provider_id: &str) -> Option<IgdbCom
 		None => None,
 	};
 
-	Some(IgdbCompanyInfo {
+	Some(ProviderCompanyInfo {
+		provider: MetadataProvider::Igdb,
 		name: company.name,
 		page_url: company.url,
 		logo_url,
@@ -165,7 +136,7 @@ pub async fn fetch_company(client: &Client, provider_id: &str) -> Option<IgdbCom
 	})
 }
 
-pub async fn fetch_platform(client: &Client, provider_id: &str) -> Option<IgdbPlatformInfo> {
+pub async fn fetch_platform(client: &Client, provider_id: &str) -> Option<ProviderPlatformInfo> {
 	let id: i32 = match provider_id.parse() {
 		Ok(id) => id,
 		Err(e) => {
@@ -202,9 +173,10 @@ pub async fn fetch_platform(client: &Client, provider_id: &str) -> Option<IgdbPl
 		None => None,
 	};
 
-	Some(IgdbPlatformInfo {
+	Some(ProviderPlatformInfo {
+		provider: MetadataProvider::Igdb,
 		name: platform.name,
-		page_url: platform.url,
+		page_url: Some(platform.url),
 		logo_url,
 		summary: platform.summary.map(|s| truncate_summary(&s)),
 	})
