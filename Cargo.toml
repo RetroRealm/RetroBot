@@ -36,3 +36,6 @@ unicode-width = "^0.2"
 
 [build-dependencies]
 built = { version = "^0.8", features = ["chrono", "semver", "git2"] }
+
+[dev-dependencies]
+wiremock = "^0.6"

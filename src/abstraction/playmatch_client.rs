@@ -5,6 +5,7 @@ use governor::Quota;
 use governor::RateLimiter;
 use governor::clock::DefaultClock;
 use governor::state::{InMemoryState, NotKeyed};
+use log::warn;
 use playmatch_client::types::{
 	Company, CompanyLogo, CompanyMetadataResponse, CompanyOrPlatformMatchRequest,
 	CompanyOrPlatformSuggestionRequest, Cover, CreateOrGetUserRequest, Game,
@@ -21,11 +22,15 @@ type Limiter = RateLimiter<NotKeyed, InMemoryState, DefaultClock>;
 
 /// Thin newtype wrapper that gates every outbound playmatch request through a shared
 /// token bucket sized to playmatch's own server-side limit (4 req/s replenish, 20 burst).
-/// One 429 retry as a backstop in case the bot's clock drifts vs the server's.
+/// On 429 or 5xx it retries with exponential backoff (250 ms, 500 ms, 1 s, 2 s, 4 s).
+/// 429s happen when the server's bucket is colder than ours (e.g. shared IP, fresh boot
+/// after a previous burst). 5xx errors are treated as transient too.
 pub struct PlaymatchClient {
 	inner: Inner,
 	limiter: Limiter,
 }
+
+const MAX_RETRIES: u32 = 5;
 
 impl PlaymatchClient {
 	pub fn new(inner: Inner) -> Self {
@@ -42,16 +47,28 @@ impl PlaymatchClient {
 		F: Fn() -> Fut,
 		Fut: std::future::Future<Output = Result<ResponseValue<T>, Error<()>>>,
 	{
-		self.limiter.until_ready().await;
-		match make().await {
-			Err(Error::UnexpectedResponse(resp))
-				if resp.status() == StatusCode::TOO_MANY_REQUESTS =>
-			{
-				let wait = parse_retry_after(&resp).unwrap_or(Duration::from_secs(1));
-				tokio::time::sleep(wait.max(Duration::from_secs(1))).await;
-				make().await.map(ResponseValue::into_inner)
+		let mut attempt: u32 = 0;
+		loop {
+			self.limiter.until_ready().await;
+			match make().await {
+				Ok(resp) => return Ok(resp.into_inner()),
+				Err(Error::UnexpectedResponse(resp))
+					if is_retryable_status(resp.status()) && attempt < MAX_RETRIES =>
+				{
+					let wait = backoff_duration(resp.headers(), attempt);
+					warn!(
+						"playmatch_client: {} on {} (attempt {}/{}), sleeping {:?}",
+						resp.status(),
+						resp.url(),
+						attempt + 1,
+						MAX_RETRIES + 1,
+						wait
+					);
+					tokio::time::sleep(wait).await;
+					attempt += 1;
+				}
+				Err(e) => return Err(e),
 			}
-			result => result.map(ResponseValue::into_inner),
 		}
 	}
 
@@ -319,11 +336,252 @@ impl PlaymatchClient {
 	}
 }
 
-fn parse_retry_after(resp: &reqwest::Response) -> Option<Duration> {
-	resp.headers()
+fn is_retryable_status(status: StatusCode) -> bool {
+	status == StatusCode::TOO_MANY_REQUESTS || status.is_server_error()
+}
+
+fn parse_retry_after(headers: &reqwest::header::HeaderMap) -> Option<Duration> {
+	headers
 		.get("retry-after")
-		.or_else(|| resp.headers().get("x-ratelimit-after"))
+		.or_else(|| headers.get("x-ratelimit-after"))
 		.and_then(|v| v.to_str().ok())
 		.and_then(|s| s.trim().parse::<u64>().ok())
 		.map(Duration::from_secs)
+}
+
+/// Pick a backoff for the next attempt: 250 ms, 500 ms, 1 s, 2 s, 4 s.
+/// Playmatch's `retry-after` is rounded down to zero (the bucket replenishes every 250 ms),
+/// so respect it when non-zero but otherwise lean on the exponential schedule.
+fn backoff_duration(headers: &reqwest::header::HeaderMap, attempt: u32) -> Duration {
+	let header_wait = parse_retry_after(headers).unwrap_or(Duration::ZERO);
+	let exp_backoff = Duration::from_millis(250u64 << attempt.min(4));
+	header_wait.max(exp_backoff)
+}
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+	use reqwest::header::HeaderMap;
+	use std::time::Instant;
+	use wiremock::matchers::{any, method, path};
+	use wiremock::{Mock, MockServer, ResponseTemplate};
+
+	fn headers(pairs: &[(&'static str, &str)]) -> HeaderMap {
+		let mut h = HeaderMap::new();
+		for (k, v) in pairs {
+			h.insert(*k, v.parse().unwrap());
+		}
+		h
+	}
+
+	#[test]
+	fn parse_retry_after_missing_header_is_none() {
+		assert_eq!(parse_retry_after(&HeaderMap::new()), None);
+	}
+
+	#[test]
+	fn parse_retry_after_reads_retry_after() {
+		let h = headers(&[("retry-after", "3")]);
+		assert_eq!(parse_retry_after(&h), Some(Duration::from_secs(3)));
+	}
+
+	#[test]
+	fn parse_retry_after_zero_is_zero() {
+		let h = headers(&[("retry-after", "0")]);
+		assert_eq!(parse_retry_after(&h), Some(Duration::ZERO));
+	}
+
+	#[test]
+	fn parse_retry_after_falls_back_to_x_ratelimit_after() {
+		let h = headers(&[("x-ratelimit-after", "7")]);
+		assert_eq!(parse_retry_after(&h), Some(Duration::from_secs(7)));
+	}
+
+	#[test]
+	fn parse_retry_after_prefers_retry_after_over_x_ratelimit_after() {
+		let h = headers(&[("retry-after", "2"), ("x-ratelimit-after", "9")]);
+		assert_eq!(parse_retry_after(&h), Some(Duration::from_secs(2)));
+	}
+
+	#[test]
+	fn parse_retry_after_malformed_returns_none() {
+		let h = headers(&[("retry-after", "soon")]);
+		assert_eq!(parse_retry_after(&h), None);
+	}
+
+	#[test]
+	fn backoff_duration_uses_exponential_schedule_when_header_is_zero() {
+		let h = headers(&[("retry-after", "0")]);
+		assert_eq!(backoff_duration(&h, 0), Duration::from_millis(250));
+		assert_eq!(backoff_duration(&h, 1), Duration::from_millis(500));
+		assert_eq!(backoff_duration(&h, 2), Duration::from_secs(1));
+		assert_eq!(backoff_duration(&h, 3), Duration::from_secs(2));
+		assert_eq!(backoff_duration(&h, 4), Duration::from_secs(4));
+	}
+
+	#[test]
+	fn backoff_duration_uses_header_when_larger_than_exponential() {
+		let h = headers(&[("retry-after", "10")]);
+		assert_eq!(backoff_duration(&h, 0), Duration::from_secs(10));
+		assert_eq!(backoff_duration(&h, 4), Duration::from_secs(10));
+	}
+
+	#[test]
+	fn backoff_duration_caps_exponential_at_4_seconds() {
+		assert_eq!(
+			backoff_duration(&HeaderMap::new(), 99),
+			Duration::from_secs(4)
+		);
+	}
+
+	fn make_client(uri: &str) -> PlaymatchClient {
+		PlaymatchClient::new(playmatch_client::Client::new(uri))
+	}
+
+	#[tokio::test]
+	async fn immediate_200_does_not_retry() {
+		let server = MockServer::start().await;
+		Mock::given(method("GET"))
+			.and(path("/api/companies"))
+			.respond_with(
+				ResponseTemplate::new(200)
+					.insert_header("content-type", "application/json")
+					.set_body_string("[]"),
+			)
+			.expect(1)
+			.mount(&server)
+			.await;
+
+		let client = make_client(&server.uri());
+		let result = client.get_all_companies().await;
+		assert!(result.is_ok());
+	}
+
+	#[tokio::test]
+	async fn retries_on_429_then_succeeds() {
+		let server = MockServer::start().await;
+		Mock::given(method("GET"))
+			.and(path("/api/companies"))
+			.respond_with(ResponseTemplate::new(429).insert_header("retry-after", "0"))
+			.up_to_n_times(2)
+			.expect(2)
+			.mount(&server)
+			.await;
+		Mock::given(method("GET"))
+			.and(path("/api/companies"))
+			.respond_with(
+				ResponseTemplate::new(200)
+					.insert_header("content-type", "application/json")
+					.set_body_string("[]"),
+			)
+			.expect(1)
+			.mount(&server)
+			.await;
+
+		let client = make_client(&server.uri());
+		let result = client.get_all_companies().await;
+		assert!(result.is_ok());
+	}
+
+	#[tokio::test]
+	async fn gives_up_after_max_retries() {
+		let server = MockServer::start().await;
+		Mock::given(method("GET"))
+			.and(path("/api/companies"))
+			.respond_with(ResponseTemplate::new(429).insert_header("retry-after", "0"))
+			.expect((MAX_RETRIES + 1) as u64)
+			.mount(&server)
+			.await;
+
+		let start = Instant::now();
+		let client = make_client(&server.uri());
+		let result = client.get_all_companies().await;
+		assert!(result.is_err());
+		// Sanity check that we actually backed off; full schedule sums to 7.75 s,
+		// allow generous slack for CI flakiness.
+		assert!(
+			start.elapsed() >= Duration::from_secs(1),
+			"expected at least 1s of backoff, took {:?}",
+			start.elapsed()
+		);
+	}
+
+	#[tokio::test]
+	async fn retries_on_500_then_succeeds() {
+		let server = MockServer::start().await;
+		Mock::given(method("GET"))
+			.and(path("/api/companies"))
+			.respond_with(ResponseTemplate::new(500))
+			.up_to_n_times(1)
+			.expect(1)
+			.mount(&server)
+			.await;
+		Mock::given(method("GET"))
+			.and(path("/api/companies"))
+			.respond_with(
+				ResponseTemplate::new(200)
+					.insert_header("content-type", "application/json")
+					.set_body_string("[]"),
+			)
+			.expect(1)
+			.mount(&server)
+			.await;
+
+		let client = make_client(&server.uri());
+		let result = client.get_all_companies().await;
+		assert!(result.is_ok());
+	}
+
+	#[tokio::test]
+	async fn retries_on_503_then_succeeds() {
+		let server = MockServer::start().await;
+		Mock::given(method("GET"))
+			.and(path("/api/companies"))
+			.respond_with(ResponseTemplate::new(503))
+			.up_to_n_times(2)
+			.expect(2)
+			.mount(&server)
+			.await;
+		Mock::given(method("GET"))
+			.and(path("/api/companies"))
+			.respond_with(
+				ResponseTemplate::new(200)
+					.insert_header("content-type", "application/json")
+					.set_body_string("[]"),
+			)
+			.expect(1)
+			.mount(&server)
+			.await;
+
+		let client = make_client(&server.uri());
+		let result = client.get_all_companies().await;
+		assert!(result.is_ok());
+	}
+
+	#[tokio::test]
+	async fn client_errors_do_not_retry() {
+		let server = MockServer::start().await;
+		Mock::given(any())
+			.respond_with(ResponseTemplate::new(404))
+			.expect(1)
+			.mount(&server)
+			.await;
+
+		let client = make_client(&server.uri());
+		let result = client.get_all_companies().await;
+		assert!(result.is_err());
+	}
+
+	#[test]
+	fn is_retryable_status_covers_429_and_5xx() {
+		assert!(is_retryable_status(StatusCode::TOO_MANY_REQUESTS));
+		assert!(is_retryable_status(StatusCode::INTERNAL_SERVER_ERROR));
+		assert!(is_retryable_status(StatusCode::BAD_GATEWAY));
+		assert!(is_retryable_status(StatusCode::SERVICE_UNAVAILABLE));
+		assert!(is_retryable_status(StatusCode::GATEWAY_TIMEOUT));
+		assert!(!is_retryable_status(StatusCode::OK));
+		assert!(!is_retryable_status(StatusCode::BAD_REQUEST));
+		assert!(!is_retryable_status(StatusCode::UNAUTHORIZED));
+		assert!(!is_retryable_status(StatusCode::NOT_FOUND));
+	}
 }
