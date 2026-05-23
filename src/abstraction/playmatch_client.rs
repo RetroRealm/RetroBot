@@ -20,11 +20,12 @@ use uuid::Uuid;
 
 type Limiter = RateLimiter<NotKeyed, InMemoryState, DefaultClock>;
 
-/// Thin newtype wrapper that gates every outbound playmatch request through a shared
-/// token bucket sized to playmatch's own server-side limit (4 req/s replenish, 20 burst).
-/// On 429 or 5xx it retries with exponential backoff (250 ms, 500 ms, 1 s, 2 s, 4 s).
-/// 429s happen when the server's bucket is colder than ours (e.g. shared IP, fresh boot
-/// after a previous burst). 5xx errors are treated as transient too.
+/// Thin newtype wrapper that paces every outbound playmatch request at one per 250 ms,
+/// matching the server's `milliseconds_per_request(250)` exactly. No burst: the local
+/// bucket holds at most one token, so two requests can never fire closer together than
+/// the server's refill interval. The retry layer (429 or 5xx with exponential backoff:
+/// 250 ms, 500 ms, 1 s, 2 s, 4 s) stays as a defence in depth for transient
+/// server-side blips.
 pub struct PlaymatchClient {
 	inner: Inner,
 	limiter: Limiter,
@@ -34,8 +35,8 @@ const MAX_RETRIES: u32 = 5;
 
 impl PlaymatchClient {
 	pub fn new(inner: Inner) -> Self {
-		let quota = Quota::per_second(NonZeroU32::new(4).unwrap())
-			.allow_burst(NonZeroU32::new(20).unwrap());
+		let quota =
+			Quota::per_second(NonZeroU32::new(4).unwrap()).allow_burst(NonZeroU32::new(1).unwrap());
 		Self {
 			inner,
 			limiter: RateLimiter::direct(quota),
