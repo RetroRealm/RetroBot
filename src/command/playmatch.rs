@@ -23,7 +23,6 @@ use serenity::all::{
 use serenity::http::Http;
 use std::collections::HashSet;
 use std::sync::Arc;
-use std::time::Duration;
 use uuid::Uuid;
 
 /// Shows a list of playmatch entities with its metadata matches
@@ -356,6 +355,7 @@ pub async fn create_game_suggestion(
 
 	tokio::spawn({
 		let playmatch_client = ctx.data().playmatch_client.clone();
+		let suggestion_store = ctx.data().suggestion_store.clone();
 		let serenity_ctx = ctx.serenity_context().clone();
 		let owners = ctx.framework().options().owners.clone();
 		let author_id = ctx.author().id;
@@ -366,6 +366,7 @@ pub async fn create_game_suggestion(
 			handle_suggestion_message(
 				SuggestionMessageHandleData {
 					playmatch_client,
+					suggestion_store,
 					serenity_ctx,
 					suggestion_id: suggestion.id,
 					owners,
@@ -447,6 +448,7 @@ pub async fn create_company_suggestion(
 
 	tokio::spawn({
 		let playmatch_client = ctx.data().playmatch_client.clone();
+		let suggestion_store = ctx.data().suggestion_store.clone();
 		let serenity_ctx = ctx.serenity_context().clone();
 		let owners = ctx.framework().options().owners.clone();
 		let author_id = ctx.author().id;
@@ -455,6 +457,7 @@ pub async fn create_company_suggestion(
 			handle_suggestion_message(
 				SuggestionMessageHandleData {
 					playmatch_client,
+					suggestion_store,
 					serenity_ctx,
 					suggestion_id: suggestion.id,
 					owners,
@@ -555,6 +558,7 @@ pub async fn create_platform_suggestion(
 
 	tokio::spawn({
 		let playmatch_client = ctx.data().playmatch_client.clone();
+		let suggestion_store = ctx.data().suggestion_store.clone();
 		let serenity_ctx = ctx.serenity_context().clone();
 		let owners = ctx.framework().options().owners.clone();
 		let author_id = ctx.author().id;
@@ -564,6 +568,7 @@ pub async fn create_platform_suggestion(
 			handle_suggestion_message(
 				SuggestionMessageHandleData {
 					playmatch_client,
+					suggestion_store,
 					serenity_ctx,
 					suggestion_id: suggestion.id,
 					owners,
@@ -834,6 +839,7 @@ pub(crate) enum SuggestionSubmitter {
 
 pub(crate) struct SuggestionMessageHandleData {
 	pub playmatch_client: Arc<crate::abstraction::playmatch_client::PlaymatchClient>,
+	pub suggestion_store: Arc<crate::abstraction::suggestion_store::SuggestionStore>,
 	pub serenity_ctx: Context,
 	pub suggestion_id: Uuid,
 	pub owners: HashSet<UserId>,
@@ -959,31 +965,19 @@ pub(crate) async fn handle_suggestion_message(
 				.widen()
 				.send_message(http, staff_card.into_message())
 				.await?;
+			data.suggestion_store
+				.mark_posted(data.suggestion_id, message.id)
+				.await?;
 			message.id
 		}
 	};
 
 	let owners = data.owners.clone();
-	let interaction_opt = ComponentInteractionCollector::new(&data.serenity_ctx)
+	let Some(interaction) = ComponentInteractionCollector::new(&data.serenity_ctx)
 		.message_id(message_id)
-		.timeout(Duration::from_secs(7 * 24 * 60 * 60))
 		.filter(move |i| owners.contains(&i.user.id))
-		.await;
-
-	let Some(interaction) = interaction_opt else {
-		debug!("No interaction received in time, marking suggestion as expired");
-		let expired = build_card(Status::Warning, "Suggestion Expired".to_string())
-			.footer("Expired without review after 7 days.");
-		let edit = EditMessage::new()
-			.flags(MessageFlags::IS_COMPONENTS_V2)
-			.components(vec![CreateComponent::Container(expired.into_container())]);
-		if let Err(e) = channel_id
-			.widen()
-			.edit_message(http, message_id, edit)
-			.await
-		{
-			error!("failed to edit expired suggestion message: {e}");
-		}
+		.await
+	else {
 		return Ok(());
 	};
 
@@ -997,6 +991,13 @@ pub(crate) async fn handle_suggestion_message(
 				.playmatch_client
 				.approve_suggestion(data.suggestion_id)
 				.await?;
+
+			if let Err(e) = data.suggestion_store.remove(data.suggestion_id).await {
+				warn!(
+					"failed to remove suggestion {} from store after approve: {e}",
+					data.suggestion_id
+				);
+			}
 
 			let mut resolution = build_card(Status::Success, "Suggestion Approved".to_string())
 				.row("Handled by", format!("<@{staff_id}>"));
@@ -1038,6 +1039,13 @@ pub(crate) async fn handle_suggestion_message(
 				.delete_suggestion(data.suggestion_id)
 				.await?;
 
+			if let Err(e) = data.suggestion_store.remove(data.suggestion_id).await {
+				warn!(
+					"failed to remove suggestion {} from store after decline: {e}",
+					data.suggestion_id
+				);
+			}
+
 			let mut resolution = build_card(Status::Error, "Suggestion Declined".to_string())
 				.row("Handled by", format!("<@{staff_id}>"));
 			if let Some(url) = provider_page_url.clone() {
@@ -1076,6 +1084,29 @@ pub(crate) async fn handle_suggestion_message(
 	}
 
 	Ok(())
+}
+
+/// Edits an existing suggestion card into a "Resolved externally" state with no buttons.
+/// Used by the poller when it notices a suggestion was actioned via the playmatch API
+/// while the bot was down or before the bot saw it.
+pub(crate) async fn mark_external_resolved(
+	http: &Http,
+	message_id: serenity::all::MessageId,
+) -> Result<(), serenity::Error> {
+	let channel_id = ChannelId::new(*SUGGESTION_CHANNEL_ID);
+	let card = Card::new(
+		Status::Warning,
+		"Suggestion Resolved Externally".to_string(),
+	)
+	.text("This suggestion was approved or declined outside Discord.");
+	let edit = EditMessage::new()
+		.flags(MessageFlags::IS_COMPONENTS_V2)
+		.components(vec![CreateComponent::Container(card.into_container())]);
+	channel_id
+		.widen()
+		.edit_message(http, message_id, edit)
+		.await
+		.map(|_| ())
 }
 
 async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<PlaymatchUserCtx> {

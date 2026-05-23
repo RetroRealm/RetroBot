@@ -42,6 +42,7 @@ Every response is rendered with Discord's Components V2 (top-level `Container`, 
 | `DISCORD_TOKEN` | yes | Bot token from the Discord Developer Portal |
 | `PLAYMATCH_API_AUTH` | yes | Bearer token for the Playmatch API |
 | `PLAYMATCH_API_URL` | no | Playmatch base URL, defaults to `https://playmatch.retrorealm.dev` |
+| `REDIS_URL` | yes | Redis connection string (e.g. `redis://localhost:6379`), used to persist posted suggestion cards across restarts |
 | `DISCORD_STATUS` | no | Activity kind (`playing`, `listening`, `watching`, `competing`) |
 | `DISCORD_STATUS_NAME` | no | Activity text shown next to the kind |
 | `DISCORD_RETROREALM_SERVER_ID` | for guild commands | Guild id used when registering guild-scoped commands |

@@ -2,17 +2,18 @@ use crate::abstraction::command::CommandData;
 use crate::command::SUGGESTION_CHANNEL_ID;
 use crate::command::playmatch::{
 	SuggestionMessageHandleData, SuggestionSubmitter, SuggestionType, handle_suggestion_message,
+	mark_external_resolved,
 };
 use lazy_static::lazy_static;
-use log::{debug, info, warn};
+use log::{info, warn};
 use playmatch_client::types::Suggestion;
 use serenity::all::{
 	ActionRowComponent, ButtonKind, ChannelId, Component, ContainerComponent, Context, GetMessages,
 	Http, Message, MessageId, TeamMemberRole, UserId,
 };
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::env;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::time::Duration;
 use tokio::time::interval;
 use uuid::Uuid;
@@ -26,7 +27,7 @@ lazy_static! {
 
 const APPROVE_PREFIX: &str = "approve:";
 const DECLINE_PREFIX: &str = "decline:";
-const CHANNEL_SCAN_LIMIT: u8 = 100;
+const CHANNEL_SEED_SCAN_LIMIT: u8 = 100;
 
 pub async fn run(ctx: Context, data: Arc<CommandData>) {
 	info!(
@@ -45,61 +46,170 @@ pub async fn run(ctx: Context, data: Arc<CommandData>) {
 	};
 
 	let channel_id = ChannelId::new(*SUGGESTION_CHANNEL_ID);
-	let seen: Arc<Mutex<HashSet<Uuid>>> = Arc::new(Mutex::new(HashSet::new()));
 
-	match channel_id
-		.widen()
-		.messages(&http, GetMessages::new().limit(CHANNEL_SCAN_LIMIT))
-		.await
-	{
-		Ok(messages) => {
-			let mut recovery_count = 0usize;
-			for msg in &messages {
-				if let Some(uuid) = extract_suggestion_uuid(msg) {
-					seen.lock().unwrap().insert(uuid);
-					spawn_recovery(ctx.clone(), data.clone(), owners.clone(), msg.id, uuid);
-					recovery_count += 1;
-				}
-			}
-			info!(
-				"suggestion poller: scanned {} channel messages, found {} suggestion cards",
-				messages.len(),
-				recovery_count
-			);
-		}
-		Err(e) => {
-			warn!("suggestion poller: channel history scan failed: {e}");
-		}
+	seed_from_channel_if_needed(&http, channel_id, &data).await;
+
+	// Reconcile once at startup: post anything new, edit anything resolved externally.
+	if let Err(e) = reconcile(&ctx, &data, &owners).await {
+		warn!("suggestion poller: initial reconcile failed: {e}");
 	}
 
-	// The first tick fires immediately so we catch up on suggestions submitted while the
-	// bot was offline. Subsequent ticks wait the full interval.
+	// Re-arm collectors for everything currently tracked in Redis.
+	let posted = match data.suggestion_store.list_all().await {
+		Ok(p) => p,
+		Err(e) => {
+			warn!("suggestion poller: cannot list posted suggestions for collector re-arm: {e}");
+			HashMap::new()
+		}
+	};
+	for (uuid, msg_id) in posted {
+		spawn_collector(ctx.clone(), data.clone(), owners.clone(), msg_id, uuid);
+	}
+
 	let mut tick = interval(Duration::from_secs(*POLL_INTERVAL_SECS));
+	tick.tick().await; // initial reconcile already ran
 	loop {
 		tick.tick().await;
-
-		let pending = match data.playmatch_client.get_all_suggestions().await {
-			Ok(p) => p,
-			Err(e) => {
-				warn!("suggestion poller: get_all_suggestions failed: {e}");
-				continue;
-			}
-		};
-
-		for s in pending {
-			if s.source.is_none() {
-				continue;
-			}
-			{
-				let mut guard = seen.lock().unwrap();
-				if guard.contains(&s.id) {
-					continue;
-				}
-				guard.insert(s.id);
-			}
-			spawn_external_post(ctx.clone(), data.clone(), owners.clone(), s);
+		if let Err(e) = reconcile(&ctx, &data, &owners).await {
+			warn!("suggestion poller: reconcile failed: {e}");
 		}
 	}
+}
+
+/// One-time migration: if Redis has no entries but the channel does, scan the channel and
+/// seed Redis with every suggestion UUID we can find. Avoids re-posting on first deploy.
+async fn seed_from_channel_if_needed(http: &Http, channel_id: ChannelId, data: &Arc<CommandData>) {
+	let empty = match data.suggestion_store.is_empty().await {
+		Ok(v) => v,
+		Err(e) => {
+			warn!("suggestion poller: cannot check store emptiness, skipping seed: {e}");
+			return;
+		}
+	};
+	if !empty {
+		return;
+	}
+
+	let messages = match channel_id
+		.widen()
+		.messages(http, GetMessages::new().limit(CHANNEL_SEED_SCAN_LIMIT))
+		.await
+	{
+		Ok(m) => m,
+		Err(e) => {
+			warn!("suggestion poller: channel history scan for seeding failed: {e}");
+			return;
+		}
+	};
+
+	let mut seeded = 0usize;
+	for msg in &messages {
+		if let Some(uuid) = extract_suggestion_uuid(msg) {
+			if let Err(e) = data.suggestion_store.mark_posted(uuid, msg.id).await {
+				warn!("suggestion poller: seed mark_posted({uuid}) failed: {e}");
+				continue;
+			}
+			seeded += 1;
+		}
+	}
+	info!(
+		"suggestion poller: seeded {} entries from {} channel messages",
+		seeded,
+		messages.len()
+	);
+}
+
+/// Compare playmatch's pending queue against Redis. Post anything new, edit anything
+/// that's been resolved outside Discord. Does not spawn collectors for new posts: the
+/// `handle_suggestion_message` call wraps both the post and the collector wait.
+async fn reconcile(
+	ctx: &Context,
+	data: &Arc<CommandData>,
+	owners: &HashSet<UserId>,
+) -> anyhow::Result<()> {
+	let pending = data.playmatch_client.get_all_suggestions().await?;
+	let pending_external: Vec<Suggestion> =
+		pending.into_iter().filter(|s| s.source.is_some()).collect();
+	let pending_uuids: HashSet<Uuid> = pending_external.iter().map(|s| s.id).collect();
+
+	let posted = data.suggestion_store.list_all().await?;
+
+	for s in pending_external {
+		if posted.contains_key(&s.id) {
+			continue;
+		}
+		spawn_new_post(ctx.clone(), data.clone(), owners.clone(), s);
+	}
+
+	let http = ctx.http.clone();
+	for (uuid, msg_id) in &posted {
+		if pending_uuids.contains(uuid) {
+			continue;
+		}
+		if let Err(e) = mark_external_resolved(&http, *msg_id).await {
+			warn!("suggestion poller: cannot edit message {msg_id} for {uuid}: {e}");
+		}
+		if let Err(e) = data.suggestion_store.remove(*uuid).await {
+			warn!("suggestion poller: cannot remove {uuid} from store: {e}");
+		}
+	}
+
+	Ok(())
+}
+
+fn spawn_new_post(
+	ctx: Context,
+	data: Arc<CommandData>,
+	owners: HashSet<UserId>,
+	suggestion: Suggestion,
+) {
+	tokio::spawn(async move {
+		let suggestion_id = suggestion.id;
+		let payload = match build_handle_data(ctx.clone(), data.clone(), owners, suggestion).await {
+			Ok(p) => p,
+			Err(e) => {
+				warn!("suggestion poller: cannot build payload for {suggestion_id}: {e}");
+				return;
+			}
+		};
+		if let Err(e) = handle_suggestion_message(payload, None).await {
+			warn!("suggestion poller: posting {suggestion_id} ended with error: {e}");
+		}
+	});
+}
+
+fn spawn_collector(
+	ctx: Context,
+	data: Arc<CommandData>,
+	owners: HashSet<UserId>,
+	message_id: MessageId,
+	suggestion_id: Uuid,
+) {
+	tokio::spawn(async move {
+		let suggestion = match data
+			.playmatch_client
+			.get_suggestion_by_id(suggestion_id)
+			.await
+		{
+			Ok(s) => s,
+			Err(e) => {
+				warn!(
+					"suggestion poller: cannot fetch suggestion {suggestion_id} for collector re-arm: {e}"
+				);
+				return;
+			}
+		};
+		let payload = match build_handle_data(ctx.clone(), data.clone(), owners, suggestion).await {
+			Ok(p) => p,
+			Err(e) => {
+				warn!("suggestion poller: cannot build re-arm payload for {suggestion_id}: {e}");
+				return;
+			}
+		};
+		if let Err(e) = handle_suggestion_message(payload, Some(message_id)).await {
+			warn!("suggestion poller: collector for {suggestion_id} ended with error: {e}");
+		}
+	});
 }
 
 async fn fetch_owners(http: &Http) -> serenity::Result<HashSet<UserId>> {
@@ -154,65 +264,6 @@ fn find_button_uuid_in_row(row: &serenity::all::ActionRow) -> Option<Uuid> {
 	None
 }
 
-fn spawn_recovery(
-	ctx: Context,
-	data: Arc<CommandData>,
-	owners: HashSet<UserId>,
-	message_id: MessageId,
-	suggestion_id: Uuid,
-) {
-	tokio::spawn(async move {
-		let suggestion = match data
-			.playmatch_client
-			.get_suggestion_by_id(suggestion_id)
-			.await
-		{
-			Ok(s) => s,
-			Err(e) => {
-				debug!(
-					"suggestion poller: recovery skipped, suggestion {suggestion_id} no longer pending: {e}"
-				);
-				return;
-			}
-		};
-
-		let payload = match build_handle_data(ctx.clone(), data.clone(), owners, suggestion).await {
-			Ok(p) => p,
-			Err(e) => {
-				warn!("suggestion poller: cannot build recovery payload for {suggestion_id}: {e}");
-				return;
-			}
-		};
-
-		if let Err(e) = handle_suggestion_message(payload, Some(message_id)).await {
-			warn!(
-				"suggestion poller: recovery collector for {suggestion_id} ended with error: {e}"
-			);
-		}
-	});
-}
-
-fn spawn_external_post(
-	ctx: Context,
-	data: Arc<CommandData>,
-	owners: HashSet<UserId>,
-	suggestion: Suggestion,
-) {
-	tokio::spawn(async move {
-		let suggestion_id = suggestion.id;
-		let payload = match build_handle_data(ctx.clone(), data.clone(), owners, suggestion).await {
-			Ok(p) => p,
-			Err(e) => {
-				warn!("suggestion poller: cannot post external suggestion {suggestion_id}: {e}");
-				return;
-			}
-		};
-		if let Err(e) = handle_suggestion_message(payload, None).await {
-			warn!("suggestion poller: external suggestion {suggestion_id} ended with error: {e}");
-		}
-	});
-}
-
 async fn build_handle_data(
 	serenity_ctx: Context,
 	data: Arc<CommandData>,
@@ -220,6 +271,7 @@ async fn build_handle_data(
 	suggestion: Suggestion,
 ) -> anyhow::Result<SuggestionMessageHandleData> {
 	let playmatch_client = data.playmatch_client.clone();
+	let suggestion_store = data.suggestion_store.clone();
 
 	let (kind, name, platform, company): (SuggestionType, String, Option<String>, Option<String>) =
 		if let Some(game_id) = suggestion.game_id {
@@ -259,6 +311,7 @@ async fn build_handle_data(
 
 	Ok(SuggestionMessageHandleData {
 		playmatch_client,
+		suggestion_store,
 		serenity_ctx,
 		suggestion_id: suggestion.id,
 		owners,

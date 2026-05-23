@@ -18,10 +18,11 @@ pub type CheckResult = Result<bool, CommandError>;
 pub struct CommandData {
 	pub client: reqwest::Client,
 	pub playmatch_client: Arc<crate::abstraction::playmatch_client::PlaymatchClient>,
+	pub suggestion_store: Arc<crate::abstraction::suggestion_store::SuggestionStore>,
 }
 
-impl Default for CommandData {
-	fn default() -> Self {
+impl CommandData {
+	pub async fn new() -> anyhow::Result<Self> {
 		let mut headers = HeaderMap::new();
 		headers.insert(
 			"Authorization",
@@ -50,12 +51,17 @@ impl Default for CommandData {
 			client.clone(),
 		);
 
-		Self {
+		let redis_url = env::var("REDIS_URL").expect("missing REDIS_URL");
+		let suggestion_store =
+			crate::abstraction::suggestion_store::SuggestionStore::connect(&redis_url).await?;
+
+		Ok(Self {
 			client,
 			playmatch_client: Arc::new(crate::abstraction::playmatch_client::PlaymatchClient::new(
 				inner,
 			)),
-		}
+			suggestion_store: Arc::new(suggestion_store),
+		})
 	}
 }
 

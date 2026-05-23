@@ -72,10 +72,12 @@ async fn main() -> anyhow::Result<()> {
 
 	let framework = poise::Framework::new(options);
 
+	let data = Arc::new(CommandData::new().await?);
+
 	let client = serenity::Client::builder(token, intents)
 		.framework(Box::new(framework))
 		.event_handler(Arc::new(events::Handler))
-		.data(Arc::new(CommandData::default()) as _)
+		.data(data as _)
 		.await;
 
 	client?.start().await?;
