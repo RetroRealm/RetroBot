@@ -47,7 +47,6 @@ pub async fn run(ctx: Context, data: Arc<CommandData>) {
 	let channel_id = ChannelId::new(*SUGGESTION_CHANNEL_ID);
 	let seen: Arc<Mutex<HashSet<Uuid>>> = Arc::new(Mutex::new(HashSet::new()));
 
-	// Phase 1 + 2: scan channel history, build seen set, spawn recovery for each pending one.
 	match channel_id
 		.widen()
 		.messages(&http, GetMessages::new().limit(CHANNEL_SCAN_LIMIT))
@@ -73,9 +72,9 @@ pub async fn run(ctx: Context, data: Arc<CommandData>) {
 		}
 	}
 
-	// Phase 3: poll loop.
+	// The first tick fires immediately so we catch up on suggestions submitted while the
+	// bot was offline. Subsequent ticks wait the full interval.
 	let mut tick = interval(Duration::from_secs(*POLL_INTERVAL_SECS));
-	tick.tick().await; // consume immediate first tick
 	loop {
 		tick.tick().await;
 
@@ -173,7 +172,7 @@ fn spawn_recovery(
 			Ok(r) => r.into_inner(),
 			Err(e) => {
 				debug!(
-					"suggestion poller: recovery skipped — suggestion {suggestion_id} no longer pending: {e}"
+					"suggestion poller: recovery skipped, suggestion {suggestion_id} no longer pending: {e}"
 				);
 				return;
 			}

@@ -36,7 +36,7 @@ pub struct ProviderPlatformInfo {
 	pub summary: Option<String>,
 }
 
-/// Slash-command choice parameter. Order here is what shows up in Discord's dropdown.
+/// Order here is the order shown in Discord's dropdown.
 #[derive(poise::ChoiceParameter, Clone, Copy, Debug)]
 pub enum ProviderChoice {
 	#[name = "IGDB"]
@@ -76,7 +76,7 @@ impl ProviderChoice {
 }
 
 /// Order in which the identification flow tries to enrich the card.
-/// `EmuReady` and `TheGamesDB` are intentionally excluded — they have no read endpoints.
+/// `EmuReady` and `TheGamesDB` are intentionally excluded. They have no read endpoints.
 pub const ENRICHMENT_PRIORITY: &[MetadataProvider] = &[
 	MetadataProvider::Igdb,
 	MetadataProvider::MobyGames,
@@ -87,7 +87,7 @@ pub const ENRICHMENT_PRIORITY: &[MetadataProvider] = &[
 	MetadataProvider::SteamGridDb,
 ];
 
-/// All providers, in the order rendered as columns in the list tables.
+/// Order here determines the column order in the `/list` tables.
 pub const ALL_PROVIDERS: &[MetadataProvider] = &[
 	MetadataProvider::Igdb,
 	MetadataProvider::MobyGames,

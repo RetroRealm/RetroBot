@@ -886,9 +886,8 @@ pub(crate) struct SuggestionMessageHandleData {
 	pub comment: Option<String>,
 }
 
-/// Posts the staff card (if `existing_message_id` is None) and then waits on the Approve/Decline
-/// buttons. Called inline from the suggest commands (with `None`) and from the external-suggestion
-/// poller (with `None` for new posts and `Some(id)` to re-attach to a pre-restart message).
+/// Posts the staff card and waits on the Approve/Decline buttons.
+/// Pass `Some(message_id)` to re-attach to an existing card instead of posting a new one.
 pub(crate) async fn handle_suggestion_message(
 	data: SuggestionMessageHandleData,
 	existing_message_id: Option<serenity::all::MessageId>,
