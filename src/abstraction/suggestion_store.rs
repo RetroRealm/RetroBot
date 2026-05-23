@@ -46,23 +46,15 @@ impl SuggestionStore {
 	pub async fn list_all(&self) -> Result<HashMap<Uuid, MessageId>, Error> {
 		let mut conn = self.conn.clone();
 		let pattern = format!("{KEY_PREFIX}*");
-		let mut cursor = 0u64;
-		let mut keys: Vec<String> = Vec::new();
-		loop {
-			let (next_cursor, batch): (u64, Vec<String>) = redis::cmd("SCAN")
-				.arg(cursor)
-				.arg("MATCH")
-				.arg(&pattern)
-				.arg("COUNT")
-				.arg(100)
-				.query_async(&mut conn)
-				.await?;
-			keys.extend(batch);
-			if next_cursor == 0 {
-				break;
+
+		let keys: Vec<String> = {
+			let mut iter: redis::AsyncIter<'_, String> = conn.scan_match(&pattern).await?;
+			let mut collected = Vec::new();
+			while let Some(item) = iter.next_item().await {
+				collected.push(item?);
 			}
-			cursor = next_cursor;
-		}
+			collected
+		};
 
 		if keys.is_empty() {
 			return Ok(HashMap::new());
