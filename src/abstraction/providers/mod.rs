@@ -1,6 +1,7 @@
 use chrono::{DateTime, Utc};
-use playmatch_client::Client;
 use playmatch_client::types::MetadataProvider;
+
+use crate::abstraction::playmatch_client::PlaymatchClient;
 
 pub mod igdb;
 pub mod launchbox;
@@ -140,7 +141,7 @@ pub(super) fn truncate_summary(s: &str) -> String {
 }
 
 pub async fn fetch_game(
-	client: &Client,
+	client: &PlaymatchClient,
 	provider: MetadataProvider,
 	provider_id: &str,
 ) -> Option<ProviderGameInfo> {
@@ -159,7 +160,7 @@ pub async fn fetch_game(
 }
 
 pub async fn fetch_company(
-	client: &Client,
+	client: &PlaymatchClient,
 	provider: MetadataProvider,
 	provider_id: &str,
 ) -> Option<ProviderCompanyInfo> {
@@ -170,7 +171,7 @@ pub async fn fetch_company(
 }
 
 pub async fn fetch_platform(
-	client: &Client,
+	client: &PlaymatchClient,
 	provider: MetadataProvider,
 	provider_id: &str,
 ) -> Option<ProviderPlatformInfo> {

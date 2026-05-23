@@ -17,7 +17,7 @@ pub type CheckResult = Result<bool, CommandError>;
 
 pub struct CommandData {
 	pub client: reqwest::Client,
-	pub playmatch_client: Arc<playmatch_client::Client>,
+	pub playmatch_client: Arc<crate::abstraction::playmatch_client::PlaymatchClient>,
 }
 
 impl Default for CommandData {
@@ -44,12 +44,16 @@ impl Default for CommandData {
 			.build()
 			.unwrap();
 
+		let inner = playmatch_client::Client::new_with_client(
+			&env::var("PLAYMATCH_API_URL")
+				.unwrap_or("https://playmatch.retrorealm.dev".to_string()),
+			client.clone(),
+		);
+
 		Self {
-			client: client.clone(),
-			playmatch_client: Arc::new(playmatch_client::Client::new_with_client(
-				&env::var("PLAYMATCH_API_URL")
-					.unwrap_or("https://playmatch.retrorealm.dev".to_string()),
-				client,
+			client,
+			playmatch_client: Arc::new(crate::abstraction::playmatch_client::PlaymatchClient::new(
+				inner,
 			)),
 		}
 	}

@@ -67,26 +67,14 @@ pub async fn suggest(_: CommandContext<'_>) -> CommandResult {
 /// Shows a list of companies with its metadata matches
 #[poise::command(slash_command, category = "Playmatch", rename = "companies")]
 pub async fn list_companies(ctx: CommandContext<'_>) -> CommandResult {
-	let response = ctx
-		.data()
-		.playmatch_client
-		.get_all_companies()
-		.send()
-		.await?;
-	let companies = response.into_inner();
+	let companies = ctx.data().playmatch_client.get_all_companies().await?;
 	paginate_playmatch_response(ctx, companies).await
 }
 
 /// Shows a list of platforms with its metadata matches
 #[poise::command(slash_command, category = "Playmatch", rename = "platforms")]
 pub async fn list_platforms(ctx: CommandContext<'_>) -> CommandResult {
-	let response = ctx
-		.data()
-		.playmatch_client
-		.get_all_platforms()
-		.send()
-		.await?;
-	let platforms = response.into_inner();
+	let platforms = ctx.data().playmatch_client.get_all_platforms().await?;
 	paginate_playmatch_response(ctx, platforms).await
 }
 
@@ -100,23 +88,11 @@ pub async fn get_game_metadata(
 	file_name: String,
 	file_size: i64,
 ) -> CommandResult {
-	let client = ctx.data().playmatch_client.clone();
-	let mut request = client
-		.identify_game_and_relations()
-		.file_name(file_name)
-		.file_size(file_size);
-	if let Some(md5) = md5_hash {
-		request = request.md5(md5);
-	}
-	if let Some(sha1) = sha1_hash {
-		request = request.sha1(sha1);
-	}
-	if let Some(sha256) = sha256_hash {
-		request = request.sha256(sha256);
-	}
-	let response = request.send().await?;
-
-	let inner = response.into_inner();
+	let inner = ctx
+		.data()
+		.playmatch_client
+		.identify_game_and_relations(file_name, file_size, md5_hash, sha1_hash, sha256_hash)
+		.await?;
 
 	if inner.game_match_type == GameMatchType::NoMatch {
 		ctx.send(components_v2::status_reply(
@@ -338,8 +314,7 @@ pub async fn create_game_suggestion(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.create_game_suggestion()
-		.body(GameSuggestionRequest {
+		.create_game_suggestion(GameSuggestionRequest {
 			provider_id: provider_id.clone(),
 			sha1: sha1_hash,
 			provider: provider_meta,
@@ -349,11 +324,10 @@ pub async fn create_game_suggestion(
 			md5: md5_hash,
 			sha256: sha256_hash,
 		})
-		.send()
 		.await;
 
 	let suggestion = match result {
-		Ok(suggestion_value) => suggestion_value.into_inner(),
+		Ok(suggestion_value) => suggestion_value,
 		Err(e) => {
 			send_playmatch_api_error(ctx, &e, "Game", "hashes or name", ApiErrorAction::Suggest)
 				.await?;
@@ -377,9 +351,7 @@ pub async fn create_game_suggestion(
 	let game_response = ctx
 		.data()
 		.playmatch_client
-		.get_playmatch_game_with_relations_by_id()
-		.id(game_id)
-		.send()
+		.get_playmatch_game_with_relations_by_id(game_id)
 		.await?;
 
 	tokio::spawn({
@@ -456,19 +428,17 @@ pub async fn create_company_suggestion(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.create_company_suggestion()
-		.body(CompanyOrPlatformSuggestionRequest {
+		.create_company_suggestion(CompanyOrPlatformSuggestionRequest {
 			provider_id: provider_id.clone(),
 			provider: provider_meta,
 			name: name.clone(),
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
-		.send()
 		.await;
 
 	let suggestion = match result {
-		Ok(suggestion_value) => suggestion_value.into_inner(),
+		Ok(suggestion_value) => suggestion_value,
 		Err(e) => {
 			send_playmatch_api_error(ctx, &e, "Company", "name", ApiErrorAction::Suggest).await?;
 			return Ok(());
@@ -547,19 +517,17 @@ pub async fn create_platform_suggestion(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.create_platform_suggestion()
-		.body(CompanyOrPlatformSuggestionRequest {
+		.create_platform_suggestion(CompanyOrPlatformSuggestionRequest {
 			provider_id: provider_id.clone(),
 			provider: provider_meta,
 			name: name.clone(),
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
-		.send()
 		.await;
 
 	let suggestion = match result {
-		Ok(suggestion_value) => suggestion_value.into_inner(),
+		Ok(suggestion_value) => suggestion_value,
 		Err(e) => {
 			send_playmatch_api_error(ctx, &e, "Platform", "name", ApiErrorAction::Suggest).await?;
 			return Ok(());
@@ -582,9 +550,7 @@ pub async fn create_platform_suggestion(
 	let platform = ctx
 		.data()
 		.playmatch_client
-		.get_platform_by_id()
-		.id(platform_id)
-		.send()
+		.get_platform_by_id(platform_id)
 		.await?;
 
 	tokio::spawn({
@@ -660,8 +626,7 @@ pub async fn manual_match_platform(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.manually_match_platform()
-		.body(CompanyOrPlatformMatchRequest {
+		.manually_match_platform(CompanyOrPlatformMatchRequest {
 			manual_match_type: playmatch_user_ctx.manual_match_mode(),
 			provider_id: provider_id.clone(),
 			provider: provider_meta,
@@ -670,7 +635,6 @@ pub async fn manual_match_platform(
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
-		.send()
 		.await;
 
 	if let Err(e) = &result {
@@ -721,8 +685,7 @@ pub async fn manual_match_company(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.manually_match_company()
-		.body(CompanyOrPlatformMatchRequest {
+		.manually_match_company(CompanyOrPlatformMatchRequest {
 			manual_match_type: playmatch_user_ctx.manual_match_mode(),
 			provider_id: provider_id.clone(),
 			provider: provider_meta,
@@ -731,7 +694,6 @@ pub async fn manual_match_company(
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
-		.send()
 		.await;
 
 	if let Err(e) = &result {
@@ -795,8 +757,7 @@ pub async fn manual_match_game(
 	let result = ctx
 		.data()
 		.playmatch_client
-		.manually_match_game()
-		.body(GameMatchRequest {
+		.manually_match_game(GameMatchRequest {
 			manual_match_type: playmatch_user_ctx.manual_match_mode(),
 			provider_id: provider_id.clone(),
 			provider: provider_meta,
@@ -808,7 +769,6 @@ pub async fn manual_match_game(
 			comment,
 			user_id: Some(playmatch_user_ctx.playmatch_user.id),
 		})
-		.send()
 		.await;
 
 	let matched = match result {
@@ -817,7 +777,7 @@ pub async fn manual_match_game(
 				.await?;
 			return Ok(());
 		}
-		Ok(value) => value.into_inner().len(),
+		Ok(value) => value.len(),
 	};
 
 	let info =
@@ -873,7 +833,7 @@ pub(crate) enum SuggestionSubmitter {
 }
 
 pub(crate) struct SuggestionMessageHandleData {
-	pub playmatch_client: Arc<playmatch_client::Client>,
+	pub playmatch_client: Arc<crate::abstraction::playmatch_client::PlaymatchClient>,
 	pub serenity_ctx: Context,
 	pub suggestion_id: Uuid,
 	pub owners: HashSet<UserId>,
@@ -908,9 +868,7 @@ pub(crate) async fn handle_suggestion_message(
 
 	let suggestion = data
 		.playmatch_client
-		.get_suggestion_by_id()
-		.id(data.suggestion_id)
-		.send()
+		.get_suggestion_by_id(data.suggestion_id)
 		.await?;
 
 	let (author_label, dm_target): (String, Option<UserId>) = match &data.submitter {
@@ -1037,9 +995,7 @@ pub(crate) async fn handle_suggestion_message(
 		"approve" => {
 			let updated = data
 				.playmatch_client
-				.approve_suggestion()
-				.id(data.suggestion_id)
-				.send()
+				.approve_suggestion(data.suggestion_id)
 				.await?;
 
 			let mut resolution = build_card(Status::Success, "Suggestion Approved".to_string())
@@ -1079,9 +1035,7 @@ pub(crate) async fn handle_suggestion_message(
 		}
 		"decline" => {
 			data.playmatch_client
-				.delete_suggestion()
-				.id(data.suggestion_id)
-				.send()
+				.delete_suggestion(data.suggestion_id)
 				.await?;
 
 			let mut resolution = build_card(Status::Error, "Suggestion Declined".to_string())
@@ -1145,19 +1099,17 @@ async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<Playm
 		UserPermissions::User
 	};
 
-	let mut playmatch_user_response = ctx
+	let mut playmatch_user = ctx
 		.data()
 		.playmatch_client
-		.create_or_get_by_discord_id()
-		.body(CreateOrGetUserRequest {
+		.create_or_get_by_discord_id(CreateOrGetUserRequest {
 			discord_id: author.id.get() as i64,
 			permissions,
 			username: author.name.to_string(),
 		})
-		.send()
 		.await?;
 
-	if playmatch_user_response.permissions == UserPermissions::User && (is_trusted || is_admin) {
+	if playmatch_user.permissions == UserPermissions::User && (is_trusted || is_admin) {
 		debug!(
 			"User permission needs to be updated for user: {}",
 			author.id
@@ -1171,19 +1123,19 @@ async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<Playm
 
 		ctx.data()
 			.playmatch_client
-			.update_user_permission_level()
-			.id(playmatch_user_response.id)
-			.body(UpdateUserPermissionsRequest { new_permission })
-			.send()
+			.update_user_permission_level(
+				playmatch_user.id,
+				UpdateUserPermissionsRequest { new_permission },
+			)
 			.await?;
 
 		debug!("User permission updated for user: {}", author.id);
 
-		playmatch_user_response.permissions = new_permission;
+		playmatch_user.permissions = new_permission;
 	}
 
 	Ok(PlaymatchUserCtx {
 		is_admin,
-		playmatch_user: playmatch_user_response.into_inner(),
+		playmatch_user,
 	})
 }

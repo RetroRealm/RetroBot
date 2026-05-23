@@ -29,6 +29,7 @@ poise = { git = "https://github.com/serenity-rs/poise", branch = "serenity-next"
 
 # playmatch
 playmatch_client = { path = "playmatch_client" }
+governor = "^0.10"
 
 # commands
 unicode-width = "^0.2"

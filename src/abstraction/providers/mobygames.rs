@@ -1,10 +1,10 @@
 use log::warn;
-use playmatch_client::Client;
 use playmatch_client::types::MetadataProvider;
 
 use super::{ProviderGameInfo, truncate_summary};
+use crate::abstraction::playmatch_client::PlaymatchClient;
 
-pub async fn fetch_game(client: &Client, provider_id: &str) -> Option<ProviderGameInfo> {
+pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<ProviderGameInfo> {
 	let id: i64 = match provider_id.parse() {
 		Ok(id) => id,
 		Err(e) => {
@@ -13,8 +13,8 @@ pub async fn fetch_game(client: &Client, provider_id: &str) -> Option<ProviderGa
 		}
 	};
 
-	let game = match client.get_mg_game_by_id().id(id).send().await {
-		Ok(resp) => resp.into_inner(),
+	let game = match client.get_mg_game_by_id(id).await {
+		Ok(g) => g,
 		Err(e) => {
 			warn!("MobyGames game lookup failed for id {id}: {e}");
 			return None;

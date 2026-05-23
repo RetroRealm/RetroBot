@@ -78,8 +78,8 @@ pub async fn run(ctx: Context, data: Arc<CommandData>) {
 	loop {
 		tick.tick().await;
 
-		let pending = match data.playmatch_client.get_all_suggestions().send().await {
-			Ok(r) => r.into_inner(),
+		let pending = match data.playmatch_client.get_all_suggestions().await {
+			Ok(p) => p,
 			Err(e) => {
 				warn!("suggestion poller: get_all_suggestions failed: {e}");
 				continue;
@@ -164,12 +164,10 @@ fn spawn_recovery(
 	tokio::spawn(async move {
 		let suggestion = match data
 			.playmatch_client
-			.get_suggestion_by_id()
-			.id(suggestion_id)
-			.send()
+			.get_suggestion_by_id(suggestion_id)
 			.await
 		{
-			Ok(r) => r.into_inner(),
+			Ok(s) => s,
 			Err(e) => {
 				debug!(
 					"suggestion poller: recovery skipped, suggestion {suggestion_id} no longer pending: {e}"
@@ -225,12 +223,9 @@ async fn build_handle_data(
 
 	let (kind, name, platform, company): (SuggestionType, String, Option<String>, Option<String>) =
 		if let Some(game_id) = suggestion.game_id {
-			let resp = playmatch_client
-				.get_playmatch_game_with_relations_by_id()
-				.id(game_id)
-				.send()
+			let game = playmatch_client
+				.get_playmatch_game_with_relations_by_id(game_id)
 				.await?;
-			let game = resp.into_inner();
 			(
 				SuggestionType::Game,
 				game.game.name.clone(),
@@ -238,20 +233,10 @@ async fn build_handle_data(
 				game.company.map(|c| c.name),
 			)
 		} else if let Some(company_id) = suggestion.company_id {
-			let resp = playmatch_client
-				.get_company_by_id()
-				.id(company_id)
-				.send()
-				.await?;
-			let c = resp.into_inner();
+			let c = playmatch_client.get_company_by_id(company_id).await?;
 			(SuggestionType::Company, c.name.clone(), None, None)
 		} else if let Some(platform_id) = suggestion.platform_id {
-			let resp = playmatch_client
-				.get_platform_by_id()
-				.id(platform_id)
-				.send()
-				.await?;
-			let p = resp.into_inner();
+			let p = playmatch_client.get_platform_by_id(platform_id).await?;
 			(
 				SuggestionType::Platform,
 				p.name.clone(),
