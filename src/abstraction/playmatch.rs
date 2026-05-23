@@ -119,7 +119,14 @@ where
 							MetadataMatchType::Automatic | MetadataMatchType::Manual
 						)
 				});
-				row.push(if matched { SUCCESS_EMOJI } else { FAILURE_EMOJI }.to_string());
+				row.push(
+					if matched {
+						SUCCESS_EMOJI
+					} else {
+						FAILURE_EMOJI
+					}
+					.to_string(),
+				);
 			}
 			row
 		})

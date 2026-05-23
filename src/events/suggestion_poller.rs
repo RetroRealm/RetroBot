@@ -128,13 +128,10 @@ fn extract_suggestion_uuid(msg: &Message) -> Option<Uuid> {
 
 fn walk_component(c: &Component) -> Option<Uuid> {
 	match c {
-		Component::Container(container) => container
-			.components
-			.iter()
-			.find_map(|cc| match cc {
-				ContainerComponent::ActionRow(row) => find_button_uuid_in_row(row),
-				_ => None,
-			}),
+		Component::Container(container) => container.components.iter().find_map(|cc| match cc {
+			ContainerComponent::ActionRow(row) => find_button_uuid_in_row(row),
+			_ => None,
+		}),
 		Component::ActionRow(row) => find_button_uuid_in_row(row),
 		_ => None,
 	}
@@ -191,7 +188,9 @@ fn spawn_recovery(
 		};
 
 		if let Err(e) = handle_suggestion_message(payload, Some(message_id)).await {
-			warn!("suggestion poller: recovery collector for {suggestion_id} ended with error: {e}");
+			warn!(
+				"suggestion poller: recovery collector for {suggestion_id} ended with error: {e}"
+			);
 		}
 	});
 }
@@ -225,48 +224,47 @@ async fn build_handle_data(
 ) -> anyhow::Result<SuggestionMessageHandleData> {
 	let playmatch_client = data.playmatch_client.clone();
 
-	let (kind, name, platform, company): (
-		SuggestionType,
-		String,
-		Option<String>,
-		Option<String>,
-	) = if let Some(game_id) = suggestion.game_id {
-		let resp = playmatch_client
-			.get_playmatch_game_with_relations_by_id()
-			.id(game_id)
-			.send()
-			.await?;
-		let game = resp.into_inner();
-		(
-			SuggestionType::Game,
-			game.game.name.clone(),
-			Some(game.platform.name.clone()),
-			game.company.map(|c| c.name),
-		)
-	} else if let Some(company_id) = suggestion.company_id {
-		let resp = playmatch_client
-			.get_company_by_id()
-			.id(company_id)
-			.send()
-			.await?;
-		let c = resp.into_inner();
-		(SuggestionType::Company, c.name.clone(), None, None)
-	} else if let Some(platform_id) = suggestion.platform_id {
-		let resp = playmatch_client
-			.get_platform_by_id()
-			.id(platform_id)
-			.send()
-			.await?;
-		let p = resp.into_inner();
-		(
-			SuggestionType::Platform,
-			p.name.clone(),
-			None,
-			p.company_name.clone(),
-		)
-	} else {
-		anyhow::bail!("suggestion {} has no game/company/platform id", suggestion.id);
-	};
+	let (kind, name, platform, company): (SuggestionType, String, Option<String>, Option<String>) =
+		if let Some(game_id) = suggestion.game_id {
+			let resp = playmatch_client
+				.get_playmatch_game_with_relations_by_id()
+				.id(game_id)
+				.send()
+				.await?;
+			let game = resp.into_inner();
+			(
+				SuggestionType::Game,
+				game.game.name.clone(),
+				Some(game.platform.name.clone()),
+				game.company.map(|c| c.name),
+			)
+		} else if let Some(company_id) = suggestion.company_id {
+			let resp = playmatch_client
+				.get_company_by_id()
+				.id(company_id)
+				.send()
+				.await?;
+			let c = resp.into_inner();
+			(SuggestionType::Company, c.name.clone(), None, None)
+		} else if let Some(platform_id) = suggestion.platform_id {
+			let resp = playmatch_client
+				.get_platform_by_id()
+				.id(platform_id)
+				.send()
+				.await?;
+			let p = resp.into_inner();
+			(
+				SuggestionType::Platform,
+				p.name.clone(),
+				None,
+				p.company_name.clone(),
+			)
+		} else {
+			anyhow::bail!(
+				"suggestion {} has no game/company/platform id",
+				suggestion.id
+			);
+		};
 
 	let submitter = match suggestion.source.clone() {
 		Some(source) => SuggestionSubmitter::External { source },

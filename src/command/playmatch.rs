@@ -158,9 +158,12 @@ pub async fn get_game_metadata(
 		}) else {
 			continue;
 		};
-		if let Some(info) =
-			providers::fetch_game(&ctx.data().playmatch_client, priority_provider, &provider_id)
-				.await
+		if let Some(info) = providers::fetch_game(
+			&ctx.data().playmatch_client,
+			priority_provider,
+			&provider_id,
+		)
+		.await
 		{
 			enriched_info = Some(info);
 			break;
@@ -292,7 +295,8 @@ pub async fn get_game_metadata(
 		&& let Some(page_url) = info.page_url.clone()
 	{
 		card = card.link(
-			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+			CreateButton::new_link(page_url)
+				.label(format!("View on {}", display_name(info.provider))),
 		);
 	}
 	if let Some(link) = signature_group.website_link.clone() {
@@ -308,6 +312,7 @@ pub async fn get_game_metadata(
 
 /// Creates a metadata match suggestion for a Game by hashes or name.
 #[poise::command(slash_command, category = "Playmatch", rename = "game")]
+#[allow(clippy::too_many_arguments)]
 pub async fn create_game_suggestion(
 	ctx: CommandContext<'_>,
 	provider: ProviderChoice,
@@ -406,7 +411,8 @@ pub async fn create_game_suggestion(
 		}
 	});
 
-	let info = providers::fetch_game(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
+	let info =
+		providers::fetch_game(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Suggestion Submitted");
 	if let Some(info) = info.as_ref()
@@ -425,7 +431,8 @@ pub async fn create_game_suggestion(
 		&& let Some(page_url) = info.page_url.clone()
 	{
 		card = card.link(
-			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+			CreateButton::new_link(page_url)
+				.label(format!("View on {}", display_name(info.provider))),
 		);
 	}
 
@@ -515,7 +522,8 @@ pub async fn create_company_suggestion(
 		&& let Some(page_url) = info.page_url.clone()
 	{
 		card = card.link(
-			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+			CreateButton::new_link(page_url)
+				.label(format!("View on {}", display_name(info.provider))),
 		);
 	}
 
@@ -627,7 +635,8 @@ pub async fn create_platform_suggestion(
 		&& let Some(page_url) = info.page_url.clone()
 	{
 		card = card.link(
-			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+			CreateButton::new_link(page_url)
+				.label(format!("View on {}", display_name(info.provider))),
 		);
 	}
 
@@ -687,7 +696,8 @@ pub async fn manual_match_platform(
 		&& let Some(page_url) = info.page_url.clone()
 	{
 		card = card.link(
-			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+			CreateButton::new_link(page_url)
+				.label(format!("View on {}", display_name(info.provider))),
 		);
 	}
 
@@ -747,7 +757,8 @@ pub async fn manual_match_company(
 		&& let Some(page_url) = info.page_url.clone()
 	{
 		card = card.link(
-			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+			CreateButton::new_link(page_url)
+				.label(format!("View on {}", display_name(info.provider))),
 		);
 	}
 
@@ -758,6 +769,7 @@ pub async fn manual_match_company(
 
 /// Manually matches a game with provided hashes or name.
 #[poise::command(slash_command, category = "Playmatch", rename = "game", check = is_user_trusted_or_above)]
+#[allow(clippy::too_many_arguments)]
 pub async fn manual_match_game(
 	ctx: CommandContext<'_>,
 	provider: ProviderChoice,
@@ -808,7 +820,8 @@ pub async fn manual_match_game(
 		Ok(value) => value.into_inner().len(),
 	};
 
-	let info = providers::fetch_game(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
+	let info =
+		providers::fetch_game(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Matched Game");
 	if let Some(info) = info.as_ref() {
@@ -827,7 +840,8 @@ pub async fn manual_match_game(
 		&& let Some(page_url) = info.page_url.clone()
 	{
 		card = card.link(
-			CreateButton::new_link(page_url).label(format!("View on {}", display_name(info.provider))),
+			CreateButton::new_link(page_url)
+				.label(format!("View on {}", display_name(info.provider))),
 		);
 	}
 
@@ -915,21 +929,27 @@ pub(crate) async fn handle_suggestion_message(
 	};
 
 	let provider_page_url: Option<String> = match data.r#type {
-		SuggestionType::Game => {
-			providers::fetch_game(&data.playmatch_client, data.provider, &suggestion.provider_id)
-				.await
-				.and_then(|i| i.page_url)
-		}
-		SuggestionType::Company => {
-			providers::fetch_company(&data.playmatch_client, data.provider, &suggestion.provider_id)
-				.await
-				.and_then(|i| i.page_url)
-		}
-		SuggestionType::Platform => {
-			providers::fetch_platform(&data.playmatch_client, data.provider, &suggestion.provider_id)
-				.await
-				.and_then(|i| i.page_url)
-		}
+		SuggestionType::Game => providers::fetch_game(
+			&data.playmatch_client,
+			data.provider,
+			&suggestion.provider_id,
+		)
+		.await
+		.and_then(|i| i.page_url),
+		SuggestionType::Company => providers::fetch_company(
+			&data.playmatch_client,
+			data.provider,
+			&suggestion.provider_id,
+		)
+		.await
+		.and_then(|i| i.page_url),
+		SuggestionType::Platform => providers::fetch_platform(
+			&data.playmatch_client,
+			data.provider,
+			&suggestion.provider_id,
+		)
+		.await
+		.and_then(|i| i.page_url),
 	};
 
 	let provider_label = display_name(data.provider);
@@ -962,8 +982,8 @@ pub(crate) async fn handle_suggestion_message(
 				format!("New {display_type} Metadata Suggestion"),
 			);
 			if let Some(url) = provider_page_url.clone() {
-				staff_card =
-					staff_card.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
+				staff_card = staff_card
+					.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
 			}
 			staff_card = staff_card
 				.link(
@@ -1000,7 +1020,11 @@ pub(crate) async fn handle_suggestion_message(
 		let edit = EditMessage::new()
 			.flags(MessageFlags::IS_COMPONENTS_V2)
 			.components(vec![CreateComponent::Container(expired.into_container())]);
-		if let Err(e) = channel_id.widen().edit_message(http, message_id, edit).await {
+		if let Err(e) = channel_id
+			.widen()
+			.edit_message(http, message_id, edit)
+			.await
+		{
 			error!("failed to edit expired suggestion message: {e}");
 		}
 		return Ok(());
@@ -1008,12 +1032,7 @@ pub(crate) async fn handle_suggestion_message(
 
 	let staff_id = interaction.user.id;
 
-	let action = interaction
-		.data
-		.custom_id
-		.split(':')
-		.next()
-		.unwrap_or("");
+	let action = interaction.data.custom_id.split(':').next().unwrap_or("");
 
 	match action {
 		"approve" => {
@@ -1030,8 +1049,8 @@ pub(crate) async fn handle_suggestion_message(
 				resolution = resolution.row("ROMs updated", updated.updated.to_string());
 			}
 			if let Some(url) = provider_page_url.clone() {
-				resolution =
-					resolution.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
+				resolution = resolution
+					.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
 			}
 
 			interaction
@@ -1069,8 +1088,8 @@ pub(crate) async fn handle_suggestion_message(
 			let mut resolution = build_card(Status::Error, "Suggestion Declined".to_string())
 				.row("Handled by", format!("<@{staff_id}>"));
 			if let Some(url) = provider_page_url.clone() {
-				resolution =
-					resolution.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
+				resolution = resolution
+					.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
 			}
 
 			interaction
