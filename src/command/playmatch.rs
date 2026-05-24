@@ -230,25 +230,25 @@ pub async fn get_game_metadata(
 				MetadataMatchType::Automatic => {
 					let reason = metadata_mapping
 						.automatic_match_reason
-						.expect("Automatic match reason is missing");
+						.ok_or_else(|| anyhow!("Automatic match is missing reason"))?;
 					let provider_id = metadata_mapping
 						.provider_id
-						.expect("Provider ID is missing for automatic match");
+						.ok_or_else(|| anyhow!("Automatic match is missing provider id"))?;
 					format!("\nReason: `{reason}`\nProvider ID: `{provider_id}`")
 				}
 				MetadataMatchType::Manual => {
 					let manual_match_type = metadata_mapping
 						.manual_match_type
-						.expect("Manual match type is missing");
+						.ok_or_else(|| anyhow!("Manual match is missing match type"))?;
 					let provider_id = metadata_mapping
 						.provider_id
-						.expect("Provider ID is missing for manual match");
+						.ok_or_else(|| anyhow!("Manual match is missing provider id"))?;
 					format!("\nMatched By: `{manual_match_type}`\nProvider ID: `{provider_id}`")
 				}
 				MetadataMatchType::Failed => {
 					let failed_reason = metadata_mapping
 						.failed_match_reason
-						.expect("Failed match reason is missing");
+						.ok_or_else(|| anyhow!("Failed match is missing reason"))?;
 					format!("\nReason: `{failed_reason}`")
 				}
 				MetadataMatchType::None => String::new(),

@@ -43,7 +43,7 @@ impl CommandData {
 			))
 			.default_headers(headers)
 			.build()
-			.unwrap();
+			.expect("failed to build reqwest client");
 
 		let inner = playmatch_client::Client::new_with_client(
 			&env::var("PLAYMATCH_API_URL")
@@ -67,13 +67,13 @@ impl CommandData {
 
 lazy_static! {
 	pub static ref STAFF_ROLE_ID: u64 = env::var("DISCORD_RETROREALM_STAFF_ROLE_ID")
-		.unwrap_or_default()
-		.parse()
-		.unwrap();
+		.ok()
+		.and_then(|v| v.parse().ok())
+		.unwrap_or(0);
 	pub static ref TRUSTED_ROLE_IDS: Vec<u64> = env::var("DISCORD_TRUSTED_ROLE_IDS")
 		.unwrap_or_default()
-		.split(",")
-		.map(|id| id.trim().parse().unwrap())
+		.split(',')
+		.filter_map(|id| id.trim().parse().ok())
 		.collect();
 }
 
@@ -85,11 +85,9 @@ pub async fn is_user_trusted_or_above(ctx: CommandContext<'_>) -> CheckResult {
 		return Ok(true);
 	}
 
-	if member.is_none() {
+	let Some(member) = member else {
 		return Ok(false);
-	}
-
-	let member = member.unwrap();
+	};
 
 	if member.roles.iter().any(|role_id| {
 		role_id == &RoleId::new(*STAFF_ROLE_ID) || TRUSTED_ROLE_IDS.contains(&role_id.get())

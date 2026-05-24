@@ -11,16 +11,16 @@ use poise::Command;
 
 lazy_static! {
 	pub static ref RETROREALM_SERVER_ID: u64 = std::env::var("DISCORD_RETROREALM_SERVER_ID")
-		.unwrap_or_default()
-		.parse()
-		.unwrap();
+		.ok()
+		.and_then(|v| v.parse().ok())
+		.unwrap_or(0);
 	static ref UPDATE_ROLE_ID: String =
 		std::env::var("DISCORD_RETROREALM_UPDATE_ROLE_ID").unwrap_or_default();
 	pub(crate) static ref SUGGESTION_CHANNEL_ID: u64 =
 		std::env::var("DISCORD_RETROREALM_SUGGESTION_CHANNEL_ID")
-			.unwrap_or_default()
-			.parse()
-			.unwrap();
+			.ok()
+			.and_then(|v| v.parse().ok())
+			.unwrap_or(0);
 }
 
 pub fn get_all_commands() -> Vec<Command<CommandData, CommandError>> {
