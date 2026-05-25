@@ -58,6 +58,8 @@ pub enum ProviderChoice {
 	EmuReady,
 	#[name = "TheGamesDB"]
 	TheGamesDb,
+	#[name = "Hasheous"]
+	Hasheous,
 }
 
 impl ProviderChoice {
@@ -72,12 +74,13 @@ impl ProviderChoice {
 			Self::SteamGridDb => MetadataProvider::SteamGridDb,
 			Self::EmuReady => MetadataProvider::EmuReady,
 			Self::TheGamesDb => MetadataProvider::TheGamesDb,
+			Self::Hasheous => MetadataProvider::Hasheous,
 		}
 	}
 }
 
 /// Order in which the identification flow tries to enrich the card.
-/// `EmuReady` and `TheGamesDB` are intentionally excluded. They have no read endpoints.
+/// `EmuReady`, `TheGamesDB` and `Hasheous` are intentionally excluded. They have no read endpoints.
 pub const ENRICHMENT_PRIORITY: &[MetadataProvider] = &[
 	MetadataProvider::Igdb,
 	MetadataProvider::MobyGames,
@@ -99,6 +102,7 @@ pub const ALL_PROVIDERS: &[MetadataProvider] = &[
 	MetadataProvider::SteamGridDb,
 	MetadataProvider::EmuReady,
 	MetadataProvider::TheGamesDb,
+	MetadataProvider::Hasheous,
 ];
 
 pub fn display_name(provider: MetadataProvider) -> &'static str {
@@ -112,6 +116,7 @@ pub fn display_name(provider: MetadataProvider) -> &'static str {
 		MetadataProvider::OpenVgdb => "OpenVGDB",
 		MetadataProvider::RetroAchievements => "RetroAchievements",
 		MetadataProvider::TheGamesDb => "TheGamesDB",
+		MetadataProvider::Hasheous => "Hasheous",
 	}
 }
 
@@ -126,6 +131,7 @@ pub fn short_label(provider: MetadataProvider) -> &'static str {
 		MetadataProvider::OpenVgdb => "OVGDB",
 		MetadataProvider::RetroAchievements => "RA",
 		MetadataProvider::TheGamesDb => "TGDB",
+		MetadataProvider::Hasheous => "HSH",
 	}
 }
 
@@ -155,7 +161,9 @@ pub async fn fetch_game(
 		}
 		MetadataProvider::OpenVgdb => openvgdb::fetch_game(client, provider_id).await,
 		MetadataProvider::SteamGridDb => steamgriddb::fetch_game(client, provider_id).await,
-		MetadataProvider::EmuReady | MetadataProvider::TheGamesDb => None,
+		MetadataProvider::EmuReady | MetadataProvider::TheGamesDb | MetadataProvider::Hasheous => {
+			None
+		}
 	}
 }
 
