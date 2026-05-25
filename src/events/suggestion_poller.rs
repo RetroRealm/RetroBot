@@ -6,7 +6,7 @@ use crate::command::playmatch::{
 };
 use lazy_static::lazy_static;
 use log::{info, warn};
-use playmatch_client::types::Suggestion;
+use playmatch_client::types::{ExternalMetadata, MetadataMatchType, MetadataProvider, Suggestion};
 use serenity::all::{
 	ActionRowComponent, ButtonKind, ChannelId, Component, ContainerComponent, Context, GetMessages,
 	Http, Message, MessageId, TeamMemberRole, UserId,
@@ -119,17 +119,32 @@ async fn seed_from_channel_if_needed(http: &Http, channel_id: ChannelId, data: &
 	);
 }
 
-/// Compare playmatch's pending queue against Redis. Post anything new, edit anything
-/// that's been resolved outside Discord. Does not spawn collectors for new posts: the
-/// `handle_suggestion_message` call wraps both the post and the collector wait.
+/// Compare playmatch's pending queue against Redis. First tears down any suggestions
+/// whose target game already has an active mapping for the suggested provider, then
+/// posts anything new and edits anything that's been resolved outside Discord. Does
+/// not spawn collectors for new posts: the `handle_suggestion_message` call wraps
+/// both the post and the collector wait.
 async fn reconcile(
 	ctx: &Context,
 	data: &Arc<CommandData>,
 	owners: &HashSet<UserId>,
 ) -> anyhow::Result<()> {
+	let http = ctx.http.clone();
 	let pending = data.playmatch_client.get_all_suggestions().await?;
-	let pending_external: Vec<Suggestion> =
-		pending.into_iter().filter(|s| s.source.is_some()).collect();
+
+	let cleanup = sweep_redundant_suggestions(&http, data, &pending).await;
+	if !cleanup.cleaned.is_empty() {
+		info!(
+			"suggestion poller: cleaned up {} redundant suggestion(s) during reconcile",
+			cleanup.cleaned.len()
+		);
+	}
+	let cleaned: HashSet<Uuid> = cleanup.cleaned.iter().copied().collect();
+
+	let pending_external: Vec<Suggestion> = pending
+		.into_iter()
+		.filter(|s| s.source.is_some() && !cleaned.contains(&s.id))
+		.collect();
 	let pending_uuids: HashSet<Uuid> = pending_external.iter().map(|s| s.id).collect();
 
 	let posted = data.suggestion_store.list_all().await?;
@@ -141,9 +156,8 @@ async fn reconcile(
 		spawn_new_post(ctx.clone(), data.clone(), owners.clone(), s);
 	}
 
-	let http = ctx.http.clone();
 	for (uuid, msg_id) in &posted {
-		if pending_uuids.contains(uuid) {
+		if pending_uuids.contains(uuid) || cleaned.contains(uuid) {
 			continue;
 		}
 		if let Err(e) = mark_external_resolved(&http, *msg_id).await {
@@ -155,6 +169,117 @@ async fn reconcile(
 	}
 
 	Ok(())
+}
+
+/// Outcome of one sweep pass: how many game suggestions were inspected and which
+/// ones got torn down because the target game already had an active mapping for
+/// the suggested provider.
+pub struct CleanupReport {
+	pub checked: usize,
+	pub cleaned: Vec<Uuid>,
+}
+
+/// Tear down any game-mapping suggestions in `pending` whose target game already
+/// has an `Automatic` or `Manual` mapping for the suggested provider. For each
+/// redundant suggestion: delete it on playmatch, remove the Redis entry, and edit
+/// the Discord card to the "resolved externally" state.
+///
+/// Game lookups are cached so the same `game_id` only costs one round trip per
+/// sweep. Individual failures are logged and skipped so one bad suggestion does
+/// not abort the rest.
+pub async fn sweep_redundant_suggestions(
+	http: &Http,
+	data: &CommandData,
+	pending: &[Suggestion],
+) -> CleanupReport {
+	let game_suggestions: Vec<&Suggestion> =
+		pending.iter().filter(|s| s.game_id.is_some()).collect();
+	let checked = game_suggestions.len();
+	let mut game_cache: HashMap<Uuid, Vec<ExternalMetadata>> = HashMap::new();
+	let mut cleaned: Vec<Uuid> = Vec::new();
+
+	for suggestion in game_suggestions {
+		let game_id = match suggestion.game_id {
+			Some(id) => id,
+			None => continue,
+		};
+
+		let already_active = match game_cache.get(&game_id) {
+			Some(metas) => has_active_provider_match(metas, suggestion.provider),
+			None => match data
+				.playmatch_client
+				.get_playmatch_game_with_relations_by_id(game_id)
+				.await
+			{
+				Ok(rel) => {
+					let active =
+						has_active_provider_match(&rel.external_metadata, suggestion.provider);
+					game_cache.insert(game_id, rel.external_metadata);
+					active
+				}
+				Err(e) => {
+					warn!(
+						"suggestion cleanup: fetch game {game_id} for suggestion {} failed: {e}",
+						suggestion.id
+					);
+					continue;
+				}
+			},
+		};
+
+		if !already_active {
+			continue;
+		}
+
+		// Playmatch is the source of truth, tear that down first.
+		if let Err(e) = data.playmatch_client.delete_suggestion(suggestion.id).await {
+			warn!(
+				"suggestion cleanup: delete_suggestion({}) failed: {e}",
+				suggestion.id
+			);
+			continue;
+		}
+
+		match data.suggestion_store.get(suggestion.id).await {
+			Ok(Some(msg_id)) => {
+				if let Err(e) = mark_external_resolved(http, msg_id).await {
+					warn!(
+						"suggestion cleanup: edit message {msg_id} for {} failed: {e}",
+						suggestion.id
+					);
+				}
+				if let Err(e) = data.suggestion_store.remove(suggestion.id).await {
+					warn!(
+						"suggestion cleanup: redis remove {} failed: {e}",
+						suggestion.id
+					);
+				}
+			}
+			Ok(None) => {}
+			Err(e) => warn!(
+				"suggestion cleanup: redis lookup {} failed: {e}",
+				suggestion.id
+			),
+		}
+
+		info!(
+			"suggestion cleanup: dismissed {} (game {game_id}, provider {})",
+			suggestion.id, suggestion.provider
+		);
+		cleaned.push(suggestion.id);
+	}
+
+	CleanupReport { checked, cleaned }
+}
+
+fn has_active_provider_match(metas: &[ExternalMetadata], provider: MetadataProvider) -> bool {
+	metas.iter().any(|m| {
+		m.provider_name == provider
+			&& matches!(
+				m.match_type,
+				MetadataMatchType::Automatic | MetadataMatchType::Manual
+			)
+	})
 }
 
 fn spawn_new_post(

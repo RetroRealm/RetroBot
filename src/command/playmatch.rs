@@ -56,7 +56,8 @@ pub async fn r#match(_: CommandContext<'_>) -> CommandResult {
 	subcommands(
 		"create_platform_suggestion",
 		"create_company_suggestion",
-		"create_game_suggestion"
+		"create_game_suggestion",
+		"cleanup_suggestions"
 	)
 )]
 pub async fn suggest(_: CommandContext<'_>) -> CommandResult {
@@ -609,6 +610,53 @@ pub async fn create_platform_suggestion(
 			CreateButton::new_link(page_url)
 				.label(format!("View on {}", display_name(info.provider))),
 		);
+	}
+
+	ctx.send(card.into_reply()).await?;
+
+	Ok(())
+}
+
+/// Dismisses pending game suggestions whose game is already mapped to that provider.
+// Handles the race where an external tool like RomM matches a game after the
+// suggestion card has already been posted to Discord.
+#[poise::command(
+	slash_command,
+	category = "Playmatch",
+	rename = "cleanup",
+	check = "is_user_trusted_or_above"
+)]
+pub async fn cleanup_suggestions(ctx: CommandContext<'_>) -> CommandResult {
+	ctx.defer().await?;
+
+	let data = ctx.data();
+	let http = ctx.serenity_context().http.clone();
+	let pending = data.playmatch_client.get_all_suggestions().await?;
+	let report = crate::events::suggestion_poller::sweep_redundant_suggestions(
+		http.as_ref(),
+		&data,
+		&pending,
+	)
+	.await;
+
+	let mut card = Card::new(Status::Success, "Suggestion Cleanup".to_string())
+		.row("Checked", format!("`{}`", report.checked))
+		.row("Cleaned", format!("`{}`", report.cleaned.len()));
+
+	if !report.cleaned.is_empty() {
+		const PREVIEW_MAX: usize = 10;
+		let preview = report
+			.cleaned
+			.iter()
+			.take(PREVIEW_MAX)
+			.map(|u| format!("`{u}`"))
+			.collect::<Vec<_>>()
+			.join("\n");
+		card = card.section("Cleaned Suggestions").text(preview);
+		if report.cleaned.len() > PREVIEW_MAX {
+			let extra = report.cleaned.len() - PREVIEW_MAX;
+			card = card.text(format!("-# …and {extra} more not shown"));
+		}
 	}
 
 	ctx.send(card.into_reply()).await?;
