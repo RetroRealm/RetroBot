@@ -833,6 +833,1454 @@ pub mod types {
             value.parse()
         }
     }
+    ///Reason why a game was automatically matched.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Reason why a game was automatically matched.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "AlternativeName",
+    ///    "DirectName",
+    ///    "ViaChild",
+    ///    "ViaParent",
+    ///    "NormalizedName",
+    ///    "NormalizedAlternativeName",
+    ///    "Md5Hash",
+    ///    "Sha1Hash",
+    ///    "CrcHash",
+    ///    "CrossProviderDirectName",
+    ///    "CrossProviderNormalizedName",
+    ///    "ViaContentHash",
+    ///    "Sha256Hash"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum AutomaticMatchReasonV2 {
+        AlternativeName,
+        DirectName,
+        ViaChild,
+        ViaParent,
+        NormalizedName,
+        NormalizedAlternativeName,
+        Md5Hash,
+        Sha1Hash,
+        CrcHash,
+        CrossProviderDirectName,
+        CrossProviderNormalizedName,
+        ViaContentHash,
+        Sha256Hash,
+    }
+    impl ::std::fmt::Display for AutomaticMatchReasonV2 {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::AlternativeName => f.write_str("AlternativeName"),
+                Self::DirectName => f.write_str("DirectName"),
+                Self::ViaChild => f.write_str("ViaChild"),
+                Self::ViaParent => f.write_str("ViaParent"),
+                Self::NormalizedName => f.write_str("NormalizedName"),
+                Self::NormalizedAlternativeName => f.write_str("NormalizedAlternativeName"),
+                Self::Md5Hash => f.write_str("Md5Hash"),
+                Self::Sha1Hash => f.write_str("Sha1Hash"),
+                Self::CrcHash => f.write_str("CrcHash"),
+                Self::CrossProviderDirectName => f.write_str("CrossProviderDirectName"),
+                Self::CrossProviderNormalizedName => f.write_str("CrossProviderNormalizedName"),
+                Self::ViaContentHash => f.write_str("ViaContentHash"),
+                Self::Sha256Hash => f.write_str("Sha256Hash"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for AutomaticMatchReasonV2 {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "AlternativeName" => Ok(Self::AlternativeName),
+                "DirectName" => Ok(Self::DirectName),
+                "ViaChild" => Ok(Self::ViaChild),
+                "ViaParent" => Ok(Self::ViaParent),
+                "NormalizedName" => Ok(Self::NormalizedName),
+                "NormalizedAlternativeName" => Ok(Self::NormalizedAlternativeName),
+                "Md5Hash" => Ok(Self::Md5Hash),
+                "Sha1Hash" => Ok(Self::Sha1Hash),
+                "CrcHash" => Ok(Self::CrcHash),
+                "CrossProviderDirectName" => Ok(Self::CrossProviderDirectName),
+                "CrossProviderNormalizedName" => Ok(Self::CrossProviderNormalizedName),
+                "ViaContentHash" => Ok(Self::ViaContentHash),
+                "Sha256Hash" => Ok(Self::Sha256Hash),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for AutomaticMatchReasonV2 {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for AutomaticMatchReasonV2 {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for AutomaticMatchReasonV2 {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///Per-item lookup status for a v2 bulk get-by-id response. A missing id is
+    /// a per-item `notFound`, never a batch-level 404.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Per-item lookup status for a v2 bulk get-by-id
+    /// response. A missing id is a\nper-item `notFound`, never a batch-level
+    /// 404.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "ok",
+    ///    "notFound"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum BulkByIdStatusV2 {
+        #[serde(rename = "ok")]
+        Ok,
+        #[serde(rename = "notFound")]
+        NotFound,
+    }
+    impl ::std::fmt::Display for BulkByIdStatusV2 {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Ok => f.write_str("ok"),
+                Self::NotFound => f.write_str("notFound"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for BulkByIdStatusV2 {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "ok" => Ok(Self::Ok),
+                "notFound" => Ok(Self::NotFound),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for BulkByIdStatusV2 {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for BulkByIdStatusV2 {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for BulkByIdStatusV2 {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///Per-batch totals for a bulk get-by-id response.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Per-batch totals for a bulk get-by-id response.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "found",
+    ///    "notFound",
+    ///    "total"
+    ///  ],
+    ///  "properties": {
+    ///    "found": {
+    ///      "description": "The number of ids that resolved to a resource.",
+    ///      "type": "integer",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "notFound": {
+    ///      "description": "The number of ids with no matching resource.",
+    ///      "type": "integer",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "total": {
+    ///      "description": "The number of distinct ids looked up.",
+    ///      "type": "integer",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkByIdSummary {
+        ///The number of ids that resolved to a resource.
+        pub found: u64,
+        ///The number of ids with no matching resource.
+        #[serde(rename = "notFound")]
+        pub not_found: u64,
+        ///The number of distinct ids looked up.
+        pub total: u64,
+    }
+    impl BulkByIdSummary {
+        pub fn builder() -> builder::BulkByIdSummary {
+            Default::default()
+        }
+    }
+    ///Cache outcome for an item. `HIT` when the result came from cache, `MISS`
+    /// when it was computed.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Cache outcome for an item. `HIT` when the result came
+    /// from cache, `MISS` when it was computed.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "HIT",
+    ///    "MISS"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum BulkCache {
+        #[serde(rename = "HIT")]
+        Hit,
+        #[serde(rename = "MISS")]
+        Miss,
+    }
+    impl ::std::fmt::Display for BulkCache {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Hit => f.write_str("HIT"),
+                Self::Miss => f.write_str("MISS"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for BulkCache {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "HIT" => Ok(Self::Hit),
+                "MISS" => Ok(Self::Miss),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for BulkCache {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for BulkCache {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for BulkCache {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`BulkCompaniesByIdResponse`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "results",
+    ///    "summary"
+    ///  ],
+    ///  "properties": {
+    ///    "results": {
+    ///      "description": "One result per distinct id, in first-seen order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BulkCompaniesByIdResult"
+    ///      }
+    ///    },
+    ///    "summary": {
+    ///      "$ref": "#/components/schemas/BulkByIdSummary"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkCompaniesByIdResponse {
+        ///One result per distinct id, in first-seen order.
+        pub results: ::std::vec::Vec<BulkCompaniesByIdResult>,
+        pub summary: BulkByIdSummary,
+    }
+    impl BulkCompaniesByIdResponse {
+        pub fn builder() -> builder::BulkCompaniesByIdResponse {
+            Default::default()
+        }
+    }
+    ///`BulkCompaniesByIdResult`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "status"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/CompanyMetadataResponse"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "The id this result corresponds to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "status": {
+    ///      "$ref": "#/components/schemas/BulkByIdStatusV2"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkCompaniesByIdResult {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub data: ::std::option::Option<CompanyMetadataResponse>,
+        ///The id this result corresponds to.
+        pub id: ::uuid::Uuid,
+        pub status: BulkByIdStatusV2,
+    }
+    impl BulkCompaniesByIdResult {
+        pub fn builder() -> builder::BulkCompaniesByIdResult {
+            Default::default()
+        }
+    }
+    ///`BulkDatFilesByIdResponse`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "results",
+    ///    "summary"
+    ///  ],
+    ///  "properties": {
+    ///    "results": {
+    ///      "description": "One result per distinct id, in first-seen order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BulkDatFilesByIdResult"
+    ///      }
+    ///    },
+    ///    "summary": {
+    ///      "$ref": "#/components/schemas/BulkByIdSummary"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkDatFilesByIdResponse {
+        ///One result per distinct id, in first-seen order.
+        pub results: ::std::vec::Vec<BulkDatFilesByIdResult>,
+        pub summary: BulkByIdSummary,
+    }
+    impl BulkDatFilesByIdResponse {
+        pub fn builder() -> builder::BulkDatFilesByIdResponse {
+            Default::default()
+        }
+    }
+    ///`BulkDatFilesByIdResult`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "status"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/DatFileDetail"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "The id this result corresponds to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "status": {
+    ///      "$ref": "#/components/schemas/BulkByIdStatusV2"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkDatFilesByIdResult {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub data: ::std::option::Option<DatFileDetail>,
+        ///The id this result corresponds to.
+        pub id: ::uuid::Uuid,
+        pub status: BulkByIdStatusV2,
+    }
+    impl BulkDatFilesByIdResult {
+        pub fn builder() -> builder::BulkDatFilesByIdResult {
+            Default::default()
+        }
+    }
+    ///`BulkGameFilesByIdResponse`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "results",
+    ///    "summary"
+    ///  ],
+    ///  "properties": {
+    ///    "results": {
+    ///      "description": "One result per distinct id, in first-seen order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BulkGameFilesByIdResult"
+    ///      }
+    ///    },
+    ///    "summary": {
+    ///      "$ref": "#/components/schemas/BulkByIdSummary"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkGameFilesByIdResponse {
+        ///One result per distinct id, in first-seen order.
+        pub results: ::std::vec::Vec<BulkGameFilesByIdResult>,
+        pub summary: BulkByIdSummary,
+    }
+    impl BulkGameFilesByIdResponse {
+        pub fn builder() -> builder::BulkGameFilesByIdResponse {
+            Default::default()
+        }
+    }
+    ///`BulkGameFilesByIdResult`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "status"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PlaymatchGameFileV2"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "The id this result corresponds to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "status": {
+    ///      "$ref": "#/components/schemas/BulkByIdStatusV2"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkGameFilesByIdResult {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub data: ::std::option::Option<PlaymatchGameFileV2>,
+        ///The id this result corresponds to.
+        pub id: ::uuid::Uuid,
+        pub status: BulkByIdStatusV2,
+    }
+    impl BulkGameFilesByIdResult {
+        pub fn builder() -> builder::BulkGameFilesByIdResult {
+            Default::default()
+        }
+    }
+    ///`BulkGamesByIdResponse`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "results",
+    ///    "summary"
+    ///  ],
+    ///  "properties": {
+    ///    "results": {
+    ///      "description": "One result per distinct id, in first-seen order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BulkGamesByIdResult"
+    ///      }
+    ///    },
+    ///    "summary": {
+    ///      "$ref": "#/components/schemas/BulkByIdSummary"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkGamesByIdResponse {
+        ///One result per distinct id, in first-seen order.
+        pub results: ::std::vec::Vec<BulkGamesByIdResult>,
+        pub summary: BulkByIdSummary,
+    }
+    impl BulkGamesByIdResponse {
+        pub fn builder() -> builder::BulkGamesByIdResponse {
+            Default::default()
+        }
+    }
+    ///`BulkGamesByIdResult`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "status"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/GameMetadataResponse"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "The id this result corresponds to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "status": {
+    ///      "$ref": "#/components/schemas/BulkByIdStatusV2"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkGamesByIdResult {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub data: ::std::option::Option<GameMetadataResponse>,
+        ///The id this result corresponds to.
+        pub id: ::uuid::Uuid,
+        pub status: BulkByIdStatusV2,
+    }
+    impl BulkGamesByIdResult {
+        pub fn builder() -> builder::BulkGamesByIdResult {
+            Default::default()
+        }
+    }
+    ///`BulkIdentifyIdsResponse`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "results",
+    ///    "summary"
+    ///  ],
+    ///  "properties": {
+    ///    "results": {
+    ///      "description": "One result per request item, in request order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BulkIdentifyIdsResult"
+    ///      }
+    ///    },
+    ///    "summary": {
+    ///      "$ref": "#/components/schemas/BulkIdentifySummary"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkIdentifyIdsResponse {
+        ///One result per request item, in request order.
+        pub results: ::std::vec::Vec<BulkIdentifyIdsResult>,
+        pub summary: BulkIdentifySummary,
+    }
+    impl BulkIdentifyIdsResponse {
+        pub fn builder() -> builder::BulkIdentifyIdsResponse {
+            Default::default()
+        }
+    }
+    ///`BulkIdentifyIdsResult`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "index",
+    ///    "status"
+    ///  ],
+    ///  "properties": {
+    ///    "cache": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/BulkCache"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "error": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/BulkItemError"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "index": {
+    ///      "description": "The zero-based position of this item in the request
+    /// array.",
+    ///      "type": "integer",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "key": {
+    ///      "description": "The caller key from the request item, when one was
+    /// supplied.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "match": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/GameMetadataMatchResult"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "status": {
+    ///      "$ref": "#/components/schemas/BulkItemStatus"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkIdentifyIdsResult {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cache: ::std::option::Option<BulkCache>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub error: ::std::option::Option<BulkItemError>,
+        ///The zero-based position of this item in the request array.
+        pub index: u64,
+        ///The caller key from the request item, when one was supplied.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub key: ::std::option::Option<::std::string::String>,
+        #[serde(
+            rename = "match",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub match_: ::std::option::Option<GameMetadataMatchResult>,
+        pub status: BulkItemStatus,
+    }
+    impl BulkIdentifyIdsResult {
+        pub fn builder() -> builder::BulkIdentifyIdsResult {
+            Default::default()
+        }
+    }
+    ///One entry in a bulk identify request: the file search fields plus an
+    /// optional caller `key` for correlating results without relying on
+    /// array position.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One entry in a bulk identify request: the file search
+    /// fields plus an optional\ncaller `key` for correlating results without
+    /// relying on array position.",
+    ///  "allOf": [
+    ///    {
+    ///      "$ref": "#/components/schemas/GameFileMatchSearch"
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "key": {
+    ///          "description": "Optional caller key echoed back on the matching
+    /// result. Unique within the batch, at most 128 characters.",
+    ///          "type": [
+    ///            "string",
+    ///            "null"
+    ///          ]
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkIdentifyItem {
+        ///Optional CRC32 checksum of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub crc: ::std::option::Option<::std::string::String>,
+        ///The file name of the game file.
+        #[serde(rename = "fileName")]
+        pub file_name: ::std::string::String,
+        ///The size of the game file in bytes.
+        #[serde(rename = "fileSize")]
+        pub file_size: i64,
+        ///Optional caller key echoed back on the matching result. Unique
+        /// within the batch, at most 128 characters.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub key: ::std::option::Option<::std::string::String>,
+        ///Optional MD5 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub md5: ::std::option::Option<::std::string::String>,
+        ///Optional SHA1 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sha1: ::std::option::Option<::std::string::String>,
+        ///Optional SHA256 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sha256: ::std::option::Option<::std::string::String>,
+    }
+    impl BulkIdentifyItem {
+        pub fn builder() -> builder::BulkIdentifyItem {
+            Default::default()
+        }
+    }
+    ///`BulkIdentifyRelationsResponse`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "results",
+    ///    "summary"
+    ///  ],
+    ///  "properties": {
+    ///    "results": {
+    ///      "description": "One result per request item, in request order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BulkIdentifyRelationsResult"
+    ///      }
+    ///    },
+    ///    "summary": {
+    ///      "$ref": "#/components/schemas/BulkIdentifySummary"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkIdentifyRelationsResponse {
+        ///One result per request item, in request order.
+        pub results: ::std::vec::Vec<BulkIdentifyRelationsResult>,
+        pub summary: BulkIdentifySummary,
+    }
+    impl BulkIdentifyRelationsResponse {
+        pub fn builder() -> builder::BulkIdentifyRelationsResponse {
+            Default::default()
+        }
+    }
+    ///`BulkIdentifyRelationsResult`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "index",
+    ///    "status"
+    ///  ],
+    ///  "properties": {
+    ///    "cache": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/BulkCache"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "error": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/BulkItemError"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "index": {
+    ///      "description": "The zero-based position of this item in the request
+    /// array.",
+    ///      "type": "integer",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "key": {
+    ///      "description": "The caller key from the request item, when one was
+    /// supplied.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "match": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/GameAndRelationMatchResultV2"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "status": {
+    ///      "$ref": "#/components/schemas/BulkItemStatus"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkIdentifyRelationsResult {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cache: ::std::option::Option<BulkCache>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub error: ::std::option::Option<BulkItemError>,
+        ///The zero-based position of this item in the request array.
+        pub index: u64,
+        ///The caller key from the request item, when one was supplied.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub key: ::std::option::Option<::std::string::String>,
+        #[serde(
+            rename = "match",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub match_: ::std::option::Option<GameAndRelationMatchResultV2>,
+        pub status: BulkItemStatus,
+    }
+    impl BulkIdentifyRelationsResult {
+        pub fn builder() -> builder::BulkIdentifyRelationsResult {
+            Default::default()
+        }
+    }
+    ///Bulk identify request body. Up to 100 items per request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Bulk identify request body. Up to 100 items per
+    /// request.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BulkIdentifyItem"
+    ///      }
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkIdentifyRequest {
+        pub items: ::std::vec::Vec<BulkIdentifyItem>,
+    }
+    impl BulkIdentifyRequest {
+        pub fn builder() -> builder::BulkIdentifyRequest {
+            Default::default()
+        }
+    }
+    ///Per-batch totals for a bulk identify response.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Per-batch totals for a bulk identify response.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "failed",
+    ///    "matched",
+    ///    "succeeded",
+    ///    "total",
+    ///    "unmatched"
+    ///  ],
+    ///  "properties": {
+    ///    "failed": {
+    ///      "description": "The number of items that were invalid or errored.",
+    ///      "type": "integer",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "matched": {
+    ///      "description": "The number of successful items that resolved to a
+    /// game.",
+    ///      "type": "integer",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "succeeded": {
+    ///      "description": "The number of items whose lookup ran
+    /// successfully.",
+    ///      "type": "integer",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "total": {
+    ///      "description": "The number of items in the batch.",
+    ///      "type": "integer",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "unmatched": {
+    ///      "description": "The number of successful items that resolved to no
+    /// match.",
+    ///      "type": "integer",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkIdentifySummary {
+        ///The number of items that were invalid or errored.
+        pub failed: u64,
+        ///The number of successful items that resolved to a game.
+        pub matched: u64,
+        ///The number of items whose lookup ran successfully.
+        pub succeeded: u64,
+        ///The number of items in the batch.
+        pub total: u64,
+        ///The number of successful items that resolved to no match.
+        pub unmatched: u64,
+    }
+    impl BulkIdentifySummary {
+        pub fn builder() -> builder::BulkIdentifySummary {
+            Default::default()
+        }
+    }
+    ///Bulk get-by-id request body. Up to 100 ids per request, correlated by
+    /// id, so no caller key is needed.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Bulk get-by-id request body. Up to 100 ids per request,
+    /// correlated by id, so\nno caller key is needed.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "ids"
+    ///  ],
+    ///  "properties": {
+    ///    "ids": {
+    ///      "description": "The ids to look up. Up to 100 per request;
+    /// duplicate ids are resolved once.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string",
+    ///        "format": "uuid"
+    ///      }
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkIdsRequest {
+        ///The ids to look up. Up to 100 per request; duplicate ids are
+        /// resolved once.
+        pub ids: ::std::vec::Vec<::uuid::Uuid>,
+    }
+    impl BulkIdsRequest {
+        pub fn builder() -> builder::BulkIdsRequest {
+            Default::default()
+        }
+    }
+    ///Structured per-item error detail returned when `status` is `invalid` or
+    ///`error`.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Structured per-item error detail returned when `status`
+    /// is `invalid` or\n`error`.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "code",
+    ///    "message"
+    ///  ],
+    ///  "properties": {
+    ///    "code": {
+    ///      "description": "A stable machine-readable error code for this
+    /// item.",
+    ///      "type": "string"
+    ///    },
+    ///    "field": {
+    ///      "description": "The request field the error applies to, when the
+    /// error is tied to one field.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "message": {
+    ///      "description": "A human-readable explanation of the error.",
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkItemError {
+        ///A stable machine-readable error code for this item.
+        pub code: ::std::string::String,
+        ///The request field the error applies to, when the error is tied to
+        /// one field.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub field: ::std::option::Option<::std::string::String>,
+        ///A human-readable explanation of the error.
+        pub message: ::std::string::String,
+    }
+    impl BulkItemError {
+        pub fn builder() -> builder::BulkItemError {
+            Default::default()
+        }
+    }
+    ///Per-item processing status. `ok` means the lookup ran and a result is
+    /// present, which may still be a no-match; `invalid` means the item
+    /// failed validation and no lookup ran; `error` means a per-item
+    /// failure while the batch as a whole still returns 200.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Per-item processing status. `ok` means the lookup ran
+    /// and a result is present,\nwhich may still be a no-match; `invalid` means
+    /// the item failed validation and\nno lookup ran; `error` means a per-item
+    /// failure while the batch as a whole\nstill returns 200.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "ok",
+    ///    "invalid",
+    ///    "error"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum BulkItemStatus {
+        #[serde(rename = "ok")]
+        Ok,
+        #[serde(rename = "invalid")]
+        Invalid,
+        #[serde(rename = "error")]
+        Error,
+    }
+    impl ::std::fmt::Display for BulkItemStatus {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Ok => f.write_str("ok"),
+                Self::Invalid => f.write_str("invalid"),
+                Self::Error => f.write_str("error"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for BulkItemStatus {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "ok" => Ok(Self::Ok),
+                "invalid" => Ok(Self::Invalid),
+                "error" => Ok(Self::Error),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for BulkItemStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for BulkItemStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for BulkItemStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///`BulkPlatformsByIdResponse`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "results",
+    ///    "summary"
+    ///  ],
+    ///  "properties": {
+    ///    "results": {
+    ///      "description": "One result per distinct id, in first-seen order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BulkPlatformsByIdResult"
+    ///      }
+    ///    },
+    ///    "summary": {
+    ///      "$ref": "#/components/schemas/BulkByIdSummary"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkPlatformsByIdResponse {
+        ///One result per distinct id, in first-seen order.
+        pub results: ::std::vec::Vec<BulkPlatformsByIdResult>,
+        pub summary: BulkByIdSummary,
+    }
+    impl BulkPlatformsByIdResponse {
+        pub fn builder() -> builder::BulkPlatformsByIdResponse {
+            Default::default()
+        }
+    }
+    ///`BulkPlatformsByIdResult`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "status"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PlatformMetadataResponse"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "The id this result corresponds to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "status": {
+    ///      "$ref": "#/components/schemas/BulkByIdStatusV2"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkPlatformsByIdResult {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub data: ::std::option::Option<PlatformMetadataResponse>,
+        ///The id this result corresponds to.
+        pub id: ::uuid::Uuid,
+        pub status: BulkByIdStatusV2,
+    }
+    impl BulkPlatformsByIdResult {
+        pub fn builder() -> builder::BulkPlatformsByIdResult {
+            Default::default()
+        }
+    }
+    ///`BulkSignatureGroupsByIdResponse`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "results",
+    ///    "summary"
+    ///  ],
+    ///  "properties": {
+    ///    "results": {
+    ///      "description": "One result per distinct id, in first-seen order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/BulkSignatureGroupsByIdResult"
+    ///      }
+    ///    },
+    ///    "summary": {
+    ///      "$ref": "#/components/schemas/BulkByIdSummary"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkSignatureGroupsByIdResponse {
+        ///One result per distinct id, in first-seen order.
+        pub results: ::std::vec::Vec<BulkSignatureGroupsByIdResult>,
+        pub summary: BulkByIdSummary,
+    }
+    impl BulkSignatureGroupsByIdResponse {
+        pub fn builder() -> builder::BulkSignatureGroupsByIdResponse {
+            Default::default()
+        }
+    }
+    ///`BulkSignatureGroupsByIdResult`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "status"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/PlaymatchSignatureGroupV2"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "The id this result corresponds to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "status": {
+    ///      "$ref": "#/components/schemas/BulkByIdStatusV2"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct BulkSignatureGroupsByIdResult {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub data: ::std::option::Option<PlaymatchSignatureGroupV2>,
+        ///The id this result corresponds to.
+        pub id: ::uuid::Uuid,
+        pub status: BulkByIdStatusV2,
+    }
+    impl BulkSignatureGroupsByIdResult {
+        pub fn builder() -> builder::BulkSignatureGroupsByIdResult {
+            Default::default()
+        }
+    }
     ///`Character`
     ///
     /// <details><summary>JSON schema</summary>
@@ -1157,6 +2605,226 @@ pub mod types {
     }
     impl CharacterSpecies {
         pub fn builder() -> builder::CharacterSpecies {
+            Default::default()
+        }
+    }
+    ///Which slice of the parent and clone graph to return around a game.
+    /// `children` returns the game's clones; `parent` returns its parent;
+    /// `siblings` returns the other clones of the same parent; `tree`
+    /// returns the parent together with all of its clones. Defaults to
+    /// `tree`.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Which slice of the parent and clone graph to return
+    /// around a game. `children`\nreturns the game's clones; `parent` returns
+    /// its parent; `siblings` returns the\nother clones of the same parent;
+    /// `tree` returns the parent together with all of\nits clones. Defaults to
+    /// `tree`.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "children",
+    ///    "parent",
+    ///    "siblings",
+    ///    "tree"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum CloneDirectionParam {
+        #[serde(rename = "children")]
+        Children,
+        #[serde(rename = "parent")]
+        Parent,
+        #[serde(rename = "siblings")]
+        Siblings,
+        #[serde(rename = "tree")]
+        Tree,
+    }
+    impl ::std::fmt::Display for CloneDirectionParam {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Children => f.write_str("children"),
+                Self::Parent => f.write_str("parent"),
+                Self::Siblings => f.write_str("siblings"),
+                Self::Tree => f.write_str("tree"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for CloneDirectionParam {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "children" => Ok(Self::Children),
+                "parent" => Ok(Self::Parent),
+                "siblings" => Ok(Self::Siblings),
+                "tree" => Ok(Self::Tree),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for CloneDirectionParam {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for CloneDirectionParam {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for CloneDirectionParam {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    ///The parent/clone graph around a game. `parent` is the game this one
+    /// clones; `children` are the games that clone the requested game (for
+    /// `tree`, the children of the resolved parent). Returns `None` when
+    /// the game does not exist.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The parent/clone graph around a game. `parent` is the
+    /// game this one clones;\n`children` are the games that clone the requested
+    /// game (for `tree`, the\nchildren of the resolved parent). Returns `None`
+    /// when the game does not exist.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "cloneGraphComplete",
+    ///    "game"
+    ///  ],
+    ///  "properties": {
+    ///    "children": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/CloneGraphNode"
+    ///      }
+    ///    },
+    ///    "cloneGraphComplete": {
+    ///      "description": "`false` when this game's dat file still has clone
+    /// rows that are not linked to\na resolved parent. That happens transiently
+    /// right after an import while the\ndeferred clone-resolution pass catches
+    /// up, and permanently when a declared\nparent is absent from the dat file
+    /// and so can never be linked. Either way the\ngraph may be missing edges,
+    /// so a caller relying on completeness (for example\n1G1R) should treat an
+    /// absent parent conservatively; retrying resolves the\ntransient case but
+    /// not the unresolvable one.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "game": {
+    ///      "$ref": "#/components/schemas/CloneGraphNode"
+    ///    },
+    ///    "parent": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/CloneGraphNode"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct CloneGraph {
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub children: ::std::vec::Vec<CloneGraphNode>,
+        ///`false` when this game's dat file still has clone rows that are not
+        /// linked to a resolved parent. That happens transiently right
+        /// after an import while the deferred clone-resolution pass
+        /// catches up, and permanently when a declared parent is absent
+        /// from the dat file and so can never be linked. Either way the
+        /// graph may be missing edges, so a caller relying on completeness (for
+        /// example 1G1R) should treat an absent parent conservatively;
+        /// retrying resolves the transient case but not the
+        /// unresolvable one.
+        #[serde(rename = "cloneGraphComplete")]
+        pub clone_graph_complete: bool,
+        pub game: CloneGraphNode,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub parent: ::std::option::Option<CloneGraphNode>,
+    }
+    impl CloneGraph {
+        pub fn builder() -> builder::CloneGraph {
+            Default::default()
+        }
+    }
+    ///A node in a game's parent/clone graph: just enough to follow up by id.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A node in a game's parent/clone graph: just enough to
+    /// follow up by id.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "cloneOf": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct CloneGraphNode {
+        #[serde(
+            rename = "cloneOf",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub clone_of: ::std::option::Option<::uuid::Uuid>,
+        pub id: ::uuid::Uuid,
+        pub name: ::std::string::String,
+    }
+    impl CloneGraphNode {
+        pub fn builder() -> builder::CloneGraphNode {
             Default::default()
         }
     }
@@ -2494,12 +4162,12 @@ pub mod types {
     ///  "description": "Request to get or create a user by their Discord ID.",
     ///  "type": "object",
     ///  "required": [
-    ///    "discord_id",
+    ///    "discordId",
     ///    "permissions",
     ///    "username"
     ///  ],
     ///  "properties": {
-    ///    "discord_id": {
+    ///    "discordId": {
     ///      "type": "integer",
     ///      "format": "int64"
     ///    },
@@ -2514,13 +4182,471 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct CreateOrGetUserRequest {
+    pub struct CreateOrGetUserRequestV2 {
+        #[serde(rename = "discordId")]
         pub discord_id: i64,
         pub permissions: UserPermissions,
         pub username: ::std::string::String,
     }
-    impl CreateOrGetUserRequest {
-        pub fn builder() -> builder::CreateOrGetUserRequest {
+    impl CreateOrGetUserRequestV2 {
+        pub fn builder() -> builder::CreateOrGetUserRequestV2 {
+            Default::default()
+        }
+    }
+    ///A dat file with the [`DatFileSummary`] fields plus aggregate game
+    /// counts. Returned by the v2 single dat-file read.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A dat file with the [`DatFileSummary`] fields plus
+    /// aggregate game counts.\nReturned by the v2 single dat-file read.",
+    ///  "allOf": [
+    ///    {
+    ///      "$ref": "#/components/schemas/DatFileSummary"
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "currentGameCount",
+    ///        "gameCount"
+    ///      ],
+    ///      "properties": {
+    ///        "currentGameCount": {
+    ///          "type": "integer",
+    ///          "format": "int64",
+    ///          "minimum": 0.0
+    ///        },
+    ///        "gameCount": {
+    ///          "type": "integer",
+    ///          "format": "int64",
+    ///          "minimum": 0.0
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct DatFileDetail {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub company: ::std::option::Option<NamedRef>,
+        #[serde(rename = "currentGameCount")]
+        pub current_game_count: i64,
+        #[serde(rename = "currentVersion")]
+        pub current_version: ::std::string::String,
+        #[serde(rename = "gameCount")]
+        pub game_count: i64,
+        pub id: ::uuid::Uuid,
+        #[serde(
+            rename = "latestDatFileImport",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub latest_dat_file_import: ::std::option::Option<LatestDatFileImport>,
+        pub name: ::std::string::String,
+        pub platform: NamedRef,
+        #[serde(rename = "signatureGroup")]
+        pub signature_group: NamedRef,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub subset: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub tags: ::std::vec::Vec<::std::string::String>,
+    }
+    impl DatFileDetail {
+        pub fn builder() -> builder::DatFileDetail {
+            Default::default()
+        }
+    }
+    ///A game in a dat file, optionally hydrated with its files and external
+    ///metadata mappings. Hydration is opt-in to keep the default listing
+    /// cheap.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A game in a dat file, optionally hydrated with its
+    /// files and external\nmetadata mappings. Hydration is opt-in to keep the
+    /// default listing cheap.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "createdAt",
+    ///    "currentInLatestDat",
+    ///    "id",
+    ///    "name",
+    ///    "updatedAt"
+    ///  ],
+    ///  "properties": {
+    ///    "categories": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "cloneOf": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "createdAt": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "currentInLatestDat": {
+    ///      "type": "boolean"
+    ///    },
+    ///    "description": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "externalMetadata": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ExternalMetadata"
+    ///      }
+    ///    },
+    ///    "files": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PlaymatchGameFileV2"
+    ///      }
+    ///    },
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "updatedAt": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct DatFileGame {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub categories: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+        #[serde(
+            rename = "cloneOf",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub clone_of: ::std::option::Option<::uuid::Uuid>,
+        #[serde(rename = "createdAt")]
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        #[serde(rename = "currentInLatestDat")]
+        pub current_in_latest_dat: bool,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(
+            rename = "externalMetadata",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub external_metadata: ::std::option::Option<::std::vec::Vec<ExternalMetadata>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub files: ::std::option::Option<::std::vec::Vec<PlaymatchGameFileV2>>,
+        pub id: ::uuid::Uuid,
+        pub name: ::std::string::String,
+        #[serde(rename = "updatedAt")]
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+    impl DatFileGame {
+        pub fn builder() -> builder::DatFileGame {
+            Default::default()
+        }
+    }
+    ///A single import a hash or game was observed in, projected for the
+    /// reverse lookups. Mirrors [`LatestDatFileImport`] but reused for
+    /// first/last seen.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A single import a hash or game was observed in,
+    /// projected for the reverse\nlookups. Mirrors [`LatestDatFileImport`] but
+    /// reused for first/last seen.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "importedAt",
+    ///    "version"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "importedAt": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "version": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct DatFileImportRef {
+        pub id: ::uuid::Uuid,
+        #[serde(rename = "importedAt")]
+        pub imported_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        pub version: ::std::string::String,
+    }
+    impl DatFileImportRef {
+        pub fn builder() -> builder::DatFileImportRef {
+            Default::default()
+        }
+    }
+    ///One entry in a dat file's import timeline. Carries the file name (which
+    ///typically encodes the build date) alongside version and import time. The
+    /// raw md5 dedup field is deliberately omitted from this public
+    /// projection.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One entry in a dat file's import timeline. Carries the
+    /// file name (which\ntypically encodes the build date) alongside version
+    /// and import time. The raw\nmd5 dedup field is deliberately omitted from
+    /// this public projection.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "importedAt",
+    ///    "name",
+    ///    "version"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "importedAt": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "version": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct DatFileImportTimelineEntry {
+        pub id: ::uuid::Uuid,
+        #[serde(rename = "importedAt")]
+        pub imported_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        pub name: ::std::string::String,
+        pub version: ::std::string::String,
+    }
+    impl DatFileImportTimelineEntry {
+        pub fn builder() -> builder::DatFileImportTimelineEntry {
+            Default::default()
+        }
+    }
+    ///A dat file that contains a looked-up hash or game, with the imports it
+    /// was first and last seen in and whether it is still present in the
+    /// dat file's current release.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A dat file that contains a looked-up hash or game, with
+    /// the imports it was\nfirst and last seen in and whether it is still
+    /// present in the dat file's\ncurrent release.",
+    ///  "allOf": [
+    ///    {
+    ///      "$ref": "#/components/schemas/DatFileSummary"
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "firstSeenImport",
+    ///        "isCurrentInLatest",
+    ///        "lastSeenImport"
+    ///      ],
+    ///      "properties": {
+    ///        "firstSeenImport": {
+    ///          "$ref": "#/components/schemas/DatFileImportRef"
+    ///        },
+    ///        "isCurrentInLatest": {
+    ///          "type": "boolean"
+    ///        },
+    ///        "lastSeenImport": {
+    ///          "$ref": "#/components/schemas/DatFileImportRef"
+    ///        }
+    ///      }
+    ///    }
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct DatFilePresence {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub company: ::std::option::Option<NamedRef>,
+        #[serde(rename = "currentVersion")]
+        pub current_version: ::std::string::String,
+        #[serde(rename = "firstSeenImport")]
+        pub first_seen_import: DatFileImportRef,
+        pub id: ::uuid::Uuid,
+        #[serde(rename = "isCurrentInLatest")]
+        pub is_current_in_latest: bool,
+        #[serde(rename = "lastSeenImport")]
+        pub last_seen_import: DatFileImportRef,
+        #[serde(
+            rename = "latestDatFileImport",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub latest_dat_file_import: ::std::option::Option<LatestDatFileImport>,
+        pub name: ::std::string::String,
+        pub platform: NamedRef,
+        #[serde(rename = "signatureGroup")]
+        pub signature_group: NamedRef,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub subset: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub tags: ::std::vec::Vec<::std::string::String>,
+    }
+    impl DatFilePresence {
+        pub fn builder() -> builder::DatFilePresence {
+            Default::default()
+        }
+    }
+    ///A dat file with its related signature group, platform and optional
+    /// company resolved to names. Returned by the v2 dat-file list.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A dat file with its related signature group, platform
+    /// and optional company\nresolved to names. Returned by the v2 dat-file
+    /// list.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "currentVersion",
+    ///    "id",
+    ///    "name",
+    ///    "platform",
+    ///    "signatureGroup"
+    ///  ],
+    ///  "properties": {
+    ///    "company": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/NamedRef"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "currentVersion": {
+    ///      "type": "string"
+    ///    },
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "latestDatFileImport": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/LatestDatFileImport"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    },
+    ///    "platform": {
+    ///      "$ref": "#/components/schemas/NamedRef"
+    ///    },
+    ///    "signatureGroup": {
+    ///      "$ref": "#/components/schemas/NamedRef"
+    ///    },
+    ///    "subset": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "tags": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct DatFileSummary {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub company: ::std::option::Option<NamedRef>,
+        #[serde(rename = "currentVersion")]
+        pub current_version: ::std::string::String,
+        pub id: ::uuid::Uuid,
+        #[serde(
+            rename = "latestDatFileImport",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub latest_dat_file_import: ::std::option::Option<LatestDatFileImport>,
+        pub name: ::std::string::String,
+        pub platform: NamedRef,
+        #[serde(rename = "signatureGroup")]
+        pub signature_group: NamedRef,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub subset: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub tags: ::std::vec::Vec<::std::string::String>,
+    }
+    impl DatFileSummary {
+        pub fn builder() -> builder::DatFileSummary {
             Default::default()
         }
     }
@@ -3326,6 +5452,125 @@ pub mod types {
     }
     impl ExternalMetadata {
         pub fn builder() -> builder::ExternalMetadata {
+            Default::default()
+        }
+    }
+    ///External metadata for a game/platform/company.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "External metadata for a game/platform/company.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "matchType",
+    ///    "providerName"
+    ///  ],
+    ///  "properties": {
+    ///    "automaticMatchReason": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/AutomaticMatchReasonV2"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "comment": {
+    ///      "description": "Optional Comment about the match.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "failedMatchReason": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/FailedMatchReason"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "manualMatchType": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/ManualMatchMode"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "matchType": {
+    ///      "$ref": "#/components/schemas/MetadataMatchType"
+    ///    },
+    ///    "providerId": {
+    ///      "description": "The ID of the game for this provider.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "providerName": {
+    ///      "$ref": "#/components/schemas/MetadataProvider"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct ExternalMetadataV2 {
+        #[serde(
+            rename = "automaticMatchReason",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub automatic_match_reason: ::std::option::Option<AutomaticMatchReasonV2>,
+        ///Optional Comment about the match.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub comment: ::std::option::Option<::std::string::String>,
+        #[serde(
+            rename = "failedMatchReason",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub failed_match_reason: ::std::option::Option<FailedMatchReason>,
+        #[serde(
+            rename = "manualMatchType",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub manual_match_type: ::std::option::Option<ManualMatchMode>,
+        #[serde(rename = "matchType")]
+        pub match_type: MetadataMatchType,
+        ///The ID of the game for this provider.
+        #[serde(
+            rename = "providerId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub provider_id: ::std::option::Option<::std::string::String>,
+        #[serde(rename = "providerName")]
+        pub provider_name: MetadataProvider,
+    }
+    impl ExternalMetadataV2 {
+        pub fn builder() -> builder::ExternalMetadataV2 {
             Default::default()
         }
     }
@@ -4164,19 +6409,30 @@ pub mod types {
             Default::default()
         }
     }
-    ///Result of a game match including company, platform and files.
+    ///The V2 identify outcome: the primary match and its related records, plus
+    /// the co-hashed siblings surfaced in `additionalMatches`.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Result of a game match including company, platform and
-    /// files.",
+    ///  "description": "The V2 identify outcome: the primary match and its
+    /// related records, plus the\nco-hashed siblings surfaced in
+    /// `additionalMatches`.",
     ///  "type": "object",
     ///  "required": [
     ///    "gameMatchType"
     ///  ],
     ///  "properties": {
+    ///    "additionalMatches": {
+    ///      "description": "Co-hashed sibling games that share a content hash
+    /// with the primary game,\nranked after it. Empty on the V1-derived path
+    /// and whenever the hash\nresolves to a single game.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/GameAndRelationsResultV2"
+    ///      }
+    ///    },
     ///    "company": {
     ///      "oneOf": [
     ///        {
@@ -4185,7 +6441,7 @@ pub mod types {
     ///        {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/PlaymatchCompany"
+    ///              "$ref": "#/components/schemas/PlaymatchCompanyV2"
     ///            }
     ///          ]
     ///        }
@@ -4199,7 +6455,7 @@ pub mod types {
     ///        {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/PlaymatchDatFile"
+    ///              "$ref": "#/components/schemas/PlaymatchDatFileV2"
     ///            }
     ///          ]
     ///        }
@@ -4213,7 +6469,7 @@ pub mod types {
     ///        {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/PlaymatchDatFileImport"
+    ///              "$ref": "#/components/schemas/PlaymatchDatFileImportV2"
     ///            }
     ///          ]
     ///        }
@@ -4224,7 +6480,7 @@ pub mod types {
     /// game.",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/ExternalMetadata"
+    ///        "$ref": "#/components/schemas/ExternalMetadataV2"
     ///      }
     ///    },
     ///    "game": {
@@ -4235,7 +6491,7 @@ pub mod types {
     ///        {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/PlaymatchGame"
+    ///              "$ref": "#/components/schemas/PlaymatchGameV2"
     ///            }
     ///          ]
     ///        }
@@ -4246,7 +6502,7 @@ pub mod types {
     /// game.",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/PlaymatchGameFile"
+    ///        "$ref": "#/components/schemas/PlaymatchGameFileV2"
     ///      }
     ///    },
     ///    "gameMatchType": {
@@ -4260,7 +6516,7 @@ pub mod types {
     ///        {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/PlaymatchPlatform"
+    ///              "$ref": "#/components/schemas/PlaymatchPlatformV2"
     ///            }
     ///          ]
     ///        }
@@ -4274,7 +6530,7 @@ pub mod types {
     ///        {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/PlaymatchSignatureGroup"
+    ///              "$ref": "#/components/schemas/PlaymatchSignatureGroupV2"
     ///            }
     ///          ]
     ///        }
@@ -4285,61 +6541,73 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct GameAndRelationMatchResult {
+    pub struct GameAndRelationMatchResultV2 {
+        ///Co-hashed sibling games that share a content hash with the primary
+        /// game, ranked after it. Empty on the V1-derived path and
+        /// whenever the hash resolves to a single game.
+        #[serde(
+            rename = "additionalMatches",
+            default,
+            skip_serializing_if = "::std::vec::Vec::is_empty"
+        )]
+        pub additional_matches: ::std::vec::Vec<GameAndRelationsResultV2>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub company: ::std::option::Option<PlaymatchCompany>,
+        pub company: ::std::option::Option<PlaymatchCompanyV2>,
         #[serde(
             rename = "datFile",
             default,
             skip_serializing_if = "::std::option::Option::is_none"
         )]
-        pub dat_file: ::std::option::Option<PlaymatchDatFile>,
+        pub dat_file: ::std::option::Option<PlaymatchDatFileV2>,
         #[serde(
             rename = "datFileImport",
             default,
             skip_serializing_if = "::std::option::Option::is_none"
         )]
-        pub dat_file_import: ::std::option::Option<PlaymatchDatFileImport>,
+        pub dat_file_import: ::std::option::Option<PlaymatchDatFileImportV2>,
         ///If a match was found, External metadata for the game.
         #[serde(
             rename = "externalMetadata",
             default,
             skip_serializing_if = "::std::vec::Vec::is_empty"
         )]
-        pub external_metadata: ::std::vec::Vec<ExternalMetadata>,
+        pub external_metadata: ::std::vec::Vec<ExternalMetadataV2>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub game: ::std::option::Option<PlaymatchGame>,
+        pub game: ::std::option::Option<PlaymatchGameV2>,
         ///If a match was found, the game files for this game.
         #[serde(
             rename = "gameFiles",
             default,
             skip_serializing_if = "::std::vec::Vec::is_empty"
         )]
-        pub game_files: ::std::vec::Vec<PlaymatchGameFile>,
+        pub game_files: ::std::vec::Vec<PlaymatchGameFileV2>,
         #[serde(rename = "gameMatchType")]
         pub game_match_type: GameMatchType,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub platform: ::std::option::Option<PlaymatchPlatform>,
+        pub platform: ::std::option::Option<PlaymatchPlatformV2>,
         #[serde(
             rename = "signatureGroup",
             default,
             skip_serializing_if = "::std::option::Option::is_none"
         )]
-        pub signature_group: ::std::option::Option<PlaymatchSignatureGroup>,
+        pub signature_group: ::std::option::Option<PlaymatchSignatureGroupV2>,
     }
-    impl GameAndRelationMatchResult {
-        pub fn builder() -> builder::GameAndRelationMatchResult {
+    impl GameAndRelationMatchResultV2 {
+        pub fn builder() -> builder::GameAndRelationMatchResultV2 {
             Default::default()
         }
     }
-    ///Result of a game match including company, platform and files.
+    ///A single co-hashed game and its related records, as carried in the V2
+    ///`additionalMatches` array. The game is always present; the spine records
+    ///below resolve from it.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Result of a game match including company, platform and
-    /// files.",
+    ///  "description": "A single co-hashed game and its related records, as
+    /// carried in the V2\n`additionalMatches` array. The game is always
+    /// present; the spine records\nbelow resolve from it.",
     ///  "type": "object",
     ///  "required": [
     ///    "datFile",
@@ -4357,55 +6625,54 @@ pub mod types {
     ///        {
     ///          "allOf": [
     ///            {
-    ///              "$ref": "#/components/schemas/PlaymatchCompany"
+    ///              "$ref": "#/components/schemas/PlaymatchCompanyV2"
     ///            }
     ///          ]
     ///        }
     ///      ]
     ///    },
     ///    "datFile": {
-    ///      "$ref": "#/components/schemas/PlaymatchDatFile"
+    ///      "$ref": "#/components/schemas/PlaymatchDatFileV2"
     ///    },
     ///    "datFileImport": {
-    ///      "$ref": "#/components/schemas/PlaymatchDatFileImport"
+    ///      "$ref": "#/components/schemas/PlaymatchDatFileImportV2"
     ///    },
     ///    "externalMetadata": {
     ///      "description": "External metadata mappings for the game (one row
     /// per matched provider).",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/ExternalMetadata"
+    ///        "$ref": "#/components/schemas/ExternalMetadataV2"
     ///      }
     ///    },
     ///    "game": {
-    ///      "$ref": "#/components/schemas/PlaymatchGame"
+    ///      "$ref": "#/components/schemas/PlaymatchGameV2"
     ///    },
     ///    "gameFiles": {
-    ///      "description": "If a match was found, the game files for this
-    /// game.",
+    ///      "description": "The game files for this game.",
     ///      "type": "array",
     ///      "items": {
-    ///        "$ref": "#/components/schemas/PlaymatchGameFile"
+    ///        "$ref": "#/components/schemas/PlaymatchGameFileV2"
     ///      }
     ///    },
     ///    "platform": {
-    ///      "$ref": "#/components/schemas/PlaymatchPlatform"
+    ///      "$ref": "#/components/schemas/PlaymatchPlatformV2"
     ///    },
     ///    "signatureGroup": {
-    ///      "$ref": "#/components/schemas/PlaymatchSignatureGroup"
+    ///      "$ref": "#/components/schemas/PlaymatchSignatureGroupV2"
     ///    }
     ///  }
     ///}
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct GameAndRelationsResult {
+    pub struct GameAndRelationsResultV2 {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub company: ::std::option::Option<PlaymatchCompany>,
+        pub company: ::std::option::Option<PlaymatchCompanyV2>,
         #[serde(rename = "datFile")]
-        pub dat_file: PlaymatchDatFile,
+        pub dat_file: PlaymatchDatFileV2,
         #[serde(rename = "datFileImport")]
-        pub dat_file_import: PlaymatchDatFileImport,
+        pub dat_file_import: PlaymatchDatFileImportV2,
         ///External metadata mappings for the game (one row per matched
         /// provider).
         #[serde(
@@ -4413,21 +6680,21 @@ pub mod types {
             default,
             skip_serializing_if = "::std::vec::Vec::is_empty"
         )]
-        pub external_metadata: ::std::vec::Vec<ExternalMetadata>,
-        pub game: PlaymatchGame,
-        ///If a match was found, the game files for this game.
+        pub external_metadata: ::std::vec::Vec<ExternalMetadataV2>,
+        pub game: PlaymatchGameV2,
+        ///The game files for this game.
         #[serde(
             rename = "gameFiles",
             default,
             skip_serializing_if = "::std::vec::Vec::is_empty"
         )]
-        pub game_files: ::std::vec::Vec<PlaymatchGameFile>,
-        pub platform: PlaymatchPlatform,
+        pub game_files: ::std::vec::Vec<PlaymatchGameFileV2>,
+        pub platform: PlaymatchPlatformV2,
         #[serde(rename = "signatureGroup")]
-        pub signature_group: PlaymatchSignatureGroup,
+        pub signature_group: PlaymatchSignatureGroupV2,
     }
-    impl GameAndRelationsResult {
-        pub fn builder() -> builder::GameAndRelationsResult {
+    impl GameAndRelationsResultV2 {
+        pub fn builder() -> builder::GameAndRelationsResultV2 {
             Default::default()
         }
     }
@@ -4602,6 +6869,181 @@ pub mod types {
     }
     impl GameEngineLogo {
         pub fn builder() -> builder::GameEngineLogo {
+            Default::default()
+        }
+    }
+    ///`GameFileMatchSearch`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "fileName",
+    ///    "fileSize"
+    ///  ],
+    ///  "properties": {
+    ///    "crc": {
+    ///      "description": "Optional CRC32 checksum of the game file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "fileName": {
+    ///      "description": "The file name of the game file.",
+    ///      "type": "string"
+    ///    },
+    ///    "fileSize": {
+    ///      "description": "The size of the game file in bytes.",
+    ///      "type": "integer",
+    ///      "format": "int64"
+    ///    },
+    ///    "md5": {
+    ///      "description": "Optional MD5 hash of the game file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "sha1": {
+    ///      "description": "Optional SHA1 hash of the game file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "sha256": {
+    ///      "description": "Optional SHA256 hash of the game file.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct GameFileMatchSearch {
+        ///Optional CRC32 checksum of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub crc: ::std::option::Option<::std::string::String>,
+        ///The file name of the game file.
+        #[serde(rename = "fileName")]
+        pub file_name: ::std::string::String,
+        ///The size of the game file in bytes.
+        #[serde(rename = "fileSize")]
+        pub file_size: i64,
+        ///Optional MD5 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub md5: ::std::option::Option<::std::string::String>,
+        ///Optional SHA1 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sha1: ::std::option::Option<::std::string::String>,
+        ///Optional SHA256 hash of the game file.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub sha256: ::std::option::Option<::std::string::String>,
+    }
+    impl GameFileMatchSearch {
+        pub fn builder() -> builder::GameFileMatchSearch {
+            Default::default()
+        }
+    }
+    ///One observation of a game file's hash inside a single dat file import.
+    /// The richer audit form behind the v2 presence changelog: where the v1
+    /// history collapses to the list of imports, this keeps each presence
+    /// row with its import and the dat file it belongs to.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One observation of a game file's hash inside a single
+    /// dat file import. The\nricher audit form behind the v2 presence
+    /// changelog: where the v1 history\ncollapses to the list of imports, this
+    /// keeps each presence row with its\nimport and the dat file it belongs
+    /// to.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "datFileId",
+    ///    "datFileImportId",
+    ///    "datFileName",
+    ///    "importName",
+    ///    "importedAt",
+    ///    "observedAt",
+    ///    "platformId",
+    ///    "presenceId",
+    ///    "signatureGroupId",
+    ///    "version"
+    ///  ],
+    ///  "properties": {
+    ///    "datFileId": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "datFileImportId": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "datFileName": {
+    ///      "type": "string"
+    ///    },
+    ///    "importName": {
+    ///      "type": "string"
+    ///    },
+    ///    "importedAt": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "observedAt": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "platformId": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "presenceId": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "signatureGroupId": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "version": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct GameFilePresenceEntry {
+        #[serde(rename = "datFileId")]
+        pub dat_file_id: ::uuid::Uuid,
+        #[serde(rename = "datFileImportId")]
+        pub dat_file_import_id: ::uuid::Uuid,
+        #[serde(rename = "datFileName")]
+        pub dat_file_name: ::std::string::String,
+        #[serde(rename = "importName")]
+        pub import_name: ::std::string::String,
+        #[serde(rename = "importedAt")]
+        pub imported_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        #[serde(rename = "observedAt")]
+        pub observed_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        #[serde(rename = "platformId")]
+        pub platform_id: ::uuid::Uuid,
+        #[serde(rename = "presenceId")]
+        pub presence_id: ::uuid::Uuid,
+        #[serde(rename = "signatureGroupId")]
+        pub signature_group_id: ::uuid::Uuid,
+        pub version: ::std::string::String,
+    }
+    impl GameFilePresenceEntry {
+        pub fn builder() -> builder::GameFilePresenceEntry {
             Default::default()
         }
     }
@@ -4818,6 +7260,7 @@ pub mod types {
     ///    "SHA256",
     ///    "SHA1",
     ///    "MD5",
+    ///    "CRC",
     ///    "FileNameAndSize",
     ///    "NoMatch"
     ///  ]
@@ -4843,6 +7286,8 @@ pub mod types {
         Sha1,
         #[serde(rename = "MD5")]
         Md5,
+        #[serde(rename = "CRC")]
+        Crc,
         FileNameAndSize,
         NoMatch,
     }
@@ -4852,6 +7297,7 @@ pub mod types {
                 Self::Sha256 => f.write_str("SHA256"),
                 Self::Sha1 => f.write_str("SHA1"),
                 Self::Md5 => f.write_str("MD5"),
+                Self::Crc => f.write_str("CRC"),
                 Self::FileNameAndSize => f.write_str("FileNameAndSize"),
                 Self::NoMatch => f.write_str("NoMatch"),
             }
@@ -4864,6 +7310,7 @@ pub mod types {
                 "SHA256" => Ok(Self::Sha256),
                 "SHA1" => Ok(Self::Sha1),
                 "MD5" => Ok(Self::Md5),
+                "CRC" => Ok(Self::Crc),
                 "FileNameAndSize" => Ok(Self::FileNameAndSize),
                 "NoMatch" => Ok(Self::NoMatch),
                 _ => Err("invalid value".into()),
@@ -5117,6 +7564,161 @@ pub mod types {
     }
     impl GameMode {
         pub fn builder() -> builder::GameMode {
+            Default::default()
+        }
+    }
+    ///A single candidate from a fuzzy game-name search. Carries just enough to
+    /// let a caller pick a result and follow up with a get-game call by id.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A single candidate from a fuzzy game-name search.
+    /// Carries just enough to let\na caller pick a result and follow up with a
+    /// get-game call by id.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "name",
+    ///    "platformId",
+    ///    "platformName"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "description": "The ID of the game.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the game.",
+    ///      "type": "string"
+    ///    },
+    ///    "platformId": {
+    ///      "description": "The ID of the platform this game belongs to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "platformName": {
+    ///      "description": "The name of the platform this game belongs to.",
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct GameNameSearchResultV2 {
+        ///The ID of the game.
+        pub id: ::uuid::Uuid,
+        ///The name of the game.
+        pub name: ::std::string::String,
+        ///The ID of the platform this game belongs to.
+        #[serde(rename = "platformId")]
+        pub platform_id: ::uuid::Uuid,
+        ///The name of the platform this game belongs to.
+        #[serde(rename = "platformName")]
+        pub platform_name: ::std::string::String,
+    }
+    impl GameNameSearchResultV2 {
+        pub fn builder() -> builder::GameNameSearchResultV2 {
+            Default::default()
+        }
+    }
+    ///The public-safe projection of a game's provider mapping. Deliberately
+    /// omits `manually_matched_by` and `cross_match_last_tried_at`, which
+    /// are internal bookkeeping that must never reach an unauthenticated
+    /// caller.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The public-safe projection of a game's provider
+    /// mapping. Deliberately omits\n`manually_matched_by` and
+    /// `cross_match_last_tried_at`, which are internal\nbookkeeping that must
+    /// never reach an unauthenticated caller.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "matchType",
+    ///    "provider"
+    ///  ],
+    ///  "properties": {
+    ///    "automaticMatchReason": {
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "null"
+    ///        },
+    ///        {
+    ///          "allOf": [
+    ///            {
+    ///              "$ref": "#/components/schemas/AutomaticMatchReasonV2"
+    ///            }
+    ///          ]
+    ///        }
+    ///      ]
+    ///    },
+    ///    "matchType": {
+    ///      "$ref": "#/components/schemas/MetadataMatchType"
+    ///    },
+    ///    "matchedName": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "matchedYear": {
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int32"
+    ///    },
+    ///    "provider": {
+    ///      "$ref": "#/components/schemas/MetadataProvider"
+    ///    },
+    ///    "providerId": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct GameProviderMapping {
+        #[serde(
+            rename = "automaticMatchReason",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub automatic_match_reason: ::std::option::Option<AutomaticMatchReasonV2>,
+        #[serde(rename = "matchType")]
+        pub match_type: MetadataMatchType,
+        #[serde(
+            rename = "matchedName",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub matched_name: ::std::option::Option<::std::string::String>,
+        #[serde(
+            rename = "matchedYear",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub matched_year: ::std::option::Option<i32>,
+        pub provider: MetadataProvider,
+        #[serde(
+            rename = "providerId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub provider_id: ::std::option::Option<::std::string::String>,
+    }
+    impl GameProviderMapping {
+        pub fn builder() -> builder::GameProviderMapping {
             Default::default()
         }
     }
@@ -6191,6 +8793,47 @@ pub mod types {
     }
     impl LanguageSupportType {
         pub fn builder() -> builder::LanguageSupportType {
+            Default::default()
+        }
+    }
+    ///The most recent import recorded for a dat file.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The most recent import recorded for a dat file.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "importedAt",
+    ///    "version"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "importedAt": {
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "version": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct LatestDatFileImport {
+        pub id: ::uuid::Uuid,
+        #[serde(rename = "importedAt")]
+        pub imported_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        pub version: ::std::string::String,
+    }
+    impl LatestDatFileImport {
+        pub fn builder() -> builder::LatestDatFileImport {
             Default::default()
         }
     }
@@ -7558,6 +10201,44 @@ pub mod types {
             Default::default()
         }
     }
+    ///A named reference (id + name) to a related entity embedded in a dat-file
+    ///projection. Keeps the catalogue response self-describing without a
+    /// second round trip to resolve ids.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A named reference (id + name) to a related entity
+    /// embedded in a dat-file\nprojection. Keeps the catalogue response
+    /// self-describing without a second\nround trip to resolve ids.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "name"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "name": {
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct NamedRef {
+        pub id: ::uuid::Uuid,
+        pub name: ::std::string::String,
+    }
+    impl NamedRef {
+        pub fn builder() -> builder::NamedRef {
+            Default::default()
+        }
+    }
     ///`NetworkType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -7886,6 +10567,496 @@ pub mod types {
     }
     impl OvgdbRomMatch {
         pub fn builder() -> builder::OvgdbRomMatch {
+            Default::default()
+        }
+    }
+    ///Pagination metadata returned alongside every list page.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Pagination metadata returned alongside every list
+    /// page.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "hasNextPage",
+    ///    "hasPreviousPage",
+    ///    "limit"
+    ///  ],
+    ///  "properties": {
+    ///    "hasNextPage": {
+    ///      "description": "Whether another page of results follows this one.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "hasPreviousPage": {
+    ///      "description": "Whether this page was reached from an earlier one,
+    /// that is, whether a cursor was supplied.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "limit": {
+    ///      "description": "The page size applied to this page after
+    /// clamping.",
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "nextCursor": {
+    ///      "description": "The cursor to pass as `cursor` to fetch the next
+    /// page. Absent on the last page.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "totalItems": {
+    ///      "description": "The exact total number of items across all pages,
+    /// serialized as `totalItems`. Present only when `withTotal` was requested
+    /// and the endpoint supports it (small bounded reference tables); omitted
+    /// otherwise.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageMeta {
+        ///Whether another page of results follows this one.
+        #[serde(rename = "hasNextPage")]
+        pub has_next_page: bool,
+        ///Whether this page was reached from an earlier one, that is, whether
+        /// a cursor was supplied.
+        #[serde(rename = "hasPreviousPage")]
+        pub has_previous_page: bool,
+        ///The page size applied to this page after clamping.
+        pub limit: i64,
+        ///The cursor to pass as `cursor` to fetch the next page. Absent on the
+        /// last page.
+        #[serde(
+            rename = "nextCursor",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub next_cursor: ::std::option::Option<::std::string::String>,
+        ///The exact total number of items across all pages, serialized as
+        /// `totalItems`. Present only when `withTotal` was requested and the
+        /// endpoint supports it (small bounded reference tables); omitted
+        /// otherwise.
+        #[serde(
+            rename = "totalItems",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub total_items: ::std::option::Option<i64>,
+    }
+    impl PageMeta {
+        pub fn builder() -> builder::PageMeta {
+            Default::default()
+        }
+    }
+    ///One page of results together with its pagination metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One page of results together with its pagination
+    /// metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "data",
+    ///    "pagination"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "description": "The items on this page, in the endpoint's sort
+    /// order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/CompanyMetadataResponse"
+    ///      }
+    ///    },
+    ///    "pagination": {
+    ///      "$ref": "#/components/schemas/PageMeta"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageOfCompanyMetadataResponse {
+        ///The items on this page, in the endpoint's sort order.
+        pub data: ::std::vec::Vec<CompanyMetadataResponse>,
+        pub pagination: PageMeta,
+    }
+    impl PageOfCompanyMetadataResponse {
+        pub fn builder() -> builder::PageOfCompanyMetadataResponse {
+            Default::default()
+        }
+    }
+    ///One page of results together with its pagination metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One page of results together with its pagination
+    /// metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "data",
+    ///    "pagination"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "description": "The items on this page, in the endpoint's sort
+    /// order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/DatFileGame"
+    ///      }
+    ///    },
+    ///    "pagination": {
+    ///      "$ref": "#/components/schemas/PageMeta"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageOfDatFileGame {
+        ///The items on this page, in the endpoint's sort order.
+        pub data: ::std::vec::Vec<DatFileGame>,
+        pub pagination: PageMeta,
+    }
+    impl PageOfDatFileGame {
+        pub fn builder() -> builder::PageOfDatFileGame {
+            Default::default()
+        }
+    }
+    ///One page of results together with its pagination metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One page of results together with its pagination
+    /// metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "data",
+    ///    "pagination"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "description": "The items on this page, in the endpoint's sort
+    /// order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/DatFileImportTimelineEntry"
+    ///      }
+    ///    },
+    ///    "pagination": {
+    ///      "$ref": "#/components/schemas/PageMeta"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageOfDatFileImportTimelineEntry {
+        ///The items on this page, in the endpoint's sort order.
+        pub data: ::std::vec::Vec<DatFileImportTimelineEntry>,
+        pub pagination: PageMeta,
+    }
+    impl PageOfDatFileImportTimelineEntry {
+        pub fn builder() -> builder::PageOfDatFileImportTimelineEntry {
+            Default::default()
+        }
+    }
+    ///One page of results together with its pagination metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One page of results together with its pagination
+    /// metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "data",
+    ///    "pagination"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "description": "The items on this page, in the endpoint's sort
+    /// order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/DatFileSummary"
+    ///      }
+    ///    },
+    ///    "pagination": {
+    ///      "$ref": "#/components/schemas/PageMeta"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageOfDatFileSummary {
+        ///The items on this page, in the endpoint's sort order.
+        pub data: ::std::vec::Vec<DatFileSummary>,
+        pub pagination: PageMeta,
+    }
+    impl PageOfDatFileSummary {
+        pub fn builder() -> builder::PageOfDatFileSummary {
+            Default::default()
+        }
+    }
+    ///One page of results together with its pagination metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One page of results together with its pagination
+    /// metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "data",
+    ///    "pagination"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "description": "The items on this page, in the endpoint's sort
+    /// order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/GameMetadataResponse"
+    ///      }
+    ///    },
+    ///    "pagination": {
+    ///      "$ref": "#/components/schemas/PageMeta"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageOfGameMetadataResponse {
+        ///The items on this page, in the endpoint's sort order.
+        pub data: ::std::vec::Vec<GameMetadataResponse>,
+        pub pagination: PageMeta,
+    }
+    impl PageOfGameMetadataResponse {
+        pub fn builder() -> builder::PageOfGameMetadataResponse {
+            Default::default()
+        }
+    }
+    ///One page of results together with its pagination metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One page of results together with its pagination
+    /// metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "data",
+    ///    "pagination"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "description": "The items on this page, in the endpoint's sort
+    /// order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/GameNameSearchResultV2"
+    ///      }
+    ///    },
+    ///    "pagination": {
+    ///      "$ref": "#/components/schemas/PageMeta"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageOfGameNameSearchResult {
+        ///The items on this page, in the endpoint's sort order.
+        pub data: ::std::vec::Vec<GameNameSearchResultV2>,
+        pub pagination: PageMeta,
+    }
+    impl PageOfGameNameSearchResult {
+        pub fn builder() -> builder::PageOfGameNameSearchResult {
+            Default::default()
+        }
+    }
+    ///One page of results together with its pagination metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One page of results together with its pagination
+    /// metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "data",
+    ///    "pagination"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "description": "The items on this page, in the endpoint's sort
+    /// order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PlatformMetadataResponse"
+    ///      }
+    ///    },
+    ///    "pagination": {
+    ///      "$ref": "#/components/schemas/PageMeta"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageOfPlatformMetadataResponse {
+        ///The items on this page, in the endpoint's sort order.
+        pub data: ::std::vec::Vec<PlatformMetadataResponse>,
+        pub pagination: PageMeta,
+    }
+    impl PageOfPlatformMetadataResponse {
+        pub fn builder() -> builder::PageOfPlatformMetadataResponse {
+            Default::default()
+        }
+    }
+    ///One page of results together with its pagination metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One page of results together with its pagination
+    /// metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "data",
+    ///    "pagination"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "description": "The items on this page, in the endpoint's sort
+    /// order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PlaymatchGameFileV2"
+    ///      }
+    ///    },
+    ///    "pagination": {
+    ///      "$ref": "#/components/schemas/PageMeta"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageOfPlaymatchGameFile {
+        ///The items on this page, in the endpoint's sort order.
+        pub data: ::std::vec::Vec<PlaymatchGameFileV2>,
+        pub pagination: PageMeta,
+    }
+    impl PageOfPlaymatchGameFile {
+        pub fn builder() -> builder::PageOfPlaymatchGameFile {
+            Default::default()
+        }
+    }
+    ///One page of results together with its pagination metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One page of results together with its pagination
+    /// metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "data",
+    ///    "pagination"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "description": "The items on this page, in the endpoint's sort
+    /// order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PlaymatchSignatureGroupV2"
+    ///      }
+    ///    },
+    ///    "pagination": {
+    ///      "$ref": "#/components/schemas/PageMeta"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageOfPlaymatchSignatureGroup {
+        ///The items on this page, in the endpoint's sort order.
+        pub data: ::std::vec::Vec<PlaymatchSignatureGroupV2>,
+        pub pagination: PageMeta,
+    }
+    impl PageOfPlaymatchSignatureGroup {
+        pub fn builder() -> builder::PageOfPlaymatchSignatureGroup {
+            Default::default()
+        }
+    }
+    ///One page of results together with its pagination metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "One page of results together with its pagination
+    /// metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "data",
+    ///    "pagination"
+    ///  ],
+    ///  "properties": {
+    ///    "data": {
+    ///      "description": "The items on this page, in the endpoint's sort
+    /// order.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Suggestion"
+    ///      }
+    ///    },
+    ///    "pagination": {
+    ///      "$ref": "#/components/schemas/PageMeta"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PageOfSuggestion {
+        ///The items on this page, in the endpoint's sort order.
+        pub data: ::std::vec::Vec<Suggestion>,
+        pub pagination: PageMeta,
+    }
+    impl PageOfSuggestion {
+        pub fn builder() -> builder::PageOfSuggestion {
             Default::default()
         }
     }
@@ -8242,6 +11413,61 @@ pub mod types {
     }
     impl PlatformMetadataResponse {
         pub fn builder() -> builder::PlatformMetadataResponse {
+            Default::default()
+        }
+    }
+    ///Per-platform aggregate counts.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Per-platform aggregate counts.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "currentGameCount",
+    ///    "datFileCount",
+    ///    "gameFileCount",
+    ///    "mappedGameCount"
+    ///  ],
+    ///  "properties": {
+    ///    "currentGameCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "datFileCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "gameFileCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "mappedGameCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PlatformStats {
+        #[serde(rename = "currentGameCount")]
+        pub current_game_count: i64,
+        #[serde(rename = "datFileCount")]
+        pub dat_file_count: i64,
+        #[serde(rename = "gameFileCount")]
+        pub game_file_count: i64,
+        #[serde(rename = "mappedGameCount")]
+        pub mapped_game_count: i64,
+    }
+    impl PlatformStats {
+        pub fn builder() -> builder::PlatformStats {
             Default::default()
         }
     }
@@ -8795,13 +12021,13 @@ pub mod types {
     ///  "description": "contains basic information about a Company.",
     ///  "type": "object",
     ///  "required": [
-    ///    "created_at",
+    ///    "createdAt",
     ///    "id",
     ///    "name",
-    ///    "updated_at"
+    ///    "updatedAt"
     ///  ],
     ///  "properties": {
-    ///    "created_at": {
+    ///    "createdAt": {
     ///      "description": "When the company was created inside playmatch.",
     ///      "type": "string",
     ///      "format": "date-time"
@@ -8815,7 +12041,7 @@ pub mod types {
     ///      "description": "The name of the company.",
     ///      "type": "string"
     ///    },
-    ///    "updated_at": {
+    ///    "updatedAt": {
     ///      "description": "When the company was last updated inside
     /// playmatch.",
     ///      "type": "string",
@@ -8826,18 +12052,113 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct PlaymatchCompany {
+    pub struct PlaymatchCompanyV2 {
         ///When the company was created inside playmatch.
+        #[serde(rename = "createdAt")]
         pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
         ///The ID of the company.
         pub id: ::uuid::Uuid,
         ///The name of the company.
         pub name: ::std::string::String,
         ///When the company was last updated inside playmatch.
+        #[serde(rename = "updatedAt")]
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
-    impl PlaymatchCompany {
-        pub fn builder() -> builder::PlaymatchCompany {
+    impl PlaymatchCompanyV2 {
+        pub fn builder() -> builder::PlaymatchCompanyV2 {
+            Default::default()
+        }
+    }
+    ///contains basic information about an imported dat file in Playmatch.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "contains basic information about an imported dat file
+    /// in Playmatch.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "createdAt",
+    ///    "datFileId",
+    ///    "id",
+    ///    "importedAt",
+    ///    "md5",
+    ///    "name",
+    ///    "updatedAt",
+    ///    "version"
+    ///  ],
+    ///  "properties": {
+    ///    "createdAt": {
+    ///      "description": "When the dat file import was created inside
+    /// playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "datFileId": {
+    ///      "description": "The ID of the dat file this import belongs to.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "id": {
+    ///      "description": "The ID of the dat file import.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "importedAt": {
+    ///      "description": "When the dat file was imported into playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "md5": {
+    ///      "description": "MD5 hash of the imported dat file.",
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the imported file, this contains
+    /// usually some information like version and date of creation",
+    ///      "type": "string"
+    ///    },
+    ///    "updatedAt": {
+    ///      "description": "When the dat file import was last updated inside
+    /// playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "version": {
+    ///      "description": "The version of the dat file which was imported.",
+    ///      "type": "string"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PlaymatchDatFileImportV2 {
+        ///When the dat file import was created inside playmatch.
+        #[serde(rename = "createdAt")]
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///The ID of the dat file this import belongs to.
+        #[serde(rename = "datFileId")]
+        pub dat_file_id: ::uuid::Uuid,
+        ///The ID of the dat file import.
+        pub id: ::uuid::Uuid,
+        ///When the dat file was imported into playmatch.
+        #[serde(rename = "importedAt")]
+        pub imported_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///MD5 hash of the imported dat file.
+        pub md5: ::std::string::String,
+        ///The name of the imported file, this contains usually some
+        /// information like version and date of creation
+        pub name: ::std::string::String,
+        ///When the dat file import was last updated inside playmatch.
+        #[serde(rename = "updatedAt")]
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///The version of the dat file which was imported.
+        pub version: ::std::string::String,
+    }
+    impl PlaymatchDatFileImportV2 {
+        pub fn builder() -> builder::PlaymatchDatFileImportV2 {
             Default::default()
         }
     }
@@ -8850,16 +12171,16 @@ pub mod types {
     ///  "description": "contains basic information about a Dat File.",
     ///  "type": "object",
     ///  "required": [
-    ///    "created_at",
-    ///    "current_version",
+    ///    "createdAt",
+    ///    "currentVersion",
     ///    "id",
     ///    "name",
-    ///    "platform_id",
-    ///    "signature_group_id",
-    ///    "updated_at"
+    ///    "platformId",
+    ///    "signatureGroupId",
+    ///    "updatedAt"
     ///  ],
     ///  "properties": {
-    ///    "company_id": {
+    ///    "companyId": {
     ///      "description": "Optional company for the platform this dat file is
     /// for.",
     ///      "type": [
@@ -8868,12 +12189,12 @@ pub mod types {
     ///      ],
     ///      "format": "uuid"
     ///    },
-    ///    "created_at": {
+    ///    "createdAt": {
     ///      "description": "When the dat file was created inside playmatch.",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
-    ///    "current_version": {
+    ///    "currentVersion": {
     ///      "description": "The current version of the dat file.",
     ///      "type": "string"
     ///    },
@@ -8886,12 +12207,12 @@ pub mod types {
     ///      "description": "The name of the dat file.",
     ///      "type": "string"
     ///    },
-    ///    "platform_id": {
+    ///    "platformId": {
     ///      "description": "The platform this dat file is for.",
     ///      "type": "string",
     ///      "format": "uuid"
     ///    },
-    ///    "signature_group_id": {
+    ///    "signatureGroupId": {
     ///      "description": "The id of the signature group which publishes this
     /// dat file.",
     ///      "type": "string",
@@ -8914,7 +12235,7 @@ pub mod types {
     ///        "type": "string"
     ///      }
     ///    },
-    ///    "updated_at": {
+    ///    "updatedAt": {
     ///      "description": "When the dat file was last updated inside
     /// playmatch.",
     ///      "type": "string",
@@ -8925,21 +12246,29 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct PlaymatchDatFile {
+    pub struct PlaymatchDatFileV2 {
         ///Optional company for the platform this dat file is for.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(
+            rename = "companyId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
         pub company_id: ::std::option::Option<::uuid::Uuid>,
         ///When the dat file was created inside playmatch.
+        #[serde(rename = "createdAt")]
         pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
         ///The current version of the dat file.
+        #[serde(rename = "currentVersion")]
         pub current_version: ::std::string::String,
         ///The ID of the dat file.
         pub id: ::uuid::Uuid,
         ///The name of the dat file.
         pub name: ::std::string::String,
         ///The platform this dat file is for.
+        #[serde(rename = "platformId")]
         pub platform_id: ::uuid::Uuid,
         ///The id of the signature group which publishes this dat file.
+        #[serde(rename = "signatureGroupId")]
         pub signature_group_id: ::uuid::Uuid,
         ///The subset this dat file is for, if any
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -8948,189 +12277,11 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub tags: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
         ///When the dat file was last updated inside playmatch.
+        #[serde(rename = "updatedAt")]
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
-    impl PlaymatchDatFile {
-        pub fn builder() -> builder::PlaymatchDatFile {
-            Default::default()
-        }
-    }
-    ///contains basic information about an imported dat file in Playmatch.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "contains basic information about an imported dat file
-    /// in Playmatch.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "created_at",
-    ///    "dat_file_id",
-    ///    "id",
-    ///    "imported_at",
-    ///    "md5",
-    ///    "name",
-    ///    "updated_at",
-    ///    "version"
-    ///  ],
-    ///  "properties": {
-    ///    "created_at": {
-    ///      "description": "When the dat file import was created inside
-    /// playmatch.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "dat_file_id": {
-    ///      "description": "The ID of the dat file this import belongs to.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "id": {
-    ///      "description": "The ID of the dat file import.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "imported_at": {
-    ///      "description": "When the dat file was imported into playmatch.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "md5": {
-    ///      "description": "MD5 hash of the imported dat file.",
-    ///      "type": "string"
-    ///    },
-    ///    "name": {
-    ///      "description": "The name of the imported file, this contains
-    /// usually some information like version and date of creation",
-    ///      "type": "string"
-    ///    },
-    ///    "updated_at": {
-    ///      "description": "When the dat file import was last updated inside
-    /// playmatch.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "version": {
-    ///      "description": "The version of the dat file which was imported.",
-    ///      "type": "string"
-    ///    }
-    ///  }
-    ///}
-    /// ```
-    /// </details>
-    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct PlaymatchDatFileImport {
-        ///When the dat file import was created inside playmatch.
-        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
-        ///The ID of the dat file this import belongs to.
-        pub dat_file_id: ::uuid::Uuid,
-        ///The ID of the dat file import.
-        pub id: ::uuid::Uuid,
-        ///When the dat file was imported into playmatch.
-        pub imported_at: ::chrono::DateTime<::chrono::offset::Utc>,
-        ///MD5 hash of the imported dat file.
-        pub md5: ::std::string::String,
-        ///The name of the imported file, this contains usually some
-        /// information like version and date of creation
-        pub name: ::std::string::String,
-        ///When the dat file import was last updated inside playmatch.
-        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
-        ///The version of the dat file which was imported.
-        pub version: ::std::string::String,
-    }
-    impl PlaymatchDatFileImport {
-        pub fn builder() -> builder::PlaymatchDatFileImport {
-            Default::default()
-        }
-    }
-    ///contains basic information about a Game.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "contains basic information about a Game.",
-    ///  "type": "object",
-    ///  "required": [
-    ///    "created_at",
-    ///    "id",
-    ///    "name",
-    ///    "updated_at"
-    ///  ],
-    ///  "properties": {
-    ///    "categories": {
-    ///      "description": "Optional categories for the game.",
-    ///      "type": [
-    ///        "array",
-    ///        "null"
-    ///      ],
-    ///      "items": {
-    ///        "type": "string"
-    ///      }
-    ///    },
-    ///    "clone_of": {
-    ///      "description": "Optional which game this game is a clone of
-    /// (different editions/versions).",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "format": "uuid"
-    ///    },
-    ///    "created_at": {
-    ///      "description": "When the game was created inside playmatch.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    },
-    ///    "description": {
-    ///      "description": "Optional description of the game.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
-    ///    },
-    ///    "id": {
-    ///      "description": "The ID of the game.",
-    ///      "type": "string",
-    ///      "format": "uuid"
-    ///    },
-    ///    "name": {
-    ///      "description": "The name of the game.",
-    ///      "type": "string"
-    ///    },
-    ///    "updated_at": {
-    ///      "description": "When the game was last updated inside playmatch.",
-    ///      "type": "string",
-    ///      "format": "date-time"
-    ///    }
-    ///  }
-    ///}
-    /// ```
-    /// </details>
-    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct PlaymatchGame {
-        ///Optional categories for the game.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub categories: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
-        ///Optional which game this game is a clone of (different
-        /// editions/versions).
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub clone_of: ::std::option::Option<::uuid::Uuid>,
-        ///When the game was created inside playmatch.
-        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
-        ///Optional description of the game.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub description: ::std::option::Option<::std::string::String>,
-        ///The ID of the game.
-        pub id: ::uuid::Uuid,
-        ///The name of the game.
-        pub name: ::std::string::String,
-        ///When the game was last updated inside playmatch.
-        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
-    }
-    impl PlaymatchGame {
-        pub fn builder() -> builder::PlaymatchGame {
+    impl PlaymatchDatFileV2 {
+        pub fn builder() -> builder::PlaymatchDatFileV2 {
             Default::default()
         }
     }
@@ -9143,11 +12294,12 @@ pub mod types {
     ///  "description": "contains basic information about a Game File.",
     ///  "type": "object",
     ///  "required": [
-    ///    "created_at",
-    ///    "file_name",
-    ///    "game_id",
+    ///    "createdAt",
+    ///    "currentInLatestDat",
+    ///    "fileName",
+    ///    "gameId",
     ///    "id",
-    ///    "updated_at"
+    ///    "updatedAt"
     ///  ],
     ///  "properties": {
     ///    "crc": {
@@ -9157,16 +12309,21 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    },
-    ///    "created_at": {
+    ///    "createdAt": {
     ///      "description": "When the game file was created inside playmatch.",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
-    ///    "file_name": {
+    ///    "currentInLatestDat": {
+    ///      "description": "Whether this hash is still present in the current
+    /// version of its dat file.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "fileName": {
     ///      "description": "The name of the file, including extension.",
     ///      "type": "string"
     ///    },
-    ///    "file_size_in_bytes": {
+    ///    "fileSizeInBytes": {
     ///      "description": "The size of the file in bytes, if available.",
     ///      "type": [
     ///        "integer",
@@ -9174,7 +12331,7 @@ pub mod types {
     ///      ],
     ///      "format": "int64"
     ///    },
-    ///    "game_id": {
+    ///    "gameId": {
     ///      "description": "The ID of the game this file belongs to.",
     ///      "type": "string",
     ///      "format": "uuid"
@@ -9183,6 +12340,23 @@ pub mod types {
     ///      "description": "The ID of the game file.",
     ///      "type": "string",
     ///      "format": "uuid"
+    ///    },
+    ///    "lastSeenDatFileImportId": {
+    ///      "description": "Id of the last dat file import this hash was seen
+    /// in.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "lastSeenDatVersion": {
+    ///      "description": "Version string of the last dat file release this
+    /// hash was seen in.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
     ///    },
     ///    "md5": {
     ///      "description": "Optional MD5 hash of the file.",
@@ -9221,7 +12395,7 @@ pub mod types {
     ///        "null"
     ///      ]
     ///    },
-    ///    "updated_at": {
+    ///    "updatedAt": {
     ///      "description": "When the game file was last updated inside
     /// playmatch.",
     ///      "type": "string",
@@ -9232,21 +12406,46 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct PlaymatchGameFile {
+    pub struct PlaymatchGameFileV2 {
         ///Optional crc32 checksum of the file.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub crc: ::std::option::Option<::std::string::String>,
         ///When the game file was created inside playmatch.
+        #[serde(rename = "createdAt")]
         pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///Whether this hash is still present in the current version of its dat
+        /// file.
+        #[serde(rename = "currentInLatestDat")]
+        pub current_in_latest_dat: bool,
         ///The name of the file, including extension.
+        #[serde(rename = "fileName")]
         pub file_name: ::std::string::String,
         ///The size of the file in bytes, if available.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(
+            rename = "fileSizeInBytes",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
         pub file_size_in_bytes: ::std::option::Option<i64>,
         ///The ID of the game this file belongs to.
+        #[serde(rename = "gameId")]
         pub game_id: ::uuid::Uuid,
         ///The ID of the game file.
         pub id: ::uuid::Uuid,
+        ///Id of the last dat file import this hash was seen in.
+        #[serde(
+            rename = "lastSeenDatFileImportId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub last_seen_dat_file_import_id: ::std::option::Option<::uuid::Uuid>,
+        ///Version string of the last dat file release this hash was seen in.
+        #[serde(
+            rename = "lastSeenDatVersion",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub last_seen_dat_version: ::std::option::Option<::std::string::String>,
         ///Optional MD5 hash of the file.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub md5: ::std::option::Option<::std::string::String>,
@@ -9263,10 +12462,148 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub status: ::std::option::Option<::std::string::String>,
         ///When the game file was last updated inside playmatch.
+        #[serde(rename = "updatedAt")]
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
-    impl PlaymatchGameFile {
-        pub fn builder() -> builder::PlaymatchGameFile {
+    impl PlaymatchGameFileV2 {
+        pub fn builder() -> builder::PlaymatchGameFileV2 {
+            Default::default()
+        }
+    }
+    ///contains basic information about a Game.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "contains basic information about a Game.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "createdAt",
+    ///    "currentInLatestDat",
+    ///    "id",
+    ///    "name",
+    ///    "updatedAt"
+    ///  ],
+    ///  "properties": {
+    ///    "categories": {
+    ///      "description": "Optional categories for the game.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "cloneOf": {
+    ///      "description": "Optional which game this game is a clone of
+    /// (different editions/versions).",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "createdAt": {
+    ///      "description": "When the game was created inside playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "currentInLatestDat": {
+    ///      "description": "Whether this game is still present in the current
+    /// version of its dat file.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "description": {
+    ///      "description": "Optional description of the game.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "id": {
+    ///      "description": "The ID of the game.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "lastSeenDatFileImportId": {
+    ///      "description": "Id of the last dat file import this game was seen
+    /// in.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "uuid"
+    ///    },
+    ///    "lastSeenDatVersion": {
+    ///      "description": "Version string of the last dat file release this
+    /// game was seen in.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the game.",
+    ///      "type": "string"
+    ///    },
+    ///    "updatedAt": {
+    ///      "description": "When the game was last updated inside playmatch.",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct PlaymatchGameV2 {
+        ///Optional categories for the game.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub categories: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+        ///Optional which game this game is a clone of (different
+        /// editions/versions).
+        #[serde(
+            rename = "cloneOf",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub clone_of: ::std::option::Option<::uuid::Uuid>,
+        ///When the game was created inside playmatch.
+        #[serde(rename = "createdAt")]
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///Whether this game is still present in the current version of its dat
+        /// file.
+        #[serde(rename = "currentInLatestDat")]
+        pub current_in_latest_dat: bool,
+        ///Optional description of the game.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        ///The ID of the game.
+        pub id: ::uuid::Uuid,
+        ///Id of the last dat file import this game was seen in.
+        #[serde(
+            rename = "lastSeenDatFileImportId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub last_seen_dat_file_import_id: ::std::option::Option<::uuid::Uuid>,
+        ///Version string of the last dat file release this game was seen in.
+        #[serde(
+            rename = "lastSeenDatVersion",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub last_seen_dat_version: ::std::option::Option<::std::string::String>,
+        ///The name of the game.
+        pub name: ::std::string::String,
+        ///When the game was last updated inside playmatch.
+        #[serde(rename = "updatedAt")]
+        pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
+    }
+    impl PlaymatchGameV2 {
+        pub fn builder() -> builder::PlaymatchGameV2 {
             Default::default()
         }
     }
@@ -9279,13 +12616,13 @@ pub mod types {
     ///  "description": "contains basic information about a Platform.",
     ///  "type": "object",
     ///  "required": [
-    ///    "created_at",
+    ///    "createdAt",
     ///    "id",
     ///    "name",
-    ///    "updated_at"
+    ///    "updatedAt"
     ///  ],
     ///  "properties": {
-    ///    "company_id": {
+    ///    "companyId": {
     ///      "description": "Optional id of the company that made the
     /// platform.",
     ///      "type": [
@@ -9294,7 +12631,7 @@ pub mod types {
     ///      ],
     ///      "format": "uuid"
     ///    },
-    ///    "created_at": {
+    ///    "createdAt": {
     ///      "description": "When the platform was created inside playmatch.",
     ///      "type": "string",
     ///      "format": "date-time"
@@ -9308,7 +12645,7 @@ pub mod types {
     ///      "description": "The name of the platform.",
     ///      "type": "string"
     ///    },
-    ///    "updated_at": {
+    ///    "updatedAt": {
     ///      "description": "When the platform was last updated inside
     /// playmatch.",
     ///      "type": "string",
@@ -9319,21 +12656,27 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct PlaymatchPlatform {
+    pub struct PlaymatchPlatformV2 {
         ///Optional id of the company that made the platform.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(
+            rename = "companyId",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
         pub company_id: ::std::option::Option<::uuid::Uuid>,
         ///When the platform was created inside playmatch.
+        #[serde(rename = "createdAt")]
         pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
         ///The ID of the platform.
         pub id: ::uuid::Uuid,
         ///The name of the platform.
         pub name: ::std::string::String,
         ///When the platform was last updated inside playmatch.
+        #[serde(rename = "updatedAt")]
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
     }
-    impl PlaymatchPlatform {
-        pub fn builder() -> builder::PlaymatchPlatform {
+    impl PlaymatchPlatformV2 {
+        pub fn builder() -> builder::PlaymatchPlatformV2 {
             Default::default()
         }
     }
@@ -9346,13 +12689,13 @@ pub mod types {
     ///  "description": "contains basic information about a Signature Group.",
     ///  "type": "object",
     ///  "required": [
-    ///    "created_at",
+    ///    "createdAt",
     ///    "id",
     ///    "name",
-    ///    "updated_at"
+    ///    "updatedAt"
     ///  ],
     ///  "properties": {
-    ///    "created_at": {
+    ///    "createdAt": {
     ///      "description": "When the signature group was created inside
     /// playmatch.",
     ///      "type": "string",
@@ -9371,17 +12714,16 @@ pub mod types {
     ///      "format": "uuid"
     ///    },
     ///    "name": {
-    ///      "description": "The ID of the dat file import this signature group
-    /// belongs to.",
+    ///      "description": "The name of the signature group.",
     ///      "type": "string"
     ///    },
-    ///    "updated_at": {
+    ///    "updatedAt": {
     ///      "description": "When the signature group was last updated inside
     /// playmatch.",
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
-    ///    "website_link": {
+    ///    "websiteLink": {
     ///      "description": "Optional Link to the website of the signature
     /// group.",
     ///      "type": [
@@ -9394,24 +12736,30 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct PlaymatchSignatureGroup {
+    pub struct PlaymatchSignatureGroupV2 {
         ///When the signature group was created inside playmatch.
+        #[serde(rename = "createdAt")]
         pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
         ///Optional description of the signature group.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
         ///The ID of the signature group.
         pub id: ::uuid::Uuid,
-        ///The ID of the dat file import this signature group belongs to.
+        ///The name of the signature group.
         pub name: ::std::string::String,
         ///When the signature group was last updated inside playmatch.
+        #[serde(rename = "updatedAt")]
         pub updated_at: ::chrono::DateTime<::chrono::offset::Utc>,
         ///Optional Link to the website of the signature group.
-        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        #[serde(
+            rename = "websiteLink",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
         pub website_link: ::std::option::Option<::std::string::String>,
     }
-    impl PlaymatchSignatureGroup {
-        pub fn builder() -> builder::PlaymatchSignatureGroup {
+    impl PlaymatchSignatureGroupV2 {
+        pub fn builder() -> builder::PlaymatchSignatureGroupV2 {
             Default::default()
         }
     }
@@ -9577,6 +12925,48 @@ pub mod types {
     impl PopularityType {
         pub fn builder() -> builder::PopularityType {
             Default::default()
+        }
+    }
+    ///The reverse-lookup result, either per dat file or collapsed to the
+    /// publishing signature groups.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The reverse-lookup result, either per dat file or
+    /// collapsed to the publishing\nsignature groups.",
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/DatFilePresence"
+    ///      }
+    ///    },
+    ///    {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SignatureGroupPresence"
+    ///      }
+    ///    }
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    #[serde(untagged)]
+    pub enum PresenceResult {
+        Variant0(::std::vec::Vec<DatFilePresence>),
+        Variant1(::std::vec::Vec<SignatureGroupPresence>),
+    }
+    impl ::std::convert::From<::std::vec::Vec<DatFilePresence>> for PresenceResult {
+        fn from(value: ::std::vec::Vec<DatFilePresence>) -> Self {
+            Self::Variant0(value)
+        }
+    }
+    impl ::std::convert::From<::std::vec::Vec<SignatureGroupPresence>> for PresenceResult {
+        fn from(value: ::std::vec::Vec<SignatureGroupPresence>) -> Self {
+            Self::Variant1(value)
         }
     }
     ///`RaGame`
@@ -10214,6 +13604,83 @@ pub mod types {
             Default::default()
         }
     }
+    ///Granularity of a reverse lookup. `dat` returns one entry per dat file;
+    /// `group` collapses the result to the publishing signature groups.
+    /// Defaults to `dat`.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Granularity of a reverse lookup. `dat` returns one
+    /// entry per dat file; `group`\ncollapses the result to the publishing
+    /// signature groups. Defaults to `dat`.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "dat",
+    ///    "group"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(
+        :: serde :: Deserialize,
+        :: serde :: Serialize,
+        Clone,
+        Copy,
+        Debug,
+        Eq,
+        Hash,
+        Ord,
+        PartialEq,
+        PartialOrd,
+    )]
+    pub enum ReverseLookupLevel {
+        #[serde(rename = "dat")]
+        Dat,
+        #[serde(rename = "group")]
+        Group,
+    }
+    impl ::std::fmt::Display for ReverseLookupLevel {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Dat => f.write_str("dat"),
+                Self::Group => f.write_str("group"),
+            }
+        }
+    }
+    impl ::std::str::FromStr for ReverseLookupLevel {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "dat" => Ok(Self::Dat),
+                "group" => Ok(Self::Group),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+    impl ::std::convert::TryFrom<&str> for ReverseLookupLevel {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<&::std::string::String> for ReverseLookupLevel {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: &::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+    impl ::std::convert::TryFrom<::std::string::String> for ReverseLookupLevel {
+        type Error = self::error::ConversionError;
+        fn try_from(
+            value: ::std::string::String,
+        ) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
     ///`Screenshot`
     ///
     /// <details><summary>JSON schema</summary>
@@ -10289,6 +13756,108 @@ pub mod types {
     }
     impl Screenshot {
         pub fn builder() -> builder::Screenshot {
+            Default::default()
+        }
+    }
+    ///Service-wide aggregate counts. Cheap to cache: the numbers move only
+    /// when a dat file is imported.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Service-wide aggregate counts. Cheap to cache: the
+    /// numbers move only when a\ndat file is imported.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "companyCount",
+    ///    "currentGameCount",
+    ///    "datFileCount",
+    ///    "gameCount",
+    ///    "gameFileCount",
+    ///    "mappedGameCount",
+    ///    "platformCount",
+    ///    "signatureGroupCount"
+    ///  ],
+    ///  "properties": {
+    ///    "companyCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "currentGameCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "datFileCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "gameCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "gameFileCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "lastImportAt": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "date-time"
+    ///    },
+    ///    "mappedGameCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "platformCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    },
+    ///    "signatureGroupCount": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 0.0
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct ServiceStats {
+        #[serde(rename = "companyCount")]
+        pub company_count: i64,
+        #[serde(rename = "currentGameCount")]
+        pub current_game_count: i64,
+        #[serde(rename = "datFileCount")]
+        pub dat_file_count: i64,
+        #[serde(rename = "gameCount")]
+        pub game_count: i64,
+        #[serde(rename = "gameFileCount")]
+        pub game_file_count: i64,
+        #[serde(
+            rename = "lastImportAt",
+            default,
+            skip_serializing_if = "::std::option::Option::is_none"
+        )]
+        pub last_import_at: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+        #[serde(rename = "mappedGameCount")]
+        pub mapped_game_count: i64,
+        #[serde(rename = "platformCount")]
+        pub platform_count: i64,
+        #[serde(rename = "signatureGroupCount")]
+        pub signature_group_count: i64,
+    }
+    impl ServiceStats {
+        pub fn builder() -> builder::ServiceStats {
             Default::default()
         }
     }
@@ -11576,6 +15145,57 @@ pub mod types {
             value.parse()
         }
     }
+    ///A signature group that publishes one or more dat files containing a
+    /// looked-up hash or game. Collapses [`DatFilePresence`] rows for the
+    /// `level=group` view.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A signature group that publishes one or more dat files
+    /// containing a looked-up\nhash or game. Collapses [`DatFilePresence`] rows
+    /// for the `level=group` view.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "firstSeenImport",
+    ///    "isCurrentInLatest",
+    ///    "lastSeenImport",
+    ///    "signatureGroup"
+    ///  ],
+    ///  "properties": {
+    ///    "firstSeenImport": {
+    ///      "$ref": "#/components/schemas/DatFileImportRef"
+    ///    },
+    ///    "isCurrentInLatest": {
+    ///      "type": "boolean"
+    ///    },
+    ///    "lastSeenImport": {
+    ///      "$ref": "#/components/schemas/DatFileImportRef"
+    ///    },
+    ///    "signatureGroup": {
+    ///      "$ref": "#/components/schemas/NamedRef"
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct SignatureGroupPresence {
+        #[serde(rename = "firstSeenImport")]
+        pub first_seen_import: DatFileImportRef,
+        #[serde(rename = "isCurrentInLatest")]
+        pub is_current_in_latest: bool,
+        #[serde(rename = "lastSeenImport")]
+        pub last_seen_import: DatFileImportRef,
+        #[serde(rename = "signatureGroup")]
+        pub signature_group: NamedRef,
+    }
+    impl SignatureGroupPresence {
+        pub fn builder() -> builder::SignatureGroupPresence {
+            Default::default()
+        }
+    }
     ///`SsEntityRef`
     ///
     /// <details><summary>JSON schema</summary>
@@ -12150,10 +15770,10 @@ pub mod types {
     ///  "description": "Request to update a user's permissions.",
     ///  "type": "object",
     ///  "required": [
-    ///    "new_permission"
+    ///    "newPermission"
     ///  ],
     ///  "properties": {
-    ///    "new_permission": {
+    ///    "newPermission": {
     ///      "$ref": "#/components/schemas/UserPermissions"
     ///    }
     ///  }
@@ -12161,11 +15781,12 @@ pub mod types {
     /// ```
     /// </details>
     #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
-    pub struct UpdateUserPermissionsRequest {
+    pub struct UpdateUserPermissionsRequestV2 {
+        #[serde(rename = "newPermission")]
         pub new_permission: UserPermissions,
     }
-    impl UpdateUserPermissionsRequest {
-        pub fn builder() -> builder::UpdateUserPermissionsRequest {
+    impl UpdateUserPermissionsRequestV2 {
+        pub fn builder() -> builder::UpdateUserPermissionsRequestV2 {
             Default::default()
         }
     }
@@ -12378,6 +15999,85 @@ pub mod types {
             value: ::std::string::String,
         ) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+    ///A v2 client error. Every v2 4xx response serializes to this shape with a
+    ///stable `code` the client can branch on and a human-readable `message`.
+    /// The optional fields are populated only by the error variants that
+    /// carry them, so the common body stays `{ "code": ..., "message": ...
+    /// }`.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A v2 client error. Every v2 4xx response serializes to
+    /// this shape with a\nstable `code` the client can branch on and a
+    /// human-readable `message`. The\noptional fields are populated only by the
+    /// error variants that carry them, so\nthe common body stays `{ \"code\":
+    /// ..., \"message\": ... }`.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "code",
+    ///    "message"
+    ///  ],
+    ///  "properties": {
+    ///    "code": {
+    ///      "type": "string"
+    ///    },
+    ///    "limit": {
+    ///      "description": "The maximum number of items a bulk request may
+    /// carry. Present on a\nbatch-too-large error.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "minimum": 0.0
+    ///    },
+    ///    "message": {
+    ///      "type": "string"
+    ///    },
+    ///    "received": {
+    ///      "description": "The number of items the rejected bulk request
+    /// carried. Present on a\nbatch-too-large error.",
+    ///      "type": [
+    ///        "integer",
+    ///        "null"
+    ///      ],
+    ///      "minimum": 0.0
+    ///    },
+    ///    "restart": {
+    ///      "description": "Set on a cursor filter-set mismatch to tell the
+    /// client to discard the\ncursor and request the first page.",
+    ///      "type": [
+    ///        "boolean",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  }
+    ///}
+    /// ```
+    /// </details>
+    #[derive(:: serde :: Deserialize, :: serde :: Serialize, Clone, Debug)]
+    pub struct V2ErrorBody {
+        pub code: ::std::string::String,
+        ///The maximum number of items a bulk request may carry. Present on a
+        ///batch-too-large error.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub limit: ::std::option::Option<u64>,
+        pub message: ::std::string::String,
+        ///The number of items the rejected bulk request carried. Present on a
+        ///batch-too-large error.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub received: ::std::option::Option<u64>,
+        ///Set on a cursor filter-set mismatch to tell the client to discard
+        /// the cursor and request the first page.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub restart: ::std::option::Option<bool>,
+    }
+    impl V2ErrorBody {
+        pub fn builder() -> builder::V2ErrorBody {
+            Default::default()
         }
     }
     ///`Website`
@@ -13707,6 +17407,1595 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
+        pub struct BulkByIdSummary {
+            found: ::std::result::Result<u64, ::std::string::String>,
+            not_found: ::std::result::Result<u64, ::std::string::String>,
+            total: ::std::result::Result<u64, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkByIdSummary {
+            fn default() -> Self {
+                Self {
+                    found: Err("no value supplied for found".to_string()),
+                    not_found: Err("no value supplied for not_found".to_string()),
+                    total: Err("no value supplied for total".to_string()),
+                }
+            }
+        }
+        impl BulkByIdSummary {
+            pub fn found<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.found = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for found: {e}"));
+                self
+            }
+            pub fn not_found<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.not_found = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for not_found: {e}"));
+                self
+            }
+            pub fn total<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.total = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for total: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkByIdSummary> for super::BulkByIdSummary {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkByIdSummary,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    found: value.found?,
+                    not_found: value.not_found?,
+                    total: value.total?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkByIdSummary> for BulkByIdSummary {
+            fn from(value: super::BulkByIdSummary) -> Self {
+                Self {
+                    found: Ok(value.found),
+                    not_found: Ok(value.not_found),
+                    total: Ok(value.total),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkCompaniesByIdResponse {
+            results: ::std::result::Result<
+                ::std::vec::Vec<super::BulkCompaniesByIdResult>,
+                ::std::string::String,
+            >,
+            summary: ::std::result::Result<super::BulkByIdSummary, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkCompaniesByIdResponse {
+            fn default() -> Self {
+                Self {
+                    results: Err("no value supplied for results".to_string()),
+                    summary: Err("no value supplied for summary".to_string()),
+                }
+            }
+        }
+        impl BulkCompaniesByIdResponse {
+            pub fn results<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BulkCompaniesByIdResult>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.results = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for results: {e}"));
+                self
+            }
+            pub fn summary<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdSummary>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.summary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for summary: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkCompaniesByIdResponse> for super::BulkCompaniesByIdResponse {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkCompaniesByIdResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    results: value.results?,
+                    summary: value.summary?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkCompaniesByIdResponse> for BulkCompaniesByIdResponse {
+            fn from(value: super::BulkCompaniesByIdResponse) -> Self {
+                Self {
+                    results: Ok(value.results),
+                    summary: Ok(value.summary),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkCompaniesByIdResult {
+            data: ::std::result::Result<
+                ::std::option::Option<super::CompanyMetadataResponse>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            status: ::std::result::Result<super::BulkByIdStatusV2, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkCompaniesByIdResult {
+            fn default() -> Self {
+                Self {
+                    data: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+        impl BulkCompaniesByIdResult {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::CompanyMetadataResponse>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdStatusV2>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkCompaniesByIdResult> for super::BulkCompaniesByIdResult {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkCompaniesByIdResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    id: value.id?,
+                    status: value.status?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkCompaniesByIdResult> for BulkCompaniesByIdResult {
+            fn from(value: super::BulkCompaniesByIdResult) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    id: Ok(value.id),
+                    status: Ok(value.status),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkDatFilesByIdResponse {
+            results: ::std::result::Result<
+                ::std::vec::Vec<super::BulkDatFilesByIdResult>,
+                ::std::string::String,
+            >,
+            summary: ::std::result::Result<super::BulkByIdSummary, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkDatFilesByIdResponse {
+            fn default() -> Self {
+                Self {
+                    results: Err("no value supplied for results".to_string()),
+                    summary: Err("no value supplied for summary".to_string()),
+                }
+            }
+        }
+        impl BulkDatFilesByIdResponse {
+            pub fn results<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BulkDatFilesByIdResult>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.results = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for results: {e}"));
+                self
+            }
+            pub fn summary<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdSummary>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.summary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for summary: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkDatFilesByIdResponse> for super::BulkDatFilesByIdResponse {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkDatFilesByIdResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    results: value.results?,
+                    summary: value.summary?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkDatFilesByIdResponse> for BulkDatFilesByIdResponse {
+            fn from(value: super::BulkDatFilesByIdResponse) -> Self {
+                Self {
+                    results: Ok(value.results),
+                    summary: Ok(value.summary),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkDatFilesByIdResult {
+            data: ::std::result::Result<
+                ::std::option::Option<super::DatFileDetail>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            status: ::std::result::Result<super::BulkByIdStatusV2, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkDatFilesByIdResult {
+            fn default() -> Self {
+                Self {
+                    data: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+        impl BulkDatFilesByIdResult {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::DatFileDetail>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdStatusV2>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkDatFilesByIdResult> for super::BulkDatFilesByIdResult {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkDatFilesByIdResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    id: value.id?,
+                    status: value.status?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkDatFilesByIdResult> for BulkDatFilesByIdResult {
+            fn from(value: super::BulkDatFilesByIdResult) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    id: Ok(value.id),
+                    status: Ok(value.status),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkGameFilesByIdResponse {
+            results: ::std::result::Result<
+                ::std::vec::Vec<super::BulkGameFilesByIdResult>,
+                ::std::string::String,
+            >,
+            summary: ::std::result::Result<super::BulkByIdSummary, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkGameFilesByIdResponse {
+            fn default() -> Self {
+                Self {
+                    results: Err("no value supplied for results".to_string()),
+                    summary: Err("no value supplied for summary".to_string()),
+                }
+            }
+        }
+        impl BulkGameFilesByIdResponse {
+            pub fn results<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BulkGameFilesByIdResult>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.results = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for results: {e}"));
+                self
+            }
+            pub fn summary<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdSummary>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.summary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for summary: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkGameFilesByIdResponse> for super::BulkGameFilesByIdResponse {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkGameFilesByIdResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    results: value.results?,
+                    summary: value.summary?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkGameFilesByIdResponse> for BulkGameFilesByIdResponse {
+            fn from(value: super::BulkGameFilesByIdResponse) -> Self {
+                Self {
+                    results: Ok(value.results),
+                    summary: Ok(value.summary),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkGameFilesByIdResult {
+            data: ::std::result::Result<
+                ::std::option::Option<super::PlaymatchGameFileV2>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            status: ::std::result::Result<super::BulkByIdStatusV2, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkGameFilesByIdResult {
+            fn default() -> Self {
+                Self {
+                    data: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+        impl BulkGameFilesByIdResult {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchGameFileV2>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdStatusV2>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkGameFilesByIdResult> for super::BulkGameFilesByIdResult {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkGameFilesByIdResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    id: value.id?,
+                    status: value.status?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkGameFilesByIdResult> for BulkGameFilesByIdResult {
+            fn from(value: super::BulkGameFilesByIdResult) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    id: Ok(value.id),
+                    status: Ok(value.status),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkGamesByIdResponse {
+            results: ::std::result::Result<
+                ::std::vec::Vec<super::BulkGamesByIdResult>,
+                ::std::string::String,
+            >,
+            summary: ::std::result::Result<super::BulkByIdSummary, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkGamesByIdResponse {
+            fn default() -> Self {
+                Self {
+                    results: Err("no value supplied for results".to_string()),
+                    summary: Err("no value supplied for summary".to_string()),
+                }
+            }
+        }
+        impl BulkGamesByIdResponse {
+            pub fn results<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BulkGamesByIdResult>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.results = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for results: {e}"));
+                self
+            }
+            pub fn summary<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdSummary>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.summary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for summary: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkGamesByIdResponse> for super::BulkGamesByIdResponse {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkGamesByIdResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    results: value.results?,
+                    summary: value.summary?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkGamesByIdResponse> for BulkGamesByIdResponse {
+            fn from(value: super::BulkGamesByIdResponse) -> Self {
+                Self {
+                    results: Ok(value.results),
+                    summary: Ok(value.summary),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkGamesByIdResult {
+            data: ::std::result::Result<
+                ::std::option::Option<super::GameMetadataResponse>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            status: ::std::result::Result<super::BulkByIdStatusV2, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkGamesByIdResult {
+            fn default() -> Self {
+                Self {
+                    data: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+        impl BulkGamesByIdResult {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::GameMetadataResponse>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdStatusV2>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkGamesByIdResult> for super::BulkGamesByIdResult {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkGamesByIdResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    id: value.id?,
+                    status: value.status?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkGamesByIdResult> for BulkGamesByIdResult {
+            fn from(value: super::BulkGamesByIdResult) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    id: Ok(value.id),
+                    status: Ok(value.status),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkIdentifyIdsResponse {
+            results: ::std::result::Result<
+                ::std::vec::Vec<super::BulkIdentifyIdsResult>,
+                ::std::string::String,
+            >,
+            summary: ::std::result::Result<super::BulkIdentifySummary, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkIdentifyIdsResponse {
+            fn default() -> Self {
+                Self {
+                    results: Err("no value supplied for results".to_string()),
+                    summary: Err("no value supplied for summary".to_string()),
+                }
+            }
+        }
+        impl BulkIdentifyIdsResponse {
+            pub fn results<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BulkIdentifyIdsResult>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.results = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for results: {e}"));
+                self
+            }
+            pub fn summary<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkIdentifySummary>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.summary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for summary: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkIdentifyIdsResponse> for super::BulkIdentifyIdsResponse {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkIdentifyIdsResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    results: value.results?,
+                    summary: value.summary?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkIdentifyIdsResponse> for BulkIdentifyIdsResponse {
+            fn from(value: super::BulkIdentifyIdsResponse) -> Self {
+                Self {
+                    results: Ok(value.results),
+                    summary: Ok(value.summary),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkIdentifyIdsResult {
+            cache: ::std::result::Result<
+                ::std::option::Option<super::BulkCache>,
+                ::std::string::String,
+            >,
+            error: ::std::result::Result<
+                ::std::option::Option<super::BulkItemError>,
+                ::std::string::String,
+            >,
+            index: ::std::result::Result<u64, ::std::string::String>,
+            key: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            match_: ::std::result::Result<
+                ::std::option::Option<super::GameMetadataMatchResult>,
+                ::std::string::String,
+            >,
+            status: ::std::result::Result<super::BulkItemStatus, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkIdentifyIdsResult {
+            fn default() -> Self {
+                Self {
+                    cache: Ok(Default::default()),
+                    error: Ok(Default::default()),
+                    index: Err("no value supplied for index".to_string()),
+                    key: Ok(Default::default()),
+                    match_: Ok(Default::default()),
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+        impl BulkIdentifyIdsResult {
+            pub fn cache<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::BulkCache>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.cache = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cache: {e}"));
+                self
+            }
+            pub fn error<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::BulkItemError>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.error = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for error: {e}"));
+                self
+            }
+            pub fn index<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.index = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for index: {e}"));
+                self
+            }
+            pub fn key<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.key = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for key: {e}"));
+                self
+            }
+            pub fn match_<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::GameMetadataMatchResult>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.match_ = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for match_: {e}"));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkItemStatus>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkIdentifyIdsResult> for super::BulkIdentifyIdsResult {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkIdentifyIdsResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    cache: value.cache?,
+                    error: value.error?,
+                    index: value.index?,
+                    key: value.key?,
+                    match_: value.match_?,
+                    status: value.status?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkIdentifyIdsResult> for BulkIdentifyIdsResult {
+            fn from(value: super::BulkIdentifyIdsResult) -> Self {
+                Self {
+                    cache: Ok(value.cache),
+                    error: Ok(value.error),
+                    index: Ok(value.index),
+                    key: Ok(value.key),
+                    match_: Ok(value.match_),
+                    status: Ok(value.status),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkIdentifyItem {
+            crc: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            file_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            file_size: ::std::result::Result<i64, ::std::string::String>,
+            key: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            md5: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            sha1: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            sha256: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for BulkIdentifyItem {
+            fn default() -> Self {
+                Self {
+                    crc: Ok(Default::default()),
+                    file_name: Err("no value supplied for file_name".to_string()),
+                    file_size: Err("no value supplied for file_size".to_string()),
+                    key: Ok(Default::default()),
+                    md5: Ok(Default::default()),
+                    sha1: Ok(Default::default()),
+                    sha256: Ok(Default::default()),
+                }
+            }
+        }
+        impl BulkIdentifyItem {
+            pub fn crc<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.crc = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for crc: {e}"));
+                self
+            }
+            pub fn file_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.file_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for file_name: {e}"));
+                self
+            }
+            pub fn file_size<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.file_size = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for file_size: {e}"));
+                self
+            }
+            pub fn key<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.key = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for key: {e}"));
+                self
+            }
+            pub fn md5<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.md5 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for md5: {e}"));
+                self
+            }
+            pub fn sha1<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sha1 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sha1: {e}"));
+                self
+            }
+            pub fn sha256<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sha256 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sha256: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkIdentifyItem> for super::BulkIdentifyItem {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkIdentifyItem,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    crc: value.crc?,
+                    file_name: value.file_name?,
+                    file_size: value.file_size?,
+                    key: value.key?,
+                    md5: value.md5?,
+                    sha1: value.sha1?,
+                    sha256: value.sha256?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkIdentifyItem> for BulkIdentifyItem {
+            fn from(value: super::BulkIdentifyItem) -> Self {
+                Self {
+                    crc: Ok(value.crc),
+                    file_name: Ok(value.file_name),
+                    file_size: Ok(value.file_size),
+                    key: Ok(value.key),
+                    md5: Ok(value.md5),
+                    sha1: Ok(value.sha1),
+                    sha256: Ok(value.sha256),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkIdentifyRelationsResponse {
+            results: ::std::result::Result<
+                ::std::vec::Vec<super::BulkIdentifyRelationsResult>,
+                ::std::string::String,
+            >,
+            summary: ::std::result::Result<super::BulkIdentifySummary, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkIdentifyRelationsResponse {
+            fn default() -> Self {
+                Self {
+                    results: Err("no value supplied for results".to_string()),
+                    summary: Err("no value supplied for summary".to_string()),
+                }
+            }
+        }
+        impl BulkIdentifyRelationsResponse {
+            pub fn results<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BulkIdentifyRelationsResult>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.results = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for results: {e}"));
+                self
+            }
+            pub fn summary<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkIdentifySummary>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.summary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for summary: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkIdentifyRelationsResponse>
+            for super::BulkIdentifyRelationsResponse
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkIdentifyRelationsResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    results: value.results?,
+                    summary: value.summary?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkIdentifyRelationsResponse> for BulkIdentifyRelationsResponse {
+            fn from(value: super::BulkIdentifyRelationsResponse) -> Self {
+                Self {
+                    results: Ok(value.results),
+                    summary: Ok(value.summary),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkIdentifyRelationsResult {
+            cache: ::std::result::Result<
+                ::std::option::Option<super::BulkCache>,
+                ::std::string::String,
+            >,
+            error: ::std::result::Result<
+                ::std::option::Option<super::BulkItemError>,
+                ::std::string::String,
+            >,
+            index: ::std::result::Result<u64, ::std::string::String>,
+            key: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            match_: ::std::result::Result<
+                ::std::option::Option<super::GameAndRelationMatchResultV2>,
+                ::std::string::String,
+            >,
+            status: ::std::result::Result<super::BulkItemStatus, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkIdentifyRelationsResult {
+            fn default() -> Self {
+                Self {
+                    cache: Ok(Default::default()),
+                    error: Ok(Default::default()),
+                    index: Err("no value supplied for index".to_string()),
+                    key: Ok(Default::default()),
+                    match_: Ok(Default::default()),
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+        impl BulkIdentifyRelationsResult {
+            pub fn cache<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::BulkCache>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.cache = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for cache: {e}"));
+                self
+            }
+            pub fn error<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::BulkItemError>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.error = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for error: {e}"));
+                self
+            }
+            pub fn index<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.index = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for index: {e}"));
+                self
+            }
+            pub fn key<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.key = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for key: {e}"));
+                self
+            }
+            pub fn match_<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<super::GameAndRelationMatchResultV2>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.match_ = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for match_: {e}"));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkItemStatus>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkIdentifyRelationsResult> for super::BulkIdentifyRelationsResult {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkIdentifyRelationsResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    cache: value.cache?,
+                    error: value.error?,
+                    index: value.index?,
+                    key: value.key?,
+                    match_: value.match_?,
+                    status: value.status?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkIdentifyRelationsResult> for BulkIdentifyRelationsResult {
+            fn from(value: super::BulkIdentifyRelationsResult) -> Self {
+                Self {
+                    cache: Ok(value.cache),
+                    error: Ok(value.error),
+                    index: Ok(value.index),
+                    key: Ok(value.key),
+                    match_: Ok(value.match_),
+                    status: Ok(value.status),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkIdentifyRequest {
+            items: ::std::result::Result<
+                ::std::vec::Vec<super::BulkIdentifyItem>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for BulkIdentifyRequest {
+            fn default() -> Self {
+                Self {
+                    items: Err("no value supplied for items".to_string()),
+                }
+            }
+        }
+        impl BulkIdentifyRequest {
+            pub fn items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BulkIdentifyItem>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for items: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkIdentifyRequest> for super::BulkIdentifyRequest {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkIdentifyRequest,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    items: value.items?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkIdentifyRequest> for BulkIdentifyRequest {
+            fn from(value: super::BulkIdentifyRequest) -> Self {
+                Self {
+                    items: Ok(value.items),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkIdentifySummary {
+            failed: ::std::result::Result<u64, ::std::string::String>,
+            matched: ::std::result::Result<u64, ::std::string::String>,
+            succeeded: ::std::result::Result<u64, ::std::string::String>,
+            total: ::std::result::Result<u64, ::std::string::String>,
+            unmatched: ::std::result::Result<u64, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkIdentifySummary {
+            fn default() -> Self {
+                Self {
+                    failed: Err("no value supplied for failed".to_string()),
+                    matched: Err("no value supplied for matched".to_string()),
+                    succeeded: Err("no value supplied for succeeded".to_string()),
+                    total: Err("no value supplied for total".to_string()),
+                    unmatched: Err("no value supplied for unmatched".to_string()),
+                }
+            }
+        }
+        impl BulkIdentifySummary {
+            pub fn failed<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.failed = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for failed: {e}"));
+                self
+            }
+            pub fn matched<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.matched = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for matched: {e}"));
+                self
+            }
+            pub fn succeeded<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.succeeded = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for succeeded: {e}"));
+                self
+            }
+            pub fn total<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.total = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for total: {e}"));
+                self
+            }
+            pub fn unmatched<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<u64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.unmatched = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for unmatched: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkIdentifySummary> for super::BulkIdentifySummary {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkIdentifySummary,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    failed: value.failed?,
+                    matched: value.matched?,
+                    succeeded: value.succeeded?,
+                    total: value.total?,
+                    unmatched: value.unmatched?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkIdentifySummary> for BulkIdentifySummary {
+            fn from(value: super::BulkIdentifySummary) -> Self {
+                Self {
+                    failed: Ok(value.failed),
+                    matched: Ok(value.matched),
+                    succeeded: Ok(value.succeeded),
+                    total: Ok(value.total),
+                    unmatched: Ok(value.unmatched),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkIdsRequest {
+            ids: ::std::result::Result<::std::vec::Vec<::uuid::Uuid>, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkIdsRequest {
+            fn default() -> Self {
+                Self {
+                    ids: Err("no value supplied for ids".to_string()),
+                }
+            }
+        }
+        impl BulkIdsRequest {
+            pub fn ids<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::uuid::Uuid>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.ids = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for ids: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkIdsRequest> for super::BulkIdsRequest {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkIdsRequest,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self { ids: value.ids? })
+            }
+        }
+        impl ::std::convert::From<super::BulkIdsRequest> for BulkIdsRequest {
+            fn from(value: super::BulkIdsRequest) -> Self {
+                Self { ids: Ok(value.ids) }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkItemError {
+            code: ::std::result::Result<::std::string::String, ::std::string::String>,
+            field: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            message: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkItemError {
+            fn default() -> Self {
+                Self {
+                    code: Err("no value supplied for code".to_string()),
+                    field: Ok(Default::default()),
+                    message: Err("no value supplied for message".to_string()),
+                }
+            }
+        }
+        impl BulkItemError {
+            pub fn code<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.code = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for code: {e}"));
+                self
+            }
+            pub fn field<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.field = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for field: {e}"));
+                self
+            }
+            pub fn message<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.message = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for message: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkItemError> for super::BulkItemError {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkItemError,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    code: value.code?,
+                    field: value.field?,
+                    message: value.message?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkItemError> for BulkItemError {
+            fn from(value: super::BulkItemError) -> Self {
+                Self {
+                    code: Ok(value.code),
+                    field: Ok(value.field),
+                    message: Ok(value.message),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkPlatformsByIdResponse {
+            results: ::std::result::Result<
+                ::std::vec::Vec<super::BulkPlatformsByIdResult>,
+                ::std::string::String,
+            >,
+            summary: ::std::result::Result<super::BulkByIdSummary, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkPlatformsByIdResponse {
+            fn default() -> Self {
+                Self {
+                    results: Err("no value supplied for results".to_string()),
+                    summary: Err("no value supplied for summary".to_string()),
+                }
+            }
+        }
+        impl BulkPlatformsByIdResponse {
+            pub fn results<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BulkPlatformsByIdResult>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.results = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for results: {e}"));
+                self
+            }
+            pub fn summary<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdSummary>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.summary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for summary: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkPlatformsByIdResponse> for super::BulkPlatformsByIdResponse {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkPlatformsByIdResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    results: value.results?,
+                    summary: value.summary?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkPlatformsByIdResponse> for BulkPlatformsByIdResponse {
+            fn from(value: super::BulkPlatformsByIdResponse) -> Self {
+                Self {
+                    results: Ok(value.results),
+                    summary: Ok(value.summary),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkPlatformsByIdResult {
+            data: ::std::result::Result<
+                ::std::option::Option<super::PlatformMetadataResponse>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            status: ::std::result::Result<super::BulkByIdStatusV2, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkPlatformsByIdResult {
+            fn default() -> Self {
+                Self {
+                    data: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+        impl BulkPlatformsByIdResult {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::PlatformMetadataResponse>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdStatusV2>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkPlatformsByIdResult> for super::BulkPlatformsByIdResult {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkPlatformsByIdResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    id: value.id?,
+                    status: value.status?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkPlatformsByIdResult> for BulkPlatformsByIdResult {
+            fn from(value: super::BulkPlatformsByIdResult) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    id: Ok(value.id),
+                    status: Ok(value.status),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkSignatureGroupsByIdResponse {
+            results: ::std::result::Result<
+                ::std::vec::Vec<super::BulkSignatureGroupsByIdResult>,
+                ::std::string::String,
+            >,
+            summary: ::std::result::Result<super::BulkByIdSummary, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkSignatureGroupsByIdResponse {
+            fn default() -> Self {
+                Self {
+                    results: Err("no value supplied for results".to_string()),
+                    summary: Err("no value supplied for summary".to_string()),
+                }
+            }
+        }
+        impl BulkSignatureGroupsByIdResponse {
+            pub fn results<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::BulkSignatureGroupsByIdResult>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.results = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for results: {e}"));
+                self
+            }
+            pub fn summary<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdSummary>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.summary = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for summary: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkSignatureGroupsByIdResponse>
+            for super::BulkSignatureGroupsByIdResponse
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkSignatureGroupsByIdResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    results: value.results?,
+                    summary: value.summary?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkSignatureGroupsByIdResponse>
+            for BulkSignatureGroupsByIdResponse
+        {
+            fn from(value: super::BulkSignatureGroupsByIdResponse) -> Self {
+                Self {
+                    results: Ok(value.results),
+                    summary: Ok(value.summary),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct BulkSignatureGroupsByIdResult {
+            data: ::std::result::Result<
+                ::std::option::Option<super::PlaymatchSignatureGroupV2>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            status: ::std::result::Result<super::BulkByIdStatusV2, ::std::string::String>,
+        }
+        impl ::std::default::Default for BulkSignatureGroupsByIdResult {
+            fn default() -> Self {
+                Self {
+                    data: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    status: Err("no value supplied for status".to_string()),
+                }
+            }
+        }
+        impl BulkSignatureGroupsByIdResult {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchSignatureGroupV2>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn status<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::BulkByIdStatusV2>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.status = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for status: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<BulkSignatureGroupsByIdResult>
+            for super::BulkSignatureGroupsByIdResult
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: BulkSignatureGroupsByIdResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    id: value.id?,
+                    status: value.status?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::BulkSignatureGroupsByIdResult> for BulkSignatureGroupsByIdResult {
+            fn from(value: super::BulkSignatureGroupsByIdResult) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    id: Ok(value.id),
+                    status: Ok(value.status),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
         pub struct Character {
             akas: ::std::result::Result<
                 ::std::option::Option<::std::vec::Vec<::std::string::String>>,
@@ -14300,6 +19589,165 @@ pub mod types {
                     id: Ok(value.id),
                     name: Ok(value.name),
                     updated_at: Ok(value.updated_at),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct CloneGraph {
+            children: ::std::result::Result<
+                ::std::vec::Vec<super::CloneGraphNode>,
+                ::std::string::String,
+            >,
+            clone_graph_complete: ::std::result::Result<bool, ::std::string::String>,
+            game: ::std::result::Result<super::CloneGraphNode, ::std::string::String>,
+            parent: ::std::result::Result<
+                ::std::option::Option<super::CloneGraphNode>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for CloneGraph {
+            fn default() -> Self {
+                Self {
+                    children: Ok(Default::default()),
+                    clone_graph_complete: Err(
+                        "no value supplied for clone_graph_complete".to_string()
+                    ),
+                    game: Err("no value supplied for game".to_string()),
+                    parent: Ok(Default::default()),
+                }
+            }
+        }
+        impl CloneGraph {
+            pub fn children<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::CloneGraphNode>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.children = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for children: {e}"));
+                self
+            }
+            pub fn clone_graph_complete<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.clone_graph_complete = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for clone_graph_complete: {e}")
+                });
+                self
+            }
+            pub fn game<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::CloneGraphNode>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.game = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for game: {e}"));
+                self
+            }
+            pub fn parent<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::CloneGraphNode>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.parent = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for parent: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<CloneGraph> for super::CloneGraph {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: CloneGraph,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    children: value.children?,
+                    clone_graph_complete: value.clone_graph_complete?,
+                    game: value.game?,
+                    parent: value.parent?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::CloneGraph> for CloneGraph {
+            fn from(value: super::CloneGraph) -> Self {
+                Self {
+                    children: Ok(value.children),
+                    clone_graph_complete: Ok(value.clone_graph_complete),
+                    game: Ok(value.game),
+                    parent: Ok(value.parent),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct CloneGraphNode {
+            clone_of:
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for CloneGraphNode {
+            fn default() -> Self {
+                Self {
+                    clone_of: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                }
+            }
+        }
+        impl CloneGraphNode {
+            pub fn clone_of<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.clone_of = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for clone_of: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<CloneGraphNode> for super::CloneGraphNode {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: CloneGraphNode,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    clone_of: value.clone_of?,
+                    id: value.id?,
+                    name: value.name?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::CloneGraphNode> for CloneGraphNode {
+            fn from(value: super::CloneGraphNode) -> Self {
+                Self {
+                    clone_of: Ok(value.clone_of),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
                 }
             }
         }
@@ -16637,12 +22085,12 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
-        pub struct CreateOrGetUserRequest {
+        pub struct CreateOrGetUserRequestV2 {
             discord_id: ::std::result::Result<i64, ::std::string::String>,
             permissions: ::std::result::Result<super::UserPermissions, ::std::string::String>,
             username: ::std::result::Result<::std::string::String, ::std::string::String>,
         }
-        impl ::std::default::Default for CreateOrGetUserRequest {
+        impl ::std::default::Default for CreateOrGetUserRequestV2 {
             fn default() -> Self {
                 Self {
                     discord_id: Err("no value supplied for discord_id".to_string()),
@@ -16651,7 +22099,7 @@ pub mod types {
                 }
             }
         }
-        impl CreateOrGetUserRequest {
+        impl CreateOrGetUserRequestV2 {
             pub fn discord_id<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<i64>,
@@ -16683,10 +22131,10 @@ pub mod types {
                 self
             }
         }
-        impl ::std::convert::TryFrom<CreateOrGetUserRequest> for super::CreateOrGetUserRequest {
+        impl ::std::convert::TryFrom<CreateOrGetUserRequestV2> for super::CreateOrGetUserRequestV2 {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: CreateOrGetUserRequest,
+                value: CreateOrGetUserRequestV2,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     discord_id: value.discord_id?,
@@ -16695,12 +22143,926 @@ pub mod types {
                 })
             }
         }
-        impl ::std::convert::From<super::CreateOrGetUserRequest> for CreateOrGetUserRequest {
-            fn from(value: super::CreateOrGetUserRequest) -> Self {
+        impl ::std::convert::From<super::CreateOrGetUserRequestV2> for CreateOrGetUserRequestV2 {
+            fn from(value: super::CreateOrGetUserRequestV2) -> Self {
                 Self {
                     discord_id: Ok(value.discord_id),
                     permissions: Ok(value.permissions),
                     username: Ok(value.username),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct DatFileDetail {
+            company: ::std::result::Result<
+                ::std::option::Option<super::NamedRef>,
+                ::std::string::String,
+            >,
+            current_game_count: ::std::result::Result<i64, ::std::string::String>,
+            current_version: ::std::result::Result<::std::string::String, ::std::string::String>,
+            game_count: ::std::result::Result<i64, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            latest_dat_file_import: ::std::result::Result<
+                ::std::option::Option<super::LatestDatFileImport>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            platform: ::std::result::Result<super::NamedRef, ::std::string::String>,
+            signature_group: ::std::result::Result<super::NamedRef, ::std::string::String>,
+            subset: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            tags: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for DatFileDetail {
+            fn default() -> Self {
+                Self {
+                    company: Ok(Default::default()),
+                    current_game_count: Err("no value supplied for current_game_count".to_string()),
+                    current_version: Err("no value supplied for current_version".to_string()),
+                    game_count: Err("no value supplied for game_count".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    latest_dat_file_import: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    platform: Err("no value supplied for platform".to_string()),
+                    signature_group: Err("no value supplied for signature_group".to_string()),
+                    subset: Ok(Default::default()),
+                    tags: Ok(Default::default()),
+                }
+            }
+        }
+        impl DatFileDetail {
+            pub fn company<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::NamedRef>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.company = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for company: {e}"));
+                self
+            }
+            pub fn current_game_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.current_game_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for current_game_count: {e}")
+                });
+                self
+            }
+            pub fn current_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.current_version = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for current_version: {e}")
+                });
+                self
+            }
+            pub fn game_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.game_count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for game_count: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn latest_dat_file_import<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::LatestDatFileImport>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.latest_dat_file_import = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for latest_dat_file_import: {e}")
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn platform<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NamedRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform: {e}"));
+                self
+            }
+            pub fn signature_group<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NamedRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.signature_group = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for signature_group: {e}")
+                });
+                self
+            }
+            pub fn subset<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subset = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subset: {e}"));
+                self
+            }
+            pub fn tags<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.tags = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for tags: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<DatFileDetail> for super::DatFileDetail {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: DatFileDetail,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    company: value.company?,
+                    current_game_count: value.current_game_count?,
+                    current_version: value.current_version?,
+                    game_count: value.game_count?,
+                    id: value.id?,
+                    latest_dat_file_import: value.latest_dat_file_import?,
+                    name: value.name?,
+                    platform: value.platform?,
+                    signature_group: value.signature_group?,
+                    subset: value.subset?,
+                    tags: value.tags?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::DatFileDetail> for DatFileDetail {
+            fn from(value: super::DatFileDetail) -> Self {
+                Self {
+                    company: Ok(value.company),
+                    current_game_count: Ok(value.current_game_count),
+                    current_version: Ok(value.current_version),
+                    game_count: Ok(value.game_count),
+                    id: Ok(value.id),
+                    latest_dat_file_import: Ok(value.latest_dat_file_import),
+                    name: Ok(value.name),
+                    platform: Ok(value.platform),
+                    signature_group: Ok(value.signature_group),
+                    subset: Ok(value.subset),
+                    tags: Ok(value.tags),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct DatFileGame {
+            categories: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+                ::std::string::String,
+            >,
+            clone_of:
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            created_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            current_in_latest_dat: ::std::result::Result<bool, ::std::string::String>,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            external_metadata: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::ExternalMetadata>>,
+                ::std::string::String,
+            >,
+            files: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<super::PlaymatchGameFileV2>>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            updated_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for DatFileGame {
+            fn default() -> Self {
+                Self {
+                    categories: Ok(Default::default()),
+                    clone_of: Ok(Default::default()),
+                    created_at: Err("no value supplied for created_at".to_string()),
+                    current_in_latest_dat: Err(
+                        "no value supplied for current_in_latest_dat".to_string()
+                    ),
+                    description: Ok(Default::default()),
+                    external_metadata: Ok(Default::default()),
+                    files: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    updated_at: Err("no value supplied for updated_at".to_string()),
+                }
+            }
+        }
+        impl DatFileGame {
+            pub fn categories<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.categories = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for categories: {e}"));
+                self
+            }
+            pub fn clone_of<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.clone_of = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for clone_of: {e}"));
+                self
+            }
+            pub fn created_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.created_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for created_at: {e}"));
+                self
+            }
+            pub fn current_in_latest_dat<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.current_in_latest_dat = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for current_in_latest_dat: {e}")
+                });
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn external_metadata<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::ExternalMetadata>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.external_metadata = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for external_metadata: {e}")
+                });
+                self
+            }
+            pub fn files<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<super::PlaymatchGameFileV2>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.files = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for files: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn updated_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.updated_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for updated_at: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<DatFileGame> for super::DatFileGame {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: DatFileGame,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    categories: value.categories?,
+                    clone_of: value.clone_of?,
+                    created_at: value.created_at?,
+                    current_in_latest_dat: value.current_in_latest_dat?,
+                    description: value.description?,
+                    external_metadata: value.external_metadata?,
+                    files: value.files?,
+                    id: value.id?,
+                    name: value.name?,
+                    updated_at: value.updated_at?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::DatFileGame> for DatFileGame {
+            fn from(value: super::DatFileGame) -> Self {
+                Self {
+                    categories: Ok(value.categories),
+                    clone_of: Ok(value.clone_of),
+                    created_at: Ok(value.created_at),
+                    current_in_latest_dat: Ok(value.current_in_latest_dat),
+                    description: Ok(value.description),
+                    external_metadata: Ok(value.external_metadata),
+                    files: Ok(value.files),
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    updated_at: Ok(value.updated_at),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct DatFileImportRef {
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            imported_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            version: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for DatFileImportRef {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    imported_at: Err("no value supplied for imported_at".to_string()),
+                    version: Err("no value supplied for version".to_string()),
+                }
+            }
+        }
+        impl DatFileImportRef {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn imported_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.imported_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for imported_at: {e}"));
+                self
+            }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<DatFileImportRef> for super::DatFileImportRef {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: DatFileImportRef,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    imported_at: value.imported_at?,
+                    version: value.version?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::DatFileImportRef> for DatFileImportRef {
+            fn from(value: super::DatFileImportRef) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    imported_at: Ok(value.imported_at),
+                    version: Ok(value.version),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct DatFileImportTimelineEntry {
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            imported_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            version: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for DatFileImportTimelineEntry {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    imported_at: Err("no value supplied for imported_at".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    version: Err("no value supplied for version".to_string()),
+                }
+            }
+        }
+        impl DatFileImportTimelineEntry {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn imported_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.imported_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for imported_at: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<DatFileImportTimelineEntry> for super::DatFileImportTimelineEntry {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: DatFileImportTimelineEntry,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    imported_at: value.imported_at?,
+                    name: value.name?,
+                    version: value.version?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::DatFileImportTimelineEntry> for DatFileImportTimelineEntry {
+            fn from(value: super::DatFileImportTimelineEntry) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    imported_at: Ok(value.imported_at),
+                    name: Ok(value.name),
+                    version: Ok(value.version),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct DatFilePresence {
+            company: ::std::result::Result<
+                ::std::option::Option<super::NamedRef>,
+                ::std::string::String,
+            >,
+            current_version: ::std::result::Result<::std::string::String, ::std::string::String>,
+            first_seen_import:
+                ::std::result::Result<super::DatFileImportRef, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            is_current_in_latest: ::std::result::Result<bool, ::std::string::String>,
+            last_seen_import: ::std::result::Result<super::DatFileImportRef, ::std::string::String>,
+            latest_dat_file_import: ::std::result::Result<
+                ::std::option::Option<super::LatestDatFileImport>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            platform: ::std::result::Result<super::NamedRef, ::std::string::String>,
+            signature_group: ::std::result::Result<super::NamedRef, ::std::string::String>,
+            subset: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            tags: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for DatFilePresence {
+            fn default() -> Self {
+                Self {
+                    company: Ok(Default::default()),
+                    current_version: Err("no value supplied for current_version".to_string()),
+                    first_seen_import: Err("no value supplied for first_seen_import".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    is_current_in_latest: Err(
+                        "no value supplied for is_current_in_latest".to_string()
+                    ),
+                    last_seen_import: Err("no value supplied for last_seen_import".to_string()),
+                    latest_dat_file_import: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    platform: Err("no value supplied for platform".to_string()),
+                    signature_group: Err("no value supplied for signature_group".to_string()),
+                    subset: Ok(Default::default()),
+                    tags: Ok(Default::default()),
+                }
+            }
+        }
+        impl DatFilePresence {
+            pub fn company<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::NamedRef>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.company = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for company: {e}"));
+                self
+            }
+            pub fn current_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.current_version = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for current_version: {e}")
+                });
+                self
+            }
+            pub fn first_seen_import<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::DatFileImportRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.first_seen_import = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for first_seen_import: {e}")
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn is_current_in_latest<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.is_current_in_latest = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for is_current_in_latest: {e}")
+                });
+                self
+            }
+            pub fn last_seen_import<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::DatFileImportRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.last_seen_import = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_seen_import: {e}")
+                });
+                self
+            }
+            pub fn latest_dat_file_import<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::LatestDatFileImport>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.latest_dat_file_import = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for latest_dat_file_import: {e}")
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn platform<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NamedRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform: {e}"));
+                self
+            }
+            pub fn signature_group<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NamedRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.signature_group = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for signature_group: {e}")
+                });
+                self
+            }
+            pub fn subset<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subset = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subset: {e}"));
+                self
+            }
+            pub fn tags<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.tags = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for tags: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<DatFilePresence> for super::DatFilePresence {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: DatFilePresence,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    company: value.company?,
+                    current_version: value.current_version?,
+                    first_seen_import: value.first_seen_import?,
+                    id: value.id?,
+                    is_current_in_latest: value.is_current_in_latest?,
+                    last_seen_import: value.last_seen_import?,
+                    latest_dat_file_import: value.latest_dat_file_import?,
+                    name: value.name?,
+                    platform: value.platform?,
+                    signature_group: value.signature_group?,
+                    subset: value.subset?,
+                    tags: value.tags?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::DatFilePresence> for DatFilePresence {
+            fn from(value: super::DatFilePresence) -> Self {
+                Self {
+                    company: Ok(value.company),
+                    current_version: Ok(value.current_version),
+                    first_seen_import: Ok(value.first_seen_import),
+                    id: Ok(value.id),
+                    is_current_in_latest: Ok(value.is_current_in_latest),
+                    last_seen_import: Ok(value.last_seen_import),
+                    latest_dat_file_import: Ok(value.latest_dat_file_import),
+                    name: Ok(value.name),
+                    platform: Ok(value.platform),
+                    signature_group: Ok(value.signature_group),
+                    subset: Ok(value.subset),
+                    tags: Ok(value.tags),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct DatFileSummary {
+            company: ::std::result::Result<
+                ::std::option::Option<super::NamedRef>,
+                ::std::string::String,
+            >,
+            current_version: ::std::result::Result<::std::string::String, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            latest_dat_file_import: ::std::result::Result<
+                ::std::option::Option<super::LatestDatFileImport>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            platform: ::std::result::Result<super::NamedRef, ::std::string::String>,
+            signature_group: ::std::result::Result<super::NamedRef, ::std::string::String>,
+            subset: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            tags: ::std::result::Result<
+                ::std::vec::Vec<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for DatFileSummary {
+            fn default() -> Self {
+                Self {
+                    company: Ok(Default::default()),
+                    current_version: Err("no value supplied for current_version".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    latest_dat_file_import: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    platform: Err("no value supplied for platform".to_string()),
+                    signature_group: Err("no value supplied for signature_group".to_string()),
+                    subset: Ok(Default::default()),
+                    tags: Ok(Default::default()),
+                }
+            }
+        }
+        impl DatFileSummary {
+            pub fn company<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::NamedRef>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.company = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for company: {e}"));
+                self
+            }
+            pub fn current_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.current_version = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for current_version: {e}")
+                });
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn latest_dat_file_import<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::LatestDatFileImport>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.latest_dat_file_import = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for latest_dat_file_import: {e}")
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn platform<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NamedRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform: {e}"));
+                self
+            }
+            pub fn signature_group<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NamedRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.signature_group = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for signature_group: {e}")
+                });
+                self
+            }
+            pub fn subset<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.subset = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for subset: {e}"));
+                self
+            }
+            pub fn tags<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.tags = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for tags: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<DatFileSummary> for super::DatFileSummary {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: DatFileSummary,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    company: value.company?,
+                    current_version: value.current_version?,
+                    id: value.id?,
+                    latest_dat_file_import: value.latest_dat_file_import?,
+                    name: value.name?,
+                    platform: value.platform?,
+                    signature_group: value.signature_group?,
+                    subset: value.subset?,
+                    tags: value.tags?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::DatFileSummary> for DatFileSummary {
+            fn from(value: super::DatFileSummary) -> Self {
+                Self {
+                    company: Ok(value.company),
+                    current_version: Ok(value.current_version),
+                    id: Ok(value.id),
+                    latest_dat_file_import: Ok(value.latest_dat_file_import),
+                    name: Ok(value.name),
+                    platform: Ok(value.platform),
+                    signature_group: Ok(value.signature_group),
+                    subset: Ok(value.subset),
+                    tags: Ok(value.tags),
                 }
             }
         }
@@ -18072,6 +24434,145 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
+        pub struct ExternalMetadataV2 {
+            automatic_match_reason: ::std::result::Result<
+                ::std::option::Option<super::AutomaticMatchReasonV2>,
+                ::std::string::String,
+            >,
+            comment: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            failed_match_reason: ::std::result::Result<
+                ::std::option::Option<super::FailedMatchReason>,
+                ::std::string::String,
+            >,
+            manual_match_type: ::std::result::Result<
+                ::std::option::Option<super::ManualMatchMode>,
+                ::std::string::String,
+            >,
+            match_type: ::std::result::Result<super::MetadataMatchType, ::std::string::String>,
+            provider_id: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            provider_name: ::std::result::Result<super::MetadataProvider, ::std::string::String>,
+        }
+        impl ::std::default::Default for ExternalMetadataV2 {
+            fn default() -> Self {
+                Self {
+                    automatic_match_reason: Ok(Default::default()),
+                    comment: Ok(Default::default()),
+                    failed_match_reason: Ok(Default::default()),
+                    manual_match_type: Ok(Default::default()),
+                    match_type: Err("no value supplied for match_type".to_string()),
+                    provider_id: Ok(Default::default()),
+                    provider_name: Err("no value supplied for provider_name".to_string()),
+                }
+            }
+        }
+        impl ExternalMetadataV2 {
+            pub fn automatic_match_reason<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::AutomaticMatchReasonV2>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.automatic_match_reason = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for automatic_match_reason: {e}")
+                });
+                self
+            }
+            pub fn comment<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.comment = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for comment: {e}"));
+                self
+            }
+            pub fn failed_match_reason<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::FailedMatchReason>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.failed_match_reason = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for failed_match_reason: {e}")
+                });
+                self
+            }
+            pub fn manual_match_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::ManualMatchMode>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.manual_match_type = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for manual_match_type: {e}")
+                });
+                self
+            }
+            pub fn match_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::MetadataMatchType>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.match_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for match_type: {e}"));
+                self
+            }
+            pub fn provider_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.provider_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for provider_id: {e}"));
+                self
+            }
+            pub fn provider_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::MetadataProvider>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.provider_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for provider_name: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<ExternalMetadataV2> for super::ExternalMetadataV2 {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ExternalMetadataV2,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    automatic_match_reason: value.automatic_match_reason?,
+                    comment: value.comment?,
+                    failed_match_reason: value.failed_match_reason?,
+                    manual_match_type: value.manual_match_type?,
+                    match_type: value.match_type?,
+                    provider_id: value.provider_id?,
+                    provider_name: value.provider_name?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::ExternalMetadataV2> for ExternalMetadataV2 {
+            fn from(value: super::ExternalMetadataV2) -> Self {
+                Self {
+                    automatic_match_reason: Ok(value.automatic_match_reason),
+                    comment: Ok(value.comment),
+                    failed_match_reason: Ok(value.failed_match_reason),
+                    manual_match_type: Ok(value.manual_match_type),
+                    match_type: Ok(value.match_type),
+                    provider_id: Ok(value.provider_id),
+                    provider_name: Ok(value.provider_name),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
         pub struct ExternalProviderMapping {
             provider: ::std::result::Result<::std::string::String, ::std::string::String>,
             provider_id: ::std::result::Result<::std::string::String, ::std::string::String>,
@@ -19241,44 +25742,49 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
-        pub struct GameAndRelationMatchResult {
+        pub struct GameAndRelationMatchResultV2 {
+            additional_matches: ::std::result::Result<
+                ::std::vec::Vec<super::GameAndRelationsResultV2>,
+                ::std::string::String,
+            >,
             company: ::std::result::Result<
-                ::std::option::Option<super::PlaymatchCompany>,
+                ::std::option::Option<super::PlaymatchCompanyV2>,
                 ::std::string::String,
             >,
             dat_file: ::std::result::Result<
-                ::std::option::Option<super::PlaymatchDatFile>,
+                ::std::option::Option<super::PlaymatchDatFileV2>,
                 ::std::string::String,
             >,
             dat_file_import: ::std::result::Result<
-                ::std::option::Option<super::PlaymatchDatFileImport>,
+                ::std::option::Option<super::PlaymatchDatFileImportV2>,
                 ::std::string::String,
             >,
             external_metadata: ::std::result::Result<
-                ::std::vec::Vec<super::ExternalMetadata>,
+                ::std::vec::Vec<super::ExternalMetadataV2>,
                 ::std::string::String,
             >,
             game: ::std::result::Result<
-                ::std::option::Option<super::PlaymatchGame>,
+                ::std::option::Option<super::PlaymatchGameV2>,
                 ::std::string::String,
             >,
             game_files: ::std::result::Result<
-                ::std::vec::Vec<super::PlaymatchGameFile>,
+                ::std::vec::Vec<super::PlaymatchGameFileV2>,
                 ::std::string::String,
             >,
             game_match_type: ::std::result::Result<super::GameMatchType, ::std::string::String>,
             platform: ::std::result::Result<
-                ::std::option::Option<super::PlaymatchPlatform>,
+                ::std::option::Option<super::PlaymatchPlatformV2>,
                 ::std::string::String,
             >,
             signature_group: ::std::result::Result<
-                ::std::option::Option<super::PlaymatchSignatureGroup>,
+                ::std::option::Option<super::PlaymatchSignatureGroupV2>,
                 ::std::string::String,
             >,
         }
-        impl ::std::default::Default for GameAndRelationMatchResult {
+        impl ::std::default::Default for GameAndRelationMatchResultV2 {
             fn default() -> Self {
                 Self {
+                    additional_matches: Ok(Default::default()),
                     company: Ok(Default::default()),
                     dat_file: Ok(Default::default()),
                     dat_file_import: Ok(Default::default()),
@@ -19291,10 +25797,20 @@ pub mod types {
                 }
             }
         }
-        impl GameAndRelationMatchResult {
+        impl GameAndRelationMatchResultV2 {
+            pub fn additional_matches<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::GameAndRelationsResultV2>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.additional_matches = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for additional_matches: {e}")
+                });
+                self
+            }
             pub fn company<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchCompany>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchCompanyV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.company = value
@@ -19304,7 +25820,7 @@ pub mod types {
             }
             pub fn dat_file<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchDatFile>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchDatFileV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.dat_file = value
@@ -19314,7 +25830,7 @@ pub mod types {
             }
             pub fn dat_file_import<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchDatFileImport>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchDatFileImportV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.dat_file_import = value.try_into().map_err(|e| {
@@ -19324,7 +25840,7 @@ pub mod types {
             }
             pub fn external_metadata<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::ExternalMetadata>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::ExternalMetadataV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.external_metadata = value.try_into().map_err(|e| {
@@ -19334,7 +25850,7 @@ pub mod types {
             }
             pub fn game<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchGame>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchGameV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.game = value
@@ -19344,7 +25860,7 @@ pub mod types {
             }
             pub fn game_files<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::PlaymatchGameFile>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::PlaymatchGameFileV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.game_files = value
@@ -19364,7 +25880,7 @@ pub mod types {
             }
             pub fn platform<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchPlatform>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchPlatformV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.platform = value
@@ -19374,7 +25890,7 @@ pub mod types {
             }
             pub fn signature_group<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchSignatureGroup>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchSignatureGroupV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.signature_group = value.try_into().map_err(|e| {
@@ -19383,12 +25899,13 @@ pub mod types {
                 self
             }
         }
-        impl ::std::convert::TryFrom<GameAndRelationMatchResult> for super::GameAndRelationMatchResult {
+        impl ::std::convert::TryFrom<GameAndRelationMatchResultV2> for super::GameAndRelationMatchResultV2 {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: GameAndRelationMatchResult,
+                value: GameAndRelationMatchResultV2,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
+                    additional_matches: value.additional_matches?,
                     company: value.company?,
                     dat_file: value.dat_file?,
                     dat_file_import: value.dat_file_import?,
@@ -19401,9 +25918,10 @@ pub mod types {
                 })
             }
         }
-        impl ::std::convert::From<super::GameAndRelationMatchResult> for GameAndRelationMatchResult {
-            fn from(value: super::GameAndRelationMatchResult) -> Self {
+        impl ::std::convert::From<super::GameAndRelationMatchResultV2> for GameAndRelationMatchResultV2 {
+            fn from(value: super::GameAndRelationMatchResultV2) -> Self {
                 Self {
+                    additional_matches: Ok(value.additional_matches),
                     company: Ok(value.company),
                     dat_file: Ok(value.dat_file),
                     dat_file_import: Ok(value.dat_file_import),
@@ -19417,28 +25935,28 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
-        pub struct GameAndRelationsResult {
+        pub struct GameAndRelationsResultV2 {
             company: ::std::result::Result<
-                ::std::option::Option<super::PlaymatchCompany>,
+                ::std::option::Option<super::PlaymatchCompanyV2>,
                 ::std::string::String,
             >,
-            dat_file: ::std::result::Result<super::PlaymatchDatFile, ::std::string::String>,
+            dat_file: ::std::result::Result<super::PlaymatchDatFileV2, ::std::string::String>,
             dat_file_import:
-                ::std::result::Result<super::PlaymatchDatFileImport, ::std::string::String>,
+                ::std::result::Result<super::PlaymatchDatFileImportV2, ::std::string::String>,
             external_metadata: ::std::result::Result<
-                ::std::vec::Vec<super::ExternalMetadata>,
+                ::std::vec::Vec<super::ExternalMetadataV2>,
                 ::std::string::String,
             >,
-            game: ::std::result::Result<super::PlaymatchGame, ::std::string::String>,
+            game: ::std::result::Result<super::PlaymatchGameV2, ::std::string::String>,
             game_files: ::std::result::Result<
-                ::std::vec::Vec<super::PlaymatchGameFile>,
+                ::std::vec::Vec<super::PlaymatchGameFileV2>,
                 ::std::string::String,
             >,
-            platform: ::std::result::Result<super::PlaymatchPlatform, ::std::string::String>,
+            platform: ::std::result::Result<super::PlaymatchPlatformV2, ::std::string::String>,
             signature_group:
-                ::std::result::Result<super::PlaymatchSignatureGroup, ::std::string::String>,
+                ::std::result::Result<super::PlaymatchSignatureGroupV2, ::std::string::String>,
         }
-        impl ::std::default::Default for GameAndRelationsResult {
+        impl ::std::default::Default for GameAndRelationsResultV2 {
             fn default() -> Self {
                 Self {
                     company: Ok(Default::default()),
@@ -19452,10 +25970,10 @@ pub mod types {
                 }
             }
         }
-        impl GameAndRelationsResult {
+        impl GameAndRelationsResultV2 {
             pub fn company<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchCompany>>,
+                T: ::std::convert::TryInto<::std::option::Option<super::PlaymatchCompanyV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.company = value
@@ -19465,7 +25983,7 @@ pub mod types {
             }
             pub fn dat_file<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::PlaymatchDatFile>,
+                T: ::std::convert::TryInto<super::PlaymatchDatFileV2>,
                 T::Error: ::std::fmt::Display,
             {
                 self.dat_file = value
@@ -19475,7 +25993,7 @@ pub mod types {
             }
             pub fn dat_file_import<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::PlaymatchDatFileImport>,
+                T: ::std::convert::TryInto<super::PlaymatchDatFileImportV2>,
                 T::Error: ::std::fmt::Display,
             {
                 self.dat_file_import = value.try_into().map_err(|e| {
@@ -19485,7 +26003,7 @@ pub mod types {
             }
             pub fn external_metadata<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::ExternalMetadata>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::ExternalMetadataV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.external_metadata = value.try_into().map_err(|e| {
@@ -19495,7 +26013,7 @@ pub mod types {
             }
             pub fn game<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::PlaymatchGame>,
+                T: ::std::convert::TryInto<super::PlaymatchGameV2>,
                 T::Error: ::std::fmt::Display,
             {
                 self.game = value
@@ -19505,7 +26023,7 @@ pub mod types {
             }
             pub fn game_files<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<::std::vec::Vec<super::PlaymatchGameFile>>,
+                T: ::std::convert::TryInto<::std::vec::Vec<super::PlaymatchGameFileV2>>,
                 T::Error: ::std::fmt::Display,
             {
                 self.game_files = value
@@ -19515,7 +26033,7 @@ pub mod types {
             }
             pub fn platform<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::PlaymatchPlatform>,
+                T: ::std::convert::TryInto<super::PlaymatchPlatformV2>,
                 T::Error: ::std::fmt::Display,
             {
                 self.platform = value
@@ -19525,7 +26043,7 @@ pub mod types {
             }
             pub fn signature_group<T>(mut self, value: T) -> Self
             where
-                T: ::std::convert::TryInto<super::PlaymatchSignatureGroup>,
+                T: ::std::convert::TryInto<super::PlaymatchSignatureGroupV2>,
                 T::Error: ::std::fmt::Display,
             {
                 self.signature_group = value.try_into().map_err(|e| {
@@ -19534,10 +26052,10 @@ pub mod types {
                 self
             }
         }
-        impl ::std::convert::TryFrom<GameAndRelationsResult> for super::GameAndRelationsResult {
+        impl ::std::convert::TryFrom<GameAndRelationsResultV2> for super::GameAndRelationsResultV2 {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: GameAndRelationsResult,
+                value: GameAndRelationsResultV2,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     company: value.company?,
@@ -19551,8 +26069,8 @@ pub mod types {
                 })
             }
         }
-        impl ::std::convert::From<super::GameAndRelationsResult> for GameAndRelationsResult {
-            fn from(value: super::GameAndRelationsResult) -> Self {
+        impl ::std::convert::From<super::GameAndRelationsResultV2> for GameAndRelationsResultV2 {
+            fn from(value: super::GameAndRelationsResultV2) -> Self {
                 Self {
                     company: Ok(value.company),
                     dat_file: Ok(value.dat_file),
@@ -19890,6 +26408,300 @@ pub mod types {
                     image_id: Ok(value.image_id),
                     url: Ok(value.url),
                     width: Ok(value.width),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct GameFileMatchSearch {
+            crc: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            file_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            file_size: ::std::result::Result<i64, ::std::string::String>,
+            md5: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            sha1: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            sha256: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for GameFileMatchSearch {
+            fn default() -> Self {
+                Self {
+                    crc: Ok(Default::default()),
+                    file_name: Err("no value supplied for file_name".to_string()),
+                    file_size: Err("no value supplied for file_size".to_string()),
+                    md5: Ok(Default::default()),
+                    sha1: Ok(Default::default()),
+                    sha256: Ok(Default::default()),
+                }
+            }
+        }
+        impl GameFileMatchSearch {
+            pub fn crc<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.crc = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for crc: {e}"));
+                self
+            }
+            pub fn file_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.file_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for file_name: {e}"));
+                self
+            }
+            pub fn file_size<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.file_size = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for file_size: {e}"));
+                self
+            }
+            pub fn md5<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.md5 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for md5: {e}"));
+                self
+            }
+            pub fn sha1<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sha1 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sha1: {e}"));
+                self
+            }
+            pub fn sha256<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.sha256 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for sha256: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<GameFileMatchSearch> for super::GameFileMatchSearch {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: GameFileMatchSearch,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    crc: value.crc?,
+                    file_name: value.file_name?,
+                    file_size: value.file_size?,
+                    md5: value.md5?,
+                    sha1: value.sha1?,
+                    sha256: value.sha256?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::GameFileMatchSearch> for GameFileMatchSearch {
+            fn from(value: super::GameFileMatchSearch) -> Self {
+                Self {
+                    crc: Ok(value.crc),
+                    file_name: Ok(value.file_name),
+                    file_size: Ok(value.file_size),
+                    md5: Ok(value.md5),
+                    sha1: Ok(value.sha1),
+                    sha256: Ok(value.sha256),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct GameFilePresenceEntry {
+            dat_file_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            dat_file_import_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            dat_file_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            import_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            imported_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            observed_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            platform_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            presence_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            signature_group_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            version: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for GameFilePresenceEntry {
+            fn default() -> Self {
+                Self {
+                    dat_file_id: Err("no value supplied for dat_file_id".to_string()),
+                    dat_file_import_id: Err("no value supplied for dat_file_import_id".to_string()),
+                    dat_file_name: Err("no value supplied for dat_file_name".to_string()),
+                    import_name: Err("no value supplied for import_name".to_string()),
+                    imported_at: Err("no value supplied for imported_at".to_string()),
+                    observed_at: Err("no value supplied for observed_at".to_string()),
+                    platform_id: Err("no value supplied for platform_id".to_string()),
+                    presence_id: Err("no value supplied for presence_id".to_string()),
+                    signature_group_id: Err("no value supplied for signature_group_id".to_string()),
+                    version: Err("no value supplied for version".to_string()),
+                }
+            }
+        }
+        impl GameFilePresenceEntry {
+            pub fn dat_file_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.dat_file_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for dat_file_id: {e}"));
+                self
+            }
+            pub fn dat_file_import_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.dat_file_import_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for dat_file_import_id: {e}")
+                });
+                self
+            }
+            pub fn dat_file_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.dat_file_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for dat_file_name: {e}"));
+                self
+            }
+            pub fn import_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.import_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for import_name: {e}"));
+                self
+            }
+            pub fn imported_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.imported_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for imported_at: {e}"));
+                self
+            }
+            pub fn observed_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.observed_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for observed_at: {e}"));
+                self
+            }
+            pub fn platform_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform_id: {e}"));
+                self
+            }
+            pub fn presence_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.presence_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for presence_id: {e}"));
+                self
+            }
+            pub fn signature_group_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.signature_group_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for signature_group_id: {e}")
+                });
+                self
+            }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<GameFilePresenceEntry> for super::GameFilePresenceEntry {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: GameFilePresenceEntry,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    dat_file_id: value.dat_file_id?,
+                    dat_file_import_id: value.dat_file_import_id?,
+                    dat_file_name: value.dat_file_name?,
+                    import_name: value.import_name?,
+                    imported_at: value.imported_at?,
+                    observed_at: value.observed_at?,
+                    platform_id: value.platform_id?,
+                    presence_id: value.presence_id?,
+                    signature_group_id: value.signature_group_id?,
+                    version: value.version?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::GameFilePresenceEntry> for GameFilePresenceEntry {
+            fn from(value: super::GameFilePresenceEntry) -> Self {
+                Self {
+                    dat_file_id: Ok(value.dat_file_id),
+                    dat_file_import_id: Ok(value.dat_file_import_id),
+                    dat_file_name: Ok(value.dat_file_name),
+                    import_name: Ok(value.import_name),
+                    imported_at: Ok(value.imported_at),
+                    observed_at: Ok(value.observed_at),
+                    platform_id: Ok(value.platform_id),
+                    presence_id: Ok(value.presence_id),
+                    signature_group_id: Ok(value.signature_group_id),
+                    version: Ok(value.version),
                 }
             }
         }
@@ -20564,6 +27376,207 @@ pub mod types {
                     slug: Ok(value.slug),
                     updated_at: Ok(value.updated_at),
                     url: Ok(value.url),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct GameNameSearchResultV2 {
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            platform_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            platform_name: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for GameNameSearchResultV2 {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    platform_id: Err("no value supplied for platform_id".to_string()),
+                    platform_name: Err("no value supplied for platform_name".to_string()),
+                }
+            }
+        }
+        impl GameNameSearchResultV2 {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn platform_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform_id: {e}"));
+                self
+            }
+            pub fn platform_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for platform_name: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<GameNameSearchResultV2> for super::GameNameSearchResultV2 {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: GameNameSearchResultV2,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    name: value.name?,
+                    platform_id: value.platform_id?,
+                    platform_name: value.platform_name?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::GameNameSearchResultV2> for GameNameSearchResultV2 {
+            fn from(value: super::GameNameSearchResultV2) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                    platform_id: Ok(value.platform_id),
+                    platform_name: Ok(value.platform_name),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct GameProviderMapping {
+            automatic_match_reason: ::std::result::Result<
+                ::std::option::Option<super::AutomaticMatchReasonV2>,
+                ::std::string::String,
+            >,
+            match_type: ::std::result::Result<super::MetadataMatchType, ::std::string::String>,
+            matched_name: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            matched_year: ::std::result::Result<::std::option::Option<i32>, ::std::string::String>,
+            provider: ::std::result::Result<super::MetadataProvider, ::std::string::String>,
+            provider_id: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for GameProviderMapping {
+            fn default() -> Self {
+                Self {
+                    automatic_match_reason: Ok(Default::default()),
+                    match_type: Err("no value supplied for match_type".to_string()),
+                    matched_name: Ok(Default::default()),
+                    matched_year: Ok(Default::default()),
+                    provider: Err("no value supplied for provider".to_string()),
+                    provider_id: Ok(Default::default()),
+                }
+            }
+        }
+        impl GameProviderMapping {
+            pub fn automatic_match_reason<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<super::AutomaticMatchReasonV2>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.automatic_match_reason = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for automatic_match_reason: {e}")
+                });
+                self
+            }
+            pub fn match_type<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::MetadataMatchType>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.match_type = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for match_type: {e}"));
+                self
+            }
+            pub fn matched_name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.matched_name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for matched_name: {e}"));
+                self
+            }
+            pub fn matched_year<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i32>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.matched_year = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for matched_year: {e}"));
+                self
+            }
+            pub fn provider<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::MetadataProvider>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.provider = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for provider: {e}"));
+                self
+            }
+            pub fn provider_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.provider_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for provider_id: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<GameProviderMapping> for super::GameProviderMapping {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: GameProviderMapping,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    automatic_match_reason: value.automatic_match_reason?,
+                    match_type: value.match_type?,
+                    matched_name: value.matched_name?,
+                    matched_year: value.matched_year?,
+                    provider: value.provider?,
+                    provider_id: value.provider_id?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::GameProviderMapping> for GameProviderMapping {
+            fn from(value: super::GameProviderMapping) -> Self {
+                Self {
+                    automatic_match_reason: Ok(value.automatic_match_reason),
+                    match_type: Ok(value.match_type),
+                    matched_name: Ok(value.matched_name),
+                    matched_year: Ok(value.matched_year),
+                    provider: Ok(value.provider),
+                    provider_id: Ok(value.provider_id),
                 }
             }
         }
@@ -22400,6 +29413,77 @@ pub mod types {
                     id: Ok(value.id),
                     name: Ok(value.name),
                     updated_at: Ok(value.updated_at),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct LatestDatFileImport {
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            imported_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            version: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for LatestDatFileImport {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    imported_at: Err("no value supplied for imported_at".to_string()),
+                    version: Err("no value supplied for version".to_string()),
+                }
+            }
+        }
+        impl LatestDatFileImport {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn imported_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.imported_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for imported_at: {e}"));
+                self
+            }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<LatestDatFileImport> for super::LatestDatFileImport {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: LatestDatFileImport,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    imported_at: value.imported_at?,
+                    version: value.version?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::LatestDatFileImport> for LatestDatFileImport {
+            fn from(value: super::LatestDatFileImport) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    imported_at: Ok(value.imported_at),
+                    version: Ok(value.version),
                 }
             }
         }
@@ -24388,6 +31472,60 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
+        pub struct NamedRef {
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for NamedRef {
+            fn default() -> Self {
+                Self {
+                    id: Err("no value supplied for id".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                }
+            }
+        }
+        impl NamedRef {
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<NamedRef> for super::NamedRef {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: NamedRef,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    id: value.id?,
+                    name: value.name?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::NamedRef> for NamedRef {
+            fn from(value: super::NamedRef) -> Self {
+                Self {
+                    id: Ok(value.id),
+                    name: Ok(value.name),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
         pub struct NetworkType {
             checksum: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             created_at: ::std::result::Result<i64, ::std::string::String>,
@@ -24992,6 +32130,681 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
+        pub struct PageMeta {
+            has_next_page: ::std::result::Result<bool, ::std::string::String>,
+            has_previous_page: ::std::result::Result<bool, ::std::string::String>,
+            limit: ::std::result::Result<i64, ::std::string::String>,
+            next_cursor: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            total_items: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageMeta {
+            fn default() -> Self {
+                Self {
+                    has_next_page: Err("no value supplied for has_next_page".to_string()),
+                    has_previous_page: Err("no value supplied for has_previous_page".to_string()),
+                    limit: Err("no value supplied for limit".to_string()),
+                    next_cursor: Ok(Default::default()),
+                    total_items: Ok(Default::default()),
+                }
+            }
+        }
+        impl PageMeta {
+            pub fn has_next_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.has_next_page = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for has_next_page: {e}"));
+                self
+            }
+            pub fn has_previous_page<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.has_previous_page = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for has_previous_page: {e}")
+                });
+                self
+            }
+            pub fn limit<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.limit = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for limit: {e}"));
+                self
+            }
+            pub fn next_cursor<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.next_cursor = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for next_cursor: {e}"));
+                self
+            }
+            pub fn total_items<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<i64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.total_items = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for total_items: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageMeta> for super::PageMeta {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageMeta,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    has_next_page: value.has_next_page?,
+                    has_previous_page: value.has_previous_page?,
+                    limit: value.limit?,
+                    next_cursor: value.next_cursor?,
+                    total_items: value.total_items?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageMeta> for PageMeta {
+            fn from(value: super::PageMeta) -> Self {
+                Self {
+                    has_next_page: Ok(value.has_next_page),
+                    has_previous_page: Ok(value.has_previous_page),
+                    limit: Ok(value.limit),
+                    next_cursor: Ok(value.next_cursor),
+                    total_items: Ok(value.total_items),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PageOfCompanyMetadataResponse {
+            data: ::std::result::Result<
+                ::std::vec::Vec<super::CompanyMetadataResponse>,
+                ::std::string::String,
+            >,
+            pagination: ::std::result::Result<super::PageMeta, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageOfCompanyMetadataResponse {
+            fn default() -> Self {
+                Self {
+                    data: Err("no value supplied for data".to_string()),
+                    pagination: Err("no value supplied for pagination".to_string()),
+                }
+            }
+        }
+        impl PageOfCompanyMetadataResponse {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::CompanyMetadataResponse>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn pagination<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PageMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pagination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pagination: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageOfCompanyMetadataResponse>
+            for super::PageOfCompanyMetadataResponse
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageOfCompanyMetadataResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    pagination: value.pagination?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageOfCompanyMetadataResponse> for PageOfCompanyMetadataResponse {
+            fn from(value: super::PageOfCompanyMetadataResponse) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    pagination: Ok(value.pagination),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PageOfDatFileGame {
+            data: ::std::result::Result<::std::vec::Vec<super::DatFileGame>, ::std::string::String>,
+            pagination: ::std::result::Result<super::PageMeta, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageOfDatFileGame {
+            fn default() -> Self {
+                Self {
+                    data: Err("no value supplied for data".to_string()),
+                    pagination: Err("no value supplied for pagination".to_string()),
+                }
+            }
+        }
+        impl PageOfDatFileGame {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::DatFileGame>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn pagination<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PageMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pagination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pagination: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageOfDatFileGame> for super::PageOfDatFileGame {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageOfDatFileGame,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    pagination: value.pagination?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageOfDatFileGame> for PageOfDatFileGame {
+            fn from(value: super::PageOfDatFileGame) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    pagination: Ok(value.pagination),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PageOfDatFileImportTimelineEntry {
+            data: ::std::result::Result<
+                ::std::vec::Vec<super::DatFileImportTimelineEntry>,
+                ::std::string::String,
+            >,
+            pagination: ::std::result::Result<super::PageMeta, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageOfDatFileImportTimelineEntry {
+            fn default() -> Self {
+                Self {
+                    data: Err("no value supplied for data".to_string()),
+                    pagination: Err("no value supplied for pagination".to_string()),
+                }
+            }
+        }
+        impl PageOfDatFileImportTimelineEntry {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::DatFileImportTimelineEntry>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn pagination<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PageMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pagination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pagination: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageOfDatFileImportTimelineEntry>
+            for super::PageOfDatFileImportTimelineEntry
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageOfDatFileImportTimelineEntry,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    pagination: value.pagination?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageOfDatFileImportTimelineEntry>
+            for PageOfDatFileImportTimelineEntry
+        {
+            fn from(value: super::PageOfDatFileImportTimelineEntry) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    pagination: Ok(value.pagination),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PageOfDatFileSummary {
+            data: ::std::result::Result<
+                ::std::vec::Vec<super::DatFileSummary>,
+                ::std::string::String,
+            >,
+            pagination: ::std::result::Result<super::PageMeta, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageOfDatFileSummary {
+            fn default() -> Self {
+                Self {
+                    data: Err("no value supplied for data".to_string()),
+                    pagination: Err("no value supplied for pagination".to_string()),
+                }
+            }
+        }
+        impl PageOfDatFileSummary {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::DatFileSummary>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn pagination<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PageMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pagination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pagination: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageOfDatFileSummary> for super::PageOfDatFileSummary {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageOfDatFileSummary,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    pagination: value.pagination?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageOfDatFileSummary> for PageOfDatFileSummary {
+            fn from(value: super::PageOfDatFileSummary) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    pagination: Ok(value.pagination),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PageOfGameMetadataResponse {
+            data: ::std::result::Result<
+                ::std::vec::Vec<super::GameMetadataResponse>,
+                ::std::string::String,
+            >,
+            pagination: ::std::result::Result<super::PageMeta, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageOfGameMetadataResponse {
+            fn default() -> Self {
+                Self {
+                    data: Err("no value supplied for data".to_string()),
+                    pagination: Err("no value supplied for pagination".to_string()),
+                }
+            }
+        }
+        impl PageOfGameMetadataResponse {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::GameMetadataResponse>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn pagination<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PageMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pagination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pagination: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageOfGameMetadataResponse> for super::PageOfGameMetadataResponse {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageOfGameMetadataResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    pagination: value.pagination?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageOfGameMetadataResponse> for PageOfGameMetadataResponse {
+            fn from(value: super::PageOfGameMetadataResponse) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    pagination: Ok(value.pagination),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PageOfGameNameSearchResult {
+            data: ::std::result::Result<
+                ::std::vec::Vec<super::GameNameSearchResultV2>,
+                ::std::string::String,
+            >,
+            pagination: ::std::result::Result<super::PageMeta, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageOfGameNameSearchResult {
+            fn default() -> Self {
+                Self {
+                    data: Err("no value supplied for data".to_string()),
+                    pagination: Err("no value supplied for pagination".to_string()),
+                }
+            }
+        }
+        impl PageOfGameNameSearchResult {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::GameNameSearchResultV2>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn pagination<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PageMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pagination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pagination: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageOfGameNameSearchResult> for super::PageOfGameNameSearchResult {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageOfGameNameSearchResult,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    pagination: value.pagination?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageOfGameNameSearchResult> for PageOfGameNameSearchResult {
+            fn from(value: super::PageOfGameNameSearchResult) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    pagination: Ok(value.pagination),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PageOfPlatformMetadataResponse {
+            data: ::std::result::Result<
+                ::std::vec::Vec<super::PlatformMetadataResponse>,
+                ::std::string::String,
+            >,
+            pagination: ::std::result::Result<super::PageMeta, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageOfPlatformMetadataResponse {
+            fn default() -> Self {
+                Self {
+                    data: Err("no value supplied for data".to_string()),
+                    pagination: Err("no value supplied for pagination".to_string()),
+                }
+            }
+        }
+        impl PageOfPlatformMetadataResponse {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::PlatformMetadataResponse>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn pagination<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PageMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pagination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pagination: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageOfPlatformMetadataResponse>
+            for super::PageOfPlatformMetadataResponse
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageOfPlatformMetadataResponse,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    pagination: value.pagination?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageOfPlatformMetadataResponse>
+            for PageOfPlatformMetadataResponse
+        {
+            fn from(value: super::PageOfPlatformMetadataResponse) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    pagination: Ok(value.pagination),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PageOfPlaymatchGameFile {
+            data: ::std::result::Result<
+                ::std::vec::Vec<super::PlaymatchGameFileV2>,
+                ::std::string::String,
+            >,
+            pagination: ::std::result::Result<super::PageMeta, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageOfPlaymatchGameFile {
+            fn default() -> Self {
+                Self {
+                    data: Err("no value supplied for data".to_string()),
+                    pagination: Err("no value supplied for pagination".to_string()),
+                }
+            }
+        }
+        impl PageOfPlaymatchGameFile {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::PlaymatchGameFileV2>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn pagination<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PageMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pagination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pagination: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageOfPlaymatchGameFile> for super::PageOfPlaymatchGameFile {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageOfPlaymatchGameFile,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    pagination: value.pagination?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageOfPlaymatchGameFile> for PageOfPlaymatchGameFile {
+            fn from(value: super::PageOfPlaymatchGameFile) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    pagination: Ok(value.pagination),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PageOfPlaymatchSignatureGroup {
+            data: ::std::result::Result<
+                ::std::vec::Vec<super::PlaymatchSignatureGroupV2>,
+                ::std::string::String,
+            >,
+            pagination: ::std::result::Result<super::PageMeta, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageOfPlaymatchSignatureGroup {
+            fn default() -> Self {
+                Self {
+                    data: Err("no value supplied for data".to_string()),
+                    pagination: Err("no value supplied for pagination".to_string()),
+                }
+            }
+        }
+        impl PageOfPlaymatchSignatureGroup {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::PlaymatchSignatureGroupV2>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn pagination<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PageMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pagination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pagination: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageOfPlaymatchSignatureGroup>
+            for super::PageOfPlaymatchSignatureGroup
+        {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageOfPlaymatchSignatureGroup,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    pagination: value.pagination?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageOfPlaymatchSignatureGroup> for PageOfPlaymatchSignatureGroup {
+            fn from(value: super::PageOfPlaymatchSignatureGroup) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    pagination: Ok(value.pagination),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PageOfSuggestion {
+            data: ::std::result::Result<::std::vec::Vec<super::Suggestion>, ::std::string::String>,
+            pagination: ::std::result::Result<super::PageMeta, ::std::string::String>,
+        }
+        impl ::std::default::Default for PageOfSuggestion {
+            fn default() -> Self {
+                Self {
+                    data: Err("no value supplied for data".to_string()),
+                    pagination: Err("no value supplied for pagination".to_string()),
+                }
+            }
+        }
+        impl PageOfSuggestion {
+            pub fn data<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::vec::Vec<super::Suggestion>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.data = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for data: {e}"));
+                self
+            }
+            pub fn pagination<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::PageMeta>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.pagination = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for pagination: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PageOfSuggestion> for super::PageOfSuggestion {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PageOfSuggestion,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    data: value.data?,
+                    pagination: value.pagination?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PageOfSuggestion> for PageOfSuggestion {
+            fn from(value: super::PageOfSuggestion) -> Self {
+                Self {
+                    data: Ok(value.data),
+                    pagination: Ok(value.pagination),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
         pub struct Platform {
             abbreviation: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
@@ -25592,6 +33405,88 @@ pub mod types {
                     external_metadata: Ok(value.external_metadata),
                     id: Ok(value.id),
                     name: Ok(value.name),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PlatformStats {
+            current_game_count: ::std::result::Result<i64, ::std::string::String>,
+            dat_file_count: ::std::result::Result<i64, ::std::string::String>,
+            game_file_count: ::std::result::Result<i64, ::std::string::String>,
+            mapped_game_count: ::std::result::Result<i64, ::std::string::String>,
+        }
+        impl ::std::default::Default for PlatformStats {
+            fn default() -> Self {
+                Self {
+                    current_game_count: Err("no value supplied for current_game_count".to_string()),
+                    dat_file_count: Err("no value supplied for dat_file_count".to_string()),
+                    game_file_count: Err("no value supplied for game_file_count".to_string()),
+                    mapped_game_count: Err("no value supplied for mapped_game_count".to_string()),
+                }
+            }
+        }
+        impl PlatformStats {
+            pub fn current_game_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.current_game_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for current_game_count: {e}")
+                });
+                self
+            }
+            pub fn dat_file_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.dat_file_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for dat_file_count: {e}")
+                });
+                self
+            }
+            pub fn game_file_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.game_file_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for game_file_count: {e}")
+                });
+                self
+            }
+            pub fn mapped_game_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.mapped_game_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for mapped_game_count: {e}")
+                });
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PlatformStats> for super::PlatformStats {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PlatformStats,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    current_game_count: value.current_game_count?,
+                    dat_file_count: value.dat_file_count?,
+                    game_file_count: value.game_file_count?,
+                    mapped_game_count: value.mapped_game_count?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PlatformStats> for PlatformStats {
+            fn from(value: super::PlatformStats) -> Self {
+                Self {
+                    current_game_count: Ok(value.current_game_count),
+                    dat_file_count: Ok(value.dat_file_count),
+                    game_file_count: Ok(value.game_file_count),
+                    mapped_game_count: Ok(value.mapped_game_count),
                 }
             }
         }
@@ -26596,7 +34491,7 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
-        pub struct PlaymatchCompany {
+        pub struct PlaymatchCompanyV2 {
             created_at: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -26608,7 +34503,7 @@ pub mod types {
                 ::std::string::String,
             >,
         }
-        impl ::std::default::Default for PlaymatchCompany {
+        impl ::std::default::Default for PlaymatchCompanyV2 {
             fn default() -> Self {
                 Self {
                     created_at: Err("no value supplied for created_at".to_string()),
@@ -26618,7 +34513,7 @@ pub mod types {
                 }
             }
         }
-        impl PlaymatchCompany {
+        impl PlaymatchCompanyV2 {
             pub fn created_at<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -26660,10 +34555,10 @@ pub mod types {
                 self
             }
         }
-        impl ::std::convert::TryFrom<PlaymatchCompany> for super::PlaymatchCompany {
+        impl ::std::convert::TryFrom<PlaymatchCompanyV2> for super::PlaymatchCompanyV2 {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: PlaymatchCompany,
+                value: PlaymatchCompanyV2,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     created_at: value.created_at?,
@@ -26673,8 +34568,8 @@ pub mod types {
                 })
             }
         }
-        impl ::std::convert::From<super::PlaymatchCompany> for PlaymatchCompany {
-            fn from(value: super::PlaymatchCompany) -> Self {
+        impl ::std::convert::From<super::PlaymatchCompanyV2> for PlaymatchCompanyV2 {
+            fn from(value: super::PlaymatchCompanyV2) -> Self {
                 Self {
                     created_at: Ok(value.created_at),
                     id: Ok(value.id),
@@ -26684,7 +34579,154 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
-        pub struct PlaymatchDatFile {
+        pub struct PlaymatchDatFileImportV2 {
+            created_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            dat_file_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            imported_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            md5: ::std::result::Result<::std::string::String, ::std::string::String>,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            updated_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            version: ::std::result::Result<::std::string::String, ::std::string::String>,
+        }
+        impl ::std::default::Default for PlaymatchDatFileImportV2 {
+            fn default() -> Self {
+                Self {
+                    created_at: Err("no value supplied for created_at".to_string()),
+                    dat_file_id: Err("no value supplied for dat_file_id".to_string()),
+                    id: Err("no value supplied for id".to_string()),
+                    imported_at: Err("no value supplied for imported_at".to_string()),
+                    md5: Err("no value supplied for md5".to_string()),
+                    name: Err("no value supplied for name".to_string()),
+                    updated_at: Err("no value supplied for updated_at".to_string()),
+                    version: Err("no value supplied for version".to_string()),
+                }
+            }
+        }
+        impl PlaymatchDatFileImportV2 {
+            pub fn created_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.created_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for created_at: {e}"));
+                self
+            }
+            pub fn dat_file_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.dat_file_id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for dat_file_id: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn imported_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.imported_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for imported_at: {e}"));
+                self
+            }
+            pub fn md5<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.md5 = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for md5: {e}"));
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn updated_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.updated_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for updated_at: {e}"));
+                self
+            }
+            pub fn version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.version = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for version: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PlaymatchDatFileImportV2> for super::PlaymatchDatFileImportV2 {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PlaymatchDatFileImportV2,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    created_at: value.created_at?,
+                    dat_file_id: value.dat_file_id?,
+                    id: value.id?,
+                    imported_at: value.imported_at?,
+                    md5: value.md5?,
+                    name: value.name?,
+                    updated_at: value.updated_at?,
+                    version: value.version?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PlaymatchDatFileImportV2> for PlaymatchDatFileImportV2 {
+            fn from(value: super::PlaymatchDatFileImportV2) -> Self {
+                Self {
+                    created_at: Ok(value.created_at),
+                    dat_file_id: Ok(value.dat_file_id),
+                    id: Ok(value.id),
+                    imported_at: Ok(value.imported_at),
+                    md5: Ok(value.md5),
+                    name: Ok(value.name),
+                    updated_at: Ok(value.updated_at),
+                    version: Ok(value.version),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PlaymatchDatFileV2 {
             company_id:
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             created_at: ::std::result::Result<
@@ -26709,7 +34751,7 @@ pub mod types {
                 ::std::string::String,
             >,
         }
-        impl ::std::default::Default for PlaymatchDatFile {
+        impl ::std::default::Default for PlaymatchDatFileV2 {
             fn default() -> Self {
                 Self {
                     company_id: Ok(Default::default()),
@@ -26725,7 +34767,7 @@ pub mod types {
                 }
             }
         }
-        impl PlaymatchDatFile {
+        impl PlaymatchDatFileV2 {
             pub fn company_id<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
@@ -26829,10 +34871,10 @@ pub mod types {
                 self
             }
         }
-        impl ::std::convert::TryFrom<PlaymatchDatFile> for super::PlaymatchDatFile {
+        impl ::std::convert::TryFrom<PlaymatchDatFileV2> for super::PlaymatchDatFileV2 {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: PlaymatchDatFile,
+                value: PlaymatchDatFileV2,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     company_id: value.company_id?,
@@ -26848,8 +34890,8 @@ pub mod types {
                 })
             }
         }
-        impl ::std::convert::From<super::PlaymatchDatFile> for PlaymatchDatFile {
-            fn from(value: super::PlaymatchDatFile) -> Self {
+        impl ::std::convert::From<super::PlaymatchDatFileV2> for PlaymatchDatFileV2 {
+            fn from(value: super::PlaymatchDatFileV2) -> Self {
                 Self {
                     company_id: Ok(value.company_id),
                     created_at: Ok(value.created_at),
@@ -26865,293 +34907,7 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
-        pub struct PlaymatchDatFileImport {
-            created_at: ::std::result::Result<
-                ::chrono::DateTime<::chrono::offset::Utc>,
-                ::std::string::String,
-            >,
-            dat_file_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            imported_at: ::std::result::Result<
-                ::chrono::DateTime<::chrono::offset::Utc>,
-                ::std::string::String,
-            >,
-            md5: ::std::result::Result<::std::string::String, ::std::string::String>,
-            name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            updated_at: ::std::result::Result<
-                ::chrono::DateTime<::chrono::offset::Utc>,
-                ::std::string::String,
-            >,
-            version: ::std::result::Result<::std::string::String, ::std::string::String>,
-        }
-        impl ::std::default::Default for PlaymatchDatFileImport {
-            fn default() -> Self {
-                Self {
-                    created_at: Err("no value supplied for created_at".to_string()),
-                    dat_file_id: Err("no value supplied for dat_file_id".to_string()),
-                    id: Err("no value supplied for id".to_string()),
-                    imported_at: Err("no value supplied for imported_at".to_string()),
-                    md5: Err("no value supplied for md5".to_string()),
-                    name: Err("no value supplied for name".to_string()),
-                    updated_at: Err("no value supplied for updated_at".to_string()),
-                    version: Err("no value supplied for version".to_string()),
-                }
-            }
-        }
-        impl PlaymatchDatFileImport {
-            pub fn created_at<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.created_at = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for created_at: {e}"));
-                self
-            }
-            pub fn dat_file_id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::uuid::Uuid>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.dat_file_id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for dat_file_id: {e}"));
-                self
-            }
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::uuid::Uuid>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
-                self
-            }
-            pub fn imported_at<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.imported_at = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for imported_at: {e}"));
-                self
-            }
-            pub fn md5<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.md5 = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for md5: {e}"));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
-                self
-            }
-            pub fn updated_at<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.updated_at = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for updated_at: {e}"));
-                self
-            }
-            pub fn version<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.version = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for version: {e}"));
-                self
-            }
-        }
-        impl ::std::convert::TryFrom<PlaymatchDatFileImport> for super::PlaymatchDatFileImport {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: PlaymatchDatFileImport,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    created_at: value.created_at?,
-                    dat_file_id: value.dat_file_id?,
-                    id: value.id?,
-                    imported_at: value.imported_at?,
-                    md5: value.md5?,
-                    name: value.name?,
-                    updated_at: value.updated_at?,
-                    version: value.version?,
-                })
-            }
-        }
-        impl ::std::convert::From<super::PlaymatchDatFileImport> for PlaymatchDatFileImport {
-            fn from(value: super::PlaymatchDatFileImport) -> Self {
-                Self {
-                    created_at: Ok(value.created_at),
-                    dat_file_id: Ok(value.dat_file_id),
-                    id: Ok(value.id),
-                    imported_at: Ok(value.imported_at),
-                    md5: Ok(value.md5),
-                    name: Ok(value.name),
-                    updated_at: Ok(value.updated_at),
-                    version: Ok(value.version),
-                }
-            }
-        }
-        #[derive(Clone, Debug)]
-        pub struct PlaymatchGame {
-            categories: ::std::result::Result<
-                ::std::option::Option<::std::vec::Vec<::std::string::String>>,
-                ::std::string::String,
-            >,
-            clone_of:
-                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
-            created_at: ::std::result::Result<
-                ::chrono::DateTime<::chrono::offset::Utc>,
-                ::std::string::String,
-            >,
-            description: ::std::result::Result<
-                ::std::option::Option<::std::string::String>,
-                ::std::string::String,
-            >,
-            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
-            name: ::std::result::Result<::std::string::String, ::std::string::String>,
-            updated_at: ::std::result::Result<
-                ::chrono::DateTime<::chrono::offset::Utc>,
-                ::std::string::String,
-            >,
-        }
-        impl ::std::default::Default for PlaymatchGame {
-            fn default() -> Self {
-                Self {
-                    categories: Ok(Default::default()),
-                    clone_of: Ok(Default::default()),
-                    created_at: Err("no value supplied for created_at".to_string()),
-                    description: Ok(Default::default()),
-                    id: Err("no value supplied for id".to_string()),
-                    name: Err("no value supplied for name".to_string()),
-                    updated_at: Err("no value supplied for updated_at".to_string()),
-                }
-            }
-        }
-        impl PlaymatchGame {
-            pub fn categories<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<
-                    ::std::option::Option<::std::vec::Vec<::std::string::String>>,
-                >,
-                T::Error: ::std::fmt::Display,
-            {
-                self.categories = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for categories: {e}"));
-                self
-            }
-            pub fn clone_of<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.clone_of = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for clone_of: {e}"));
-                self
-            }
-            pub fn created_at<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.created_at = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for created_at: {e}"));
-                self
-            }
-            pub fn description<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.description = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for description: {e}"));
-                self
-            }
-            pub fn id<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::uuid::Uuid>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.id = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for id: {e}"));
-                self
-            }
-            pub fn name<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::std::string::String>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.name = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for name: {e}"));
-                self
-            }
-            pub fn updated_at<T>(mut self, value: T) -> Self
-            where
-                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
-                T::Error: ::std::fmt::Display,
-            {
-                self.updated_at = value
-                    .try_into()
-                    .map_err(|e| format!("error converting supplied value for updated_at: {e}"));
-                self
-            }
-        }
-        impl ::std::convert::TryFrom<PlaymatchGame> for super::PlaymatchGame {
-            type Error = super::error::ConversionError;
-            fn try_from(
-                value: PlaymatchGame,
-            ) -> ::std::result::Result<Self, super::error::ConversionError> {
-                Ok(Self {
-                    categories: value.categories?,
-                    clone_of: value.clone_of?,
-                    created_at: value.created_at?,
-                    description: value.description?,
-                    id: value.id?,
-                    name: value.name?,
-                    updated_at: value.updated_at?,
-                })
-            }
-        }
-        impl ::std::convert::From<super::PlaymatchGame> for PlaymatchGame {
-            fn from(value: super::PlaymatchGame) -> Self {
-                Self {
-                    categories: Ok(value.categories),
-                    clone_of: Ok(value.clone_of),
-                    created_at: Ok(value.created_at),
-                    description: Ok(value.description),
-                    id: Ok(value.id),
-                    name: Ok(value.name),
-                    updated_at: Ok(value.updated_at),
-                }
-            }
-        }
-        #[derive(Clone, Debug)]
-        pub struct PlaymatchGameFile {
+        pub struct PlaymatchGameFileV2 {
             crc: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
                 ::std::string::String,
@@ -27160,11 +34916,18 @@ pub mod types {
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
             >,
+            current_in_latest_dat: ::std::result::Result<bool, ::std::string::String>,
             file_name: ::std::result::Result<::std::string::String, ::std::string::String>,
             file_size_in_bytes:
                 ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
             game_id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
             id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            last_seen_dat_file_import_id:
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            last_seen_dat_version: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
             md5: ::std::result::Result<
                 ::std::option::Option<::std::string::String>,
                 ::std::string::String,
@@ -27190,15 +34953,20 @@ pub mod types {
                 ::std::string::String,
             >,
         }
-        impl ::std::default::Default for PlaymatchGameFile {
+        impl ::std::default::Default for PlaymatchGameFileV2 {
             fn default() -> Self {
                 Self {
                     crc: Ok(Default::default()),
                     created_at: Err("no value supplied for created_at".to_string()),
+                    current_in_latest_dat: Err(
+                        "no value supplied for current_in_latest_dat".to_string()
+                    ),
                     file_name: Err("no value supplied for file_name".to_string()),
                     file_size_in_bytes: Ok(Default::default()),
                     game_id: Err("no value supplied for game_id".to_string()),
                     id: Err("no value supplied for id".to_string()),
+                    last_seen_dat_file_import_id: Ok(Default::default()),
+                    last_seen_dat_version: Ok(Default::default()),
                     md5: Ok(Default::default()),
                     serial: Ok(Default::default()),
                     sha1: Ok(Default::default()),
@@ -27208,7 +34976,7 @@ pub mod types {
                 }
             }
         }
-        impl PlaymatchGameFile {
+        impl PlaymatchGameFileV2 {
             pub fn crc<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
@@ -27227,6 +34995,16 @@ pub mod types {
                 self.created_at = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for created_at: {e}"));
+                self
+            }
+            pub fn current_in_latest_dat<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.current_in_latest_dat = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for current_in_latest_dat: {e}")
+                });
                 self
             }
             pub fn file_name<T>(mut self, value: T) -> Self
@@ -27267,6 +35045,26 @@ pub mod types {
                 self.id = value
                     .try_into()
                     .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn last_seen_dat_file_import_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.last_seen_dat_file_import_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_seen_dat_file_import_id: {e}")
+                });
+                self
+            }
+            pub fn last_seen_dat_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.last_seen_dat_version = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_seen_dat_version: {e}")
+                });
                 self
             }
             pub fn md5<T>(mut self, value: T) -> Self
@@ -27330,18 +35128,21 @@ pub mod types {
                 self
             }
         }
-        impl ::std::convert::TryFrom<PlaymatchGameFile> for super::PlaymatchGameFile {
+        impl ::std::convert::TryFrom<PlaymatchGameFileV2> for super::PlaymatchGameFileV2 {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: PlaymatchGameFile,
+                value: PlaymatchGameFileV2,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     crc: value.crc?,
                     created_at: value.created_at?,
+                    current_in_latest_dat: value.current_in_latest_dat?,
                     file_name: value.file_name?,
                     file_size_in_bytes: value.file_size_in_bytes?,
                     game_id: value.game_id?,
                     id: value.id?,
+                    last_seen_dat_file_import_id: value.last_seen_dat_file_import_id?,
+                    last_seen_dat_version: value.last_seen_dat_version?,
                     md5: value.md5?,
                     serial: value.serial?,
                     sha1: value.sha1?,
@@ -27351,15 +35152,18 @@ pub mod types {
                 })
             }
         }
-        impl ::std::convert::From<super::PlaymatchGameFile> for PlaymatchGameFile {
-            fn from(value: super::PlaymatchGameFile) -> Self {
+        impl ::std::convert::From<super::PlaymatchGameFileV2> for PlaymatchGameFileV2 {
+            fn from(value: super::PlaymatchGameFileV2) -> Self {
                 Self {
                     crc: Ok(value.crc),
                     created_at: Ok(value.created_at),
+                    current_in_latest_dat: Ok(value.current_in_latest_dat),
                     file_name: Ok(value.file_name),
                     file_size_in_bytes: Ok(value.file_size_in_bytes),
                     game_id: Ok(value.game_id),
                     id: Ok(value.id),
+                    last_seen_dat_file_import_id: Ok(value.last_seen_dat_file_import_id),
+                    last_seen_dat_version: Ok(value.last_seen_dat_version),
                     md5: Ok(value.md5),
                     serial: Ok(value.serial),
                     sha1: Ok(value.sha1),
@@ -27370,7 +35174,194 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
-        pub struct PlaymatchPlatform {
+        pub struct PlaymatchGameV2 {
+            categories: ::std::result::Result<
+                ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+                ::std::string::String,
+            >,
+            clone_of:
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            created_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+            current_in_latest_dat: ::std::result::Result<bool, ::std::string::String>,
+            description: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            id: ::std::result::Result<::uuid::Uuid, ::std::string::String>,
+            last_seen_dat_file_import_id:
+                ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
+            last_seen_dat_version: ::std::result::Result<
+                ::std::option::Option<::std::string::String>,
+                ::std::string::String,
+            >,
+            name: ::std::result::Result<::std::string::String, ::std::string::String>,
+            updated_at: ::std::result::Result<
+                ::chrono::DateTime<::chrono::offset::Utc>,
+                ::std::string::String,
+            >,
+        }
+        impl ::std::default::Default for PlaymatchGameV2 {
+            fn default() -> Self {
+                Self {
+                    categories: Ok(Default::default()),
+                    clone_of: Ok(Default::default()),
+                    created_at: Err("no value supplied for created_at".to_string()),
+                    current_in_latest_dat: Err(
+                        "no value supplied for current_in_latest_dat".to_string()
+                    ),
+                    description: Ok(Default::default()),
+                    id: Err("no value supplied for id".to_string()),
+                    last_seen_dat_file_import_id: Ok(Default::default()),
+                    last_seen_dat_version: Ok(Default::default()),
+                    name: Err("no value supplied for name".to_string()),
+                    updated_at: Err("no value supplied for updated_at".to_string()),
+                }
+            }
+        }
+        impl PlaymatchGameV2 {
+            pub fn categories<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.categories = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for categories: {e}"));
+                self
+            }
+            pub fn clone_of<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.clone_of = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for clone_of: {e}"));
+                self
+            }
+            pub fn created_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.created_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for created_at: {e}"));
+                self
+            }
+            pub fn current_in_latest_dat<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.current_in_latest_dat = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for current_in_latest_dat: {e}")
+                });
+                self
+            }
+            pub fn description<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.description = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for description: {e}"));
+                self
+            }
+            pub fn id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::uuid::Uuid>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.id = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for id: {e}"));
+                self
+            }
+            pub fn last_seen_dat_file_import_id<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.last_seen_dat_file_import_id = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_seen_dat_file_import_id: {e}")
+                });
+                self
+            }
+            pub fn last_seen_dat_version<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<::std::string::String>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.last_seen_dat_version = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_seen_dat_version: {e}")
+                });
+                self
+            }
+            pub fn name<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.name = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for name: {e}"));
+                self
+            }
+            pub fn updated_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.updated_at = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for updated_at: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<PlaymatchGameV2> for super::PlaymatchGameV2 {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: PlaymatchGameV2,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    categories: value.categories?,
+                    clone_of: value.clone_of?,
+                    created_at: value.created_at?,
+                    current_in_latest_dat: value.current_in_latest_dat?,
+                    description: value.description?,
+                    id: value.id?,
+                    last_seen_dat_file_import_id: value.last_seen_dat_file_import_id?,
+                    last_seen_dat_version: value.last_seen_dat_version?,
+                    name: value.name?,
+                    updated_at: value.updated_at?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::PlaymatchGameV2> for PlaymatchGameV2 {
+            fn from(value: super::PlaymatchGameV2) -> Self {
+                Self {
+                    categories: Ok(value.categories),
+                    clone_of: Ok(value.clone_of),
+                    created_at: Ok(value.created_at),
+                    current_in_latest_dat: Ok(value.current_in_latest_dat),
+                    description: Ok(value.description),
+                    id: Ok(value.id),
+                    last_seen_dat_file_import_id: Ok(value.last_seen_dat_file_import_id),
+                    last_seen_dat_version: Ok(value.last_seen_dat_version),
+                    name: Ok(value.name),
+                    updated_at: Ok(value.updated_at),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct PlaymatchPlatformV2 {
             company_id:
                 ::std::result::Result<::std::option::Option<::uuid::Uuid>, ::std::string::String>,
             created_at: ::std::result::Result<
@@ -27384,7 +35375,7 @@ pub mod types {
                 ::std::string::String,
             >,
         }
-        impl ::std::default::Default for PlaymatchPlatform {
+        impl ::std::default::Default for PlaymatchPlatformV2 {
             fn default() -> Self {
                 Self {
                     company_id: Ok(Default::default()),
@@ -27395,7 +35386,7 @@ pub mod types {
                 }
             }
         }
-        impl PlaymatchPlatform {
+        impl PlaymatchPlatformV2 {
             pub fn company_id<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::std::option::Option<::uuid::Uuid>>,
@@ -27447,10 +35438,10 @@ pub mod types {
                 self
             }
         }
-        impl ::std::convert::TryFrom<PlaymatchPlatform> for super::PlaymatchPlatform {
+        impl ::std::convert::TryFrom<PlaymatchPlatformV2> for super::PlaymatchPlatformV2 {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: PlaymatchPlatform,
+                value: PlaymatchPlatformV2,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     company_id: value.company_id?,
@@ -27461,8 +35452,8 @@ pub mod types {
                 })
             }
         }
-        impl ::std::convert::From<super::PlaymatchPlatform> for PlaymatchPlatform {
-            fn from(value: super::PlaymatchPlatform) -> Self {
+        impl ::std::convert::From<super::PlaymatchPlatformV2> for PlaymatchPlatformV2 {
+            fn from(value: super::PlaymatchPlatformV2) -> Self {
                 Self {
                     company_id: Ok(value.company_id),
                     created_at: Ok(value.created_at),
@@ -27473,7 +35464,7 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
-        pub struct PlaymatchSignatureGroup {
+        pub struct PlaymatchSignatureGroupV2 {
             created_at: ::std::result::Result<
                 ::chrono::DateTime<::chrono::offset::Utc>,
                 ::std::string::String,
@@ -27493,7 +35484,7 @@ pub mod types {
                 ::std::string::String,
             >,
         }
-        impl ::std::default::Default for PlaymatchSignatureGroup {
+        impl ::std::default::Default for PlaymatchSignatureGroupV2 {
             fn default() -> Self {
                 Self {
                     created_at: Err("no value supplied for created_at".to_string()),
@@ -27505,7 +35496,7 @@ pub mod types {
                 }
             }
         }
-        impl PlaymatchSignatureGroup {
+        impl PlaymatchSignatureGroupV2 {
             pub fn created_at<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<::chrono::DateTime<::chrono::offset::Utc>>,
@@ -27567,10 +35558,10 @@ pub mod types {
                 self
             }
         }
-        impl ::std::convert::TryFrom<PlaymatchSignatureGroup> for super::PlaymatchSignatureGroup {
+        impl ::std::convert::TryFrom<PlaymatchSignatureGroupV2> for super::PlaymatchSignatureGroupV2 {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: PlaymatchSignatureGroup,
+                value: PlaymatchSignatureGroupV2,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     created_at: value.created_at?,
@@ -27582,8 +35573,8 @@ pub mod types {
                 })
             }
         }
-        impl ::std::convert::From<super::PlaymatchSignatureGroup> for PlaymatchSignatureGroup {
-            fn from(value: super::PlaymatchSignatureGroup) -> Self {
+        impl ::std::convert::From<super::PlaymatchSignatureGroupV2> for PlaymatchSignatureGroupV2 {
+            fn from(value: super::PlaymatchSignatureGroupV2) -> Self {
                 Self {
                     created_at: Ok(value.created_at),
                     description: Ok(value.description),
@@ -29195,6 +37186,165 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
+        pub struct ServiceStats {
+            company_count: ::std::result::Result<i64, ::std::string::String>,
+            current_game_count: ::std::result::Result<i64, ::std::string::String>,
+            dat_file_count: ::std::result::Result<i64, ::std::string::String>,
+            game_count: ::std::result::Result<i64, ::std::string::String>,
+            game_file_count: ::std::result::Result<i64, ::std::string::String>,
+            last_import_at: ::std::result::Result<
+                ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                ::std::string::String,
+            >,
+            mapped_game_count: ::std::result::Result<i64, ::std::string::String>,
+            platform_count: ::std::result::Result<i64, ::std::string::String>,
+            signature_group_count: ::std::result::Result<i64, ::std::string::String>,
+        }
+        impl ::std::default::Default for ServiceStats {
+            fn default() -> Self {
+                Self {
+                    company_count: Err("no value supplied for company_count".to_string()),
+                    current_game_count: Err("no value supplied for current_game_count".to_string()),
+                    dat_file_count: Err("no value supplied for dat_file_count".to_string()),
+                    game_count: Err("no value supplied for game_count".to_string()),
+                    game_file_count: Err("no value supplied for game_file_count".to_string()),
+                    last_import_at: Ok(Default::default()),
+                    mapped_game_count: Err("no value supplied for mapped_game_count".to_string()),
+                    platform_count: Err("no value supplied for platform_count".to_string()),
+                    signature_group_count: Err(
+                        "no value supplied for signature_group_count".to_string()
+                    ),
+                }
+            }
+        }
+        impl ServiceStats {
+            pub fn company_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.company_count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for company_count: {e}"));
+                self
+            }
+            pub fn current_game_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.current_game_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for current_game_count: {e}")
+                });
+                self
+            }
+            pub fn dat_file_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.dat_file_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for dat_file_count: {e}")
+                });
+                self
+            }
+            pub fn game_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.game_count = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for game_count: {e}"));
+                self
+            }
+            pub fn game_file_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.game_file_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for game_file_count: {e}")
+                });
+                self
+            }
+            pub fn last_import_at<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<
+                    ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+                >,
+                T::Error: ::std::fmt::Display,
+            {
+                self.last_import_at = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_import_at: {e}")
+                });
+                self
+            }
+            pub fn mapped_game_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.mapped_game_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for mapped_game_count: {e}")
+                });
+                self
+            }
+            pub fn platform_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.platform_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for platform_count: {e}")
+                });
+                self
+            }
+            pub fn signature_group_count<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<i64>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.signature_group_count = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for signature_group_count: {e}")
+                });
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<ServiceStats> for super::ServiceStats {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: ServiceStats,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    company_count: value.company_count?,
+                    current_game_count: value.current_game_count?,
+                    dat_file_count: value.dat_file_count?,
+                    game_count: value.game_count?,
+                    game_file_count: value.game_file_count?,
+                    last_import_at: value.last_import_at?,
+                    mapped_game_count: value.mapped_game_count?,
+                    platform_count: value.platform_count?,
+                    signature_group_count: value.signature_group_count?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::ServiceStats> for ServiceStats {
+            fn from(value: super::ServiceStats) -> Self {
+                Self {
+                    company_count: Ok(value.company_count),
+                    current_game_count: Ok(value.current_game_count),
+                    dat_file_count: Ok(value.dat_file_count),
+                    game_count: Ok(value.game_count),
+                    game_file_count: Ok(value.game_file_count),
+                    last_import_at: Ok(value.last_import_at),
+                    mapped_game_count: Ok(value.mapped_game_count),
+                    platform_count: Ok(value.platform_count),
+                    signature_group_count: Ok(value.signature_group_count),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
         pub struct SgdbAsset {
             author: ::std::result::Result<super::SgdbAuthor, ::std::string::String>,
             downvotes: ::std::result::Result<::std::option::Option<i64>, ::std::string::String>,
@@ -29793,6 +37943,91 @@ pub mod types {
                     name: Ok(value.name),
                     types: Ok(value.types),
                     verified: Ok(value.verified),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct SignatureGroupPresence {
+            first_seen_import:
+                ::std::result::Result<super::DatFileImportRef, ::std::string::String>,
+            is_current_in_latest: ::std::result::Result<bool, ::std::string::String>,
+            last_seen_import: ::std::result::Result<super::DatFileImportRef, ::std::string::String>,
+            signature_group: ::std::result::Result<super::NamedRef, ::std::string::String>,
+        }
+        impl ::std::default::Default for SignatureGroupPresence {
+            fn default() -> Self {
+                Self {
+                    first_seen_import: Err("no value supplied for first_seen_import".to_string()),
+                    is_current_in_latest: Err(
+                        "no value supplied for is_current_in_latest".to_string()
+                    ),
+                    last_seen_import: Err("no value supplied for last_seen_import".to_string()),
+                    signature_group: Err("no value supplied for signature_group".to_string()),
+                }
+            }
+        }
+        impl SignatureGroupPresence {
+            pub fn first_seen_import<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::DatFileImportRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.first_seen_import = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for first_seen_import: {e}")
+                });
+                self
+            }
+            pub fn is_current_in_latest<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<bool>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.is_current_in_latest = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for is_current_in_latest: {e}")
+                });
+                self
+            }
+            pub fn last_seen_import<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::DatFileImportRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.last_seen_import = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for last_seen_import: {e}")
+                });
+                self
+            }
+            pub fn signature_group<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<super::NamedRef>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.signature_group = value.try_into().map_err(|e| {
+                    format!("error converting supplied value for signature_group: {e}")
+                });
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<SignatureGroupPresence> for super::SignatureGroupPresence {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: SignatureGroupPresence,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    first_seen_import: value.first_seen_import?,
+                    is_current_in_latest: value.is_current_in_latest?,
+                    last_seen_import: value.last_seen_import?,
+                    signature_group: value.signature_group?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::SignatureGroupPresence> for SignatureGroupPresence {
+            fn from(value: super::SignatureGroupPresence) -> Self {
+                Self {
+                    first_seen_import: Ok(value.first_seen_import),
+                    is_current_in_latest: Ok(value.is_current_in_latest),
+                    last_seen_import: Ok(value.last_seen_import),
+                    signature_group: Ok(value.signature_group),
                 }
             }
         }
@@ -30652,17 +38887,17 @@ pub mod types {
             }
         }
         #[derive(Clone, Debug)]
-        pub struct UpdateUserPermissionsRequest {
+        pub struct UpdateUserPermissionsRequestV2 {
             new_permission: ::std::result::Result<super::UserPermissions, ::std::string::String>,
         }
-        impl ::std::default::Default for UpdateUserPermissionsRequest {
+        impl ::std::default::Default for UpdateUserPermissionsRequestV2 {
             fn default() -> Self {
                 Self {
                     new_permission: Err("no value supplied for new_permission".to_string()),
                 }
             }
         }
-        impl UpdateUserPermissionsRequest {
+        impl UpdateUserPermissionsRequestV2 {
             pub fn new_permission<T>(mut self, value: T) -> Self
             where
                 T: ::std::convert::TryInto<super::UserPermissions>,
@@ -30674,18 +38909,22 @@ pub mod types {
                 self
             }
         }
-        impl ::std::convert::TryFrom<UpdateUserPermissionsRequest> for super::UpdateUserPermissionsRequest {
+        impl ::std::convert::TryFrom<UpdateUserPermissionsRequestV2>
+            for super::UpdateUserPermissionsRequestV2
+        {
             type Error = super::error::ConversionError;
             fn try_from(
-                value: UpdateUserPermissionsRequest,
+                value: UpdateUserPermissionsRequestV2,
             ) -> ::std::result::Result<Self, super::error::ConversionError> {
                 Ok(Self {
                     new_permission: value.new_permission?,
                 })
             }
         }
-        impl ::std::convert::From<super::UpdateUserPermissionsRequest> for UpdateUserPermissionsRequest {
-            fn from(value: super::UpdateUserPermissionsRequest) -> Self {
+        impl ::std::convert::From<super::UpdateUserPermissionsRequestV2>
+            for UpdateUserPermissionsRequestV2
+        {
+            fn from(value: super::UpdateUserPermissionsRequestV2) -> Self {
                 Self {
                     new_permission: Ok(value.new_permission),
                 }
@@ -30901,6 +39140,102 @@ pub mod types {
                     permissions: Ok(value.permissions),
                     updated_at: Ok(value.updated_at),
                     username: Ok(value.username),
+                }
+            }
+        }
+        #[derive(Clone, Debug)]
+        pub struct V2ErrorBody {
+            code: ::std::result::Result<::std::string::String, ::std::string::String>,
+            limit: ::std::result::Result<::std::option::Option<u64>, ::std::string::String>,
+            message: ::std::result::Result<::std::string::String, ::std::string::String>,
+            received: ::std::result::Result<::std::option::Option<u64>, ::std::string::String>,
+            restart: ::std::result::Result<::std::option::Option<bool>, ::std::string::String>,
+        }
+        impl ::std::default::Default for V2ErrorBody {
+            fn default() -> Self {
+                Self {
+                    code: Err("no value supplied for code".to_string()),
+                    limit: Ok(Default::default()),
+                    message: Err("no value supplied for message".to_string()),
+                    received: Ok(Default::default()),
+                    restart: Ok(Default::default()),
+                }
+            }
+        }
+        impl V2ErrorBody {
+            pub fn code<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.code = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for code: {e}"));
+                self
+            }
+            pub fn limit<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<u64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.limit = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for limit: {e}"));
+                self
+            }
+            pub fn message<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::string::String>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.message = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for message: {e}"));
+                self
+            }
+            pub fn received<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<u64>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.received = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for received: {e}"));
+                self
+            }
+            pub fn restart<T>(mut self, value: T) -> Self
+            where
+                T: ::std::convert::TryInto<::std::option::Option<bool>>,
+                T::Error: ::std::fmt::Display,
+            {
+                self.restart = value
+                    .try_into()
+                    .map_err(|e| format!("error converting supplied value for restart: {e}"));
+                self
+            }
+        }
+        impl ::std::convert::TryFrom<V2ErrorBody> for super::V2ErrorBody {
+            type Error = super::error::ConversionError;
+            fn try_from(
+                value: V2ErrorBody,
+            ) -> ::std::result::Result<Self, super::error::ConversionError> {
+                Ok(Self {
+                    code: value.code?,
+                    limit: value.limit?,
+                    message: value.message?,
+                    received: value.received?,
+                    restart: value.restart?,
+                })
+            }
+        }
+        impl ::std::convert::From<super::V2ErrorBody> for V2ErrorBody {
+            fn from(value: super::V2ErrorBody) -> Self {
+                Self {
+                    code: Ok(value.code),
+                    limit: Ok(value.limit),
+                    message: Ok(value.message),
+                    received: Ok(value.received),
+                    restart: Ok(value.restart),
                 }
             }
         }
@@ -31184,60 +39519,603 @@ impl ClientInfo<()> for Client {
 }
 impl ClientHooks<()> for &Client {}
 impl Client {
-    ///Returns all companies and its external metadata mappings
+    ///Lists companies ordered by name
     ///
-    ///Sends a `GET` request to `/api/companies`
+    ///Each entry carries the company and its external metadata mappings.
     ///
+    ///Sends a `GET` request to `/companies`
+    ///
+    ///Arguments:
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
     ///```ignore
-    /// let response = client.get_all_companies()
+    /// let response = client.list_companies_v2()
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .with_total(with_total)
     ///    .send()
     ///    .await;
     /// ```
-    pub fn get_all_companies(&self) -> builder::GetAllCompanies<'_> {
-        builder::GetAllCompanies::new(self)
+    pub fn list_companies_v2(&self) -> builder::ListCompaniesV2<'_> {
+        builder::ListCompaniesV2::new(self)
     }
-    ///Returns a company and its metadata mappings by id
+    ///Looks up many companies by id in one request
     ///
-    ///Sends a `GET` request to `/api/companies/{id}`
+    ///Up to 100 ids per request; duplicate ids are resolved once. A missing id
+    /// is a per-item `not_found`, never a batch-level 404. The whole batch
+    /// counts as one request against the rate limiter.
+    ///
+    ///Sends a `POST` request to `/companies/bulk`
     ///
     ///```ignore
-    /// let response = client.get_company_by_id()
+    /// let response = client.bulk_companies_by_id_v2()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn bulk_companies_by_id_v2(&self) -> builder::BulkCompaniesByIdV2<'_> {
+        builder::BulkCompaniesByIdV2::new(self)
+    }
+    ///Searches companies by name, ordered by name
+    ///
+    ///Case-insensitive substring match on the company name. Each entry carries
+    /// the company and its external metadata mappings. Returns an empty array
+    /// when nothing matches.
+    ///
+    ///Sends a `GET` request to `/companies/search`
+    ///
+    ///Arguments:
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `query`: The case-insensitive substring to match against company
+    ///   names.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.search_companies_v2()
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .query(query)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn search_companies_v2(&self) -> builder::SearchCompaniesV2<'_> {
+        builder::SearchCompaniesV2::new(self)
+    }
+    ///Returns a company by id
+    ///
+    ///The response includes the company and its external metadata mappings.
+    ///
+    ///Sends a `GET` request to `/companies/{id}`
+    ///
+    ///```ignore
+    /// let response = client.get_company_by_id_v2()
     ///    .id(id)
     ///    .send()
     ///    .await;
     /// ```
-    pub fn get_company_by_id(&self) -> builder::GetCompanyById<'_> {
-        builder::GetCompanyById::new(self)
+    pub fn get_company_by_id_v2(&self) -> builder::GetCompanyByIdV2<'_> {
+        builder::GetCompanyByIdV2::new(self)
     }
-    ///Gets a Playmatch game by its ID
+    ///Lists dat files ordered by name
     ///
-    ///Sends a `GET` request to `/api/game/{id}`
+    ///Narrow the result with optional signature group, platform, company,
+    /// subset, tag, and name-substring filters. Keep the filters identical
+    /// across pages.
+    ///
+    ///Sends a `GET` request to `/dat-files`
+    ///
+    ///Arguments:
+    /// - `company_id`: Restrict to dat files for a platform made by this
+    ///   company. If omitted, all companies are included.
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `name`: Case-insensitive substring to match against the dat file name.
+    ///   If omitted, names are not filtered.
+    /// - `platform_id`: Restrict to dat files targeting this platform. If
+    ///   omitted, all platforms are included.
+    /// - `signature_group_id`: Restrict to dat files published by this
+    ///   signature group. If omitted, all signature groups are included.
+    /// - `subset`: Restrict to dat files of this subset. If omitted, all
+    ///   subsets are included.
+    /// - `tag`: Restrict to dat files carrying this tag. If omitted, all tags
+    ///   are included.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.list_dat_files_v2()
+    ///    .company_id(company_id)
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .name(name)
+    ///    .platform_id(platform_id)
+    ///    .signature_group_id(signature_group_id)
+    ///    .subset(subset)
+    ///    .tag(tag)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_dat_files_v2(&self) -> builder::ListDatFilesV2<'_> {
+        builder::ListDatFilesV2::new(self)
+    }
+    ///Looks up many dat files by id in one request
+    ///
+    ///Up to 100 ids per request; duplicate ids are resolved once. A missing id
+    /// is a per-item `not_found`, never a batch-level 404. The whole batch
+    /// counts as one request against the rate limiter.
+    ///
+    ///Sends a `POST` request to `/dat-files/bulk`
     ///
     ///```ignore
-    /// let response = client.get_playmatch_game_by_id()
+    /// let response = client.bulk_dat_files_by_id_v2()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn bulk_dat_files_by_id_v2(&self) -> builder::BulkDatFilesByIdV2<'_> {
+        builder::BulkDatFilesByIdV2::new(self)
+    }
+    ///Lists the dat files or signature groups that contain a file by its
+    /// hashes
+    ///
+    ///Returns one entry per dat file, or one entry per signature group when
+    /// `level=group`. The strongest supplied hash resolves the file: sha256,
+    /// then sha1, then md5, then crc. Each entry shows the first and last
+    /// import the file appeared in and whether it is in the dat file's current
+    /// release.
+    ///
+    ///Sends a `GET` request to `/dat-files/by-hash`
+    ///
+    ///Arguments:
+    /// - `crc`: CRC32 checksum of the file, 8 hex characters.
+    /// - `level`: Granularity of the reverse lookup. `dat` returns one entry
+    ///   per dat file; `group` collapses the result to the publishing signature
+    ///   groups. Defaults to `dat`.
+    /// - `md5`: MD5 hash of the file, 32 hex characters.
+    /// - `sha1`: SHA1 hash of the file, 40 hex characters.
+    /// - `sha256`: SHA256 hash of the file, 64 hex characters.
+    ///```ignore
+    /// let response = client.list_dat_files_by_hash_v2()
+    ///    .crc(crc)
+    ///    .level(level)
+    ///    .md5(md5)
+    ///    .sha1(sha1)
+    ///    .sha256(sha256)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_dat_files_by_hash_v2(&self) -> builder::ListDatFilesByHashV2<'_> {
+        builder::ListDatFilesByHashV2::new(self)
+    }
+    ///Returns a dat file by id
+    ///
+    ///Includes the dat file's related entities and its aggregate game counts.
+    ///
+    ///Sends a `GET` request to `/dat-files/{id}`
+    ///
+    ///```ignore
+    /// let response = client.get_dat_file_by_id_v2()
     ///    .id(id)
     ///    .send()
     ///    .await;
     /// ```
-    pub fn get_playmatch_game_by_id(&self) -> builder::GetPlaymatchGameById<'_> {
-        builder::GetPlaymatchGameById::new(self)
+    pub fn get_dat_file_by_id_v2(&self) -> builder::GetDatFileByIdV2<'_> {
+        builder::GetDatFileByIdV2::new(self)
     }
-    ///Gets a Playmatch game by its ID, includes all relations
+    ///Lists the games in a dat file ordered by name
     ///
-    ///Sends a `GET` request to `/api/game/{id}/with-relations`
+    ///Defaults to current games only. File and metadata hydration are off by
+    /// default and enabled with `include_files` and `include_mappings`.
+    ///
+    ///Sends a `GET` request to `/dat-files/{id}/games`
+    ///
+    ///Arguments:
+    /// - `id`
+    /// - `current_only`: Only return games present in the current dat release.
+    ///   Defaults to `true`.
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `include_files`: Whether to include each game's files in the response.
+    ///   Defaults to `false`.
+    /// - `include_mappings`: Whether to include each game's external metadata
+    ///   mappings in the response. Defaults to `false`.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.list_dat_file_games_v2()
+    ///    .id(id)
+    ///    .current_only(current_only)
+    ///    .cursor(cursor)
+    ///    .include_files(include_files)
+    ///    .include_mappings(include_mappings)
+    ///    .limit(limit)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_dat_file_games_v2(&self) -> builder::ListDatFileGamesV2<'_> {
+        builder::ListDatFileGamesV2::new(self)
+    }
+    ///Lists the imports of a dat file, newest first
+    ///
+    ///Each entry carries the import id, file name, version, and import time.
+    /// The raw md5 dedup field is omitted.
+    ///
+    ///Sends a `GET` request to `/dat-files/{id}/imports`
+    ///
+    ///Arguments:
+    /// - `id`
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.list_dat_file_imports_v2()
+    ///    .id(id)
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_dat_file_imports_v2(&self) -> builder::ListDatFileImportsV2<'_> {
+        builder::ListDatFileImportsV2::new(self)
+    }
+    ///Returns a single dat file import by id
+    ///
+    ///The import is addressed by its parent dat file id and its own import id.
+    ///
+    ///Sends a `GET` request to `/dat-files/{id}/imports/{importId}`
     ///
     ///```ignore
-    /// let response = client.get_playmatch_game_with_relations_by_id()
+    /// let response = client.get_dat_file_import_v2()
+    ///    .id(id)
+    ///    .import_id(import_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_dat_file_import_v2(&self) -> builder::GetDatFileImportV2<'_> {
+        builder::GetDatFileImportV2::new(self)
+    }
+    ///Looks up many game files by id in one request
+    ///
+    ///Up to 100 ids per request; duplicate ids are resolved once. A missing id
+    /// is a per-item `not_found`, never a batch-level 404. The whole batch
+    /// counts as one request against the rate limiter. Each file carries
+    /// the same projection as `/games/{id}/files`.
+    ///
+    ///Sends a `POST` request to `/game-files/bulk`
+    ///
+    ///```ignore
+    /// let response = client.bulk_game_files_by_id_v2()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn bulk_game_files_by_id_v2(&self) -> builder::BulkGameFilesByIdV2<'_> {
+        builder::BulkGameFilesByIdV2::new(self)
+    }
+    ///Returns a game file by id
+    ///
+    ///Carries the same projection as the files listed under
+    /// `/games/{id}/files`.
+    ///
+    ///Sends a `GET` request to `/game-files/{id}`
+    ///
+    ///```ignore
+    /// let response = client.get_game_file_by_id_v2()
     ///    .id(id)
     ///    .send()
     ///    .await;
     /// ```
-    pub fn get_playmatch_game_with_relations_by_id(
-        &self,
-    ) -> builder::GetPlaymatchGameWithRelationsById<'_> {
-        builder::GetPlaymatchGameWithRelationsById::new(self)
+    pub fn get_game_file_by_id_v2(&self) -> builder::GetGameFileByIdV2<'_> {
+        builder::GetGameFileByIdV2::new(self)
     }
-    ///Sends a `GET` request to `/api/health`
+    ///Lists the dat file imports a game file was seen in, newest first
+    ///
+    ///Each entry is a dat file release in which this hash appeared.
+    ///
+    ///Sends a `GET` request to `/game-files/{id}/history`
+    ///
+    ///```ignore
+    /// let response = client.get_game_file_history_by_id_v2()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_game_file_history_by_id_v2(&self) -> builder::GetGameFileHistoryByIdV2<'_> {
+        builder::GetGameFileHistoryByIdV2::new(self)
+    }
+    ///Lists every import a game file's hash was observed in, newest import
+    /// first
+    ///
+    ///Each entry pairs one observation of the hash with the import and dat
+    /// file it was seen in.
+    ///
+    ///Sends a `GET` request to `/game-files/{id}/presence`
+    ///
+    ///```ignore
+    /// let response = client.get_game_file_presence_v2()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_game_file_presence_v2(&self) -> builder::GetGameFilePresenceV2<'_> {
+        builder::GetGameFilePresenceV2::new(self)
+    }
+    ///Lists games ordered by name
+    ///
+    ///Optional `platform_id`, `signature_group_id`, and `company_id` narrow
+    /// the result. Defaults to current games only. Clones are excluded unless
+    /// `clones=true`.
+    ///
+    ///Sends a `GET` request to `/games`
+    ///
+    ///Arguments:
+    /// - `clones`: Whether to include clone entries in the results. Defaults to
+    ///   `false`.
+    /// - `company_id`: Restrict to games whose platform was made by this
+    ///   company. If omitted, all companies are included.
+    /// - `current_only`: Only return games marked current. Defaults to `true`.
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `platform_id`: Restrict to games on this platform. If omitted, all
+    ///   platforms are included.
+    /// - `signature_group_id`: Restrict to games belonging to this signature
+    ///   group. If omitted, all signature groups are included.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.list_games_v2()
+    ///    .clones(clones)
+    ///    .company_id(company_id)
+    ///    .current_only(current_only)
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .platform_id(platform_id)
+    ///    .signature_group_id(signature_group_id)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_games_v2(&self) -> builder::ListGamesV2<'_> {
+        builder::ListGamesV2::new(self)
+    }
+    ///Looks up many games by id in one request
+    ///
+    ///Up to 100 ids per request; duplicate ids are resolved once. A missing id
+    /// is a per-item `not_found`, never a batch-level 404. The whole batch
+    /// counts as one request against the rate limiter.
+    ///
+    ///Sends a `POST` request to `/games/bulk`
+    ///
+    ///```ignore
+    /// let response = client.bulk_games_by_id_v2()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn bulk_games_by_id_v2(&self) -> builder::BulkGamesByIdV2<'_> {
+        builder::BulkGamesByIdV2::new(self)
+    }
+    ///Looks up games by exact name within a platform
+    ///
+    ///Case-insensitive exact match on `name`, scoped to `platform_id`. Returns
+    /// every game whose name matches, or an empty array when nothing matches.
+    ///
+    ///Sends a `GET` request to `/games/by-name`
+    ///
+    ///Arguments:
+    /// - `name`: The exact game title to look up. Case-insensitive.
+    /// - `platform_id`: The platform to scope the lookup to.
+    ///```ignore
+    /// let response = client.get_games_by_name_v2()
+    ///    .name(name)
+    ///    .platform_id(platform_id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_games_by_name_v2(&self) -> builder::GetGamesByNameV2<'_> {
+        builder::GetGamesByNameV2::new(self)
+    }
+    ///Searches games by name, ordered by relevance
+    ///
+    ///Fuzzy match on the game name, narrowed to a single platform when
+    /// `platform_id` is set. Returns an empty array when nothing matches.
+    ///
+    ///Sends a `GET` request to `/games/search`
+    ///
+    ///Arguments:
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `platform_id`: Restrict to games on this platform. If omitted, all
+    ///   platforms are included.
+    /// - `query`: The game title to search for.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.search_games_v2()
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .platform_id(platform_id)
+    ///    .query(query)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn search_games_v2(&self) -> builder::SearchGamesV2<'_> {
+        builder::SearchGamesV2::new(self)
+    }
+    ///Returns a game by id
+    ///
+    ///Sends a `GET` request to `/games/{id}`
+    ///
+    ///```ignore
+    /// let response = client.get_game_by_id_v2()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_game_by_id_v2(&self) -> builder::GetGameByIdV2<'_> {
+        builder::GetGameByIdV2::new(self)
+    }
+    ///Returns the parent and clone graph around a game
+    ///
+    ///`direction` selects which slice to return: `children`, `parent`,
+    /// `siblings`, or `tree` for the full graph. Defaults to `tree`. The
+    /// response carries `cloneGraphComplete`: it is `false` when this game's
+    /// dat file still has clone rows not linked to a resolved parent, either
+    /// transiently while the background resolution pass catches up after an
+    /// import or permanently when a declared parent is absent from the dat
+    /// file. A client that needs a complete graph (for example 1G1R) should
+    /// treat an absent parent conservatively.
+    ///
+    ///Sends a `GET` request to `/games/{id}/clones`
+    ///
+    ///Arguments:
+    /// - `id`
+    /// - `direction`: Which slice of the parent and clone graph to return.
+    ///   `children` returns the game's clones; `parent` returns its parent;
+    ///   `siblings` returns the other clones of the same parent; `tree` returns
+    ///   the parent together with all of its clones. Defaults to `tree`.
+    ///```ignore
+    /// let response = client.list_game_clones_v2()
+    ///    .id(id)
+    ///    .direction(direction)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_game_clones_v2(&self) -> builder::ListGameClonesV2<'_> {
+        builder::ListGameClonesV2::new(self)
+    }
+    ///Lists the dat files or signature groups that contain a game
+    ///
+    ///Returns one entry per dat file, or one entry per signature group when
+    /// `level=group`, unioned across all of the game's files. Each entry shows
+    /// the first and last import the file appeared in and whether it is in the
+    /// dat file's current release.
+    ///
+    ///Sends a `GET` request to `/games/{id}/dat-files`
+    ///
+    ///Arguments:
+    /// - `id`
+    /// - `level`: Granularity of the reverse lookup. `dat` returns one entry
+    ///   per dat file; `group` collapses the result to the publishing signature
+    ///   groups. Defaults to `dat`.
+    ///```ignore
+    /// let response = client.list_game_dat_files_v2()
+    ///    .id(id)
+    ///    .level(level)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_game_dat_files_v2(&self) -> builder::ListGameDatFilesV2<'_> {
+        builder::ListGameDatFilesV2::new(self)
+    }
+    ///Lists a game's ROM files ordered by file name
+    ///
+    ///Defaults to files present in the latest dat release. Set
+    /// `current_only=false` to include files dropped from earlier releases.
+    ///
+    ///Sends a `GET` request to `/games/{id}/files`
+    ///
+    ///Arguments:
+    /// - `id`
+    /// - `current_only`: Only return files still present in the current dat
+    ///   release. Defaults to `true`.
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.list_game_files_v2()
+    ///    .id(id)
+    ///    .current_only(current_only)
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_game_files_v2(&self) -> builder::ListGameFilesV2<'_> {
+        builder::ListGameFilesV2::new(self)
+    }
+    ///Lists a game's external provider mappings
+    ///
+    ///Set `provider` to restrict to one metadata provider and `match_type` to
+    /// restrict to one match type. If omitted, all mappings are returned.
+    ///
+    ///Sends a `GET` request to `/games/{id}/mappings`
+    ///
+    ///Arguments:
+    /// - `id`
+    /// - `match_type`: Restrict to mappings with this match type. If omitted,
+    ///   all match types are included.
+    /// - `provider`: Restrict to mappings for a single metadata provider. If
+    ///   omitted, all providers are included.
+    ///```ignore
+    /// let response = client.list_game_mappings_v2()
+    ///    .id(id)
+    ///    .match_type(match_type)
+    ///    .provider(provider)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_game_mappings_v2(&self) -> builder::ListGameMappingsV2<'_> {
+        builder::ListGameMappingsV2::new(self)
+    }
+    ///Returns a game by id with all related metadata
+    ///
+    ///Sends a `GET` request to `/games/{id}/with-relations`
+    ///
+    ///```ignore
+    /// let response = client.get_game_with_relations_by_id_v2()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_game_with_relations_by_id_v2(&self) -> builder::GetGameWithRelationsByIdV2<'_> {
+        builder::GetGameWithRelationsByIdV2::new(self)
+    }
+    ///Returns the liveness status of the service
+    ///
+    ///Sends a `GET` request to `/health`
     ///
     ///```ignore
     /// let response = client.health()
@@ -31247,20 +40125,72 @@ impl Client {
     pub fn health(&self) -> builder::Health<'_> {
         builder::Health::new(self)
     }
-    ///Identify a game by its file hashes or filename and size, returning the
-    /// matched metadata, goes in order sha256, sha1, md5 and filename + size
-    /// (from most accurate to least accurate)
+    ///Identifies many game files in one request, returning metadata mappings
     ///
-    ///Sends a `GET` request to `/api/identify/ids`
+    ///Each item is resolved by its file hashes or by filename and size. Up to
+    /// 100 items per request. A per-item failure does not fail the batch;
+    /// it is reported on that item. The whole batch counts as one request
+    /// against the rate limiter.
+    ///
+    ///Sends a `POST` request to `/identify/bulk/ids`
+    ///
+    ///```ignore
+    /// let response = client.identify_bulk_ids_v2()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn identify_bulk_ids_v2(&self) -> builder::IdentifyBulkIdsV2<'_> {
+        builder::IdentifyBulkIdsV2::new(self)
+    }
+    ///Identifies many game files in one request, returning full relations
+    ///
+    ///Each item is resolved by its file hashes or by filename and size, with
+    /// the matched game's relations on each result. Up to 100 items per
+    /// request. A per-item failure does not fail the batch; it is reported
+    /// on that item. The whole batch counts as one request against the rate
+    /// limiter.
+    ///
+    ///`additionalMatches` is omitted on every item here to keep the batch
+    /// cheap. Resolve the co-hashed siblings for a specific file through
+    /// the single `/identify` or `/identify/relations` endpoint.
+    ///
+    ///Sends a `POST` request to `/identify/bulk/relations`
+    ///
+    ///```ignore
+    /// let response = client.identify_bulk_relations_v2()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn identify_bulk_relations_v2(&self) -> builder::IdentifyBulkRelationsV2<'_> {
+        builder::IdentifyBulkRelationsV2::new(self)
+    }
+    ///Identifies a game by its file hashes or by filename and size, returning
+    /// the
+    ///
+    ///matched game and its metadata provider ids.
+    ///
+    ///The strongest supplied hash resolves the file: sha256, then sha1, then
+    /// md5, then crc. When no hash matches, the filename and size are tried
+    /// last.
+    ///
+    ///This is the v2 twin of the v1 `/identify/ids`: identical behaviour,
+    /// except a malformed query answers the v2 `{code, message}` envelope
+    /// instead of v1's plain-text body.
+    ///
+    ///Sends a `GET` request to `/identify/ids`
     ///
     ///Arguments:
+    /// - `crc`: Optional CRC32 checksum of the game file.
     /// - `file_name`: The file name of the game file.
     /// - `file_size`: The size of the game file in bytes.
     /// - `md5`: Optional MD5 hash of the game file.
     /// - `sha1`: Optional SHA1 hash of the game file.
     /// - `sha256`: Optional SHA256 hash of the game file.
     ///```ignore
-    /// let response = client.identify_game_with_metadata_ids()
+    /// let response = client.identify_game_with_metadata_ids_v2()
+    ///    .crc(crc)
     ///    .file_name(file_name)
     ///    .file_size(file_size)
     ///    .md5(md5)
@@ -31269,24 +40199,33 @@ impl Client {
     ///    .send()
     ///    .await;
     /// ```
-    pub fn identify_game_with_metadata_ids(&self) -> builder::IdentifyGameWithMetadataIds<'_> {
-        builder::IdentifyGameWithMetadataIds::new(self)
+    pub fn identify_game_with_metadata_ids_v2(&self) -> builder::IdentifyGameWithMetadataIdsV2<'_> {
+        builder::IdentifyGameWithMetadataIdsV2::new(self)
     }
-    ///Identify a game by its file hashes or filename and size, goes in order
-    /// sha256, sha1, md5 and filename + size (from most accurate to least
-    /// accurate), returning information about the game, game files, metadata
-    /// mappings, publisher and company
+    ///Identifies a game by its file hashes or by filename and size
     ///
-    ///Sends a `GET` request to `/api/identify/relations`
+    ///The strongest supplied hash resolves the file: sha256, then sha1, then
+    /// md5, then crc. When no hash matches, the filename and size are tried
+    /// last. The result carries the matched game together with its game
+    /// files, metadata mappings, publisher, and company.
+    ///
+    ///When the resolving hash is shared by sibling games, those co-hashed
+    /// games are returned in `additionalMatches`, ranked after the primary
+    /// match. The array is omitted for single-game results and for filename
+    /// and size results.
+    ///
+    ///Sends a `GET` request to `/identify/relations`
     ///
     ///Arguments:
+    /// - `crc`: Optional CRC32 checksum of the game file.
     /// - `file_name`: The file name of the game file.
     /// - `file_size`: The size of the game file in bytes.
     /// - `md5`: Optional MD5 hash of the game file.
     /// - `sha1`: Optional SHA1 hash of the game file.
     /// - `sha256`: Optional SHA256 hash of the game file.
     ///```ignore
-    /// let response = client.identify_game_and_relations()
+    /// let response = client.identify_game_and_relations_v2()
+    ///    .crc(crc)
     ///    .file_name(file_name)
     ///    .file_size(file_size)
     ///    .md5(md5)
@@ -31295,10 +40234,12 @@ impl Client {
     ///    .send()
     ///    .await;
     /// ```
-    pub fn identify_game_and_relations(&self) -> builder::IdentifyGameAndRelations<'_> {
-        builder::IdentifyGameAndRelations::new(self)
+    pub fn identify_game_and_relations_v2(&self) -> builder::IdentifyGameAndRelationsV2<'_> {
+        builder::IdentifyGameAndRelationsV2::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/age-rating`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/age-rating`
     ///
     ///```ignore
     /// let response = client.get_igdb_age_rating_by_id()
@@ -31309,7 +40250,9 @@ impl Client {
     pub fn get_igdb_age_rating_by_id(&self) -> builder::GetIgdbAgeRatingById<'_> {
         builder::GetIgdbAgeRatingById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/age-rating-categories`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/age-rating-categories`
     ///
     ///```ignore
     /// let response = client.get_igdb_age_rating_categories_by_ids()
@@ -31322,7 +40265,9 @@ impl Client {
     ) -> builder::GetIgdbAgeRatingCategoriesByIds<'_> {
         builder::GetIgdbAgeRatingCategoriesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/age-rating-category`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/age-rating-category`
     ///
     ///```ignore
     /// let response = client.get_igdb_age_rating_category_by_id()
@@ -31333,7 +40278,9 @@ impl Client {
     pub fn get_igdb_age_rating_category_by_id(&self) -> builder::GetIgdbAgeRatingCategoryById<'_> {
         builder::GetIgdbAgeRatingCategoryById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/age-rating-content-description-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/age-rating-content-description-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_age_rating_content_description_type_by_id()
@@ -31346,8 +40293,9 @@ impl Client {
     ) -> builder::GetIgdbAgeRatingContentDescriptionTypeById<'_> {
         builder::GetIgdbAgeRatingContentDescriptionTypeById::new(self)
     }
-    ///Sends a `GET` request to
-    /// `/api/igdb/age-rating-content-description-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/age-rating-content-description-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_age_rating_content_description_types_by_ids()
@@ -31360,7 +40308,9 @@ impl Client {
     ) -> builder::GetIgdbAgeRatingContentDescriptionTypesByIds<'_> {
         builder::GetIgdbAgeRatingContentDescriptionTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/age-rating-content-description-v2`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/age-rating-content-description-v2`
     ///
     ///```ignore
     /// let response = client.get_igdb_age_rating_content_description_v2_by_id()
@@ -31373,7 +40323,9 @@ impl Client {
     ) -> builder::GetIgdbAgeRatingContentDescriptionV2ById<'_> {
         builder::GetIgdbAgeRatingContentDescriptionV2ById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/age-rating-content-descriptions-v2`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/age-rating-content-descriptions-v2`
     ///
     ///```ignore
     /// let response = client.get_igdb_age_rating_content_descriptions_v2_by_ids()
@@ -31386,7 +40338,9 @@ impl Client {
     ) -> builder::GetIgdbAgeRatingContentDescriptionsV2ByIds<'_> {
         builder::GetIgdbAgeRatingContentDescriptionsV2ByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/age-rating-organization`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/age-rating-organization`
     ///
     ///```ignore
     /// let response = client.get_igdb_age_rating_organization_by_id()
@@ -31399,7 +40353,9 @@ impl Client {
     ) -> builder::GetIgdbAgeRatingOrganizationById<'_> {
         builder::GetIgdbAgeRatingOrganizationById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/age-rating-organizations`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/age-rating-organizations`
     ///
     ///```ignore
     /// let response = client.get_igdb_age_rating_organizations_by_ids()
@@ -31412,7 +40368,9 @@ impl Client {
     ) -> builder::GetIgdbAgeRatingOrganizationsByIds<'_> {
         builder::GetIgdbAgeRatingOrganizationsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/age-ratings`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/age-ratings`
     ///
     ///```ignore
     /// let response = client.get_igdb_age_ratings_by_ids()
@@ -31423,7 +40381,9 @@ impl Client {
     pub fn get_igdb_age_ratings_by_ids(&self) -> builder::GetIgdbAgeRatingsByIds<'_> {
         builder::GetIgdbAgeRatingsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/alternative-name`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/alternative-name`
     ///
     ///```ignore
     /// let response = client.get_igdb_alternative_name_by_id()
@@ -31434,7 +40394,9 @@ impl Client {
     pub fn get_igdb_alternative_name_by_id(&self) -> builder::GetIgdbAlternativeNameById<'_> {
         builder::GetIgdbAlternativeNameById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/alternative-names`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/alternative-names`
     ///
     ///```ignore
     /// let response = client.get_igdb_alternative_names_by_ids()
@@ -31445,7 +40407,9 @@ impl Client {
     pub fn get_igdb_alternative_names_by_ids(&self) -> builder::GetIgdbAlternativeNamesByIds<'_> {
         builder::GetIgdbAlternativeNamesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/artwork`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/artwork`
     ///
     ///```ignore
     /// let response = client.get_igdb_artwork_by_id()
@@ -31456,7 +40420,9 @@ impl Client {
     pub fn get_igdb_artwork_by_id(&self) -> builder::GetIgdbArtworkById<'_> {
         builder::GetIgdbArtworkById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/artwork-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/artwork-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_artwork_type_by_id()
@@ -31467,7 +40433,9 @@ impl Client {
     pub fn get_igdb_artwork_type_by_id(&self) -> builder::GetIgdbArtworkTypeById<'_> {
         builder::GetIgdbArtworkTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/artwork-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/artwork-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_artwork_types_by_ids()
@@ -31478,7 +40446,9 @@ impl Client {
     pub fn get_igdb_artwork_types_by_ids(&self) -> builder::GetIgdbArtworkTypesByIds<'_> {
         builder::GetIgdbArtworkTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/artworks`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/artworks`
     ///
     ///```ignore
     /// let response = client.get_igdb_artworks_by_ids()
@@ -31489,7 +40459,9 @@ impl Client {
     pub fn get_igdb_artworks_by_ids(&self) -> builder::GetIgdbArtworksByIds<'_> {
         builder::GetIgdbArtworksByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/character`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/character`
     ///
     ///```ignore
     /// let response = client.get_igdb_character_by_id()
@@ -31500,7 +40472,9 @@ impl Client {
     pub fn get_igdb_character_by_id(&self) -> builder::GetIgdbCharacterById<'_> {
         builder::GetIgdbCharacterById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/character-gender`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/character-gender`
     ///
     ///```ignore
     /// let response = client.get_igdb_character_gender_by_id()
@@ -31511,7 +40485,9 @@ impl Client {
     pub fn get_igdb_character_gender_by_id(&self) -> builder::GetIgdbCharacterGenderById<'_> {
         builder::GetIgdbCharacterGenderById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/character-genders`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/character-genders`
     ///
     ///```ignore
     /// let response = client.get_igdb_character_genders_by_ids()
@@ -31522,7 +40498,9 @@ impl Client {
     pub fn get_igdb_character_genders_by_ids(&self) -> builder::GetIgdbCharacterGendersByIds<'_> {
         builder::GetIgdbCharacterGendersByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/character-mug-shot`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/character-mug-shot`
     ///
     ///```ignore
     /// let response = client.get_igdb_character_mug_shot_by_id()
@@ -31533,7 +40511,9 @@ impl Client {
     pub fn get_igdb_character_mug_shot_by_id(&self) -> builder::GetIgdbCharacterMugShotById<'_> {
         builder::GetIgdbCharacterMugShotById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/character-mug-shots`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/character-mug-shots`
     ///
     ///```ignore
     /// let response = client.get_igdb_character_mug_shots_by_ids()
@@ -31546,7 +40526,9 @@ impl Client {
     ) -> builder::GetIgdbCharacterMugShotsByIds<'_> {
         builder::GetIgdbCharacterMugShotsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/character-species`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/character-species`
     ///
     ///```ignore
     /// let response = client.get_igdb_character_species_by_id()
@@ -31557,7 +40539,9 @@ impl Client {
     pub fn get_igdb_character_species_by_id(&self) -> builder::GetIgdbCharacterSpeciesById<'_> {
         builder::GetIgdbCharacterSpeciesById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/character-species-list`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/character-species-list`
     ///
     ///```ignore
     /// let response = client.get_igdb_character_species_by_ids()
@@ -31568,7 +40552,9 @@ impl Client {
     pub fn get_igdb_character_species_by_ids(&self) -> builder::GetIgdbCharacterSpeciesByIds<'_> {
         builder::GetIgdbCharacterSpeciesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/characters`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/characters`
     ///
     ///```ignore
     /// let response = client.get_igdb_characters_by_ids()
@@ -31579,7 +40565,9 @@ impl Client {
     pub fn get_igdb_characters_by_ids(&self) -> builder::GetIgdbCharactersByIds<'_> {
         builder::GetIgdbCharactersByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/collection`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_by_id()
@@ -31590,7 +40578,9 @@ impl Client {
     pub fn get_igdb_collection_by_id(&self) -> builder::GetIgdbCollectionById<'_> {
         builder::GetIgdbCollectionById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection-membership`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/collection-membership`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_membership_by_id()
@@ -31603,7 +40593,9 @@ impl Client {
     ) -> builder::GetIgdbCollectionMembershipById<'_> {
         builder::GetIgdbCollectionMembershipById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection-membership-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/collection-membership-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_membership_type_by_id()
@@ -31616,7 +40608,9 @@ impl Client {
     ) -> builder::GetIgdbCollectionMembershipTypeById<'_> {
         builder::GetIgdbCollectionMembershipTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection-membership-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/collection-membership-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_membership_types_by_ids()
@@ -31629,7 +40623,9 @@ impl Client {
     ) -> builder::GetIgdbCollectionMembershipTypesByIds<'_> {
         builder::GetIgdbCollectionMembershipTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection-memberships`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/collection-memberships`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_memberships_by_ids()
@@ -31642,7 +40638,9 @@ impl Client {
     ) -> builder::GetIgdbCollectionMembershipsByIds<'_> {
         builder::GetIgdbCollectionMembershipsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection-relation`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/collection-relation`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_relation_by_id()
@@ -31653,7 +40651,9 @@ impl Client {
     pub fn get_igdb_collection_relation_by_id(&self) -> builder::GetIgdbCollectionRelationById<'_> {
         builder::GetIgdbCollectionRelationById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection-relation-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/collection-relation-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_relation_type_by_id()
@@ -31666,7 +40666,9 @@ impl Client {
     ) -> builder::GetIgdbCollectionRelationTypeById<'_> {
         builder::GetIgdbCollectionRelationTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection-relation-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/collection-relation-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_relation_types_by_ids()
@@ -31679,7 +40681,9 @@ impl Client {
     ) -> builder::GetIgdbCollectionRelationTypesByIds<'_> {
         builder::GetIgdbCollectionRelationTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection-relations`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/collection-relations`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_relations_by_ids()
@@ -31692,7 +40696,9 @@ impl Client {
     ) -> builder::GetIgdbCollectionRelationsByIds<'_> {
         builder::GetIgdbCollectionRelationsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/collection-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_type_by_id()
@@ -31703,7 +40709,9 @@ impl Client {
     pub fn get_igdb_collection_type_by_id(&self) -> builder::GetIgdbCollectionTypeById<'_> {
         builder::GetIgdbCollectionTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collection-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/collection-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_collection_types_by_ids()
@@ -31714,7 +40722,9 @@ impl Client {
     pub fn get_igdb_collection_types_by_ids(&self) -> builder::GetIgdbCollectionTypesByIds<'_> {
         builder::GetIgdbCollectionTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/collections`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/collections`
     ///
     ///```ignore
     /// let response = client.get_igdb_collections_by_ids()
@@ -31725,7 +40735,9 @@ impl Client {
     pub fn get_igdb_collections_by_ids(&self) -> builder::GetIgdbCollectionsByIds<'_> {
         builder::GetIgdbCollectionsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/companies`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/companies`
     ///
     ///```ignore
     /// let response = client.get_igdb_companies_by_ids()
@@ -31736,7 +40748,9 @@ impl Client {
     pub fn get_igdb_companies_by_ids(&self) -> builder::GetIgdbCompaniesByIds<'_> {
         builder::GetIgdbCompaniesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/company`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_by_id()
@@ -31747,7 +40761,9 @@ impl Client {
     pub fn get_igdb_company_by_id(&self) -> builder::GetIgdbCompanyById<'_> {
         builder::GetIgdbCompanyById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-logo`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/company-logo`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_logo_by_id()
@@ -31758,7 +40774,9 @@ impl Client {
     pub fn get_igdb_company_logo_by_id(&self) -> builder::GetIgdbCompanyLogoById<'_> {
         builder::GetIgdbCompanyLogoById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-logos`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/company-logos`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_logos_by_ids()
@@ -31769,7 +40787,9 @@ impl Client {
     pub fn get_igdb_company_logos_by_ids(&self) -> builder::GetIgdbCompanyLogosByIds<'_> {
         builder::GetIgdbCompanyLogosByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-size`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/company-size`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_size_by_id()
@@ -31780,7 +40800,9 @@ impl Client {
     pub fn get_igdb_company_size_by_id(&self) -> builder::GetIgdbCompanySizeById<'_> {
         builder::GetIgdbCompanySizeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-sizes`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/company-sizes`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_sizes_by_ids()
@@ -31791,7 +40813,9 @@ impl Client {
     pub fn get_igdb_company_sizes_by_ids(&self) -> builder::GetIgdbCompanySizesByIds<'_> {
         builder::GetIgdbCompanySizesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-status`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/company-status`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_status_by_id()
@@ -31802,7 +40826,9 @@ impl Client {
     pub fn get_igdb_company_status_by_id(&self) -> builder::GetIgdbCompanyStatusById<'_> {
         builder::GetIgdbCompanyStatusById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-statuses`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/company-statuses`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_statuses_by_ids()
@@ -31813,7 +40839,9 @@ impl Client {
     pub fn get_igdb_company_statuses_by_ids(&self) -> builder::GetIgdbCompanyStatusesByIds<'_> {
         builder::GetIgdbCompanyStatusesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/company-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_type_by_id()
@@ -31824,7 +40852,9 @@ impl Client {
     pub fn get_igdb_company_type_by_id(&self) -> builder::GetIgdbCompanyTypeById<'_> {
         builder::GetIgdbCompanyTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-type-histories`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/company-type-histories`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_type_histories_by_ids()
@@ -31837,7 +40867,9 @@ impl Client {
     ) -> builder::GetIgdbCompanyTypeHistoriesByIds<'_> {
         builder::GetIgdbCompanyTypeHistoriesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-type-history`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/company-type-history`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_type_history_by_id()
@@ -31850,7 +40882,9 @@ impl Client {
     ) -> builder::GetIgdbCompanyTypeHistoryById<'_> {
         builder::GetIgdbCompanyTypeHistoryById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/company-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_types_by_ids()
@@ -31861,7 +40895,9 @@ impl Client {
     pub fn get_igdb_company_types_by_ids(&self) -> builder::GetIgdbCompanyTypesByIds<'_> {
         builder::GetIgdbCompanyTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-website`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/company-website`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_website_by_id()
@@ -31872,7 +40908,9 @@ impl Client {
     pub fn get_igdb_company_website_by_id(&self) -> builder::GetIgdbCompanyWebsiteById<'_> {
         builder::GetIgdbCompanyWebsiteById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/company-websites`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/company-websites`
     ///
     ///```ignore
     /// let response = client.get_igdb_company_websites_by_ids()
@@ -31883,7 +40921,9 @@ impl Client {
     pub fn get_igdb_company_websites_by_ids(&self) -> builder::GetIgdbCompanyWebsitesByIds<'_> {
         builder::GetIgdbCompanyWebsitesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/cover`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/cover`
     ///
     ///```ignore
     /// let response = client.get_igdb_cover_by_id()
@@ -31894,7 +40934,9 @@ impl Client {
     pub fn get_igdb_cover_by_id(&self) -> builder::GetIgdbCoverById<'_> {
         builder::GetIgdbCoverById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/covers`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/covers`
     ///
     ///```ignore
     /// let response = client.get_igdb_covers_by_ids()
@@ -31905,7 +40947,9 @@ impl Client {
     pub fn get_igdb_covers_by_ids(&self) -> builder::GetIgdbCoversByIds<'_> {
         builder::GetIgdbCoversByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/date-format`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/date-format`
     ///
     ///```ignore
     /// let response = client.get_igdb_date_format_by_id()
@@ -31916,7 +40960,9 @@ impl Client {
     pub fn get_igdb_date_format_by_id(&self) -> builder::GetIgdbDateFormatById<'_> {
         builder::GetIgdbDateFormatById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/date-formats`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/date-formats`
     ///
     ///```ignore
     /// let response = client.get_igdb_date_formats_by_ids()
@@ -31927,7 +40973,9 @@ impl Client {
     pub fn get_igdb_date_formats_by_ids(&self) -> builder::GetIgdbDateFormatsByIds<'_> {
         builder::GetIgdbDateFormatsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/entity-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/entity-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_entity_type_by_id()
@@ -31938,7 +40986,9 @@ impl Client {
     pub fn get_igdb_entity_type_by_id(&self) -> builder::GetIgdbEntityTypeById<'_> {
         builder::GetIgdbEntityTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/entity-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/entity-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_entity_types_by_ids()
@@ -31949,7 +40999,9 @@ impl Client {
     pub fn get_igdb_entity_types_by_ids(&self) -> builder::GetIgdbEntityTypesByIds<'_> {
         builder::GetIgdbEntityTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/event`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/event`
     ///
     ///```ignore
     /// let response = client.get_igdb_event_by_id()
@@ -31960,7 +41012,9 @@ impl Client {
     pub fn get_igdb_event_by_id(&self) -> builder::GetIgdbEventById<'_> {
         builder::GetIgdbEventById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/event-logo`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/event-logo`
     ///
     ///```ignore
     /// let response = client.get_igdb_event_logo_by_id()
@@ -31971,7 +41025,9 @@ impl Client {
     pub fn get_igdb_event_logo_by_id(&self) -> builder::GetIgdbEventLogoById<'_> {
         builder::GetIgdbEventLogoById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/event-logos`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/event-logos`
     ///
     ///```ignore
     /// let response = client.get_igdb_event_logos_by_ids()
@@ -31982,7 +41038,9 @@ impl Client {
     pub fn get_igdb_event_logos_by_ids(&self) -> builder::GetIgdbEventLogosByIds<'_> {
         builder::GetIgdbEventLogosByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/event-network`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/event-network`
     ///
     ///```ignore
     /// let response = client.get_igdb_event_network_by_id()
@@ -31993,7 +41051,9 @@ impl Client {
     pub fn get_igdb_event_network_by_id(&self) -> builder::GetIgdbEventNetworkById<'_> {
         builder::GetIgdbEventNetworkById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/event-networks`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/event-networks`
     ///
     ///```ignore
     /// let response = client.get_igdb_event_networks_by_ids()
@@ -32004,7 +41064,9 @@ impl Client {
     pub fn get_igdb_event_networks_by_ids(&self) -> builder::GetIgdbEventNetworksByIds<'_> {
         builder::GetIgdbEventNetworksByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/events`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/events`
     ///
     ///```ignore
     /// let response = client.get_igdb_events_by_ids()
@@ -32015,7 +41077,9 @@ impl Client {
     pub fn get_igdb_events_by_ids(&self) -> builder::GetIgdbEventsByIds<'_> {
         builder::GetIgdbEventsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/external-game`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/external-game`
     ///
     ///```ignore
     /// let response = client.get_igdb_external_game_by_id()
@@ -32026,7 +41090,9 @@ impl Client {
     pub fn get_igdb_external_game_by_id(&self) -> builder::GetIgdbExternalGameById<'_> {
         builder::GetIgdbExternalGameById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/external-game-source`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/external-game-source`
     ///
     ///```ignore
     /// let response = client.get_igdb_external_game_source_by_id()
@@ -32039,7 +41105,9 @@ impl Client {
     ) -> builder::GetIgdbExternalGameSourceById<'_> {
         builder::GetIgdbExternalGameSourceById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/external-game-sources`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/external-game-sources`
     ///
     ///```ignore
     /// let response = client.get_igdb_external_game_sources_by_ids()
@@ -32052,7 +41120,9 @@ impl Client {
     ) -> builder::GetIgdbExternalGameSourcesByIds<'_> {
         builder::GetIgdbExternalGameSourcesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/external-games`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/external-games`
     ///
     ///```ignore
     /// let response = client.get_igdb_external_games_by_ids()
@@ -32063,7 +41133,9 @@ impl Client {
     pub fn get_igdb_external_games_by_ids(&self) -> builder::GetIgdbExternalGamesByIds<'_> {
         builder::GetIgdbExternalGamesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/franchise`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/franchise`
     ///
     ///```ignore
     /// let response = client.get_igdb_franchise_by_id()
@@ -32074,7 +41146,9 @@ impl Client {
     pub fn get_igdb_franchise_by_id(&self) -> builder::GetIgdbFranchiseById<'_> {
         builder::GetIgdbFranchiseById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/franchises`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/franchises`
     ///
     ///```ignore
     /// let response = client.get_igdb_franchises_by_ids()
@@ -32085,9 +41159,11 @@ impl Client {
     pub fn get_igdb_franchises_by_ids(&self) -> builder::GetIgdbFranchisesByIds<'_> {
         builder::GetIgdbFranchisesByIds::new(self)
     }
-    ///Queries the IGDB API for a game by its Id or Slug
+    ///Returns an IGDB game by id or slug
     ///
-    ///Sends a `GET` request to `/api/igdb/game`
+    ///Supply either `id` or `slug`. If both are present, `id` is used.
+    ///
+    ///Sends a `GET` request to `/igdb/game`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_by_id()
@@ -32099,7 +41175,9 @@ impl Client {
     pub fn get_igdb_game_by_id(&self) -> builder::GetIgdbGameById<'_> {
         builder::GetIgdbGameById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-engine`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-engine`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_engine_by_id()
@@ -32110,7 +41188,9 @@ impl Client {
     pub fn get_igdb_game_engine_by_id(&self) -> builder::GetIgdbGameEngineById<'_> {
         builder::GetIgdbGameEngineById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-engine-logo`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-engine-logo`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_engine_logo_by_id()
@@ -32121,7 +41201,9 @@ impl Client {
     pub fn get_igdb_game_engine_logo_by_id(&self) -> builder::GetIgdbGameEngineLogoById<'_> {
         builder::GetIgdbGameEngineLogoById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-engine-logos`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-engine-logos`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_engine_logos_by_ids()
@@ -32132,7 +41214,9 @@ impl Client {
     pub fn get_igdb_game_engine_logos_by_ids(&self) -> builder::GetIgdbGameEngineLogosByIds<'_> {
         builder::GetIgdbGameEngineLogosByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-engines`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-engines`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_engines_by_ids()
@@ -32143,7 +41227,9 @@ impl Client {
     pub fn get_igdb_game_engines_by_ids(&self) -> builder::GetIgdbGameEnginesByIds<'_> {
         builder::GetIgdbGameEnginesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-localization`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-localization`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_localization_by_id()
@@ -32154,7 +41240,9 @@ impl Client {
     pub fn get_igdb_game_localization_by_id(&self) -> builder::GetIgdbGameLocalizationById<'_> {
         builder::GetIgdbGameLocalizationById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-localizations`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-localizations`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_localizations_by_ids()
@@ -32165,7 +41253,9 @@ impl Client {
     pub fn get_igdb_game_localizations_by_ids(&self) -> builder::GetIgdbGameLocalizationsByIds<'_> {
         builder::GetIgdbGameLocalizationsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-mode`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-mode`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_mode_by_id()
@@ -32176,7 +41266,9 @@ impl Client {
     pub fn get_igdb_game_mode_by_id(&self) -> builder::GetIgdbGameModeById<'_> {
         builder::GetIgdbGameModeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-modes`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-modes`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_modes_by_ids()
@@ -32187,7 +41279,9 @@ impl Client {
     pub fn get_igdb_game_modes_by_ids(&self) -> builder::GetIgdbGameModesByIds<'_> {
         builder::GetIgdbGameModesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-release-format`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-release-format`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_release_format_by_id()
@@ -32198,7 +41292,9 @@ impl Client {
     pub fn get_igdb_game_release_format_by_id(&self) -> builder::GetIgdbGameReleaseFormatById<'_> {
         builder::GetIgdbGameReleaseFormatById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-release-formats`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-release-formats`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_release_formats_by_ids()
@@ -32211,7 +41307,9 @@ impl Client {
     ) -> builder::GetIgdbGameReleaseFormatsByIds<'_> {
         builder::GetIgdbGameReleaseFormatsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-status`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-status`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_status_by_id()
@@ -32222,7 +41320,9 @@ impl Client {
     pub fn get_igdb_game_status_by_id(&self) -> builder::GetIgdbGameStatusById<'_> {
         builder::GetIgdbGameStatusById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-statuses`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-statuses`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_statuses_by_ids()
@@ -32233,7 +41333,9 @@ impl Client {
     pub fn get_igdb_game_statuses_by_ids(&self) -> builder::GetIgdbGameStatusesByIds<'_> {
         builder::GetIgdbGameStatusesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-time-to-beat`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-time-to-beat`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_time_to_beat_by_id()
@@ -32244,7 +41346,9 @@ impl Client {
     pub fn get_igdb_game_time_to_beat_by_id(&self) -> builder::GetIgdbGameTimeToBeatById<'_> {
         builder::GetIgdbGameTimeToBeatById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-time-to-beats`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-time-to-beats`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_time_to_beats_by_ids()
@@ -32255,7 +41359,9 @@ impl Client {
     pub fn get_igdb_game_time_to_beats_by_ids(&self) -> builder::GetIgdbGameTimeToBeatsByIds<'_> {
         builder::GetIgdbGameTimeToBeatsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_type_by_id()
@@ -32266,7 +41372,9 @@ impl Client {
     pub fn get_igdb_game_type_by_id(&self) -> builder::GetIgdbGameTypeById<'_> {
         builder::GetIgdbGameTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_types_by_ids()
@@ -32277,7 +41385,9 @@ impl Client {
     pub fn get_igdb_game_types_by_ids(&self) -> builder::GetIgdbGameTypesByIds<'_> {
         builder::GetIgdbGameTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-version`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-version`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_version_by_id()
@@ -32288,7 +41398,9 @@ impl Client {
     pub fn get_igdb_game_version_by_id(&self) -> builder::GetIgdbGameVersionById<'_> {
         builder::GetIgdbGameVersionById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-version-feature`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-version-feature`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_version_feature_by_id()
@@ -32301,7 +41413,9 @@ impl Client {
     ) -> builder::GetIgdbGameVersionFeatureById<'_> {
         builder::GetIgdbGameVersionFeatureById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-version-feature-value`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-version-feature-value`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_version_feature_value_by_id()
@@ -32314,7 +41428,9 @@ impl Client {
     ) -> builder::GetIgdbGameVersionFeatureValueById<'_> {
         builder::GetIgdbGameVersionFeatureValueById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-version-feature-values`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-version-feature-values`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_version_feature_values_by_ids()
@@ -32327,7 +41443,9 @@ impl Client {
     ) -> builder::GetIgdbGameVersionFeatureValuesByIds<'_> {
         builder::GetIgdbGameVersionFeatureValuesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-version-features`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-version-features`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_version_features_by_ids()
@@ -32340,7 +41458,9 @@ impl Client {
     ) -> builder::GetIgdbGameVersionFeaturesByIds<'_> {
         builder::GetIgdbGameVersionFeaturesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-versions`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-versions`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_versions_by_ids()
@@ -32351,7 +41471,9 @@ impl Client {
     pub fn get_igdb_game_versions_by_ids(&self) -> builder::GetIgdbGameVersionsByIds<'_> {
         builder::GetIgdbGameVersionsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-video`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/game-video`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_video_by_id()
@@ -32362,7 +41484,9 @@ impl Client {
     pub fn get_igdb_game_video_by_id(&self) -> builder::GetIgdbGameVideoById<'_> {
         builder::GetIgdbGameVideoById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/game-videos`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/game-videos`
     ///
     ///```ignore
     /// let response = client.get_igdb_game_videos_by_ids()
@@ -32373,9 +41497,9 @@ impl Client {
     pub fn get_igdb_game_videos_by_ids(&self) -> builder::GetIgdbGameVideosByIds<'_> {
         builder::GetIgdbGameVideosByIds::new(self)
     }
-    ///Searches the IGDB API for games by its name
+    ///Searches IGDB games by name, ordered by relevance
     ///
-    ///Sends a `GET` request to `/api/igdb/game/search`
+    ///Sends a `GET` request to `/igdb/game/search`
     ///
     ///```ignore
     /// let response = client.search_igdb_game_by_name()
@@ -32386,9 +41510,9 @@ impl Client {
     pub fn search_igdb_game_by_name(&self) -> builder::SearchIgdbGameByName<'_> {
         builder::SearchIgdbGameByName::new(self)
     }
-    ///Queries the IGDB API for games by its Ids
+    ///Looks up many IGDB games by id in one request
     ///
-    ///Sends a `GET` request to `/api/igdb/games`
+    ///Sends a `GET` request to `/igdb/games`
     ///
     ///```ignore
     /// let response = client.get_igdb_games_by_ids()
@@ -32399,7 +41523,9 @@ impl Client {
     pub fn get_igdb_games_by_ids(&self) -> builder::GetIgdbGamesByIds<'_> {
         builder::GetIgdbGamesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/genre`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/genre`
     ///
     ///```ignore
     /// let response = client.get_igdb_genre_by_id()
@@ -32410,7 +41536,9 @@ impl Client {
     pub fn get_igdb_genre_by_id(&self) -> builder::GetIgdbGenreById<'_> {
         builder::GetIgdbGenreById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/genres`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/genres`
     ///
     ///```ignore
     /// let response = client.get_igdb_genres_by_ids()
@@ -32421,7 +41549,9 @@ impl Client {
     pub fn get_igdb_genres_by_ids(&self) -> builder::GetIgdbGenresByIds<'_> {
         builder::GetIgdbGenresByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/involved-companies`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/involved-companies`
     ///
     ///```ignore
     /// let response = client.get_igdb_involved_companies_by_ids()
@@ -32432,7 +41562,9 @@ impl Client {
     pub fn get_igdb_involved_companies_by_ids(&self) -> builder::GetIgdbInvolvedCompaniesByIds<'_> {
         builder::GetIgdbInvolvedCompaniesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/involved-company`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/involved-company`
     ///
     ///```ignore
     /// let response = client.get_igdb_involved_company_by_id()
@@ -32443,7 +41575,9 @@ impl Client {
     pub fn get_igdb_involved_company_by_id(&self) -> builder::GetIgdbInvolvedCompanyById<'_> {
         builder::GetIgdbInvolvedCompanyById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/keyword`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/keyword`
     ///
     ///```ignore
     /// let response = client.get_igdb_keyword_by_id()
@@ -32454,7 +41588,9 @@ impl Client {
     pub fn get_igdb_keyword_by_id(&self) -> builder::GetIgdbKeywordById<'_> {
         builder::GetIgdbKeywordById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/keywords`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/keywords`
     ///
     ///```ignore
     /// let response = client.get_igdb_keywords_by_ids()
@@ -32465,7 +41601,9 @@ impl Client {
     pub fn get_igdb_keywords_by_ids(&self) -> builder::GetIgdbKeywordsByIds<'_> {
         builder::GetIgdbKeywordsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/language`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/language`
     ///
     ///```ignore
     /// let response = client.get_igdb_language_by_id()
@@ -32476,7 +41614,9 @@ impl Client {
     pub fn get_igdb_language_by_id(&self) -> builder::GetIgdbLanguageById<'_> {
         builder::GetIgdbLanguageById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/language-support`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/language-support`
     ///
     ///```ignore
     /// let response = client.get_igdb_language_support_by_id()
@@ -32487,7 +41627,9 @@ impl Client {
     pub fn get_igdb_language_support_by_id(&self) -> builder::GetIgdbLanguageSupportById<'_> {
         builder::GetIgdbLanguageSupportById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/language-support-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/language-support-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_language_support_type_by_id()
@@ -32500,7 +41642,9 @@ impl Client {
     ) -> builder::GetIgdbLanguageSupportTypeById<'_> {
         builder::GetIgdbLanguageSupportTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/language-support-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/language-support-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_language_support_types_by_ids()
@@ -32513,7 +41657,9 @@ impl Client {
     ) -> builder::GetIgdbLanguageSupportTypesByIds<'_> {
         builder::GetIgdbLanguageSupportTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/language-supports`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/language-supports`
     ///
     ///```ignore
     /// let response = client.get_igdb_language_supports_by_ids()
@@ -32524,7 +41670,9 @@ impl Client {
     pub fn get_igdb_language_supports_by_ids(&self) -> builder::GetIgdbLanguageSupportsByIds<'_> {
         builder::GetIgdbLanguageSupportsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/languages`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/languages`
     ///
     ///```ignore
     /// let response = client.get_igdb_languages_by_ids()
@@ -32535,7 +41683,9 @@ impl Client {
     pub fn get_igdb_languages_by_ids(&self) -> builder::GetIgdbLanguagesByIds<'_> {
         builder::GetIgdbLanguagesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/multiplayer-mode`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/multiplayer-mode`
     ///
     ///```ignore
     /// let response = client.get_igdb_multiplayer_mode_by_id()
@@ -32546,7 +41696,9 @@ impl Client {
     pub fn get_igdb_multiplayer_mode_by_id(&self) -> builder::GetIgdbMultiplayerModeById<'_> {
         builder::GetIgdbMultiplayerModeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/multiplayer-modes`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/multiplayer-modes`
     ///
     ///```ignore
     /// let response = client.get_igdb_multiplayer_modes_by_ids()
@@ -32557,7 +41709,9 @@ impl Client {
     pub fn get_igdb_multiplayer_modes_by_ids(&self) -> builder::GetIgdbMultiplayerModesByIds<'_> {
         builder::GetIgdbMultiplayerModesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/network-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/network-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_network_type_by_id()
@@ -32568,7 +41722,9 @@ impl Client {
     pub fn get_igdb_network_type_by_id(&self) -> builder::GetIgdbNetworkTypeById<'_> {
         builder::GetIgdbNetworkTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/network-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/network-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_network_types_by_ids()
@@ -32579,7 +41735,9 @@ impl Client {
     pub fn get_igdb_network_types_by_ids(&self) -> builder::GetIgdbNetworkTypesByIds<'_> {
         builder::GetIgdbNetworkTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/platform`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_by_id()
@@ -32590,7 +41748,9 @@ impl Client {
     pub fn get_igdb_platform_by_id(&self) -> builder::GetIgdbPlatformById<'_> {
         builder::GetIgdbPlatformById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-families`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/platform-families`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_families_by_ids()
@@ -32601,7 +41761,9 @@ impl Client {
     pub fn get_igdb_platform_families_by_ids(&self) -> builder::GetIgdbPlatformFamiliesByIds<'_> {
         builder::GetIgdbPlatformFamiliesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-family`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/platform-family`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_family_by_id()
@@ -32612,7 +41774,9 @@ impl Client {
     pub fn get_igdb_platform_family_by_id(&self) -> builder::GetIgdbPlatformFamilyById<'_> {
         builder::GetIgdbPlatformFamilyById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-logo`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/platform-logo`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_logo_by_id()
@@ -32623,7 +41787,9 @@ impl Client {
     pub fn get_igdb_platform_logo_by_id(&self) -> builder::GetIgdbPlatformLogoById<'_> {
         builder::GetIgdbPlatformLogoById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-logos`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/platform-logos`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_logos_by_ids()
@@ -32634,7 +41800,9 @@ impl Client {
     pub fn get_igdb_platform_logos_by_ids(&self) -> builder::GetIgdbPlatformLogosByIds<'_> {
         builder::GetIgdbPlatformLogosByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/platform-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_type_by_id()
@@ -32645,7 +41813,9 @@ impl Client {
     pub fn get_igdb_platform_type_by_id(&self) -> builder::GetIgdbPlatformTypeById<'_> {
         builder::GetIgdbPlatformTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/platform-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_types_by_ids()
@@ -32656,7 +41826,9 @@ impl Client {
     pub fn get_igdb_platform_types_by_ids(&self) -> builder::GetIgdbPlatformTypesByIds<'_> {
         builder::GetIgdbPlatformTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-version`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/platform-version`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_version_by_id()
@@ -32667,7 +41839,9 @@ impl Client {
     pub fn get_igdb_platform_version_by_id(&self) -> builder::GetIgdbPlatformVersionById<'_> {
         builder::GetIgdbPlatformVersionById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-version-companies`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/platform-version-companies`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_version_companies_by_ids()
@@ -32680,7 +41854,9 @@ impl Client {
     ) -> builder::GetIgdbPlatformVersionCompaniesByIds<'_> {
         builder::GetIgdbPlatformVersionCompaniesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-version-company`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/platform-version-company`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_version_company_by_id()
@@ -32693,7 +41869,9 @@ impl Client {
     ) -> builder::GetIgdbPlatformVersionCompanyById<'_> {
         builder::GetIgdbPlatformVersionCompanyById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-version-release-date`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/platform-version-release-date`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_version_release_date_by_id()
@@ -32706,7 +41884,9 @@ impl Client {
     ) -> builder::GetIgdbPlatformVersionReleaseDateById<'_> {
         builder::GetIgdbPlatformVersionReleaseDateById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-version-release-dates`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/platform-version-release-dates`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_version_release_dates_by_ids()
@@ -32719,7 +41899,9 @@ impl Client {
     ) -> builder::GetIgdbPlatformVersionReleaseDatesByIds<'_> {
         builder::GetIgdbPlatformVersionReleaseDatesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-versions`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/platform-versions`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_versions_by_ids()
@@ -32730,7 +41912,9 @@ impl Client {
     pub fn get_igdb_platform_versions_by_ids(&self) -> builder::GetIgdbPlatformVersionsByIds<'_> {
         builder::GetIgdbPlatformVersionsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-website`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/platform-website`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_website_by_id()
@@ -32741,7 +41925,9 @@ impl Client {
     pub fn get_igdb_platform_website_by_id(&self) -> builder::GetIgdbPlatformWebsiteById<'_> {
         builder::GetIgdbPlatformWebsiteById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platform-websites`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/platform-websites`
     ///
     ///```ignore
     /// let response = client.get_igdb_platform_websites_by_ids()
@@ -32752,7 +41938,9 @@ impl Client {
     pub fn get_igdb_platform_websites_by_ids(&self) -> builder::GetIgdbPlatformWebsitesByIds<'_> {
         builder::GetIgdbPlatformWebsitesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/platforms`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/platforms`
     ///
     ///```ignore
     /// let response = client.get_igdb_platforms_by_ids()
@@ -32763,7 +41951,9 @@ impl Client {
     pub fn get_igdb_platforms_by_ids(&self) -> builder::GetIgdbPlatformsByIds<'_> {
         builder::GetIgdbPlatformsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/player-perspective`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/player-perspective`
     ///
     ///```ignore
     /// let response = client.get_igdb_player_perspective_by_id()
@@ -32774,7 +41964,9 @@ impl Client {
     pub fn get_igdb_player_perspective_by_id(&self) -> builder::GetIgdbPlayerPerspectiveById<'_> {
         builder::GetIgdbPlayerPerspectiveById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/player-perspectives`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/player-perspectives`
     ///
     ///```ignore
     /// let response = client.get_igdb_player_perspectives_by_ids()
@@ -32787,7 +41979,9 @@ impl Client {
     ) -> builder::GetIgdbPlayerPerspectivesByIds<'_> {
         builder::GetIgdbPlayerPerspectivesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/popularity-primitive`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/popularity-primitive`
     ///
     ///```ignore
     /// let response = client.get_igdb_popularity_primitive_by_id()
@@ -32800,7 +41994,9 @@ impl Client {
     ) -> builder::GetIgdbPopularityPrimitiveById<'_> {
         builder::GetIgdbPopularityPrimitiveById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/popularity-primitives`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/popularity-primitives`
     ///
     ///```ignore
     /// let response = client.get_igdb_popularity_primitives_by_ids()
@@ -32813,7 +42009,9 @@ impl Client {
     ) -> builder::GetIgdbPopularityPrimitivesByIds<'_> {
         builder::GetIgdbPopularityPrimitivesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/popularity-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/popularity-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_popularity_type_by_id()
@@ -32824,7 +42022,9 @@ impl Client {
     pub fn get_igdb_popularity_type_by_id(&self) -> builder::GetIgdbPopularityTypeById<'_> {
         builder::GetIgdbPopularityTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/popularity-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/popularity-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_popularity_types_by_ids()
@@ -32835,7 +42035,9 @@ impl Client {
     pub fn get_igdb_popularity_types_by_ids(&self) -> builder::GetIgdbPopularityTypesByIds<'_> {
         builder::GetIgdbPopularityTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/region`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/region`
     ///
     ///```ignore
     /// let response = client.get_igdb_region_by_id()
@@ -32846,7 +42048,9 @@ impl Client {
     pub fn get_igdb_region_by_id(&self) -> builder::GetIgdbRegionById<'_> {
         builder::GetIgdbRegionById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/regions`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/regions`
     ///
     ///```ignore
     /// let response = client.get_igdb_regions_by_ids()
@@ -32857,7 +42061,9 @@ impl Client {
     pub fn get_igdb_regions_by_ids(&self) -> builder::GetIgdbRegionsByIds<'_> {
         builder::GetIgdbRegionsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/release-date`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/release-date`
     ///
     ///```ignore
     /// let response = client.get_igdb_release_date_by_id()
@@ -32868,7 +42074,9 @@ impl Client {
     pub fn get_igdb_release_date_by_id(&self) -> builder::GetIgdbReleaseDateById<'_> {
         builder::GetIgdbReleaseDateById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/release-date-region`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/release-date-region`
     ///
     ///```ignore
     /// let response = client.get_igdb_release_date_region_by_id()
@@ -32879,7 +42087,9 @@ impl Client {
     pub fn get_igdb_release_date_region_by_id(&self) -> builder::GetIgdbReleaseDateRegionById<'_> {
         builder::GetIgdbReleaseDateRegionById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/release-date-regions`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/release-date-regions`
     ///
     ///```ignore
     /// let response = client.get_igdb_release_date_regions_by_ids()
@@ -32892,7 +42102,9 @@ impl Client {
     ) -> builder::GetIgdbReleaseDateRegionsByIds<'_> {
         builder::GetIgdbReleaseDateRegionsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/release-date-status`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/release-date-status`
     ///
     ///```ignore
     /// let response = client.get_igdb_release_date_status_by_id()
@@ -32903,7 +42115,9 @@ impl Client {
     pub fn get_igdb_release_date_status_by_id(&self) -> builder::GetIgdbReleaseDateStatusById<'_> {
         builder::GetIgdbReleaseDateStatusById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/release-date-statuses`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/release-date-statuses`
     ///
     ///```ignore
     /// let response = client.get_igdb_release_date_statuses_by_ids()
@@ -32916,7 +42130,9 @@ impl Client {
     ) -> builder::GetIgdbReleaseDateStatusesByIds<'_> {
         builder::GetIgdbReleaseDateStatusesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/release-dates`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/release-dates`
     ///
     ///```ignore
     /// let response = client.get_igdb_release_dates_by_ids()
@@ -32927,7 +42143,9 @@ impl Client {
     pub fn get_igdb_release_dates_by_ids(&self) -> builder::GetIgdbReleaseDatesByIds<'_> {
         builder::GetIgdbReleaseDatesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/report`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/report`
     ///
     ///```ignore
     /// let response = client.get_igdb_report_by_id()
@@ -32938,7 +42156,9 @@ impl Client {
     pub fn get_igdb_report_by_id(&self) -> builder::GetIgdbReportById<'_> {
         builder::GetIgdbReportById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/report-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/report-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_report_type_by_id()
@@ -32949,7 +42169,9 @@ impl Client {
     pub fn get_igdb_report_type_by_id(&self) -> builder::GetIgdbReportTypeById<'_> {
         builder::GetIgdbReportTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/report-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/report-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_report_types_by_ids()
@@ -32960,7 +42182,9 @@ impl Client {
     pub fn get_igdb_report_types_by_ids(&self) -> builder::GetIgdbReportTypesByIds<'_> {
         builder::GetIgdbReportTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/reports`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/reports`
     ///
     ///```ignore
     /// let response = client.get_igdb_reports_by_ids()
@@ -32971,7 +42195,9 @@ impl Client {
     pub fn get_igdb_reports_by_ids(&self) -> builder::GetIgdbReportsByIds<'_> {
         builder::GetIgdbReportsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/screenshot`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/screenshot`
     ///
     ///```ignore
     /// let response = client.get_igdb_screenshot_by_id()
@@ -32982,7 +42208,9 @@ impl Client {
     pub fn get_igdb_screenshot_by_id(&self) -> builder::GetIgdbScreenshotById<'_> {
         builder::GetIgdbScreenshotById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/screenshots`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/screenshots`
     ///
     ///```ignore
     /// let response = client.get_igdb_screenshots_by_ids()
@@ -32993,7 +42221,9 @@ impl Client {
     pub fn get_igdb_screenshots_by_ids(&self) -> builder::GetIgdbScreenshotsByIds<'_> {
         builder::GetIgdbScreenshotsByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/theme`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/theme`
     ///
     ///```ignore
     /// let response = client.get_igdb_theme_by_id()
@@ -33004,7 +42234,9 @@ impl Client {
     pub fn get_igdb_theme_by_id(&self) -> builder::GetIgdbThemeById<'_> {
         builder::GetIgdbThemeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/themes`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/themes`
     ///
     ///```ignore
     /// let response = client.get_igdb_themes_by_ids()
@@ -33015,7 +42247,9 @@ impl Client {
     pub fn get_igdb_themes_by_ids(&self) -> builder::GetIgdbThemesByIds<'_> {
         builder::GetIgdbThemesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/website`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/website`
     ///
     ///```ignore
     /// let response = client.get_igdb_website_by_id()
@@ -33026,7 +42260,9 @@ impl Client {
     pub fn get_igdb_website_by_id(&self) -> builder::GetIgdbWebsiteById<'_> {
         builder::GetIgdbWebsiteById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/website-type`
+    ///Returns one entity by id
+    ///
+    ///Sends a `GET` request to `/igdb/website-type`
     ///
     ///```ignore
     /// let response = client.get_igdb_website_type_by_id()
@@ -33037,7 +42273,9 @@ impl Client {
     pub fn get_igdb_website_type_by_id(&self) -> builder::GetIgdbWebsiteTypeById<'_> {
         builder::GetIgdbWebsiteTypeById::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/website-types`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/website-types`
     ///
     ///```ignore
     /// let response = client.get_igdb_website_types_by_ids()
@@ -33048,7 +42286,9 @@ impl Client {
     pub fn get_igdb_website_types_by_ids(&self) -> builder::GetIgdbWebsiteTypesByIds<'_> {
         builder::GetIgdbWebsiteTypesByIds::new(self)
     }
-    ///Sends a `GET` request to `/api/igdb/websites`
+    ///Looks up many entities by id in one request
+    ///
+    ///Sends a `GET` request to `/igdb/websites`
     ///
     ///```ignore
     /// let response = client.get_igdb_websites_by_ids()
@@ -33059,9 +42299,9 @@ impl Client {
     pub fn get_igdb_websites_by_ids(&self) -> builder::GetIgdbWebsitesByIds<'_> {
         builder::GetIgdbWebsitesByIds::new(self)
     }
-    ///Look up a LaunchBox game by its database id
+    ///Returns a LaunchBox game by id
     ///
-    ///Sends a `GET` request to `/api/launchbox/game`
+    ///Sends a `GET` request to `/launchbox/game`
     ///
     ///```ignore
     /// let response = client.get_lb_game_by_id()
@@ -33072,9 +42312,9 @@ impl Client {
     pub fn get_lb_game_by_id(&self) -> builder::GetLbGameById<'_> {
         builder::GetLbGameById::new(self)
     }
-    ///Fetch every alternate name LaunchBox has for a given game
+    ///Lists every alternate name LaunchBox has for a game
     ///
-    ///Sends a `GET` request to `/api/launchbox/game/alternate-names`
+    ///Sends a `GET` request to `/launchbox/game/alternate-names`
     ///
     ///```ignore
     /// let response = client.get_lb_game_alternate_names()
@@ -33085,9 +42325,9 @@ impl Client {
     pub fn get_lb_game_alternate_names(&self) -> builder::GetLbGameAlternateNames<'_> {
         builder::GetLbGameAlternateNames::new(self)
     }
-    ///Fetch every image LaunchBox has for a given game
+    ///Lists every image LaunchBox has for a game
     ///
-    ///Sends a `GET` request to `/api/launchbox/game/images`
+    ///Sends a `GET` request to `/launchbox/game/images`
     ///
     ///```ignore
     /// let response = client.get_lb_game_images()
@@ -33098,9 +42338,12 @@ impl Client {
     pub fn get_lb_game_images(&self) -> builder::GetLbGameImages<'_> {
         builder::GetLbGameImages::new(self)
     }
-    ///Search LaunchBox games by name, optionally narrowed to a platform
+    ///Searches LaunchBox games by name
     ///
-    ///Sends a `GET` request to `/api/launchbox/game/search`
+    ///Narrow the search to a single platform by passing a platform name. If
+    /// omitted, all platforms are included.
+    ///
+    ///Sends a `GET` request to `/launchbox/game/search`
     ///
     ///```ignore
     /// let response = client.search_lb_games()
@@ -33112,9 +42355,9 @@ impl Client {
     pub fn search_lb_games(&self) -> builder::SearchLbGames<'_> {
         builder::SearchLbGames::new(self)
     }
-    ///List every platform LaunchBox knows about
+    ///Lists every platform known to LaunchBox
     ///
-    ///Sends a `GET` request to `/api/launchbox/platforms`
+    ///Sends a `GET` request to `/launchbox/platforms`
     ///
     ///```ignore
     /// let response = client.list_lb_platforms()
@@ -33124,14 +42367,13 @@ impl Client {
     pub fn list_lb_platforms(&self) -> builder::ListLbPlatforms<'_> {
         builder::ListLbPlatforms::new(self)
     }
-    ///Manually match a Company by its name, returning the matched
-    /// ExternalMetadata
+    ///Matches a company to external metadata by name
     ///
-    ///This Endpoint requires Credentials of a User with at least Trusted
-    /// level, if you do not have user credentials and a user account with at
-    /// least Trusted level, use the suggestion endpoints instead.
+    ///Identify the company by its name and attach the chosen external metadata
+    /// to it. Requires credentials of at least Trusted level. Callers without a
+    /// Trusted account use the suggestion endpoints instead.
     ///
-    ///Sends a `POST` request to `/api/match/manual/company`
+    ///Sends a `POST` request to `/match/manual/company`
     ///
     ///Arguments:
     /// - `body`:
@@ -33144,14 +42386,16 @@ impl Client {
     pub fn manually_match_company(&self) -> builder::ManuallyMatchCompany<'_> {
         builder::ManuallyMatchCompany::new(self)
     }
-    ///Manually match a Game by its file hashes, filename or Game name,
-    /// returning the matched game ExternalMetadata
+    ///Matches a game to external metadata by file hash, filename, or name
     ///
-    ///This Endpoint requires Credentials of a User with at least Trusted
-    /// level, if you do not have user credentials and a user account with at
-    /// least Trusted level, use the suggestion endpoints instead.
+    ///Identify the game by any of its file hashes, its filename, or its game
+    /// name, then attach the chosen external metadata to it. The strongest
+    /// supplied hash resolves the file: sha256, then sha1, then md5, then crc.
+    /// At least one of `file_name`, `md5`, `sha1`, or `sha256` is required.
+    /// Requires credentials of at least Trusted level. Callers without a
+    /// Trusted account use the suggestion endpoints instead.
     ///
-    ///Sends a `POST` request to `/api/match/manual/game`
+    ///Sends a `POST` request to `/match/manual/game`
     ///
     ///Arguments:
     /// - `body`:
@@ -33164,14 +42408,13 @@ impl Client {
     pub fn manually_match_game(&self) -> builder::ManuallyMatchGame<'_> {
         builder::ManuallyMatchGame::new(self)
     }
-    ///Manually match a Platform by its name, returning the matched
-    /// ExternalMetadata
+    ///Matches a platform to external metadata by name
     ///
-    ///This Endpoint requires Credentials of a User with at least Trusted
-    /// level, if you do not have user credentials and a user account with at
-    /// least Trusted level, use the suggestion endpoints instead.
+    ///Identify the platform by its name and attach the chosen external
+    /// metadata to it. Requires credentials of at least Trusted level. Callers
+    /// without a Trusted account use the suggestion endpoints instead.
     ///
-    ///Sends a `POST` request to `/api/match/manual/platform`
+    ///Sends a `POST` request to `/match/manual/platform`
     ///
     ///Arguments:
     /// - `body`:
@@ -33184,9 +42427,9 @@ impl Client {
     pub fn manually_match_platform(&self) -> builder::ManuallyMatchPlatform<'_> {
         builder::ManuallyMatchPlatform::new(self)
     }
-    ///Look up a MobyGames game by its game id
+    ///Returns a MobyGames game by id
     ///
-    ///Sends a `GET` request to `/api/mobygames/game`
+    ///Sends a `GET` request to `/mobygames/game`
     ///
     ///```ignore
     /// let response = client.get_mg_game_by_id()
@@ -33197,9 +42440,9 @@ impl Client {
     pub fn get_mg_game_by_id(&self) -> builder::GetMgGameById<'_> {
         builder::GetMgGameById::new(self)
     }
-    ///Fetch MobyGames cover groups for a given game/platform combination
+    ///Returns the cover groups for a game on a platform
     ///
-    ///Sends a `GET` request to `/api/mobygames/game/covers`
+    ///Sends a `GET` request to `/mobygames/game/covers`
     ///
     ///```ignore
     /// let response = client.get_mg_game_covers()
@@ -33211,9 +42454,9 @@ impl Client {
     pub fn get_mg_game_covers(&self) -> builder::GetMgGameCovers<'_> {
         builder::GetMgGameCovers::new(self)
     }
-    ///Fetch MobyGames screenshots for a given game/platform combination
+    ///Returns the screenshots for a game on a platform
     ///
-    ///Sends a `GET` request to `/api/mobygames/game/screenshots`
+    ///Sends a `GET` request to `/mobygames/game/screenshots`
     ///
     ///```ignore
     /// let response = client.get_mg_game_screenshots()
@@ -33225,9 +42468,12 @@ impl Client {
     pub fn get_mg_game_screenshots(&self) -> builder::GetMgGameScreenshots<'_> {
         builder::GetMgGameScreenshots::new(self)
     }
-    ///Search MobyGames games by title, optionally narrowed to a platform
+    ///Searches MobyGames games by title
     ///
-    ///Sends a `GET` request to `/api/mobygames/game/search`
+    ///Narrow the search to a single platform by passing a platform id. If
+    /// omitted, all platforms are included.
+    ///
+    ///Sends a `GET` request to `/mobygames/game/search`
     ///
     ///```ignore
     /// let response = client.search_mg_games()
@@ -33239,9 +42485,9 @@ impl Client {
     pub fn search_mg_games(&self) -> builder::SearchMgGames<'_> {
         builder::SearchMgGames::new(self)
     }
-    ///List every genre MobyGames knows about
+    ///Lists every genre known to MobyGames
     ///
-    ///Sends a `GET` request to `/api/mobygames/genres`
+    ///Sends a `GET` request to `/mobygames/genres`
     ///
     ///```ignore
     /// let response = client.list_mg_genres()
@@ -33251,9 +42497,9 @@ impl Client {
     pub fn list_mg_genres(&self) -> builder::ListMgGenres<'_> {
         builder::ListMgGenres::new(self)
     }
-    ///List every platform MobyGames knows about
+    ///Lists every platform known to MobyGames
     ///
-    ///Sends a `GET` request to `/api/mobygames/platforms`
+    ///Sends a `GET` request to `/mobygames/platforms`
     ///
     ///```ignore
     /// let response = client.list_mg_platforms()
@@ -33263,9 +42509,9 @@ impl Client {
     pub fn list_mg_platforms(&self) -> builder::ListMgPlatforms<'_> {
         builder::ListMgPlatforms::new(self)
     }
-    ///Look up an OpenVGDB release by its release id
+    ///Returns an OpenVGDB release by id
     ///
-    ///Sends a `GET` request to `/api/openvgdb/release`
+    ///Sends a `GET` request to `/openvgdb/release`
     ///
     ///```ignore
     /// let response = client.get_ovgdb_release_by_id()
@@ -33276,12 +42522,13 @@ impl Client {
     pub fn get_ovgdb_release_by_id(&self) -> builder::GetOvgdbReleaseById<'_> {
         builder::GetOvgdbReleaseById::new(self)
     }
-    ///Look up an OpenVGDB rom by a file hash (sha1, md5 or crc) and return it
+    ///Looks up an OpenVGDB rom by a file hash
     ///
-    ///together with every release attached to it. At least one hash query
-    ///parameter must be supplied; sha1 is preferred, then md5, then crc.
+    ///The strongest supplied hash resolves the rom: sha1, then md5, then crc.
+    /// At least one hash must be supplied. The response carries the matched rom
+    /// and every release attached to it.
     ///
-    ///Sends a `GET` request to `/api/openvgdb/rom/by-hash`
+    ///Sends a `GET` request to `/openvgdb/rom/by-hash`
     ///
     ///```ignore
     /// let response = client.get_ovgdb_rom_by_hash()
@@ -33294,33 +42541,116 @@ impl Client {
     pub fn get_ovgdb_rom_by_hash(&self) -> builder::GetOvgdbRomByHash<'_> {
         builder::GetOvgdbRomByHash::new(self)
     }
-    ///Returns all platforms with its company and its external metadata
-    /// mappings
+    ///Lists platforms ordered by name
     ///
-    ///Sends a `GET` request to `/api/platforms`
+    ///Each entry carries the platform with its company and external metadata
+    /// mappings.
     ///
+    ///Sends a `GET` request to `/platforms`
+    ///
+    ///Arguments:
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
     ///```ignore
-    /// let response = client.get_all_platforms()
+    /// let response = client.list_platforms_v2()
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .with_total(with_total)
     ///    .send()
     ///    .await;
     /// ```
-    pub fn get_all_platforms(&self) -> builder::GetAllPlatforms<'_> {
-        builder::GetAllPlatforms::new(self)
+    pub fn list_platforms_v2(&self) -> builder::ListPlatformsV2<'_> {
+        builder::ListPlatformsV2::new(self)
     }
-    ///Returns a platform and its metadata mappings by id
+    ///Looks up many platforms by id in one request
     ///
-    ///Sends a `GET` request to `/api/platforms/{id}`
+    ///Up to 100 ids per request; duplicate ids are resolved once. A missing id
+    /// is a per-item `not_found`, never a batch-level 404. The whole batch
+    /// counts as one request against the rate limiter.
+    ///
+    ///Sends a `POST` request to `/platforms/bulk`
     ///
     ///```ignore
-    /// let response = client.get_platform_by_id()
+    /// let response = client.bulk_platforms_by_id_v2()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn bulk_platforms_by_id_v2(&self) -> builder::BulkPlatformsByIdV2<'_> {
+        builder::BulkPlatformsByIdV2::new(self)
+    }
+    ///Searches platforms by name, ordered by name
+    ///
+    ///Case-insensitive substring match on the platform name. Each entry
+    /// carries the platform with its company and external metadata mappings.
+    /// Returns an empty array when nothing matches.
+    ///
+    ///Sends a `GET` request to `/platforms/search`
+    ///
+    ///Arguments:
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `query`: The platform name to search for.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.search_platforms_v2()
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .query(query)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn search_platforms_v2(&self) -> builder::SearchPlatformsV2<'_> {
+        builder::SearchPlatformsV2::new(self)
+    }
+    ///Returns a platform by id
+    ///
+    ///The response includes the platform with its company and metadata
+    /// mappings.
+    ///
+    ///Sends a `GET` request to `/platforms/{id}`
+    ///
+    ///```ignore
+    /// let response = client.get_platform_by_id_v2()
     ///    .id(id)
     ///    .send()
     ///    .await;
     /// ```
-    pub fn get_platform_by_id(&self) -> builder::GetPlatformById<'_> {
-        builder::GetPlatformById::new(self)
+    pub fn get_platform_by_id_v2(&self) -> builder::GetPlatformByIdV2<'_> {
+        builder::GetPlatformByIdV2::new(self)
     }
-    ///Sends a `GET` request to `/api/ready`
+    ///Returns aggregate counts for a single platform
+    ///
+    ///Sends a `GET` request to `/platforms/{id}/stats`
+    ///
+    ///```ignore
+    /// let response = client.get_platform_stats_v2()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_platform_stats_v2(&self) -> builder::GetPlatformStatsV2<'_> {
+        builder::GetPlatformStatsV2::new(self)
+    }
+    ///Returns the readiness status of the service
+    ///
+    ///Confirms the database and cache backends respond before reporting ready.
+    /// A successful result is held for a few seconds before the backends
+    /// are checked again.
+    ///
+    ///Sends a `GET` request to `/ready`
     ///
     ///```ignore
     /// let response = client.ready()
@@ -33330,9 +42660,9 @@ impl Client {
     pub fn ready(&self) -> builder::Ready<'_> {
         builder::Ready::new(self)
     }
-    ///Look up a RetroAchievements game by its game id
+    ///Returns a RetroAchievements game by id
     ///
-    ///Sends a `GET` request to `/api/retroachievements/game`
+    ///Sends a `GET` request to `/retroachievements/game`
     ///
     ///```ignore
     /// let response = client.get_ra_game_by_id()
@@ -33343,11 +42673,12 @@ impl Client {
     pub fn get_ra_game_by_id(&self) -> builder::GetRaGameById<'_> {
         builder::GetRaGameById::new(self)
     }
-    ///Look up a RetroAchievements game by one of its MD5 hashes and return the
+    ///Looks up a RetroAchievements game by one of its MD5 hashes
     ///
-    ///game record together with every other hash RetroAchievements has for it.
+    ///The response carries the matched game and every other MD5 hash
+    /// RetroAchievements has for it.
     ///
-    ///Sends a `GET` request to `/api/retroachievements/game/by-hash`
+    ///Sends a `GET` request to `/retroachievements/game/by-hash`
     ///
     ///```ignore
     /// let response = client.get_ra_game_by_hash()
@@ -33358,9 +42689,12 @@ impl Client {
     pub fn get_ra_game_by_hash(&self) -> builder::GetRaGameByHash<'_> {
         builder::GetRaGameByHash::new(self)
     }
-    ///Search RetroAchievements games by title, optionally narrowed to a system
+    ///Searches RetroAchievements games by title
     ///
-    ///Sends a `GET` request to `/api/retroachievements/game/search`
+    ///Narrow the search to a single system by passing a system name. If
+    /// omitted, all systems are included.
+    ///
+    ///Sends a `GET` request to `/retroachievements/game/search`
     ///
     ///```ignore
     /// let response = client.search_ra_games()
@@ -33372,9 +42706,9 @@ impl Client {
     pub fn search_ra_games(&self) -> builder::SearchRaGames<'_> {
         builder::SearchRaGames::new(self)
     }
-    ///List every console RetroAchievements knows about
+    ///Lists every console known to RetroAchievements
     ///
-    ///Sends a `GET` request to `/api/retroachievements/systems`
+    ///Sends a `GET` request to `/retroachievements/systems`
     ///
     ///```ignore
     /// let response = client.list_ra_systems()
@@ -33384,9 +42718,9 @@ impl Client {
     pub fn list_ra_systems(&self) -> builder::ListRaSystems<'_> {
         builder::ListRaSystems::new(self)
     }
-    ///Look up a ScreenScraper game by its SS game id
+    ///Returns a ScreenScraper game by its ScreenScraper game id
     ///
-    ///Sends a `GET` request to `/api/screenscraper/game`
+    ///Sends a `GET` request to `/screenscraper/game`
     ///
     ///```ignore
     /// let response = client.get_ss_game_by_id()
@@ -33397,9 +42731,11 @@ impl Client {
     pub fn get_ss_game_by_id(&self) -> builder::GetSsGameById<'_> {
         builder::GetSsGameById::new(self)
     }
-    ///Look up a ScreenScraper game by an exact rom file name within a system
+    ///Returns a ScreenScraper game by an exact rom file name within a system
     ///
-    ///Sends a `GET` request to `/api/screenscraper/game/by-rom`
+    ///The rom name must match a known file name in the system exactly.
+    ///
+    ///Sends a `GET` request to `/screenscraper/game/by-rom`
     ///
     ///```ignore
     /// let response = client.get_ss_game_by_rom_name()
@@ -33411,9 +42747,11 @@ impl Client {
     pub fn get_ss_game_by_rom_name(&self) -> builder::GetSsGameByRomName<'_> {
         builder::GetSsGameByRomName::new(self)
     }
-    ///Search ScreenScraper games by name within a system
+    ///Searches ScreenScraper games by name within a system
     ///
-    ///Sends a `GET` request to `/api/screenscraper/game/search`
+    ///Returns an empty array when no game name matches in the system.
+    ///
+    ///Sends a `GET` request to `/screenscraper/game/search`
     ///
     ///```ignore
     /// let response = client.search_ss_games()
@@ -33425,9 +42763,11 @@ impl Client {
     pub fn search_ss_games(&self) -> builder::SearchSsGames<'_> {
         builder::SearchSsGames::new(self)
     }
-    ///List every system (platform) ScreenScraper knows about
+    ///Lists every system ScreenScraper knows about
     ///
-    ///Sends a `GET` request to `/api/screenscraper/systems`
+    ///A system is a platform such as a console, handheld, or computer.
+    ///
+    ///Sends a `GET` request to `/screenscraper/systems`
     ///
     ///```ignore
     /// let response = client.list_ss_systems()
@@ -33437,9 +42777,9 @@ impl Client {
     pub fn list_ss_systems(&self) -> builder::ListSsSystems<'_> {
         builder::ListSsSystems::new(self)
     }
-    ///Look up a SteamGridDB game by its SGDB id
+    ///Returns a SteamGridDB game by its SteamGridDB id
     ///
-    ///Sends a `GET` request to `/api/sgdb/game`
+    ///Sends a `GET` request to `/sgdb/game`
     ///
     ///```ignore
     /// let response = client.get_sgdb_game_by_id()
@@ -33450,10 +42790,12 @@ impl Client {
     pub fn get_sgdb_game_by_id(&self) -> builder::GetSgdbGameById<'_> {
         builder::GetSgdbGameById::new(self)
     }
-    ///Look up a SteamGridDB game by an external platform id (steam, origin,
-    /// egs, etc.)
+    ///Returns a SteamGridDB game by an external platform id
     ///
-    ///Sends a `GET` request to `/api/sgdb/game/by-platform`
+    ///The platform id is the game's id on an external store or service such as
+    /// Steam, Origin, the Epic Games Store, GOG, or Flashpoint.
+    ///
+    ///Sends a `GET` request to `/sgdb/game/by-platform`
     ///
     ///```ignore
     /// let response = client.get_sgdb_game_by_platform()
@@ -33465,9 +42807,11 @@ impl Client {
     pub fn get_sgdb_game_by_platform(&self) -> builder::GetSgdbGameByPlatform<'_> {
         builder::GetSgdbGameByPlatform::new(self)
     }
-    ///Search SteamGridDB games via its autocomplete endpoint
+    ///Searches SteamGridDB games by name
     ///
-    ///Sends a `GET` request to `/api/sgdb/game/search`
+    ///Returns an empty array when no game name matches.
+    ///
+    ///Sends a `GET` request to `/sgdb/game/search`
     ///
     ///```ignore
     /// let response = client.search_sgdb_games()
@@ -33478,7 +42822,9 @@ impl Client {
     pub fn search_sgdb_games(&self) -> builder::SearchSgdbGames<'_> {
         builder::SearchSgdbGames::new(self)
     }
-    ///Sends a `GET` request to `/api/sgdb/grids`
+    ///The grid assets for the SteamGridDB game
+    ///
+    ///Sends a `GET` request to `/sgdb/grids`
     ///
     ///```ignore
     /// let response = client.get_sgdb_grids_by_game()
@@ -33499,7 +42845,9 @@ impl Client {
     pub fn get_sgdb_grids_by_game(&self) -> builder::GetSgdbGridsByGame<'_> {
         builder::GetSgdbGridsByGame::new(self)
     }
-    ///Sends a `GET` request to `/api/sgdb/grids/by-platform`
+    ///The grid assets for the external platform id
+    ///
+    ///Sends a `GET` request to `/sgdb/grids/by-platform`
     ///
     ///```ignore
     /// let response = client.get_sgdb_grids_by_platform()
@@ -33521,7 +42869,9 @@ impl Client {
     pub fn get_sgdb_grids_by_platform(&self) -> builder::GetSgdbGridsByPlatform<'_> {
         builder::GetSgdbGridsByPlatform::new(self)
     }
-    ///Sends a `GET` request to `/api/sgdb/heroes`
+    ///The hero assets for the SteamGridDB game
+    ///
+    ///Sends a `GET` request to `/sgdb/heroes`
     ///
     ///```ignore
     /// let response = client.get_sgdb_heroes_by_game()
@@ -33542,7 +42892,9 @@ impl Client {
     pub fn get_sgdb_heroes_by_game(&self) -> builder::GetSgdbHeroesByGame<'_> {
         builder::GetSgdbHeroesByGame::new(self)
     }
-    ///Sends a `GET` request to `/api/sgdb/heroes/by-platform`
+    ///The hero assets for the external platform id
+    ///
+    ///Sends a `GET` request to `/sgdb/heroes/by-platform`
     ///
     ///```ignore
     /// let response = client.get_sgdb_heroes_by_platform()
@@ -33564,7 +42916,9 @@ impl Client {
     pub fn get_sgdb_heroes_by_platform(&self) -> builder::GetSgdbHeroesByPlatform<'_> {
         builder::GetSgdbHeroesByPlatform::new(self)
     }
-    ///Sends a `GET` request to `/api/sgdb/icons`
+    ///The icon assets for the SteamGridDB game
+    ///
+    ///Sends a `GET` request to `/sgdb/icons`
     ///
     ///```ignore
     /// let response = client.get_sgdb_icons_by_game()
@@ -33585,7 +42939,9 @@ impl Client {
     pub fn get_sgdb_icons_by_game(&self) -> builder::GetSgdbIconsByGame<'_> {
         builder::GetSgdbIconsByGame::new(self)
     }
-    ///Sends a `GET` request to `/api/sgdb/icons/by-platform`
+    ///The icon assets for the external platform id
+    ///
+    ///Sends a `GET` request to `/sgdb/icons/by-platform`
     ///
     ///```ignore
     /// let response = client.get_sgdb_icons_by_platform()
@@ -33607,7 +42963,9 @@ impl Client {
     pub fn get_sgdb_icons_by_platform(&self) -> builder::GetSgdbIconsByPlatform<'_> {
         builder::GetSgdbIconsByPlatform::new(self)
     }
-    ///Sends a `GET` request to `/api/sgdb/logos`
+    ///The logo assets for the SteamGridDB game
+    ///
+    ///Sends a `GET` request to `/sgdb/logos`
     ///
     ///```ignore
     /// let response = client.get_sgdb_logos_by_game()
@@ -33628,7 +42986,9 @@ impl Client {
     pub fn get_sgdb_logos_by_game(&self) -> builder::GetSgdbLogosByGame<'_> {
         builder::GetSgdbLogosByGame::new(self)
     }
-    ///Sends a `GET` request to `/api/sgdb/logos/by-platform`
+    ///The logo assets for the external platform id
+    ///
+    ///Sends a `GET` request to `/sgdb/logos/by-platform`
     ///
     ///```ignore
     /// let response = client.get_sgdb_logos_by_platform()
@@ -33650,25 +43010,205 @@ impl Client {
     pub fn get_sgdb_logos_by_platform(&self) -> builder::GetSgdbLogosByPlatform<'_> {
         builder::GetSgdbLogosByPlatform::new(self)
     }
-    ///Gets all currently pending suggestions
+    ///Lists signature groups ordered by name
     ///
-    ///This Endpoint requires Credentials of at least Automation level.
+    ///Sends a `GET` request to `/signature-groups`
     ///
-    ///Sends a `GET` request to `/api/suggestion`
-    ///
+    ///Arguments:
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
     ///```ignore
-    /// let response = client.get_all_suggestions()
+    /// let response = client.list_signature_groups_v2()
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .with_total(with_total)
     ///    .send()
     ///    .await;
     /// ```
-    pub fn get_all_suggestions(&self) -> builder::GetAllSuggestions<'_> {
-        builder::GetAllSuggestions::new(self)
+    pub fn list_signature_groups_v2(&self) -> builder::ListSignatureGroupsV2<'_> {
+        builder::ListSignatureGroupsV2::new(self)
     }
-    ///Adds a suggestion for a manual company metadata match
+    ///Looks up many signature groups by id in one request
     ///
-    ///This Endpoint requires Credentials of a User.
+    ///Up to 100 ids per request; duplicate ids are resolved once. A missing id
+    /// is a per-item `not_found`, never a batch-level 404. The whole batch
+    /// counts as one request against the rate limiter.
     ///
-    ///Sends a `POST` request to `/api/suggestion/company`
+    ///Sends a `POST` request to `/signature-groups/bulk`
+    ///
+    ///```ignore
+    /// let response = client.bulk_signature_groups_by_id_v2()
+    ///    .body(body)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn bulk_signature_groups_by_id_v2(&self) -> builder::BulkSignatureGroupsByIdV2<'_> {
+        builder::BulkSignatureGroupsByIdV2::new(self)
+    }
+    ///Searches signature groups by name, ordered by name
+    ///
+    ///Case-insensitive substring match on the signature group name. Returns an
+    /// empty array when nothing matches.
+    ///
+    ///Sends a `GET` request to `/signature-groups/search`
+    ///
+    ///Arguments:
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `query`: The signature group name to search for.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.search_signature_groups_v2()
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .query(query)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn search_signature_groups_v2(&self) -> builder::SearchSignatureGroupsV2<'_> {
+        builder::SearchSignatureGroupsV2::new(self)
+    }
+    ///Returns a signature group by id
+    ///
+    ///Sends a `GET` request to `/signature-groups/{id}`
+    ///
+    ///```ignore
+    /// let response = client.get_signature_group_by_id_v2()
+    ///    .id(id)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_signature_group_by_id_v2(&self) -> builder::GetSignatureGroupByIdV2<'_> {
+        builder::GetSignatureGroupByIdV2::new(self)
+    }
+    ///Lists the dat files published under a signature group, ordered by name
+    ///
+    ///Pass `platform_id` to narrow the listing to a single platform. If
+    /// omitted, all platforms are included.
+    ///
+    ///Sends a `GET` request to `/signature-groups/{id}/dat-files`
+    ///
+    ///Arguments:
+    /// - `id`
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `platform_id`: Restrict to dat files targeting this platform. If
+    ///   omitted, all platforms are included.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.list_signature_group_dat_files_v2()
+    ///    .id(id)
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .platform_id(platform_id)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_signature_group_dat_files_v2(&self) -> builder::ListSignatureGroupDatFilesV2<'_> {
+        builder::ListSignatureGroupDatFilesV2::new(self)
+    }
+    ///Lists the games across every dat file published under a signature group,
+    /// ordered by name
+    ///
+    ///Pass `platform_id` to narrow the listing to a single platform. If
+    /// omitted, all platforms are included. Defaults to current games only.
+    /// Clones are excluded.
+    ///
+    ///Sends a `GET` request to `/signature-groups/{id}/games`
+    ///
+    ///Arguments:
+    /// - `id`
+    /// - `current_only`: Only return games present in the current dat release.
+    ///   Defaults to `true`.
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `platform_id`: Restrict to games whose dat file targets this platform.
+    ///   If omitted, all platforms are included.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.list_signature_group_games_v2()
+    ///    .id(id)
+    ///    .current_only(current_only)
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .platform_id(platform_id)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_signature_group_games_v2(&self) -> builder::ListSignatureGroupGamesV2<'_> {
+        builder::ListSignatureGroupGamesV2::new(self)
+    }
+    ///Returns aggregate counts across the whole service
+    ///
+    ///The counts change only when a dat file is imported.
+    ///
+    ///Sends a `GET` request to `/stats`
+    ///
+    ///```ignore
+    /// let response = client.get_stats_v2()
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn get_stats_v2(&self) -> builder::GetStatsV2<'_> {
+        builder::GetStatsV2::new(self)
+    }
+    ///Lists pending suggestions, newest first
+    ///
+    ///Suggestions are ordered by creation time, newest first. Requires
+    /// credentials of at least Automation level.
+    ///
+    ///Sends a `GET` request to `/suggestion`
+    ///
+    ///Arguments:
+    /// - `cursor`: Opaque cursor copied from the previous page's `nextCursor`.
+    ///   Omit it to fetch the first page. Keep the filters identical across
+    ///   pages.
+    /// - `limit`: Page size. Ranges from 1 to 50. Defaults to 25 when omitted
+    ///   or `0`. Values above 50 are clamped, never rejected.
+    /// - `with_total`: Whether to include an exact `totalItems` count in the
+    ///   page metadata. Honored only on small bounded reference tables.
+    ///   Defaults to `false`.
+    ///```ignore
+    /// let response = client.list_suggestions_v2()
+    ///    .cursor(cursor)
+    ///    .limit(limit)
+    ///    .with_total(with_total)
+    ///    .send()
+    ///    .await;
+    /// ```
+    pub fn list_suggestions_v2(&self) -> builder::ListSuggestionsV2<'_> {
+        builder::ListSuggestionsV2::new(self)
+    }
+    ///Creates a suggestion for a company metadata match
+    ///
+    ///Proposes external metadata for a company so a reviewer can approve or
+    /// decline it. Requires credentials of at least User level.
+    ///
+    ///Sends a `POST` request to `/suggestion/company`
     ///
     ///Arguments:
     /// - `body`:
@@ -33681,14 +43221,15 @@ impl Client {
     pub fn create_company_suggestion(&self) -> builder::CreateCompanySuggestion<'_> {
         builder::CreateCompanySuggestion::new(self)
     }
-    ///Fire-and-forget signal from third-party tools. Always returns 204; a
-    /// scheduled
+    ///Submits a game match suggestion from a third-party tool
     ///
-    ///worker validates the payload and only creates a suggestion for ROMs
-    /// already in the database where the proposed mapping is not yet
-    /// represented.
+    ///Queues the proposed mapping for later processing and returns 204 without
+    /// waiting on the result. The payload is validated in the background, and a
+    /// suggestion is created only for a ROM already in the database whose
+    /// proposed mapping is not yet recorded. No credentials are required.
+    /// Submissions are rate limited per client IP.
     ///
-    ///Sends a `POST` request to `/api/suggestion/external/game`
+    ///Sends a `POST` request to `/suggestion/external/game`
     ///
     ///Arguments:
     /// - `body`:
@@ -33701,11 +43242,12 @@ impl Client {
     pub fn submit_external_game_suggestion(&self) -> builder::SubmitExternalGameSuggestion<'_> {
         builder::SubmitExternalGameSuggestion::new(self)
     }
-    ///Adds a suggestion for a manual game metadata match
+    ///Creates a suggestion for a game metadata match
     ///
-    ///This Endpoint requires Credentials of a User.
+    ///Proposes external metadata for a game so a reviewer can approve or
+    /// decline it. Requires credentials of at least User level.
     ///
-    ///Sends a `POST` request to `/api/suggestion/game`
+    ///Sends a `POST` request to `/suggestion/game`
     ///
     ///Arguments:
     /// - `body`:
@@ -33718,11 +43260,12 @@ impl Client {
     pub fn create_game_suggestion(&self) -> builder::CreateGameSuggestion<'_> {
         builder::CreateGameSuggestion::new(self)
     }
-    ///Adds a suggestion for a manual platform metadata match
+    ///Creates a suggestion for a platform metadata match
     ///
-    ///This Endpoint requires Credentials of a User.
+    ///Proposes external metadata for a platform so a reviewer can approve or
+    /// decline it. Requires credentials of at least User level.
     ///
-    ///Sends a `POST` request to `/api/suggestion/platform`
+    ///Sends a `POST` request to `/suggestion/platform`
     ///
     ///Arguments:
     /// - `body`:
@@ -33735,11 +43278,11 @@ impl Client {
     pub fn create_platform_suggestion(&self) -> builder::CreatePlatformSuggestion<'_> {
         builder::CreatePlatformSuggestion::new(self)
     }
-    ///Gets a pending suggestion by id
+    ///Returns a pending suggestion by id
     ///
-    ///This Endpoint requires Credentials of at least Automation level.
+    ///Requires credentials of at least Automation level.
     ///
-    ///Sends a `GET` request to `/api/suggestion/{id}`
+    ///Sends a `GET` request to `/suggestion/{id}`
     ///
     ///```ignore
     /// let response = client.get_suggestion_by_id()
@@ -33752,9 +43295,10 @@ impl Client {
     }
     ///Declines a suggestion by id
     ///
-    ///This Endpoint requires Credentials of at least Automation level.
+    ///Removes the pending suggestion without applying it. Requires credentials
+    /// of at least Automation level.
     ///
-    ///Sends a `DELETE` request to `/api/suggestion/{id}`
+    ///Sends a `DELETE` request to `/suggestion/{id}`
     ///
     ///```ignore
     /// let response = client.delete_suggestion()
@@ -33767,9 +43311,10 @@ impl Client {
     }
     ///Approves a suggestion by id
     ///
-    ///This Endpoint requires Credentials of at least Automation level.
+    ///Applies the suggested external metadata to its target. Requires
+    /// credentials of at least Automation level.
     ///
-    ///Sends a `POST` request to `/api/suggestion/{id}/accept`
+    ///Sends a `POST` request to `/suggestion/{id}/accept`
     ///
     ///```ignore
     /// let response = client.approve_suggestion()
@@ -33780,46 +43325,44 @@ impl Client {
     pub fn approve_suggestion(&self) -> builder::ApproveSuggestion<'_> {
         builder::ApproveSuggestion::new(self)
     }
-    ///Find a User by their Discord ID
+    ///Returns a user by Discord id
     ///
-    ///This Endpoint requires Credentials of a User with at least Automation
-    /// level.
+    ///Requires credentials of at least Automation level.
     ///
-    ///Sends a `GET` request to `/api/user`
+    ///Sends a `GET` request to `/user`
     ///
     ///```ignore
-    /// let response = client.get_user_by_discord_id()
+    /// let response = client.get_user_by_discord_id_v2()
     ///    .discord_id(discord_id)
     ///    .send()
     ///    .await;
     /// ```
-    pub fn get_user_by_discord_id(&self) -> builder::GetUserByDiscordId<'_> {
-        builder::GetUserByDiscordId::new(self)
+    pub fn get_user_by_discord_id_v2(&self) -> builder::GetUserByDiscordIdV2<'_> {
+        builder::GetUserByDiscordIdV2::new(self)
     }
-    ///Find or Create a User by their Discord ID
+    ///Returns a user by Discord id, creating one if none exists
     ///
-    ///This Endpoint requires Credentials of a User with at least Automation
-    /// level.
+    ///Looks up the user by Discord id and creates a new user when no match is
+    /// found. Requires credentials of at least Automation level.
     ///
-    ///Sends a `POST` request to `/api/user/by-discord-id`
+    ///Sends a `POST` request to `/user/by-discord-id`
     ///
     ///Arguments:
     /// - `body`:
     ///```ignore
-    /// let response = client.create_or_get_by_discord_id()
+    /// let response = client.create_or_get_by_discord_id_v2()
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    pub fn create_or_get_by_discord_id(&self) -> builder::CreateOrGetByDiscordId<'_> {
-        builder::CreateOrGetByDiscordId::new(self)
+    pub fn create_or_get_by_discord_id_v2(&self) -> builder::CreateOrGetByDiscordIdV2<'_> {
+        builder::CreateOrGetByDiscordIdV2::new(self)
     }
-    ///Find a User by their ID
+    ///Returns a user by id
     ///
-    ///This Endpoint requires Credentials of a User with at least Automation
-    /// level.
+    ///Requires credentials of at least Automation level.
     ///
-    ///Sends a `GET` request to `/api/user/{id}`
+    ///Sends a `GET` request to `/user/{id}`
     ///
     ///```ignore
     /// let response = client.get_user()
@@ -33830,25 +43373,25 @@ impl Client {
     pub fn get_user(&self) -> builder::GetUser<'_> {
         builder::GetUser::new(self)
     }
-    ///Update a user's Permission Level
+    ///Updates a user's permission level
     ///
-    ///This Endpoint requires Credentials of a User with at least Automation
-    /// level.
+    ///Sets the permission level of the user to the value in the request body.
+    /// Requires credentials of at least Automation level.
     ///
-    ///Sends a `PATCH` request to `/api/user/{id}/permission`
+    ///Sends a `PATCH` request to `/user/{id}/permission`
     ///
     ///Arguments:
     /// - `id`
     /// - `body`:
     ///```ignore
-    /// let response = client.update_user_permission_level()
+    /// let response = client.update_user_permission_level_v2()
     ///    .id(id)
     ///    .body(body)
     ///    .send()
     ///    .await;
     /// ```
-    pub fn update_user_permission_level(&self) -> builder::UpdateUserPermissionLevel<'_> {
-        builder::UpdateUserPermissionLevel::new(self)
+    pub fn update_user_permission_level_v2(&self) -> builder::UpdateUserPermissionLevelV2<'_> {
+        builder::UpdateUserPermissionLevelV2::new(self)
     }
 }
 /// Types for composing operation parameters.
@@ -33860,24 +43403,68 @@ pub mod builder {
         encode_path, ByteStream, ClientHooks, ClientInfo, Error, OperationInfo, RequestBuilderExt,
         ResponseValue,
     };
-    ///Builder for [`Client::get_all_companies`]
+    ///Builder for [`Client::list_companies_v2`]
     ///
-    ///[`Client::get_all_companies`]: super::Client::get_all_companies
+    ///[`Client::list_companies_v2`]: super::Client::list_companies_v2
     #[derive(Debug, Clone)]
-    pub struct GetAllCompanies<'a> {
+    pub struct ListCompaniesV2<'a> {
         client: &'a super::Client,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        with_total: Result<Option<bool>, String>,
     }
-    impl<'a> GetAllCompanies<'a> {
+    impl<'a> ListCompaniesV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client: client }
+            Self {
+                client: client,
+                cursor: Ok(None),
+                limit: Ok(None),
+                with_total: Ok(None),
+            }
         }
-        ///Sends a `GET` request to `/api/companies`
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/companies`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<::std::vec::Vec<types::CompanyMetadataResponse>>, Error<()>>
+        ) -> Result<ResponseValue<types::PageOfCompanyMetadataResponse>, Error<types::V2ErrorBody>>
         {
-            let Self { client } = self;
-            let url = format!("{}/api/companies", client.baseurl,);
+            let Self {
+                client,
+                cursor,
+                limit,
+                with_total,
+            } = self;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/companies", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -33891,10 +43478,16 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "get_all_companies",
+                operation_id: "list_companies_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -33902,45 +43495,163 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
-    ///Builder for [`Client::get_company_by_id`]
+    ///Builder for [`Client::bulk_companies_by_id_v2`]
     ///
-    ///[`Client::get_company_by_id`]: super::Client::get_company_by_id
+    ///[`Client::bulk_companies_by_id_v2`]: super::Client::bulk_companies_by_id_v2
     #[derive(Debug, Clone)]
-    pub struct GetCompanyById<'a> {
+    pub struct BulkCompaniesByIdV2<'a> {
         client: &'a super::Client,
-        id: Result<::uuid::Uuid, String>,
+        body: Result<types::builder::BulkIdsRequest, String>,
     }
-    impl<'a> GetCompanyById<'a> {
+    impl<'a> BulkCompaniesByIdV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
-                id: Err("id was not initialized".to_string()),
+                body: Ok(::std::default::Default::default()),
             }
         }
-        pub fn id<V>(mut self, value: V) -> Self
+        pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<::uuid::Uuid>,
+            V: std::convert::TryInto<types::BulkIdsRequest>,
+            <V as std::convert::TryInto<types::BulkIdsRequest>>::Error: std::fmt::Display,
         {
-            self.id = value
+            self.body = value
                 .try_into()
-                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BulkIdsRequest` for body failed: {}", s));
             self
         }
-        ///Sends a `GET` request to `/api/companies/{id}`
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BulkIdsRequest) -> types::builder::BulkIdsRequest,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+        ///Sends a `POST` request to `/companies/bulk`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::CompanyMetadataResponse>, Error<()>> {
-            let Self { client, id } = self;
-            let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/api/companies/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
+        ) -> Result<ResponseValue<types::BulkCompaniesByIdResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BulkIdsRequest::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/companies/bulk", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
             );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "bulk_companies_by_id_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::search_companies_v2`]
+    ///
+    ///[`Client::search_companies_v2`]: super::Client::search_companies_v2
+    #[derive(Debug, Clone)]
+    pub struct SearchCompaniesV2<'a> {
+        client: &'a super::Client,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        query: Result<::std::string::String, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> SearchCompaniesV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                cursor: Ok(None),
+                limit: Ok(None),
+                query: Err("query was not initialized".to_string()),
+                with_total: Ok(None),
+            }
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn query<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.query = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for query failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/companies/search`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfCompanyMetadataResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                cursor,
+                limit,
+                query,
+                with_total,
+            } = self;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let query = query.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/companies/search", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -33954,10 +43665,17 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("query", &query))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "get_company_by_id",
+                operation_id: "search_companies_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -33965,20 +43683,22 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
-                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
-    ///Builder for [`Client::get_playmatch_game_by_id`]
+    ///Builder for [`Client::get_company_by_id_v2`]
     ///
-    ///[`Client::get_playmatch_game_by_id`]: super::Client::get_playmatch_game_by_id
+    ///[`Client::get_company_by_id_v2`]: super::Client::get_company_by_id_v2
     #[derive(Debug, Clone)]
-    pub struct GetPlaymatchGameById<'a> {
+    pub struct GetCompanyByIdV2<'a> {
         client: &'a super::Client,
         id: Result<::uuid::Uuid, String>,
     }
-    impl<'a> GetPlaymatchGameById<'a> {
+    impl<'a> GetCompanyByIdV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -33994,12 +43714,15 @@ pub mod builder {
                 .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/game/{id}`
-        pub async fn send(self) -> Result<ResponseValue<types::GameMetadataResponse>, Error<()>> {
+        ///Sends a `GET` request to `/companies/{id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::CompanyMetadataResponse>, Error<types::V2ErrorBody>>
+        {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/api/game/{}",
+                "{}/companies/{}",
                 client.baseurl,
                 encode_path(&id.to_string()),
             );
@@ -34019,7 +43742,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "get_playmatch_game_by_id",
+                operation_id: "get_company_by_id_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -34027,19 +43750,416 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
-    ///Builder for [`Client::get_playmatch_game_with_relations_by_id`]
+    ///Builder for [`Client::list_dat_files_v2`]
     ///
-    ///[`Client::get_playmatch_game_with_relations_by_id`]: super::Client::get_playmatch_game_with_relations_by_id
+    ///[`Client::list_dat_files_v2`]: super::Client::list_dat_files_v2
     #[derive(Debug, Clone)]
-    pub struct GetPlaymatchGameWithRelationsById<'a> {
+    pub struct ListDatFilesV2<'a> {
+        client: &'a super::Client,
+        company_id: Result<Option<::uuid::Uuid>, String>,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        name: Result<Option<::std::string::String>, String>,
+        platform_id: Result<Option<::uuid::Uuid>, String>,
+        signature_group_id: Result<Option<::uuid::Uuid>, String>,
+        subset: Result<Option<::std::string::String>, String>,
+        tag: Result<Option<::std::string::String>, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> ListDatFilesV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                company_id: Ok(None),
+                cursor: Ok(None),
+                limit: Ok(None),
+                name: Ok(None),
+                platform_id: Ok(None),
+                signature_group_id: Ok(None),
+                subset: Ok(None),
+                tag: Ok(None),
+                with_total: Ok(None),
+            }
+        }
+        pub fn company_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.company_id = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for company_id failed".to_string());
+            self
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.name = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for name failed".to_string()
+            });
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.platform_id = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for platform_id failed".to_string());
+            self
+        }
+        pub fn signature_group_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.signature_group_id = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for signature_group_id failed".to_string()
+            });
+            self
+        }
+        pub fn subset<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.subset = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for subset failed".to_string()
+            });
+            self
+        }
+        pub fn tag<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.tag = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for tag failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/dat-files`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfDatFileSummary>, Error<types::V2ErrorBody>> {
+            let Self {
+                client,
+                company_id,
+                cursor,
+                limit,
+                name,
+                platform_id,
+                signature_group_id,
+                subset,
+                tag,
+                with_total,
+            } = self;
+            let company_id = company_id.map_err(Error::InvalidRequest)?;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let name = name.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let signature_group_id = signature_group_id.map_err(Error::InvalidRequest)?;
+            let subset = subset.map_err(Error::InvalidRequest)?;
+            let tag = tag.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/dat-files", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "companyId",
+                    &company_id,
+                ))
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("name", &name))
+                .query(&progenitor_client::QueryParam::new(
+                    "platformId",
+                    &platform_id,
+                ))
+                .query(&progenitor_client::QueryParam::new(
+                    "signatureGroupId",
+                    &signature_group_id,
+                ))
+                .query(&progenitor_client::QueryParam::new("subset", &subset))
+                .query(&progenitor_client::QueryParam::new("tag", &tag))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_dat_files_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::bulk_dat_files_by_id_v2`]
+    ///
+    ///[`Client::bulk_dat_files_by_id_v2`]: super::Client::bulk_dat_files_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct BulkDatFilesByIdV2<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BulkIdsRequest, String>,
+    }
+    impl<'a> BulkDatFilesByIdV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BulkIdsRequest>,
+            <V as std::convert::TryInto<types::BulkIdsRequest>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BulkIdsRequest` for body failed: {}", s));
+            self
+        }
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BulkIdsRequest) -> types::builder::BulkIdsRequest,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+        ///Sends a `POST` request to `/dat-files/bulk`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::BulkDatFilesByIdResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BulkIdsRequest::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/dat-files/bulk", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "bulk_dat_files_by_id_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_dat_files_by_hash_v2`]
+    ///
+    ///[`Client::list_dat_files_by_hash_v2`]: super::Client::list_dat_files_by_hash_v2
+    #[derive(Debug, Clone)]
+    pub struct ListDatFilesByHashV2<'a> {
+        client: &'a super::Client,
+        crc: Result<Option<::std::string::String>, String>,
+        level: Result<Option<types::ReverseLookupLevel>, String>,
+        md5: Result<Option<::std::string::String>, String>,
+        sha1: Result<Option<::std::string::String>, String>,
+        sha256: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> ListDatFilesByHashV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                crc: Ok(None),
+                level: Ok(None),
+                md5: Ok(None),
+                sha1: Ok(None),
+                sha256: Ok(None),
+            }
+        }
+        pub fn crc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.crc = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for crc failed".to_string()
+            });
+            self
+        }
+        pub fn level<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ReverseLookupLevel>,
+        {
+            self.level = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `ReverseLookupLevel` for level failed".to_string());
+            self
+        }
+        pub fn md5<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.md5 = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for md5 failed".to_string()
+            });
+            self
+        }
+        pub fn sha1<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.sha1 = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for sha1 failed".to_string()
+            });
+            self
+        }
+        pub fn sha256<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.sha256 = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for sha256 failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/dat-files/by-hash`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PresenceResult>, Error<types::V2ErrorBody>> {
+            let Self {
+                client,
+                crc,
+                level,
+                md5,
+                sha1,
+                sha256,
+            } = self;
+            let crc = crc.map_err(Error::InvalidRequest)?;
+            let level = level.map_err(Error::InvalidRequest)?;
+            let md5 = md5.map_err(Error::InvalidRequest)?;
+            let sha1 = sha1.map_err(Error::InvalidRequest)?;
+            let sha256 = sha256.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/dat-files/by-hash", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("crc", &crc))
+                .query(&progenitor_client::QueryParam::new("level", &level))
+                .query(&progenitor_client::QueryParam::new("md5", &md5))
+                .query(&progenitor_client::QueryParam::new("sha1", &sha1))
+                .query(&progenitor_client::QueryParam::new("sha256", &sha256))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_dat_files_by_hash_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_dat_file_by_id_v2`]
+    ///
+    ///[`Client::get_dat_file_by_id_v2`]: super::Client::get_dat_file_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct GetDatFileByIdV2<'a> {
         client: &'a super::Client,
         id: Result<::uuid::Uuid, String>,
     }
-    impl<'a> GetPlaymatchGameWithRelationsById<'a> {
+    impl<'a> GetDatFileByIdV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -34055,12 +44175,14 @@ pub mod builder {
                 .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/game/{id}/with-relations`
-        pub async fn send(self) -> Result<ResponseValue<types::GameAndRelationsResult>, Error<()>> {
+        ///Sends a `GET` request to `/dat-files/{id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::DatFileDetail>, Error<types::V2ErrorBody>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/api/game/{}/with-relations",
+                "{}/dat-files/{}",
                 client.baseurl,
                 encode_path(&id.to_string()),
             );
@@ -34080,7 +44202,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "get_playmatch_game_with_relations_by_id",
+                operation_id: "get_dat_file_by_id_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -34088,6 +44210,1664 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_dat_file_games_v2`]
+    ///
+    ///[`Client::list_dat_file_games_v2`]: super::Client::list_dat_file_games_v2
+    #[derive(Debug, Clone)]
+    pub struct ListDatFileGamesV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+        current_only: Result<Option<bool>, String>,
+        cursor: Result<Option<::std::string::String>, String>,
+        include_files: Result<Option<bool>, String>,
+        include_mappings: Result<Option<bool>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> ListDatFileGamesV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+                current_only: Ok(None),
+                cursor: Ok(None),
+                include_files: Ok(None),
+                include_mappings: Ok(None),
+                limit: Ok(None),
+                with_total: Ok(None),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        pub fn current_only<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.current_only = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for current_only failed".to_string());
+            self
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn include_files<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.include_files = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for include_files failed".to_string());
+            self
+        }
+        pub fn include_mappings<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.include_mappings = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for include_mappings failed".to_string());
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/dat-files/{id}/games`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfDatFileGame>, Error<types::V2ErrorBody>> {
+            let Self {
+                client,
+                id,
+                current_only,
+                cursor,
+                include_files,
+                include_mappings,
+                limit,
+                with_total,
+            } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let current_only = current_only.map_err(Error::InvalidRequest)?;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let include_files = include_files.map_err(Error::InvalidRequest)?;
+            let include_mappings = include_mappings.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/dat-files/{}/games",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "currentOnly",
+                    &current_only,
+                ))
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new(
+                    "includeFiles",
+                    &include_files,
+                ))
+                .query(&progenitor_client::QueryParam::new(
+                    "includeMappings",
+                    &include_mappings,
+                ))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_dat_file_games_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_dat_file_imports_v2`]
+    ///
+    ///[`Client::list_dat_file_imports_v2`]: super::Client::list_dat_file_imports_v2
+    #[derive(Debug, Clone)]
+    pub struct ListDatFileImportsV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> ListDatFileImportsV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+                cursor: Ok(None),
+                limit: Ok(None),
+                with_total: Ok(None),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/dat-files/{id}/imports`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfDatFileImportTimelineEntry>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                id,
+                cursor,
+                limit,
+                with_total,
+            } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/dat-files/{}/imports",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_dat_file_imports_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_dat_file_import_v2`]
+    ///
+    ///[`Client::get_dat_file_import_v2`]: super::Client::get_dat_file_import_v2
+    #[derive(Debug, Clone)]
+    pub struct GetDatFileImportV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+        import_id: Result<::uuid::Uuid, String>,
+    }
+    impl<'a> GetDatFileImportV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+                import_id: Err("import_id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        pub fn import_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.import_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for import_id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/dat-files/{id}/imports/{importId}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::DatFileImportTimelineEntry>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                id,
+                import_id,
+            } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let import_id = import_id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/dat-files/{}/imports/{}",
+                client.baseurl,
+                encode_path(&id.to_string()),
+                encode_path(&import_id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_dat_file_import_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::bulk_game_files_by_id_v2`]
+    ///
+    ///[`Client::bulk_game_files_by_id_v2`]: super::Client::bulk_game_files_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct BulkGameFilesByIdV2<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BulkIdsRequest, String>,
+    }
+    impl<'a> BulkGameFilesByIdV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BulkIdsRequest>,
+            <V as std::convert::TryInto<types::BulkIdsRequest>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BulkIdsRequest` for body failed: {}", s));
+            self
+        }
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BulkIdsRequest) -> types::builder::BulkIdsRequest,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+        ///Sends a `POST` request to `/game-files/bulk`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::BulkGameFilesByIdResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BulkIdsRequest::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/game-files/bulk", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "bulk_game_files_by_id_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_game_file_by_id_v2`]
+    ///
+    ///[`Client::get_game_file_by_id_v2`]: super::Client::get_game_file_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct GetGameFileByIdV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+    }
+    impl<'a> GetGameFileByIdV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/game-files/{id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PlaymatchGameFileV2>, Error<types::V2ErrorBody>> {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/game-files/{}",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_game_file_by_id_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_game_file_history_by_id_v2`]
+    ///
+    ///[`Client::get_game_file_history_by_id_v2`]: super::Client::get_game_file_history_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct GetGameFileHistoryByIdV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+    }
+    impl<'a> GetGameFileHistoryByIdV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/game-files/{id}/history`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::PlaymatchDatFileImportV2>>, Error<()>>
+        {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/game-files/{}/history",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_game_file_history_by_id_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_game_file_presence_v2`]
+    ///
+    ///[`Client::get_game_file_presence_v2`]: super::Client::get_game_file_presence_v2
+    #[derive(Debug, Clone)]
+    pub struct GetGameFilePresenceV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+    }
+    impl<'a> GetGameFilePresenceV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/game-files/{id}/presence`
+        pub async fn send(
+            self,
+        ) -> Result<
+            ResponseValue<::std::vec::Vec<types::GameFilePresenceEntry>>,
+            Error<types::V2ErrorBody>,
+        > {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/game-files/{}/presence",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_game_file_presence_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_games_v2`]
+    ///
+    ///[`Client::list_games_v2`]: super::Client::list_games_v2
+    #[derive(Debug, Clone)]
+    pub struct ListGamesV2<'a> {
+        client: &'a super::Client,
+        clones: Result<Option<bool>, String>,
+        company_id: Result<Option<::uuid::Uuid>, String>,
+        current_only: Result<Option<bool>, String>,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        platform_id: Result<Option<::uuid::Uuid>, String>,
+        signature_group_id: Result<Option<::uuid::Uuid>, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> ListGamesV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                clones: Ok(None),
+                company_id: Ok(None),
+                current_only: Ok(None),
+                cursor: Ok(None),
+                limit: Ok(None),
+                platform_id: Ok(None),
+                signature_group_id: Ok(None),
+                with_total: Ok(None),
+            }
+        }
+        pub fn clones<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.clones = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for clones failed".to_string());
+            self
+        }
+        pub fn company_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.company_id = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for company_id failed".to_string());
+            self
+        }
+        pub fn current_only<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.current_only = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for current_only failed".to_string());
+            self
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.platform_id = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for platform_id failed".to_string());
+            self
+        }
+        pub fn signature_group_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.signature_group_id = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: uuid :: Uuid` for signature_group_id failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/games`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfGameMetadataResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                clones,
+                company_id,
+                current_only,
+                cursor,
+                limit,
+                platform_id,
+                signature_group_id,
+                with_total,
+            } = self;
+            let clones = clones.map_err(Error::InvalidRequest)?;
+            let company_id = company_id.map_err(Error::InvalidRequest)?;
+            let current_only = current_only.map_err(Error::InvalidRequest)?;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let signature_group_id = signature_group_id.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/games", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("clones", &clones))
+                .query(&progenitor_client::QueryParam::new(
+                    "companyId",
+                    &company_id,
+                ))
+                .query(&progenitor_client::QueryParam::new(
+                    "currentOnly",
+                    &current_only,
+                ))
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "platformId",
+                    &platform_id,
+                ))
+                .query(&progenitor_client::QueryParam::new(
+                    "signatureGroupId",
+                    &signature_group_id,
+                ))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_games_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::bulk_games_by_id_v2`]
+    ///
+    ///[`Client::bulk_games_by_id_v2`]: super::Client::bulk_games_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct BulkGamesByIdV2<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BulkIdsRequest, String>,
+    }
+    impl<'a> BulkGamesByIdV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BulkIdsRequest>,
+            <V as std::convert::TryInto<types::BulkIdsRequest>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BulkIdsRequest` for body failed: {}", s));
+            self
+        }
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BulkIdsRequest) -> types::builder::BulkIdsRequest,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+        ///Sends a `POST` request to `/games/bulk`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::BulkGamesByIdResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BulkIdsRequest::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/games/bulk", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "bulk_games_by_id_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_games_by_name_v2`]
+    ///
+    ///[`Client::get_games_by_name_v2`]: super::Client::get_games_by_name_v2
+    #[derive(Debug, Clone)]
+    pub struct GetGamesByNameV2<'a> {
+        client: &'a super::Client,
+        name: Result<::std::string::String, String>,
+        platform_id: Result<::uuid::Uuid, String>,
+    }
+    impl<'a> GetGamesByNameV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                name: Err("name was not initialized".to_string()),
+                platform_id: Err("platform_id was not initialized".to_string()),
+            }
+        }
+        pub fn name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.name = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for name failed".to_string()
+            });
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.platform_id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for platform_id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/games/by-name`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<::std::vec::Vec<types::GameMetadataResponse>>, Error<()>>
+        {
+            let Self {
+                client,
+                name,
+                platform_id,
+            } = self;
+            let name = name.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/games/by-name", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("name", &name))
+                .query(&progenitor_client::QueryParam::new(
+                    "platformId",
+                    &platform_id,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_games_by_name_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::search_games_v2`]
+    ///
+    ///[`Client::search_games_v2`]: super::Client::search_games_v2
+    #[derive(Debug, Clone)]
+    pub struct SearchGamesV2<'a> {
+        client: &'a super::Client,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        platform_id: Result<Option<::uuid::Uuid>, String>,
+        query: Result<::std::string::String, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> SearchGamesV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                cursor: Ok(None),
+                limit: Ok(None),
+                platform_id: Ok(None),
+                query: Err("query was not initialized".to_string()),
+                with_total: Ok(None),
+            }
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.platform_id = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for platform_id failed".to_string());
+            self
+        }
+        pub fn query<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.query = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for query failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/games/search`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfGameNameSearchResult>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                cursor,
+                limit,
+                platform_id,
+                query,
+                with_total,
+            } = self;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let query = query.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/games/search", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "platformId",
+                    &platform_id,
+                ))
+                .query(&progenitor_client::QueryParam::new("query", &query))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "search_games_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_game_by_id_v2`]
+    ///
+    ///[`Client::get_game_by_id_v2`]: super::Client::get_game_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct GetGameByIdV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+    }
+    impl<'a> GetGameByIdV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/games/{id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::GameMetadataResponse>, Error<types::V2ErrorBody>> {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/games/{}", client.baseurl, encode_path(&id.to_string()),);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_game_by_id_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_game_clones_v2`]
+    ///
+    ///[`Client::list_game_clones_v2`]: super::Client::list_game_clones_v2
+    #[derive(Debug, Clone)]
+    pub struct ListGameClonesV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+        direction: Result<Option<types::CloneDirectionParam>, String>,
+    }
+    impl<'a> ListGameClonesV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+                direction: Ok(None),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        pub fn direction<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::CloneDirectionParam>,
+        {
+            self.direction = value.try_into().map(Some).map_err(|_| {
+                "conversion to `CloneDirectionParam` for direction failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/games/{id}/clones`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::CloneGraph>, Error<types::V2ErrorBody>> {
+            let Self {
+                client,
+                id,
+                direction,
+            } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let direction = direction.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/games/{}/clones",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("direction", &direction))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_game_clones_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_game_dat_files_v2`]
+    ///
+    ///[`Client::list_game_dat_files_v2`]: super::Client::list_game_dat_files_v2
+    #[derive(Debug, Clone)]
+    pub struct ListGameDatFilesV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+        level: Result<Option<types::ReverseLookupLevel>, String>,
+    }
+    impl<'a> ListGameDatFilesV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+                level: Ok(None),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        pub fn level<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::ReverseLookupLevel>,
+        {
+            self.level = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `ReverseLookupLevel` for level failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/games/{id}/dat-files`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PresenceResult>, Error<types::V2ErrorBody>> {
+            let Self { client, id, level } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let level = level.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/games/{}/dat-files",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("level", &level))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_game_dat_files_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_game_files_v2`]
+    ///
+    ///[`Client::list_game_files_v2`]: super::Client::list_game_files_v2
+    #[derive(Debug, Clone)]
+    pub struct ListGameFilesV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+        current_only: Result<Option<bool>, String>,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> ListGameFilesV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+                current_only: Ok(None),
+                cursor: Ok(None),
+                limit: Ok(None),
+                with_total: Ok(None),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        pub fn current_only<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.current_only = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for current_only failed".to_string());
+            self
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/games/{id}/files`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfPlaymatchGameFile>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                id,
+                current_only,
+                cursor,
+                limit,
+                with_total,
+            } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let current_only = current_only.map_err(Error::InvalidRequest)?;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/games/{}/files",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "currentOnly",
+                    &current_only,
+                ))
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_game_files_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_game_mappings_v2`]
+    ///
+    ///[`Client::list_game_mappings_v2`]: super::Client::list_game_mappings_v2
+    #[derive(Debug, Clone)]
+    pub struct ListGameMappingsV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+        match_type: Result<Option<types::MetadataMatchType>, String>,
+        provider: Result<Option<types::MetadataProvider>, String>,
+    }
+    impl<'a> ListGameMappingsV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+                match_type: Ok(None),
+                provider: Ok(None),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        pub fn match_type<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::MetadataMatchType>,
+        {
+            self.match_type = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `MetadataMatchType` for match_type failed".to_string());
+            self
+        }
+        pub fn provider<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::MetadataProvider>,
+        {
+            self.provider = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `MetadataProvider` for provider failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/games/{id}/mappings`
+        pub async fn send(
+            self,
+        ) -> Result<
+            ResponseValue<::std::vec::Vec<types::GameProviderMapping>>,
+            Error<types::V2ErrorBody>,
+        > {
+            let Self {
+                client,
+                id,
+                match_type,
+                provider,
+            } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let match_type = match_type.map_err(Error::InvalidRequest)?;
+            let provider = provider.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/games/{}/mappings",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "matchType",
+                    &match_type,
+                ))
+                .query(&progenitor_client::QueryParam::new("provider", &provider))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_game_mappings_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_game_with_relations_by_id_v2`]
+    ///
+    ///[`Client::get_game_with_relations_by_id_v2`]: super::Client::get_game_with_relations_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct GetGameWithRelationsByIdV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+    }
+    impl<'a> GetGameWithRelationsByIdV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/games/{id}/with-relations`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::GameAndRelationsResultV2>, Error<types::V2ErrorBody>>
+        {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/games/{}/with-relations",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_game_with_relations_by_id_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
@@ -34103,10 +45883,10 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
-        ///Sends a `GET` request to `/api/health`
+        ///Sends a `GET` request to `/health`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<()>> {
             let Self { client } = self;
-            let url = format!("{}/api/health", client.baseurl,);
+            let url = format!("{}/health", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -34127,92 +45907,51 @@ pub mod builder {
             }
         }
     }
-    ///Builder for [`Client::identify_game_with_metadata_ids`]
+    ///Builder for [`Client::identify_bulk_ids_v2`]
     ///
-    ///[`Client::identify_game_with_metadata_ids`]: super::Client::identify_game_with_metadata_ids
+    ///[`Client::identify_bulk_ids_v2`]: super::Client::identify_bulk_ids_v2
     #[derive(Debug, Clone)]
-    pub struct IdentifyGameWithMetadataIds<'a> {
+    pub struct IdentifyBulkIdsV2<'a> {
         client: &'a super::Client,
-        file_name: Result<::std::string::String, String>,
-        file_size: Result<i64, String>,
-        md5: Result<Option<::std::string::String>, String>,
-        sha1: Result<Option<::std::string::String>, String>,
-        sha256: Result<Option<::std::string::String>, String>,
+        body: Result<types::builder::BulkIdentifyRequest, String>,
     }
-    impl<'a> IdentifyGameWithMetadataIds<'a> {
+    impl<'a> IdentifyBulkIdsV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
-                file_name: Err("file_name was not initialized".to_string()),
-                file_size: Err("file_size was not initialized".to_string()),
-                md5: Ok(None),
-                sha1: Ok(None),
-                sha256: Ok(None),
+                body: Ok(::std::default::Default::default()),
             }
         }
-        pub fn file_name<V>(mut self, value: V) -> Self
+        pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<::std::string::String>,
+            V: std::convert::TryInto<types::BulkIdentifyRequest>,
+            <V as std::convert::TryInto<types::BulkIdentifyRequest>>::Error: std::fmt::Display,
         {
-            self.file_name = value.try_into().map_err(|_| {
-                "conversion to `:: std :: string :: String` for file_name failed".to_string()
-            });
-            self
-        }
-        pub fn file_size<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<i64>,
-        {
-            self.file_size = value
+            self.body = value
                 .try_into()
-                .map_err(|_| "conversion to `i64` for file_size failed".to_string());
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BulkIdentifyRequest` for body failed: {}", s));
             self
         }
-        pub fn md5<V>(mut self, value: V) -> Self
+        pub fn body_map<F>(mut self, f: F) -> Self
         where
-            V: std::convert::TryInto<::std::string::String>,
+            F: std::ops::FnOnce(
+                types::builder::BulkIdentifyRequest,
+            ) -> types::builder::BulkIdentifyRequest,
         {
-            self.md5 = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for md5 failed".to_string()
-            });
+            self.body = self.body.map(f);
             self
         }
-        pub fn sha1<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.sha1 = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for sha1 failed".to_string()
-            });
-            self
-        }
-        pub fn sha256<V>(mut self, value: V) -> Self
-        where
-            V: std::convert::TryInto<::std::string::String>,
-        {
-            self.sha256 = value.try_into().map(Some).map_err(|_| {
-                "conversion to `:: std :: string :: String` for sha256 failed".to_string()
-            });
-            self
-        }
-        ///Sends a `GET` request to `/api/identify/ids`
+        ///Sends a `POST` request to `/identify/bulk/ids`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::GameMetadataMatchResult>, Error<()>> {
-            let Self {
-                client,
-                file_name,
-                file_size,
-                md5,
-                sha1,
-                sha256,
-            } = self;
-            let file_name = file_name.map_err(Error::InvalidRequest)?;
-            let file_size = file_size.map_err(Error::InvalidRequest)?;
-            let md5 = md5.map_err(Error::InvalidRequest)?;
-            let sha1 = sha1.map_err(Error::InvalidRequest)?;
-            let sha256 = sha256.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/identify/ids", client.baseurl,);
+        ) -> Result<ResponseValue<types::BulkIdentifyIdsResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BulkIdentifyRequest::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/identify/bulk/ids", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -34221,20 +45960,16 @@ pub mod builder {
             #[allow(unused_mut)]
             let mut request = client
                 .client
-                .get(url)
+                .post(url)
                 .header(
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
-                .query(&progenitor_client::QueryParam::new("fileName", &file_name))
-                .query(&progenitor_client::QueryParam::new("fileSize", &file_size))
-                .query(&progenitor_client::QueryParam::new("md5", &md5))
-                .query(&progenitor_client::QueryParam::new("sha1", &sha1))
-                .query(&progenitor_client::QueryParam::new("sha256", &sha256))
+                .json(&body)
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "identify_game_with_metadata_ids",
+                operation_id: "identify_bulk_ids_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -34242,32 +45977,123 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
-    ///Builder for [`Client::identify_game_and_relations`]
+    ///Builder for [`Client::identify_bulk_relations_v2`]
     ///
-    ///[`Client::identify_game_and_relations`]: super::Client::identify_game_and_relations
+    ///[`Client::identify_bulk_relations_v2`]: super::Client::identify_bulk_relations_v2
     #[derive(Debug, Clone)]
-    pub struct IdentifyGameAndRelations<'a> {
+    pub struct IdentifyBulkRelationsV2<'a> {
         client: &'a super::Client,
+        body: Result<types::builder::BulkIdentifyRequest, String>,
+    }
+    impl<'a> IdentifyBulkRelationsV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BulkIdentifyRequest>,
+            <V as std::convert::TryInto<types::BulkIdentifyRequest>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BulkIdentifyRequest` for body failed: {}", s));
+            self
+        }
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(
+                types::builder::BulkIdentifyRequest,
+            ) -> types::builder::BulkIdentifyRequest,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+        ///Sends a `POST` request to `/identify/bulk/relations`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::BulkIdentifyRelationsResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BulkIdentifyRequest::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/identify/bulk/relations", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "identify_bulk_relations_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::identify_game_with_metadata_ids_v2`]
+    ///
+    ///[`Client::identify_game_with_metadata_ids_v2`]: super::Client::identify_game_with_metadata_ids_v2
+    #[derive(Debug, Clone)]
+    pub struct IdentifyGameWithMetadataIdsV2<'a> {
+        client: &'a super::Client,
+        crc: Result<Option<::std::string::String>, String>,
         file_name: Result<::std::string::String, String>,
         file_size: Result<i64, String>,
         md5: Result<Option<::std::string::String>, String>,
         sha1: Result<Option<::std::string::String>, String>,
         sha256: Result<Option<::std::string::String>, String>,
     }
-    impl<'a> IdentifyGameAndRelations<'a> {
+    impl<'a> IdentifyGameWithMetadataIdsV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
+                crc: Ok(None),
                 file_name: Err("file_name was not initialized".to_string()),
                 file_size: Err("file_size was not initialized".to_string()),
                 md5: Ok(None),
                 sha1: Ok(None),
                 sha256: Ok(None),
             }
+        }
+        pub fn crc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.crc = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for crc failed".to_string()
+            });
+            self
         }
         pub fn file_name<V>(mut self, value: V) -> Self
         where
@@ -34314,24 +46140,27 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/identify/relations`
+        ///Sends a `GET` request to `/identify/ids`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::GameAndRelationMatchResult>, Error<()>> {
+        ) -> Result<ResponseValue<types::GameMetadataMatchResult>, Error<types::V2ErrorBody>>
+        {
             let Self {
                 client,
+                crc,
                 file_name,
                 file_size,
                 md5,
                 sha1,
                 sha256,
             } = self;
+            let crc = crc.map_err(Error::InvalidRequest)?;
             let file_name = file_name.map_err(Error::InvalidRequest)?;
             let file_size = file_size.map_err(Error::InvalidRequest)?;
             let md5 = md5.map_err(Error::InvalidRequest)?;
             let sha1 = sha1.map_err(Error::InvalidRequest)?;
             let sha256 = sha256.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/identify/relations", client.baseurl,);
+            let url = format!("{}/identify/ids", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -34345,6 +46174,7 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&progenitor_client::QueryParam::new("crc", &crc))
                 .query(&progenitor_client::QueryParam::new("fileName", &file_name))
                 .query(&progenitor_client::QueryParam::new("fileSize", &file_size))
                 .query(&progenitor_client::QueryParam::new("md5", &md5))
@@ -34353,7 +46183,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "identify_game_and_relations",
+                operation_id: "identify_game_with_metadata_ids_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -34361,6 +46191,146 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::identify_game_and_relations_v2`]
+    ///
+    ///[`Client::identify_game_and_relations_v2`]: super::Client::identify_game_and_relations_v2
+    #[derive(Debug, Clone)]
+    pub struct IdentifyGameAndRelationsV2<'a> {
+        client: &'a super::Client,
+        crc: Result<Option<::std::string::String>, String>,
+        file_name: Result<::std::string::String, String>,
+        file_size: Result<i64, String>,
+        md5: Result<Option<::std::string::String>, String>,
+        sha1: Result<Option<::std::string::String>, String>,
+        sha256: Result<Option<::std::string::String>, String>,
+    }
+    impl<'a> IdentifyGameAndRelationsV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                crc: Ok(None),
+                file_name: Err("file_name was not initialized".to_string()),
+                file_size: Err("file_size was not initialized".to_string()),
+                md5: Ok(None),
+                sha1: Ok(None),
+                sha256: Ok(None),
+            }
+        }
+        pub fn crc<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.crc = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for crc failed".to_string()
+            });
+            self
+        }
+        pub fn file_name<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.file_name = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for file_name failed".to_string()
+            });
+            self
+        }
+        pub fn file_size<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<i64>,
+        {
+            self.file_size = value
+                .try_into()
+                .map_err(|_| "conversion to `i64` for file_size failed".to_string());
+            self
+        }
+        pub fn md5<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.md5 = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for md5 failed".to_string()
+            });
+            self
+        }
+        pub fn sha1<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.sha1 = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for sha1 failed".to_string()
+            });
+            self
+        }
+        pub fn sha256<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.sha256 = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for sha256 failed".to_string()
+            });
+            self
+        }
+        ///Sends a `GET` request to `/identify/relations`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::GameAndRelationMatchResultV2>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                crc,
+                file_name,
+                file_size,
+                md5,
+                sha1,
+                sha256,
+            } = self;
+            let crc = crc.map_err(Error::InvalidRequest)?;
+            let file_name = file_name.map_err(Error::InvalidRequest)?;
+            let file_size = file_size.map_err(Error::InvalidRequest)?;
+            let md5 = md5.map_err(Error::InvalidRequest)?;
+            let sha1 = sha1.map_err(Error::InvalidRequest)?;
+            let sha256 = sha256.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/identify/relations", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("crc", &crc))
+                .query(&progenitor_client::QueryParam::new("fileName", &file_name))
+                .query(&progenitor_client::QueryParam::new("fileSize", &file_size))
+                .query(&progenitor_client::QueryParam::new("md5", &md5))
+                .query(&progenitor_client::QueryParam::new("sha1", &sha1))
+                .query(&progenitor_client::QueryParam::new("sha256", &sha256))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "identify_game_and_relations_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
@@ -34389,11 +46359,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/age-rating`
+        ///Sends a `GET` request to `/igdb/age-rating`
         pub async fn send(self) -> Result<ResponseValue<types::AgeRating>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/age-rating", client.baseurl,);
+            let url = format!("{}/igdb/age-rating", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -34448,13 +46418,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/age-rating-categories`
+        ///Sends a `GET` request to `/igdb/age-rating-categories`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::AgeRatingCategory>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/age-rating-categories", client.baseurl,);
+            let url = format!("{}/igdb/age-rating-categories", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -34508,11 +46478,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/age-rating-category`
+        ///Sends a `GET` request to `/igdb/age-rating-category`
         pub async fn send(self) -> Result<ResponseValue<types::AgeRatingCategory>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/age-rating-category", client.baseurl,);
+            let url = format!("{}/igdb/age-rating-category", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -34568,15 +46538,14 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to
-        /// `/api/igdb/age-rating-content-description-type`
+        ///Sends a `GET` request to `/igdb/age-rating-content-description-type`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::AgeRatingContentDescriptionType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/api/igdb/age-rating-content-description-type",
+                "{}/igdb/age-rating-content-description-type",
                 client.baseurl,
             );
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
@@ -34635,7 +46604,7 @@ pub mod builder {
             self
         }
         ///Sends a `GET` request to
-        /// `/api/igdb/age-rating-content-description-types`
+        /// `/igdb/age-rating-content-description-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::AgeRatingContentDescriptionType>>, Error<()>>
@@ -34643,7 +46612,7 @@ pub mod builder {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/api/igdb/age-rating-content-description-types",
+                "{}/igdb/age-rating-content-description-types",
                 client.baseurl,
             );
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
@@ -34699,17 +46668,13 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to
-        /// `/api/igdb/age-rating-content-description-v2`
+        ///Sends a `GET` request to `/igdb/age-rating-content-description-v2`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::AgeRatingContentDescriptionV2>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/api/igdb/age-rating-content-description-v2",
-                client.baseurl,
-            );
+            let url = format!("{}/igdb/age-rating-content-description-v2", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -34765,18 +46730,14 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to
-        /// `/api/igdb/age-rating-content-descriptions-v2`
+        ///Sends a `GET` request to `/igdb/age-rating-content-descriptions-v2`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::AgeRatingContentDescriptionV2>>, Error<()>>
         {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/api/igdb/age-rating-content-descriptions-v2",
-                client.baseurl,
-            );
+            let url = format!("{}/igdb/age-rating-content-descriptions-v2", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -34830,11 +46791,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/age-rating-organization`
+        ///Sends a `GET` request to `/igdb/age-rating-organization`
         pub async fn send(self) -> Result<ResponseValue<types::AgeRatingOrganization>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/age-rating-organization", client.baseurl,);
+            let url = format!("{}/igdb/age-rating-organization", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -34889,14 +46850,14 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/age-rating-organizations`
+        ///Sends a `GET` request to `/igdb/age-rating-organizations`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::AgeRatingOrganization>>, Error<()>>
         {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/age-rating-organizations", client.baseurl,);
+            let url = format!("{}/igdb/age-rating-organizations", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -34950,13 +46911,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/age-ratings`
+        ///Sends a `GET` request to `/igdb/age-ratings`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::AgeRating>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/age-ratings", client.baseurl,);
+            let url = format!("{}/igdb/age-ratings", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35010,11 +46971,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/alternative-name`
+        ///Sends a `GET` request to `/igdb/alternative-name`
         pub async fn send(self) -> Result<ResponseValue<types::AlternativeName>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/alternative-name", client.baseurl,);
+            let url = format!("{}/igdb/alternative-name", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35069,13 +47030,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/alternative-names`
+        ///Sends a `GET` request to `/igdb/alternative-names`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::AlternativeName>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/alternative-names", client.baseurl,);
+            let url = format!("{}/igdb/alternative-names", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35129,11 +47090,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/artwork`
+        ///Sends a `GET` request to `/igdb/artwork`
         pub async fn send(self) -> Result<ResponseValue<types::Artwork>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/artwork", client.baseurl,);
+            let url = format!("{}/igdb/artwork", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35188,11 +47149,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/artwork-type`
+        ///Sends a `GET` request to `/igdb/artwork-type`
         pub async fn send(self) -> Result<ResponseValue<types::ArtworkType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/artwork-type", client.baseurl,);
+            let url = format!("{}/igdb/artwork-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35247,13 +47208,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/artwork-types`
+        ///Sends a `GET` request to `/igdb/artwork-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::ArtworkType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/artwork-types", client.baseurl,);
+            let url = format!("{}/igdb/artwork-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35307,13 +47268,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/artworks`
+        ///Sends a `GET` request to `/igdb/artworks`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Artwork>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/artworks", client.baseurl,);
+            let url = format!("{}/igdb/artworks", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35367,11 +47328,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/character`
+        ///Sends a `GET` request to `/igdb/character`
         pub async fn send(self) -> Result<ResponseValue<types::Character>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/character", client.baseurl,);
+            let url = format!("{}/igdb/character", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35426,11 +47387,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/character-gender`
+        ///Sends a `GET` request to `/igdb/character-gender`
         pub async fn send(self) -> Result<ResponseValue<types::CharacterGender>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/character-gender", client.baseurl,);
+            let url = format!("{}/igdb/character-gender", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35485,13 +47446,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/character-genders`
+        ///Sends a `GET` request to `/igdb/character-genders`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CharacterGender>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/character-genders", client.baseurl,);
+            let url = format!("{}/igdb/character-genders", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35545,11 +47506,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/character-mug-shot`
+        ///Sends a `GET` request to `/igdb/character-mug-shot`
         pub async fn send(self) -> Result<ResponseValue<types::CharacterMugShot>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/character-mug-shot", client.baseurl,);
+            let url = format!("{}/igdb/character-mug-shot", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35604,13 +47565,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/character-mug-shots`
+        ///Sends a `GET` request to `/igdb/character-mug-shots`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CharacterMugShot>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/character-mug-shots", client.baseurl,);
+            let url = format!("{}/igdb/character-mug-shots", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35664,11 +47625,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/character-species`
+        ///Sends a `GET` request to `/igdb/character-species`
         pub async fn send(self) -> Result<ResponseValue<types::CharacterSpecies>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/character-species", client.baseurl,);
+            let url = format!("{}/igdb/character-species", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35723,13 +47684,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/character-species-list`
+        ///Sends a `GET` request to `/igdb/character-species-list`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CharacterSpecies>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/character-species-list", client.baseurl,);
+            let url = format!("{}/igdb/character-species-list", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35783,13 +47744,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/characters`
+        ///Sends a `GET` request to `/igdb/characters`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Character>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/characters", client.baseurl,);
+            let url = format!("{}/igdb/characters", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35843,11 +47804,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection`
+        ///Sends a `GET` request to `/igdb/collection`
         pub async fn send(self) -> Result<ResponseValue<types::Collection>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection", client.baseurl,);
+            let url = format!("{}/igdb/collection", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35902,11 +47863,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection-membership`
+        ///Sends a `GET` request to `/igdb/collection-membership`
         pub async fn send(self) -> Result<ResponseValue<types::CollectionMembership>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection-membership", client.baseurl,);
+            let url = format!("{}/igdb/collection-membership", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -35961,13 +47922,13 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection-membership-type`
+        ///Sends a `GET` request to `/igdb/collection-membership-type`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::CollectionMembershipType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection-membership-type", client.baseurl,);
+            let url = format!("{}/igdb/collection-membership-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36022,14 +47983,14 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection-membership-types`
+        ///Sends a `GET` request to `/igdb/collection-membership-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CollectionMembershipType>>, Error<()>>
         {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection-membership-types", client.baseurl,);
+            let url = format!("{}/igdb/collection-membership-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36083,14 +48044,14 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection-memberships`
+        ///Sends a `GET` request to `/igdb/collection-memberships`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CollectionMembership>>, Error<()>>
         {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection-memberships", client.baseurl,);
+            let url = format!("{}/igdb/collection-memberships", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36144,11 +48105,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection-relation`
+        ///Sends a `GET` request to `/igdb/collection-relation`
         pub async fn send(self) -> Result<ResponseValue<types::CollectionRelation>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection-relation", client.baseurl,);
+            let url = format!("{}/igdb/collection-relation", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36203,11 +48164,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection-relation-type`
+        ///Sends a `GET` request to `/igdb/collection-relation-type`
         pub async fn send(self) -> Result<ResponseValue<types::CollectionRelationType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection-relation-type", client.baseurl,);
+            let url = format!("{}/igdb/collection-relation-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36262,14 +48223,14 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection-relation-types`
+        ///Sends a `GET` request to `/igdb/collection-relation-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CollectionRelationType>>, Error<()>>
         {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection-relation-types", client.baseurl,);
+            let url = format!("{}/igdb/collection-relation-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36323,13 +48284,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection-relations`
+        ///Sends a `GET` request to `/igdb/collection-relations`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CollectionRelation>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection-relations", client.baseurl,);
+            let url = format!("{}/igdb/collection-relations", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36383,11 +48344,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection-type`
+        ///Sends a `GET` request to `/igdb/collection-type`
         pub async fn send(self) -> Result<ResponseValue<types::CollectionType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection-type", client.baseurl,);
+            let url = format!("{}/igdb/collection-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36442,13 +48403,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collection-types`
+        ///Sends a `GET` request to `/igdb/collection-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CollectionType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collection-types", client.baseurl,);
+            let url = format!("{}/igdb/collection-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36502,13 +48463,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/collections`
+        ///Sends a `GET` request to `/igdb/collections`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Collection>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/collections", client.baseurl,);
+            let url = format!("{}/igdb/collections", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36562,13 +48523,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/companies`
+        ///Sends a `GET` request to `/igdb/companies`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Company>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/companies", client.baseurl,);
+            let url = format!("{}/igdb/companies", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36622,11 +48583,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company`
+        ///Sends a `GET` request to `/igdb/company`
         pub async fn send(self) -> Result<ResponseValue<types::Company>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company", client.baseurl,);
+            let url = format!("{}/igdb/company", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36681,11 +48642,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-logo`
+        ///Sends a `GET` request to `/igdb/company-logo`
         pub async fn send(self) -> Result<ResponseValue<types::CompanyLogo>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-logo", client.baseurl,);
+            let url = format!("{}/igdb/company-logo", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36740,13 +48701,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-logos`
+        ///Sends a `GET` request to `/igdb/company-logos`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CompanyLogo>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-logos", client.baseurl,);
+            let url = format!("{}/igdb/company-logos", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36800,11 +48761,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-size`
+        ///Sends a `GET` request to `/igdb/company-size`
         pub async fn send(self) -> Result<ResponseValue<types::CompanySize>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-size", client.baseurl,);
+            let url = format!("{}/igdb/company-size", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36859,13 +48820,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-sizes`
+        ///Sends a `GET` request to `/igdb/company-sizes`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CompanySize>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-sizes", client.baseurl,);
+            let url = format!("{}/igdb/company-sizes", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36919,11 +48880,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-status`
+        ///Sends a `GET` request to `/igdb/company-status`
         pub async fn send(self) -> Result<ResponseValue<types::CompanyStatus>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-status", client.baseurl,);
+            let url = format!("{}/igdb/company-status", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -36978,13 +48939,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-statuses`
+        ///Sends a `GET` request to `/igdb/company-statuses`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CompanyStatus>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-statuses", client.baseurl,);
+            let url = format!("{}/igdb/company-statuses", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37038,11 +48999,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-type`
+        ///Sends a `GET` request to `/igdb/company-type`
         pub async fn send(self) -> Result<ResponseValue<types::CompanyType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-type", client.baseurl,);
+            let url = format!("{}/igdb/company-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37097,13 +49058,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-type-histories`
+        ///Sends a `GET` request to `/igdb/company-type-histories`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CompanyTypeHistory>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-type-histories", client.baseurl,);
+            let url = format!("{}/igdb/company-type-histories", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37157,11 +49118,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-type-history`
+        ///Sends a `GET` request to `/igdb/company-type-history`
         pub async fn send(self) -> Result<ResponseValue<types::CompanyTypeHistory>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-type-history", client.baseurl,);
+            let url = format!("{}/igdb/company-type-history", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37216,13 +49177,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-types`
+        ///Sends a `GET` request to `/igdb/company-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CompanyType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-types", client.baseurl,);
+            let url = format!("{}/igdb/company-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37276,11 +49237,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-website`
+        ///Sends a `GET` request to `/igdb/company-website`
         pub async fn send(self) -> Result<ResponseValue<types::CompanyWebsite>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-website", client.baseurl,);
+            let url = format!("{}/igdb/company-website", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37335,13 +49296,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/company-websites`
+        ///Sends a `GET` request to `/igdb/company-websites`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::CompanyWebsite>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/company-websites", client.baseurl,);
+            let url = format!("{}/igdb/company-websites", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37395,11 +49356,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/cover`
+        ///Sends a `GET` request to `/igdb/cover`
         pub async fn send(self) -> Result<ResponseValue<types::Cover>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/cover", client.baseurl,);
+            let url = format!("{}/igdb/cover", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37454,11 +49415,11 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/covers`
+        ///Sends a `GET` request to `/igdb/covers`
         pub async fn send(self) -> Result<ResponseValue<::std::vec::Vec<types::Cover>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/covers", client.baseurl,);
+            let url = format!("{}/igdb/covers", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37512,11 +49473,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/date-format`
+        ///Sends a `GET` request to `/igdb/date-format`
         pub async fn send(self) -> Result<ResponseValue<types::DateFormat>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/date-format", client.baseurl,);
+            let url = format!("{}/igdb/date-format", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37571,13 +49532,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/date-formats`
+        ///Sends a `GET` request to `/igdb/date-formats`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::DateFormat>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/date-formats", client.baseurl,);
+            let url = format!("{}/igdb/date-formats", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37631,11 +49592,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/entity-type`
+        ///Sends a `GET` request to `/igdb/entity-type`
         pub async fn send(self) -> Result<ResponseValue<types::EntityType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/entity-type", client.baseurl,);
+            let url = format!("{}/igdb/entity-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37690,13 +49651,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/entity-types`
+        ///Sends a `GET` request to `/igdb/entity-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::EntityType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/entity-types", client.baseurl,);
+            let url = format!("{}/igdb/entity-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37750,11 +49711,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/event`
+        ///Sends a `GET` request to `/igdb/event`
         pub async fn send(self) -> Result<ResponseValue<types::Event>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/event", client.baseurl,);
+            let url = format!("{}/igdb/event", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37809,11 +49770,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/event-logo`
+        ///Sends a `GET` request to `/igdb/event-logo`
         pub async fn send(self) -> Result<ResponseValue<types::EventLogo>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/event-logo", client.baseurl,);
+            let url = format!("{}/igdb/event-logo", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37868,13 +49829,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/event-logos`
+        ///Sends a `GET` request to `/igdb/event-logos`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::EventLogo>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/event-logos", client.baseurl,);
+            let url = format!("{}/igdb/event-logos", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37928,11 +49889,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/event-network`
+        ///Sends a `GET` request to `/igdb/event-network`
         pub async fn send(self) -> Result<ResponseValue<types::EventNetwork>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/event-network", client.baseurl,);
+            let url = format!("{}/igdb/event-network", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -37987,13 +49948,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/event-networks`
+        ///Sends a `GET` request to `/igdb/event-networks`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::EventNetwork>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/event-networks", client.baseurl,);
+            let url = format!("{}/igdb/event-networks", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38047,11 +50008,11 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/events`
+        ///Sends a `GET` request to `/igdb/events`
         pub async fn send(self) -> Result<ResponseValue<::std::vec::Vec<types::Event>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/events", client.baseurl,);
+            let url = format!("{}/igdb/events", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38105,11 +50066,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/external-game`
+        ///Sends a `GET` request to `/igdb/external-game`
         pub async fn send(self) -> Result<ResponseValue<types::ExternalGame>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/external-game", client.baseurl,);
+            let url = format!("{}/igdb/external-game", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38164,11 +50125,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/external-game-source`
+        ///Sends a `GET` request to `/igdb/external-game-source`
         pub async fn send(self) -> Result<ResponseValue<types::ExternalGameSource>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/external-game-source", client.baseurl,);
+            let url = format!("{}/igdb/external-game-source", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38223,13 +50184,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/external-game-sources`
+        ///Sends a `GET` request to `/igdb/external-game-sources`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::ExternalGameSource>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/external-game-sources", client.baseurl,);
+            let url = format!("{}/igdb/external-game-sources", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38283,13 +50244,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/external-games`
+        ///Sends a `GET` request to `/igdb/external-games`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::ExternalGame>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/external-games", client.baseurl,);
+            let url = format!("{}/igdb/external-games", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38343,11 +50304,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/franchise`
+        ///Sends a `GET` request to `/igdb/franchise`
         pub async fn send(self) -> Result<ResponseValue<types::Franchise>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/franchise", client.baseurl,);
+            let url = format!("{}/igdb/franchise", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38402,13 +50363,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/franchises`
+        ///Sends a `GET` request to `/igdb/franchises`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Franchise>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/franchises", client.baseurl,);
+            let url = format!("{}/igdb/franchises", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38474,12 +50435,12 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game`
+        ///Sends a `GET` request to `/igdb/game`
         pub async fn send(self) -> Result<ResponseValue<types::Game>, Error<()>> {
             let Self { client, id, slug } = self;
             let id = id.map_err(Error::InvalidRequest)?;
             let slug = slug.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game", client.baseurl,);
+            let url = format!("{}/igdb/game", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38535,11 +50496,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-engine`
+        ///Sends a `GET` request to `/igdb/game-engine`
         pub async fn send(self) -> Result<ResponseValue<types::GameEngine>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-engine", client.baseurl,);
+            let url = format!("{}/igdb/game-engine", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38594,11 +50555,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-engine-logo`
+        ///Sends a `GET` request to `/igdb/game-engine-logo`
         pub async fn send(self) -> Result<ResponseValue<types::GameEngineLogo>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-engine-logo", client.baseurl,);
+            let url = format!("{}/igdb/game-engine-logo", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38653,13 +50614,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-engine-logos`
+        ///Sends a `GET` request to `/igdb/game-engine-logos`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameEngineLogo>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-engine-logos", client.baseurl,);
+            let url = format!("{}/igdb/game-engine-logos", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38713,13 +50674,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-engines`
+        ///Sends a `GET` request to `/igdb/game-engines`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameEngine>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-engines", client.baseurl,);
+            let url = format!("{}/igdb/game-engines", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38773,11 +50734,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-localization`
+        ///Sends a `GET` request to `/igdb/game-localization`
         pub async fn send(self) -> Result<ResponseValue<types::GameLocalization>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-localization", client.baseurl,);
+            let url = format!("{}/igdb/game-localization", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38832,13 +50793,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-localizations`
+        ///Sends a `GET` request to `/igdb/game-localizations`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameLocalization>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-localizations", client.baseurl,);
+            let url = format!("{}/igdb/game-localizations", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38892,11 +50853,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-mode`
+        ///Sends a `GET` request to `/igdb/game-mode`
         pub async fn send(self) -> Result<ResponseValue<types::GameMode>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-mode", client.baseurl,);
+            let url = format!("{}/igdb/game-mode", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -38951,13 +50912,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-modes`
+        ///Sends a `GET` request to `/igdb/game-modes`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameMode>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-modes", client.baseurl,);
+            let url = format!("{}/igdb/game-modes", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39011,11 +50972,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-release-format`
+        ///Sends a `GET` request to `/igdb/game-release-format`
         pub async fn send(self) -> Result<ResponseValue<types::GameReleaseFormat>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-release-format", client.baseurl,);
+            let url = format!("{}/igdb/game-release-format", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39070,13 +51031,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-release-formats`
+        ///Sends a `GET` request to `/igdb/game-release-formats`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameReleaseFormat>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-release-formats", client.baseurl,);
+            let url = format!("{}/igdb/game-release-formats", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39130,11 +51091,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-status`
+        ///Sends a `GET` request to `/igdb/game-status`
         pub async fn send(self) -> Result<ResponseValue<types::GameStatus>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-status", client.baseurl,);
+            let url = format!("{}/igdb/game-status", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39189,13 +51150,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-statuses`
+        ///Sends a `GET` request to `/igdb/game-statuses`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameStatus>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-statuses", client.baseurl,);
+            let url = format!("{}/igdb/game-statuses", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39249,11 +51210,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-time-to-beat`
+        ///Sends a `GET` request to `/igdb/game-time-to-beat`
         pub async fn send(self) -> Result<ResponseValue<types::GameTimeToBeat>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-time-to-beat", client.baseurl,);
+            let url = format!("{}/igdb/game-time-to-beat", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39308,13 +51269,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-time-to-beats`
+        ///Sends a `GET` request to `/igdb/game-time-to-beats`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameTimeToBeat>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-time-to-beats", client.baseurl,);
+            let url = format!("{}/igdb/game-time-to-beats", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39368,11 +51329,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-type`
+        ///Sends a `GET` request to `/igdb/game-type`
         pub async fn send(self) -> Result<ResponseValue<types::GameType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-type", client.baseurl,);
+            let url = format!("{}/igdb/game-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39427,13 +51388,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-types`
+        ///Sends a `GET` request to `/igdb/game-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-types", client.baseurl,);
+            let url = format!("{}/igdb/game-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39487,11 +51448,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-version`
+        ///Sends a `GET` request to `/igdb/game-version`
         pub async fn send(self) -> Result<ResponseValue<types::GameVersion>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-version", client.baseurl,);
+            let url = format!("{}/igdb/game-version", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39546,11 +51507,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-version-feature`
+        ///Sends a `GET` request to `/igdb/game-version-feature`
         pub async fn send(self) -> Result<ResponseValue<types::GameVersionFeature>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-version-feature", client.baseurl,);
+            let url = format!("{}/igdb/game-version-feature", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39605,13 +51566,13 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-version-feature-value`
+        ///Sends a `GET` request to `/igdb/game-version-feature-value`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::GameVersionFeatureValue>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-version-feature-value", client.baseurl,);
+            let url = format!("{}/igdb/game-version-feature-value", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39666,14 +51627,14 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-version-feature-values`
+        ///Sends a `GET` request to `/igdb/game-version-feature-values`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameVersionFeatureValue>>, Error<()>>
         {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-version-feature-values", client.baseurl,);
+            let url = format!("{}/igdb/game-version-feature-values", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39727,13 +51688,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-version-features`
+        ///Sends a `GET` request to `/igdb/game-version-features`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameVersionFeature>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-version-features", client.baseurl,);
+            let url = format!("{}/igdb/game-version-features", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39787,13 +51748,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-versions`
+        ///Sends a `GET` request to `/igdb/game-versions`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameVersion>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-versions", client.baseurl,);
+            let url = format!("{}/igdb/game-versions", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39847,11 +51808,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-video`
+        ///Sends a `GET` request to `/igdb/game-video`
         pub async fn send(self) -> Result<ResponseValue<types::GameVideo>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-video", client.baseurl,);
+            let url = format!("{}/igdb/game-video", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39906,13 +51867,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game-videos`
+        ///Sends a `GET` request to `/igdb/game-videos`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::GameVideo>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game-videos", client.baseurl,);
+            let url = format!("{}/igdb/game-videos", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -39966,11 +51927,11 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/game/search`
+        ///Sends a `GET` request to `/igdb/game/search`
         pub async fn send(self) -> Result<ResponseValue<::std::vec::Vec<types::Game>>, Error<()>> {
             let Self { client, query } = self;
             let query = query.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/game/search", client.baseurl,);
+            let url = format!("{}/igdb/game/search", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40024,11 +51985,11 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/games`
+        ///Sends a `GET` request to `/igdb/games`
         pub async fn send(self) -> Result<ResponseValue<::std::vec::Vec<types::Game>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/games", client.baseurl,);
+            let url = format!("{}/igdb/games", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40082,11 +52043,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/genre`
+        ///Sends a `GET` request to `/igdb/genre`
         pub async fn send(self) -> Result<ResponseValue<types::Genre>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/genre", client.baseurl,);
+            let url = format!("{}/igdb/genre", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40141,11 +52102,11 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/genres`
+        ///Sends a `GET` request to `/igdb/genres`
         pub async fn send(self) -> Result<ResponseValue<::std::vec::Vec<types::Genre>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/genres", client.baseurl,);
+            let url = format!("{}/igdb/genres", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40199,13 +52160,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/involved-companies`
+        ///Sends a `GET` request to `/igdb/involved-companies`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::InvolvedCompany>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/involved-companies", client.baseurl,);
+            let url = format!("{}/igdb/involved-companies", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40259,11 +52220,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/involved-company`
+        ///Sends a `GET` request to `/igdb/involved-company`
         pub async fn send(self) -> Result<ResponseValue<types::InvolvedCompany>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/involved-company", client.baseurl,);
+            let url = format!("{}/igdb/involved-company", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40318,11 +52279,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/keyword`
+        ///Sends a `GET` request to `/igdb/keyword`
         pub async fn send(self) -> Result<ResponseValue<types::Keyword>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/keyword", client.baseurl,);
+            let url = format!("{}/igdb/keyword", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40377,13 +52338,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/keywords`
+        ///Sends a `GET` request to `/igdb/keywords`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Keyword>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/keywords", client.baseurl,);
+            let url = format!("{}/igdb/keywords", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40437,11 +52398,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/language`
+        ///Sends a `GET` request to `/igdb/language`
         pub async fn send(self) -> Result<ResponseValue<types::Language>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/language", client.baseurl,);
+            let url = format!("{}/igdb/language", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40496,11 +52457,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/language-support`
+        ///Sends a `GET` request to `/igdb/language-support`
         pub async fn send(self) -> Result<ResponseValue<types::LanguageSupport>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/language-support", client.baseurl,);
+            let url = format!("{}/igdb/language-support", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40555,11 +52516,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/language-support-type`
+        ///Sends a `GET` request to `/igdb/language-support-type`
         pub async fn send(self) -> Result<ResponseValue<types::LanguageSupportType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/language-support-type", client.baseurl,);
+            let url = format!("{}/igdb/language-support-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40614,13 +52575,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/language-support-types`
+        ///Sends a `GET` request to `/igdb/language-support-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::LanguageSupportType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/language-support-types", client.baseurl,);
+            let url = format!("{}/igdb/language-support-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40674,13 +52635,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/language-supports`
+        ///Sends a `GET` request to `/igdb/language-supports`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::LanguageSupport>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/language-supports", client.baseurl,);
+            let url = format!("{}/igdb/language-supports", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40734,13 +52695,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/languages`
+        ///Sends a `GET` request to `/igdb/languages`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Language>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/languages", client.baseurl,);
+            let url = format!("{}/igdb/languages", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40794,11 +52755,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/multiplayer-mode`
+        ///Sends a `GET` request to `/igdb/multiplayer-mode`
         pub async fn send(self) -> Result<ResponseValue<types::MultiplayerMode>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/multiplayer-mode", client.baseurl,);
+            let url = format!("{}/igdb/multiplayer-mode", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40853,13 +52814,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/multiplayer-modes`
+        ///Sends a `GET` request to `/igdb/multiplayer-modes`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::MultiplayerMode>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/multiplayer-modes", client.baseurl,);
+            let url = format!("{}/igdb/multiplayer-modes", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40913,11 +52874,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/network-type`
+        ///Sends a `GET` request to `/igdb/network-type`
         pub async fn send(self) -> Result<ResponseValue<types::NetworkType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/network-type", client.baseurl,);
+            let url = format!("{}/igdb/network-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -40972,13 +52933,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/network-types`
+        ///Sends a `GET` request to `/igdb/network-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::NetworkType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/network-types", client.baseurl,);
+            let url = format!("{}/igdb/network-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41032,11 +52993,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform`
+        ///Sends a `GET` request to `/igdb/platform`
         pub async fn send(self) -> Result<ResponseValue<types::Platform>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform", client.baseurl,);
+            let url = format!("{}/igdb/platform", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41091,13 +53052,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-families`
+        ///Sends a `GET` request to `/igdb/platform-families`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::PlatformFamily>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-families", client.baseurl,);
+            let url = format!("{}/igdb/platform-families", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41151,11 +53112,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-family`
+        ///Sends a `GET` request to `/igdb/platform-family`
         pub async fn send(self) -> Result<ResponseValue<types::PlatformFamily>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-family", client.baseurl,);
+            let url = format!("{}/igdb/platform-family", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41210,11 +53171,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-logo`
+        ///Sends a `GET` request to `/igdb/platform-logo`
         pub async fn send(self) -> Result<ResponseValue<types::PlatformLogo>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-logo", client.baseurl,);
+            let url = format!("{}/igdb/platform-logo", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41269,13 +53230,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-logos`
+        ///Sends a `GET` request to `/igdb/platform-logos`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::PlatformLogo>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-logos", client.baseurl,);
+            let url = format!("{}/igdb/platform-logos", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41329,11 +53290,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-type`
+        ///Sends a `GET` request to `/igdb/platform-type`
         pub async fn send(self) -> Result<ResponseValue<types::PlatformType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-type", client.baseurl,);
+            let url = format!("{}/igdb/platform-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41388,13 +53349,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-types`
+        ///Sends a `GET` request to `/igdb/platform-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::PlatformType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-types", client.baseurl,);
+            let url = format!("{}/igdb/platform-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41448,11 +53409,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-version`
+        ///Sends a `GET` request to `/igdb/platform-version`
         pub async fn send(self) -> Result<ResponseValue<types::PlatformVersion>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-version", client.baseurl,);
+            let url = format!("{}/igdb/platform-version", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41507,14 +53468,14 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-version-companies`
+        ///Sends a `GET` request to `/igdb/platform-version-companies`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::PlatformVersionCompany>>, Error<()>>
         {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-version-companies", client.baseurl,);
+            let url = format!("{}/igdb/platform-version-companies", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41568,11 +53529,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-version-company`
+        ///Sends a `GET` request to `/igdb/platform-version-company`
         pub async fn send(self) -> Result<ResponseValue<types::PlatformVersionCompany>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-version-company", client.baseurl,);
+            let url = format!("{}/igdb/platform-version-company", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41627,13 +53588,13 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-version-release-date`
+        ///Sends a `GET` request to `/igdb/platform-version-release-date`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::PlatformVersionReleaseDate>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-version-release-date", client.baseurl,);
+            let url = format!("{}/igdb/platform-version-release-date", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41688,14 +53649,14 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-version-release-dates`
+        ///Sends a `GET` request to `/igdb/platform-version-release-dates`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::PlatformVersionReleaseDate>>, Error<()>>
         {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-version-release-dates", client.baseurl,);
+            let url = format!("{}/igdb/platform-version-release-dates", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41749,13 +53710,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-versions`
+        ///Sends a `GET` request to `/igdb/platform-versions`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::PlatformVersion>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-versions", client.baseurl,);
+            let url = format!("{}/igdb/platform-versions", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41809,11 +53770,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-website`
+        ///Sends a `GET` request to `/igdb/platform-website`
         pub async fn send(self) -> Result<ResponseValue<types::PlatformWebsite>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-website", client.baseurl,);
+            let url = format!("{}/igdb/platform-website", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41868,13 +53829,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platform-websites`
+        ///Sends a `GET` request to `/igdb/platform-websites`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::PlatformWebsite>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platform-websites", client.baseurl,);
+            let url = format!("{}/igdb/platform-websites", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41928,13 +53889,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/platforms`
+        ///Sends a `GET` request to `/igdb/platforms`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Platform>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/platforms", client.baseurl,);
+            let url = format!("{}/igdb/platforms", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -41988,11 +53949,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/player-perspective`
+        ///Sends a `GET` request to `/igdb/player-perspective`
         pub async fn send(self) -> Result<ResponseValue<types::PlayerPerspective>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/player-perspective", client.baseurl,);
+            let url = format!("{}/igdb/player-perspective", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42047,13 +54008,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/player-perspectives`
+        ///Sends a `GET` request to `/igdb/player-perspectives`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::PlayerPerspective>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/player-perspectives", client.baseurl,);
+            let url = format!("{}/igdb/player-perspectives", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42107,11 +54068,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/popularity-primitive`
+        ///Sends a `GET` request to `/igdb/popularity-primitive`
         pub async fn send(self) -> Result<ResponseValue<types::PopularityPrimitive>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/popularity-primitive", client.baseurl,);
+            let url = format!("{}/igdb/popularity-primitive", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42166,13 +54127,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/popularity-primitives`
+        ///Sends a `GET` request to `/igdb/popularity-primitives`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::PopularityPrimitive>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/popularity-primitives", client.baseurl,);
+            let url = format!("{}/igdb/popularity-primitives", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42226,11 +54187,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/popularity-type`
+        ///Sends a `GET` request to `/igdb/popularity-type`
         pub async fn send(self) -> Result<ResponseValue<types::PopularityType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/popularity-type", client.baseurl,);
+            let url = format!("{}/igdb/popularity-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42285,13 +54246,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/popularity-types`
+        ///Sends a `GET` request to `/igdb/popularity-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::PopularityType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/popularity-types", client.baseurl,);
+            let url = format!("{}/igdb/popularity-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42345,11 +54306,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/region`
+        ///Sends a `GET` request to `/igdb/region`
         pub async fn send(self) -> Result<ResponseValue<types::Region>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/region", client.baseurl,);
+            let url = format!("{}/igdb/region", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42404,13 +54365,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/regions`
+        ///Sends a `GET` request to `/igdb/regions`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Region>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/regions", client.baseurl,);
+            let url = format!("{}/igdb/regions", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42464,11 +54425,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/release-date`
+        ///Sends a `GET` request to `/igdb/release-date`
         pub async fn send(self) -> Result<ResponseValue<types::ReleaseDate>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/release-date", client.baseurl,);
+            let url = format!("{}/igdb/release-date", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42523,11 +54484,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/release-date-region`
+        ///Sends a `GET` request to `/igdb/release-date-region`
         pub async fn send(self) -> Result<ResponseValue<types::ReleaseDateRegion>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/release-date-region", client.baseurl,);
+            let url = format!("{}/igdb/release-date-region", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42582,13 +54543,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/release-date-regions`
+        ///Sends a `GET` request to `/igdb/release-date-regions`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::ReleaseDateRegion>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/release-date-regions", client.baseurl,);
+            let url = format!("{}/igdb/release-date-regions", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42642,11 +54603,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/release-date-status`
+        ///Sends a `GET` request to `/igdb/release-date-status`
         pub async fn send(self) -> Result<ResponseValue<types::ReleaseDateStatus>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/release-date-status", client.baseurl,);
+            let url = format!("{}/igdb/release-date-status", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42701,13 +54662,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/release-date-statuses`
+        ///Sends a `GET` request to `/igdb/release-date-statuses`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::ReleaseDateStatus>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/release-date-statuses", client.baseurl,);
+            let url = format!("{}/igdb/release-date-statuses", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42761,13 +54722,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/release-dates`
+        ///Sends a `GET` request to `/igdb/release-dates`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::ReleaseDate>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/release-dates", client.baseurl,);
+            let url = format!("{}/igdb/release-dates", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42821,11 +54782,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/report`
+        ///Sends a `GET` request to `/igdb/report`
         pub async fn send(self) -> Result<ResponseValue<types::Report>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/report", client.baseurl,);
+            let url = format!("{}/igdb/report", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42880,11 +54841,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/report-type`
+        ///Sends a `GET` request to `/igdb/report-type`
         pub async fn send(self) -> Result<ResponseValue<types::ReportType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/report-type", client.baseurl,);
+            let url = format!("{}/igdb/report-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42939,13 +54900,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/report-types`
+        ///Sends a `GET` request to `/igdb/report-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::ReportType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/report-types", client.baseurl,);
+            let url = format!("{}/igdb/report-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -42999,13 +54960,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/reports`
+        ///Sends a `GET` request to `/igdb/reports`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Report>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/reports", client.baseurl,);
+            let url = format!("{}/igdb/reports", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43059,11 +55020,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/screenshot`
+        ///Sends a `GET` request to `/igdb/screenshot`
         pub async fn send(self) -> Result<ResponseValue<types::Screenshot>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/screenshot", client.baseurl,);
+            let url = format!("{}/igdb/screenshot", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43118,13 +55079,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/screenshots`
+        ///Sends a `GET` request to `/igdb/screenshots`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Screenshot>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/screenshots", client.baseurl,);
+            let url = format!("{}/igdb/screenshots", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43178,11 +55139,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/theme`
+        ///Sends a `GET` request to `/igdb/theme`
         pub async fn send(self) -> Result<ResponseValue<types::Theme>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/theme", client.baseurl,);
+            let url = format!("{}/igdb/theme", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43237,11 +55198,11 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/themes`
+        ///Sends a `GET` request to `/igdb/themes`
         pub async fn send(self) -> Result<ResponseValue<::std::vec::Vec<types::Theme>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/themes", client.baseurl,);
+            let url = format!("{}/igdb/themes", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43295,11 +55256,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/website`
+        ///Sends a `GET` request to `/igdb/website`
         pub async fn send(self) -> Result<ResponseValue<types::Website>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/website", client.baseurl,);
+            let url = format!("{}/igdb/website", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43354,11 +55315,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/igdb/website-type`
+        ///Sends a `GET` request to `/igdb/website-type`
         pub async fn send(self) -> Result<ResponseValue<types::WebsiteType>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/website-type", client.baseurl,);
+            let url = format!("{}/igdb/website-type", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43413,13 +55374,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/website-types`
+        ///Sends a `GET` request to `/igdb/website-types`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::WebsiteType>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/website-types", client.baseurl,);
+            let url = format!("{}/igdb/website-types", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43473,13 +55434,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/igdb/websites`
+        ///Sends a `GET` request to `/igdb/websites`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::Website>>, Error<()>> {
             let Self { client, ids } = self;
             let ids = ids.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/igdb/websites", client.baseurl,);
+            let url = format!("{}/igdb/websites", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43533,11 +55494,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/launchbox/game`
+        ///Sends a `GET` request to `/launchbox/game`
         pub async fn send(self) -> Result<ResponseValue<types::LbGame>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/launchbox/game", client.baseurl,);
+            let url = format!("{}/launchbox/game", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43592,13 +55553,13 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for game_id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/launchbox/game/alternate-names`
+        ///Sends a `GET` request to `/launchbox/game/alternate-names`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::LbGameAlternateName>>, Error<()>> {
             let Self { client, game_id } = self;
             let game_id = game_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/launchbox/game/alternate-names", client.baseurl,);
+            let url = format!("{}/launchbox/game/alternate-names", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43652,13 +55613,13 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for game_id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/launchbox/game/images`
+        ///Sends a `GET` request to `/launchbox/game/images`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::LbGameImage>>, Error<()>> {
             let Self { client, game_id } = self;
             let game_id = game_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/launchbox/game/images", client.baseurl,);
+            let url = format!("{}/launchbox/game/images", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43723,7 +55684,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/launchbox/game/search`
+        ///Sends a `GET` request to `/launchbox/game/search`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::LbGame>>, Error<()>> {
@@ -43734,7 +55695,7 @@ pub mod builder {
             } = self;
             let platform_name = platform_name.map_err(Error::InvalidRequest)?;
             let query = query.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/launchbox/game/search", client.baseurl,);
+            let url = format!("{}/launchbox/game/search", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43779,12 +55740,12 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
-        ///Sends a `GET` request to `/api/launchbox/platforms`
+        ///Sends a `GET` request to `/launchbox/platforms`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::LbPlatform>>, Error<()>> {
             let Self { client } = self;
-            let url = format!("{}/api/launchbox/platforms", client.baseurl,);
+            let url = format!("{}/launchbox/platforms", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43851,7 +55812,7 @@ pub mod builder {
             self.body = self.body.map(f);
             self
         }
-        ///Sends a `POST` request to `/api/match/manual/company`
+        ///Sends a `POST` request to `/match/manual/company`
         pub async fn send(self) -> Result<ResponseValue<types::UpdatedMatchResult>, Error<()>> {
             let Self { client, body } = self;
             let body = body
@@ -43859,7 +55820,7 @@ pub mod builder {
                     types::CompanyOrPlatformMatchRequest::try_from(v).map_err(|e| e.to_string())
                 })
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/match/manual/company", client.baseurl,);
+            let url = format!("{}/match/manual/company", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -43927,7 +55888,7 @@ pub mod builder {
             self.body = self.body.map(f);
             self
         }
-        ///Sends a `POST` request to `/api/match/manual/game`
+        ///Sends a `POST` request to `/match/manual/game`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::UpdatedMatchResult>>, Error<()>> {
@@ -43935,7 +55896,7 @@ pub mod builder {
             let body = body
                 .and_then(|v| types::GameMatchRequest::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/match/manual/game", client.baseurl,);
+            let url = format!("{}/match/manual/game", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44007,7 +55968,7 @@ pub mod builder {
             self.body = self.body.map(f);
             self
         }
-        ///Sends a `POST` request to `/api/match/manual/platform`
+        ///Sends a `POST` request to `/match/manual/platform`
         pub async fn send(self) -> Result<ResponseValue<types::UpdatedMatchResult>, Error<()>> {
             let Self { client, body } = self;
             let body = body
@@ -44015,7 +55976,7 @@ pub mod builder {
                     types::CompanyOrPlatformMatchRequest::try_from(v).map_err(|e| e.to_string())
                 })
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/match/manual/platform", client.baseurl,);
+            let url = format!("{}/match/manual/platform", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44072,11 +56033,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/mobygames/game`
+        ///Sends a `GET` request to `/mobygames/game`
         pub async fn send(self) -> Result<ResponseValue<types::MgGame>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/mobygames/game", client.baseurl,);
+            let url = format!("{}/mobygames/game", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44142,7 +56103,7 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for platform_id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/mobygames/game/covers`
+        ///Sends a `GET` request to `/mobygames/game/covers`
         pub async fn send(self) -> Result<ResponseValue<types::MgCoversResp>, Error<()>> {
             let Self {
                 client,
@@ -44151,7 +56112,7 @@ pub mod builder {
             } = self;
             let game_id = game_id.map_err(Error::InvalidRequest)?;
             let platform_id = platform_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/mobygames/game/covers", client.baseurl,);
+            let url = format!("{}/mobygames/game/covers", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44220,7 +56181,7 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for platform_id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/mobygames/game/screenshots`
+        ///Sends a `GET` request to `/mobygames/game/screenshots`
         pub async fn send(self) -> Result<ResponseValue<types::MgScreenshotsResp>, Error<()>> {
             let Self {
                 client,
@@ -44229,7 +56190,7 @@ pub mod builder {
             } = self;
             let game_id = game_id.map_err(Error::InvalidRequest)?;
             let platform_id = platform_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/mobygames/game/screenshots", client.baseurl,);
+            let url = format!("{}/mobygames/game/screenshots", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44299,7 +56260,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/mobygames/game/search`
+        ///Sends a `GET` request to `/mobygames/game/search`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::MgGame>>, Error<()>> {
@@ -44310,7 +56271,7 @@ pub mod builder {
             } = self;
             let platform_id = platform_id.map_err(Error::InvalidRequest)?;
             let query = query.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/mobygames/game/search", client.baseurl,);
+            let url = format!("{}/mobygames/game/search", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44355,12 +56316,12 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
-        ///Sends a `GET` request to `/api/mobygames/genres`
+        ///Sends a `GET` request to `/mobygames/genres`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::MgGenre>>, Error<()>> {
             let Self { client } = self;
-            let url = format!("{}/api/mobygames/genres", client.baseurl,);
+            let url = format!("{}/mobygames/genres", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44400,12 +56361,12 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
-        ///Sends a `GET` request to `/api/mobygames/platforms`
+        ///Sends a `GET` request to `/mobygames/platforms`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::MgPlatform>>, Error<()>> {
             let Self { client } = self;
-            let url = format!("{}/api/mobygames/platforms", client.baseurl,);
+            let url = format!("{}/mobygames/platforms", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44458,11 +56419,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for release_id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/openvgdb/release`
+        ///Sends a `GET` request to `/openvgdb/release`
         pub async fn send(self) -> Result<ResponseValue<types::OvgdbRelease>, Error<()>> {
             let Self { client, release_id } = self;
             let release_id = release_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/openvgdb/release", client.baseurl,);
+            let url = format!("{}/openvgdb/release", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44542,7 +56503,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/openvgdb/rom/by-hash`
+        ///Sends a `GET` request to `/openvgdb/rom/by-hash`
         pub async fn send(self) -> Result<ResponseValue<types::OvgdbRomMatch>, Error<()>> {
             let Self {
                 client,
@@ -44553,7 +56514,7 @@ pub mod builder {
             let crc = crc.map_err(Error::InvalidRequest)?;
             let md5 = md5.map_err(Error::InvalidRequest)?;
             let sha1 = sha1.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/openvgdb/rom/by-hash", client.baseurl,);
+            let url = format!("{}/openvgdb/rom/by-hash", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44587,24 +56548,68 @@ pub mod builder {
             }
         }
     }
-    ///Builder for [`Client::get_all_platforms`]
+    ///Builder for [`Client::list_platforms_v2`]
     ///
-    ///[`Client::get_all_platforms`]: super::Client::get_all_platforms
+    ///[`Client::list_platforms_v2`]: super::Client::list_platforms_v2
     #[derive(Debug, Clone)]
-    pub struct GetAllPlatforms<'a> {
+    pub struct ListPlatformsV2<'a> {
         client: &'a super::Client,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        with_total: Result<Option<bool>, String>,
     }
-    impl<'a> GetAllPlatforms<'a> {
+    impl<'a> ListPlatformsV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client: client }
+            Self {
+                client: client,
+                cursor: Ok(None),
+                limit: Ok(None),
+                with_total: Ok(None),
+            }
         }
-        ///Sends a `GET` request to `/api/platforms`
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/platforms`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<::std::vec::Vec<types::PlatformMetadataResponse>>, Error<()>>
+        ) -> Result<ResponseValue<types::PageOfPlatformMetadataResponse>, Error<types::V2ErrorBody>>
         {
-            let Self { client } = self;
-            let url = format!("{}/api/platforms", client.baseurl,);
+            let Self {
+                client,
+                cursor,
+                limit,
+                with_total,
+            } = self;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/platforms", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44618,10 +56623,16 @@ pub mod builder {
                     ::reqwest::header::ACCEPT,
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "get_all_platforms",
+                operation_id: "list_platforms_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -44629,19 +56640,210 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
     }
-    ///Builder for [`Client::get_platform_by_id`]
+    ///Builder for [`Client::bulk_platforms_by_id_v2`]
     ///
-    ///[`Client::get_platform_by_id`]: super::Client::get_platform_by_id
+    ///[`Client::bulk_platforms_by_id_v2`]: super::Client::bulk_platforms_by_id_v2
     #[derive(Debug, Clone)]
-    pub struct GetPlatformById<'a> {
+    pub struct BulkPlatformsByIdV2<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BulkIdsRequest, String>,
+    }
+    impl<'a> BulkPlatformsByIdV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BulkIdsRequest>,
+            <V as std::convert::TryInto<types::BulkIdsRequest>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BulkIdsRequest` for body failed: {}", s));
+            self
+        }
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BulkIdsRequest) -> types::builder::BulkIdsRequest,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+        ///Sends a `POST` request to `/platforms/bulk`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::BulkPlatformsByIdResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BulkIdsRequest::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/platforms/bulk", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "bulk_platforms_by_id_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::search_platforms_v2`]
+    ///
+    ///[`Client::search_platforms_v2`]: super::Client::search_platforms_v2
+    #[derive(Debug, Clone)]
+    pub struct SearchPlatformsV2<'a> {
+        client: &'a super::Client,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        query: Result<::std::string::String, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> SearchPlatformsV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                cursor: Ok(None),
+                limit: Ok(None),
+                query: Err("query was not initialized".to_string()),
+                with_total: Ok(None),
+            }
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn query<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.query = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for query failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/platforms/search`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfPlatformMetadataResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                cursor,
+                limit,
+                query,
+                with_total,
+            } = self;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let query = query.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/platforms/search", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("query", &query))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "search_platforms_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_platform_by_id_v2`]
+    ///
+    ///[`Client::get_platform_by_id_v2`]: super::Client::get_platform_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct GetPlatformByIdV2<'a> {
         client: &'a super::Client,
         id: Result<::uuid::Uuid, String>,
     }
-    impl<'a> GetPlatformById<'a> {
+    impl<'a> GetPlatformByIdV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -44657,14 +56859,15 @@ pub mod builder {
                 .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/platforms/{id}`
+        ///Sends a `GET` request to `/platforms/{id}`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<types::PlatformMetadataResponse>, Error<()>> {
+        ) -> Result<ResponseValue<types::PlatformMetadataResponse>, Error<types::V2ErrorBody>>
+        {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/api/platforms/{}",
+                "{}/platforms/{}",
                 client.baseurl,
                 encode_path(&id.to_string()),
             );
@@ -44684,7 +56887,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "get_platform_by_id",
+                operation_id: "get_platform_by_id_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -44692,7 +56895,75 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
-                404u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_platform_stats_v2`]
+    ///
+    ///[`Client::get_platform_stats_v2`]: super::Client::get_platform_stats_v2
+    #[derive(Debug, Clone)]
+    pub struct GetPlatformStatsV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+    }
+    impl<'a> GetPlatformStatsV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/platforms/{id}/stats`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PlatformStats>, Error<types::V2ErrorBody>> {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/platforms/{}/stats",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_platform_stats_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
@@ -44708,10 +56979,10 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
-        ///Sends a `GET` request to `/api/ready`
+        ///Sends a `GET` request to `/ready`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<()>> {
             let Self { client } = self;
-            let url = format!("{}/api/ready", client.baseurl,);
+            let url = format!("{}/ready", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44757,11 +57028,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/retroachievements/game`
+        ///Sends a `GET` request to `/retroachievements/game`
         pub async fn send(self) -> Result<ResponseValue<types::RaGame>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/retroachievements/game", client.baseurl,);
+            let url = format!("{}/retroachievements/game", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44816,11 +57087,11 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/retroachievements/game/by-hash`
+        ///Sends a `GET` request to `/retroachievements/game/by-hash`
         pub async fn send(self) -> Result<ResponseValue<types::RaGameMatch>, Error<()>> {
             let Self { client, md5 } = self;
             let md5 = md5.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/retroachievements/game/by-hash", client.baseurl,);
+            let url = format!("{}/retroachievements/game/by-hash", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44886,7 +57157,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/retroachievements/game/search`
+        ///Sends a `GET` request to `/retroachievements/game/search`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::RaGame>>, Error<()>> {
@@ -44897,7 +57168,7 @@ pub mod builder {
             } = self;
             let query = query.map_err(Error::InvalidRequest)?;
             let system_name = system_name.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/retroachievements/game/search", client.baseurl,);
+            let url = format!("{}/retroachievements/game/search", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -44942,12 +57213,12 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
-        ///Sends a `GET` request to `/api/retroachievements/systems`
+        ///Sends a `GET` request to `/retroachievements/systems`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::RaSystem>>, Error<()>> {
             let Self { client } = self;
-            let url = format!("{}/api/retroachievements/systems", client.baseurl,);
+            let url = format!("{}/retroachievements/systems", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -45000,11 +57271,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/screenscraper/game`
+        ///Sends a `GET` request to `/screenscraper/game`
         pub async fn send(self) -> Result<ResponseValue<types::SsGame>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/screenscraper/game", client.baseurl,);
+            let url = format!("{}/screenscraper/game", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -45071,7 +57342,7 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for system_id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/screenscraper/game/by-rom`
+        ///Sends a `GET` request to `/screenscraper/game/by-rom`
         pub async fn send(self) -> Result<ResponseValue<types::SsGame>, Error<()>> {
             let Self {
                 client,
@@ -45080,7 +57351,7 @@ pub mod builder {
             } = self;
             let rom_name = rom_name.map_err(Error::InvalidRequest)?;
             let system_id = system_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/screenscraper/game/by-rom", client.baseurl,);
+            let url = format!("{}/screenscraper/game/by-rom", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -45148,10 +57419,10 @@ pub mod builder {
                 .map_err(|_| "conversion to `i32` for system_id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/screenscraper/game/search`
+        ///Sends a `GET` request to `/screenscraper/game/search`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<::std::vec::Vec<types::SsGame>>, Error<()>> {
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SsGame>>, Error<ByteStream>> {
             let Self {
                 client,
                 query,
@@ -45159,7 +57430,7 @@ pub mod builder {
             } = self;
             let query = query.map_err(Error::InvalidRequest)?;
             let system_id = system_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/screenscraper/game/search", client.baseurl,);
+            let url = format!("{}/screenscraper/game/search", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -45186,7 +57457,7 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
-                503u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                503u16 => Err(Error::ErrorResponse(ResponseValue::stream(response))),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
@@ -45202,12 +57473,12 @@ pub mod builder {
         pub fn new(client: &'a super::Client) -> Self {
             Self { client: client }
         }
-        ///Sends a `GET` request to `/api/screenscraper/systems`
+        ///Sends a `GET` request to `/screenscraper/systems`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<::std::vec::Vec<types::SsSystem>>, Error<()>> {
+        ) -> Result<ResponseValue<::std::vec::Vec<types::SsSystem>>, Error<ByteStream>> {
             let Self { client } = self;
-            let url = format!("{}/api/screenscraper/systems", client.baseurl,);
+            let url = format!("{}/screenscraper/systems", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -45232,7 +57503,7 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
-                503u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
+                503u16 => Err(Error::ErrorResponse(ResponseValue::stream(response))),
                 _ => Err(Error::UnexpectedResponse(response)),
             }
         }
@@ -45261,11 +57532,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/game`
+        ///Sends a `GET` request to `/sgdb/game`
         pub async fn send(self) -> Result<ResponseValue<types::SgdbGame>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/game", client.baseurl,);
+            let url = format!("{}/sgdb/game", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -45331,7 +57602,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/game/by-platform`
+        ///Sends a `GET` request to `/sgdb/game/by-platform`
         pub async fn send(self) -> Result<ResponseValue<types::SgdbGame>, Error<()>> {
             let Self {
                 client,
@@ -45340,7 +57611,7 @@ pub mod builder {
             } = self;
             let platform = platform.map_err(Error::InvalidRequest)?;
             let platform_id = platform_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/game/by-platform", client.baseurl,);
+            let url = format!("{}/sgdb/game/by-platform", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -45399,13 +57670,13 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/game/search`
+        ///Sends a `GET` request to `/sgdb/game/search`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbGame>>, Error<()>> {
             let Self { client, query } = self;
             let query = query.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/game/search", client.baseurl,);
+            let url = format!("{}/sgdb/game/search", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -45574,7 +57845,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/grids`
+        ///Sends a `GET` request to `/sgdb/grids`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
@@ -45603,7 +57874,7 @@ pub mod builder {
             let page = page.map_err(Error::InvalidRequest)?;
             let styles = styles.map_err(Error::InvalidRequest)?;
             let types = types.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/grids", client.baseurl,);
+            let url = format!("{}/sgdb/grids", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -45796,7 +58067,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/grids/by-platform`
+        ///Sends a `GET` request to `/sgdb/grids/by-platform`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
@@ -45827,7 +58098,7 @@ pub mod builder {
             let platform_id = platform_id.map_err(Error::InvalidRequest)?;
             let styles = styles.map_err(Error::InvalidRequest)?;
             let types = types.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/grids/by-platform", client.baseurl,);
+            let url = format!("{}/sgdb/grids/by-platform", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -46013,7 +58284,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/heroes`
+        ///Sends a `GET` request to `/sgdb/heroes`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
@@ -46042,7 +58313,7 @@ pub mod builder {
             let page = page.map_err(Error::InvalidRequest)?;
             let styles = styles.map_err(Error::InvalidRequest)?;
             let types = types.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/heroes", client.baseurl,);
+            let url = format!("{}/sgdb/heroes", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -46235,7 +58506,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/heroes/by-platform`
+        ///Sends a `GET` request to `/sgdb/heroes/by-platform`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
@@ -46266,7 +58537,7 @@ pub mod builder {
             let platform_id = platform_id.map_err(Error::InvalidRequest)?;
             let styles = styles.map_err(Error::InvalidRequest)?;
             let types = types.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/heroes/by-platform", client.baseurl,);
+            let url = format!("{}/sgdb/heroes/by-platform", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -46452,7 +58723,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/icons`
+        ///Sends a `GET` request to `/sgdb/icons`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
@@ -46481,7 +58752,7 @@ pub mod builder {
             let page = page.map_err(Error::InvalidRequest)?;
             let styles = styles.map_err(Error::InvalidRequest)?;
             let types = types.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/icons", client.baseurl,);
+            let url = format!("{}/sgdb/icons", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -46674,7 +58945,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/icons/by-platform`
+        ///Sends a `GET` request to `/sgdb/icons/by-platform`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
@@ -46705,7 +58976,7 @@ pub mod builder {
             let platform_id = platform_id.map_err(Error::InvalidRequest)?;
             let styles = styles.map_err(Error::InvalidRequest)?;
             let types = types.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/icons/by-platform", client.baseurl,);
+            let url = format!("{}/sgdb/icons/by-platform", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -46891,7 +59162,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/logos`
+        ///Sends a `GET` request to `/sgdb/logos`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
@@ -46920,7 +59191,7 @@ pub mod builder {
             let page = page.map_err(Error::InvalidRequest)?;
             let styles = styles.map_err(Error::InvalidRequest)?;
             let types = types.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/logos", client.baseurl,);
+            let url = format!("{}/sgdb/logos", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -47113,7 +59384,7 @@ pub mod builder {
             });
             self
         }
-        ///Sends a `GET` request to `/api/sgdb/logos/by-platform`
+        ///Sends a `GET` request to `/sgdb/logos/by-platform`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<::std::vec::Vec<types::SgdbAsset>>, Error<()>> {
@@ -47144,7 +59415,7 @@ pub mod builder {
             let platform_id = platform_id.map_err(Error::InvalidRequest)?;
             let styles = styles.map_err(Error::InvalidRequest)?;
             let types = types.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/sgdb/logos/by-platform", client.baseurl,);
+            let url = format!("{}/sgdb/logos/by-platform", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -47191,23 +59462,329 @@ pub mod builder {
             }
         }
     }
-    ///Builder for [`Client::get_all_suggestions`]
+    ///Builder for [`Client::list_signature_groups_v2`]
     ///
-    ///[`Client::get_all_suggestions`]: super::Client::get_all_suggestions
+    ///[`Client::list_signature_groups_v2`]: super::Client::list_signature_groups_v2
     #[derive(Debug, Clone)]
-    pub struct GetAllSuggestions<'a> {
+    pub struct ListSignatureGroupsV2<'a> {
         client: &'a super::Client,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        with_total: Result<Option<bool>, String>,
     }
-    impl<'a> GetAllSuggestions<'a> {
+    impl<'a> ListSignatureGroupsV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
-            Self { client: client }
+            Self {
+                client: client,
+                cursor: Ok(None),
+                limit: Ok(None),
+                with_total: Ok(None),
+            }
         }
-        ///Sends a `GET` request to `/api/suggestion`
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/signature-groups`
         pub async fn send(
             self,
-        ) -> Result<ResponseValue<::std::vec::Vec<types::Suggestion>>, Error<()>> {
-            let Self { client } = self;
-            let url = format!("{}/api/suggestion", client.baseurl,);
+        ) -> Result<ResponseValue<types::PageOfPlaymatchSignatureGroup>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                cursor,
+                limit,
+                with_total,
+            } = self;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/signature-groups", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_signature_groups_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::bulk_signature_groups_by_id_v2`]
+    ///
+    ///[`Client::bulk_signature_groups_by_id_v2`]: super::Client::bulk_signature_groups_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct BulkSignatureGroupsByIdV2<'a> {
+        client: &'a super::Client,
+        body: Result<types::builder::BulkIdsRequest, String>,
+    }
+    impl<'a> BulkSignatureGroupsByIdV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                body: Ok(::std::default::Default::default()),
+            }
+        }
+        pub fn body<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<types::BulkIdsRequest>,
+            <V as std::convert::TryInto<types::BulkIdsRequest>>::Error: std::fmt::Display,
+        {
+            self.body = value
+                .try_into()
+                .map(From::from)
+                .map_err(|s| format!("conversion to `BulkIdsRequest` for body failed: {}", s));
+            self
+        }
+        pub fn body_map<F>(mut self, f: F) -> Self
+        where
+            F: std::ops::FnOnce(types::builder::BulkIdsRequest) -> types::builder::BulkIdsRequest,
+        {
+            self.body = self.body.map(f);
+            self
+        }
+        ///Sends a `POST` request to `/signature-groups/bulk`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::BulkSignatureGroupsByIdResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self { client, body } = self;
+            let body = body
+                .and_then(|v| types::BulkIdsRequest::try_from(v).map_err(|e| e.to_string()))
+                .map_err(Error::InvalidRequest)?;
+            let url = format!("{}/signature-groups/bulk", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .post(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .json(&body)
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "bulk_signature_groups_by_id_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::search_signature_groups_v2`]
+    ///
+    ///[`Client::search_signature_groups_v2`]: super::Client::search_signature_groups_v2
+    #[derive(Debug, Clone)]
+    pub struct SearchSignatureGroupsV2<'a> {
+        client: &'a super::Client,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        query: Result<::std::string::String, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> SearchSignatureGroupsV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                cursor: Ok(None),
+                limit: Ok(None),
+                query: Err("query was not initialized".to_string()),
+                with_total: Ok(None),
+            }
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn query<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.query = value.try_into().map_err(|_| {
+                "conversion to `:: std :: string :: String` for query failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/signature-groups/search`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfPlaymatchSignatureGroup>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                cursor,
+                limit,
+                query,
+                with_total,
+            } = self;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let query = query.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/signature-groups/search", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new("query", &query))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "search_signature_groups_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_signature_group_by_id_v2`]
+    ///
+    ///[`Client::get_signature_group_by_id_v2`]: super::Client::get_signature_group_by_id_v2
+    #[derive(Debug, Clone)]
+    pub struct GetSignatureGroupByIdV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+    }
+    impl<'a> GetSignatureGroupByIdV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/signature-groups/{id}`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PlaymatchSignatureGroupV2>, Error<types::V2ErrorBody>>
+        {
+            let Self { client, id } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/signature-groups/{}",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -47224,7 +59801,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "get_all_suggestions",
+                operation_id: "get_signature_group_by_id_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -47232,6 +59809,437 @@ pub mod builder {
             let response = result?;
             match response.status().as_u16() {
                 200u16 => ResponseValue::from_response(response).await,
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_signature_group_dat_files_v2`]
+    ///
+    ///[`Client::list_signature_group_dat_files_v2`]: super::Client::list_signature_group_dat_files_v2
+    #[derive(Debug, Clone)]
+    pub struct ListSignatureGroupDatFilesV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        platform_id: Result<Option<::uuid::Uuid>, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> ListSignatureGroupDatFilesV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+                cursor: Ok(None),
+                limit: Ok(None),
+                platform_id: Ok(None),
+                with_total: Ok(None),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.platform_id = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for platform_id failed".to_string());
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/signature-groups/{id}/dat-files`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfDatFileSummary>, Error<types::V2ErrorBody>> {
+            let Self {
+                client,
+                id,
+                cursor,
+                limit,
+                platform_id,
+                with_total,
+            } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/signature-groups/{}/dat-files",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "platformId",
+                    &platform_id,
+                ))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_signature_group_dat_files_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_signature_group_games_v2`]
+    ///
+    ///[`Client::list_signature_group_games_v2`]: super::Client::list_signature_group_games_v2
+    #[derive(Debug, Clone)]
+    pub struct ListSignatureGroupGamesV2<'a> {
+        client: &'a super::Client,
+        id: Result<::uuid::Uuid, String>,
+        current_only: Result<Option<bool>, String>,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        platform_id: Result<Option<::uuid::Uuid>, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> ListSignatureGroupGamesV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                id: Err("id was not initialized".to_string()),
+                current_only: Ok(None),
+                cursor: Ok(None),
+                limit: Ok(None),
+                platform_id: Ok(None),
+                with_total: Ok(None),
+            }
+        }
+        pub fn id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.id = value
+                .try_into()
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
+            self
+        }
+        pub fn current_only<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.current_only = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for current_only failed".to_string());
+            self
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn platform_id<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::uuid::Uuid>,
+        {
+            self.platform_id = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `:: uuid :: Uuid` for platform_id failed".to_string());
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/signature-groups/{id}/games`
+        pub async fn send(
+            self,
+        ) -> Result<ResponseValue<types::PageOfGameMetadataResponse>, Error<types::V2ErrorBody>>
+        {
+            let Self {
+                client,
+                id,
+                current_only,
+                cursor,
+                limit,
+                platform_id,
+                with_total,
+            } = self;
+            let id = id.map_err(Error::InvalidRequest)?;
+            let current_only = current_only.map_err(Error::InvalidRequest)?;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let platform_id = platform_id.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!(
+                "{}/signature-groups/{}/games",
+                client.baseurl,
+                encode_path(&id.to_string()),
+            );
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new(
+                    "currentOnly",
+                    &current_only,
+                ))
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "platformId",
+                    &platform_id,
+                ))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_signature_group_games_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                404u16 => Err(Error::ErrorResponse(
+                    ResponseValue::from_response(response).await?,
+                )),
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::get_stats_v2`]
+    ///
+    ///[`Client::get_stats_v2`]: super::Client::get_stats_v2
+    #[derive(Debug, Clone)]
+    pub struct GetStatsV2<'a> {
+        client: &'a super::Client,
+    }
+    impl<'a> GetStatsV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self { client: client }
+        }
+        ///Sends a `GET` request to `/stats`
+        pub async fn send(self) -> Result<ResponseValue<types::ServiceStats>, Error<()>> {
+            let Self { client } = self;
+            let url = format!("{}/stats", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "get_stats_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                _ => Err(Error::UnexpectedResponse(response)),
+            }
+        }
+    }
+    ///Builder for [`Client::list_suggestions_v2`]
+    ///
+    ///[`Client::list_suggestions_v2`]: super::Client::list_suggestions_v2
+    #[derive(Debug, Clone)]
+    pub struct ListSuggestionsV2<'a> {
+        client: &'a super::Client,
+        cursor: Result<Option<::std::string::String>, String>,
+        limit: Result<Option<::std::num::NonZeroU64>, String>,
+        with_total: Result<Option<bool>, String>,
+    }
+    impl<'a> ListSuggestionsV2<'a> {
+        pub fn new(client: &'a super::Client) -> Self {
+            Self {
+                client: client,
+                cursor: Ok(None),
+                limit: Ok(None),
+                with_total: Ok(None),
+            }
+        }
+        pub fn cursor<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::string::String>,
+        {
+            self.cursor = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: string :: String` for cursor failed".to_string()
+            });
+            self
+        }
+        pub fn limit<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<::std::num::NonZeroU64>,
+        {
+            self.limit = value.try_into().map(Some).map_err(|_| {
+                "conversion to `:: std :: num :: NonZeroU64` for limit failed".to_string()
+            });
+            self
+        }
+        pub fn with_total<V>(mut self, value: V) -> Self
+        where
+            V: std::convert::TryInto<bool>,
+        {
+            self.with_total = value
+                .try_into()
+                .map(Some)
+                .map_err(|_| "conversion to `bool` for with_total failed".to_string());
+            self
+        }
+        ///Sends a `GET` request to `/suggestion`
+        pub async fn send(self) -> Result<ResponseValue<types::PageOfSuggestion>, Error<()>> {
+            let Self {
+                client,
+                cursor,
+                limit,
+                with_total,
+            } = self;
+            let cursor = cursor.map_err(Error::InvalidRequest)?;
+            let limit = limit.map_err(Error::InvalidRequest)?;
+            let with_total = with_total.map_err(Error::InvalidRequest)?;
+            let url = format!("{}/suggestion", client.baseurl,);
+            let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+            header_map.append(
+                ::reqwest::header::HeaderName::from_static("api-version"),
+                ::reqwest::header::HeaderValue::from_static(super::Client::api_version()),
+            );
+            #[allow(unused_mut)]
+            let mut request = client
+                .client
+                .get(url)
+                .header(
+                    ::reqwest::header::ACCEPT,
+                    ::reqwest::header::HeaderValue::from_static("application/json"),
+                )
+                .query(&progenitor_client::QueryParam::new("cursor", &cursor))
+                .query(&progenitor_client::QueryParam::new("limit", &limit))
+                .query(&progenitor_client::QueryParam::new(
+                    "withTotal",
+                    &with_total,
+                ))
+                .headers(header_map)
+                .build()?;
+            let info = OperationInfo {
+                operation_id: "list_suggestions_v2",
+            };
+            client.pre(&mut request, &info).await?;
+            let result = client.exec(request, &info).await;
+            client.post(&result, &info).await?;
+            let response = result?;
+            match response.status().as_u16() {
+                200u16 => ResponseValue::from_response(response).await,
+                400u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
                 401u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
                 403u16 => Err(Error::ErrorResponse(ResponseValue::empty(response))),
                 _ => Err(Error::UnexpectedResponse(response)),
@@ -47276,7 +60284,7 @@ pub mod builder {
             self.body = self.body.map(f);
             self
         }
-        ///Sends a `POST` request to `/api/suggestion/company`
+        ///Sends a `POST` request to `/suggestion/company`
         pub async fn send(self) -> Result<ResponseValue<types::Suggestion>, Error<()>> {
             let Self { client, body } = self;
             let body = body
@@ -47285,7 +60293,7 @@ pub mod builder {
                         .map_err(|e| e.to_string())
                 })
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/suggestion/company", client.baseurl,);
+            let url = format!("{}/suggestion/company", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -47356,7 +60364,7 @@ pub mod builder {
             self.body = self.body.map(f);
             self
         }
-        ///Sends a `POST` request to `/api/suggestion/external/game`
+        ///Sends a `POST` request to `/suggestion/external/game`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<()>> {
             let Self { client, body } = self;
             let body = body
@@ -47365,7 +60373,7 @@ pub mod builder {
                         .map_err(|e| e.to_string())
                 })
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/suggestion/external/game", client.baseurl,);
+            let url = format!("{}/suggestion/external/game", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -47428,13 +60436,13 @@ pub mod builder {
             self.body = self.body.map(f);
             self
         }
-        ///Sends a `POST` request to `/api/suggestion/game`
+        ///Sends a `POST` request to `/suggestion/game`
         pub async fn send(self) -> Result<ResponseValue<types::Suggestion>, Error<()>> {
             let Self { client, body } = self;
             let body = body
                 .and_then(|v| types::GameSuggestionRequest::try_from(v).map_err(|e| e.to_string()))
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/suggestion/game", client.baseurl,);
+            let url = format!("{}/suggestion/game", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -47505,7 +60513,7 @@ pub mod builder {
             self.body = self.body.map(f);
             self
         }
-        ///Sends a `POST` request to `/api/suggestion/platform`
+        ///Sends a `POST` request to `/suggestion/platform`
         pub async fn send(self) -> Result<ResponseValue<types::Suggestion>, Error<()>> {
             let Self { client, body } = self;
             let body = body
@@ -47514,7 +60522,7 @@ pub mod builder {
                         .map_err(|e| e.to_string())
                 })
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/suggestion/platform", client.baseurl,);
+            let url = format!("{}/suggestion/platform", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -47571,12 +60579,12 @@ pub mod builder {
                 .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/suggestion/{id}`
+        ///Sends a `GET` request to `/suggestion/{id}`
         pub async fn send(self) -> Result<ResponseValue<types::Suggestion>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/api/suggestion/{}",
+                "{}/suggestion/{}",
                 client.baseurl,
                 encode_path(&id.to_string()),
             );
@@ -47634,12 +60642,12 @@ pub mod builder {
                 .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
             self
         }
-        ///Sends a `DELETE` request to `/api/suggestion/{id}`
+        ///Sends a `DELETE` request to `/suggestion/{id}`
         pub async fn send(self) -> Result<ResponseValue<()>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/api/suggestion/{}",
+                "{}/suggestion/{}",
                 client.baseurl,
                 encode_path(&id.to_string()),
             );
@@ -47690,7 +60698,7 @@ pub mod builder {
                 .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
             self
         }
-        ///Sends a `POST` request to `/api/suggestion/{id}/accept`
+        ///Sends a `POST` request to `/suggestion/{id}/accept`
         pub async fn send(
             self,
         ) -> Result<ResponseValue<types::UpdatedMetadataMatchesFromSuggestionResponse>, Error<()>>
@@ -47698,7 +60706,7 @@ pub mod builder {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/api/suggestion/{}/accept",
+                "{}/suggestion/{}/accept",
                 client.baseurl,
                 encode_path(&id.to_string()),
             );
@@ -47733,15 +60741,15 @@ pub mod builder {
             }
         }
     }
-    ///Builder for [`Client::get_user_by_discord_id`]
+    ///Builder for [`Client::get_user_by_discord_id_v2`]
     ///
-    ///[`Client::get_user_by_discord_id`]: super::Client::get_user_by_discord_id
+    ///[`Client::get_user_by_discord_id_v2`]: super::Client::get_user_by_discord_id_v2
     #[derive(Debug, Clone)]
-    pub struct GetUserByDiscordId<'a> {
+    pub struct GetUserByDiscordIdV2<'a> {
         client: &'a super::Client,
         discord_id: Result<i64, String>,
     }
-    impl<'a> GetUserByDiscordId<'a> {
+    impl<'a> GetUserByDiscordIdV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -47757,11 +60765,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `i64` for discord_id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/user`
+        ///Sends a `GET` request to `/user`
         pub async fn send(self) -> Result<ResponseValue<types::User>, Error<()>> {
             let Self { client, discord_id } = self;
             let discord_id = discord_id.map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/user", client.baseurl,);
+            let url = format!("{}/user", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -47776,13 +60784,13 @@ pub mod builder {
                     ::reqwest::header::HeaderValue::from_static("application/json"),
                 )
                 .query(&progenitor_client::QueryParam::new(
-                    "discord_id",
+                    "discordId",
                     &discord_id,
                 ))
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "get_user_by_discord_id",
+                operation_id: "get_user_by_discord_id_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -47797,15 +60805,15 @@ pub mod builder {
             }
         }
     }
-    ///Builder for [`Client::create_or_get_by_discord_id`]
+    ///Builder for [`Client::create_or_get_by_discord_id_v2`]
     ///
-    ///[`Client::create_or_get_by_discord_id`]: super::Client::create_or_get_by_discord_id
+    ///[`Client::create_or_get_by_discord_id_v2`]: super::Client::create_or_get_by_discord_id_v2
     #[derive(Debug, Clone)]
-    pub struct CreateOrGetByDiscordId<'a> {
+    pub struct CreateOrGetByDiscordIdV2<'a> {
         client: &'a super::Client,
-        body: Result<types::builder::CreateOrGetUserRequest, String>,
+        body: Result<types::builder::CreateOrGetUserRequestV2, String>,
     }
-    impl<'a> CreateOrGetByDiscordId<'a> {
+    impl<'a> CreateOrGetByDiscordIdV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -47814,12 +60822,12 @@ pub mod builder {
         }
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::CreateOrGetUserRequest>,
-            <V as std::convert::TryInto<types::CreateOrGetUserRequest>>::Error: std::fmt::Display,
+            V: std::convert::TryInto<types::CreateOrGetUserRequestV2>,
+            <V as std::convert::TryInto<types::CreateOrGetUserRequestV2>>::Error: std::fmt::Display,
         {
             self.body = value.try_into().map(From::from).map_err(|s| {
                 format!(
-                    "conversion to `CreateOrGetUserRequest` for body failed: {}",
+                    "conversion to `CreateOrGetUserRequestV2` for body failed: {}",
                     s
                 )
             });
@@ -47828,19 +60836,21 @@ pub mod builder {
         pub fn body_map<F>(mut self, f: F) -> Self
         where
             F: std::ops::FnOnce(
-                types::builder::CreateOrGetUserRequest,
-            ) -> types::builder::CreateOrGetUserRequest,
+                types::builder::CreateOrGetUserRequestV2,
+            ) -> types::builder::CreateOrGetUserRequestV2,
         {
             self.body = self.body.map(f);
             self
         }
-        ///Sends a `POST` request to `/api/user/by-discord-id`
+        ///Sends a `POST` request to `/user/by-discord-id`
         pub async fn send(self) -> Result<ResponseValue<types::User>, Error<()>> {
             let Self { client, body } = self;
             let body = body
-                .and_then(|v| types::CreateOrGetUserRequest::try_from(v).map_err(|e| e.to_string()))
+                .and_then(|v| {
+                    types::CreateOrGetUserRequestV2::try_from(v).map_err(|e| e.to_string())
+                })
                 .map_err(Error::InvalidRequest)?;
-            let url = format!("{}/api/user/by-discord-id", client.baseurl,);
+            let url = format!("{}/user/by-discord-id", client.baseurl,);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -47858,7 +60868,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "create_or_get_by_discord_id",
+                operation_id: "create_or_get_by_discord_id_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;
@@ -47896,15 +60906,11 @@ pub mod builder {
                 .map_err(|_| "conversion to `:: uuid :: Uuid` for id failed".to_string());
             self
         }
-        ///Sends a `GET` request to `/api/user/{id}`
+        ///Sends a `GET` request to `/user/{id}`
         pub async fn send(self) -> Result<ResponseValue<types::User>, Error<()>> {
             let Self { client, id } = self;
             let id = id.map_err(Error::InvalidRequest)?;
-            let url = format!(
-                "{}/api/user/{}",
-                client.baseurl,
-                encode_path(&id.to_string()),
-            );
+            let url = format!("{}/user/{}", client.baseurl, encode_path(&id.to_string()),);
             let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
             header_map.append(
                 ::reqwest::header::HeaderName::from_static("api-version"),
@@ -47936,16 +60942,16 @@ pub mod builder {
             }
         }
     }
-    ///Builder for [`Client::update_user_permission_level`]
+    ///Builder for [`Client::update_user_permission_level_v2`]
     ///
-    ///[`Client::update_user_permission_level`]: super::Client::update_user_permission_level
+    ///[`Client::update_user_permission_level_v2`]: super::Client::update_user_permission_level_v2
     #[derive(Debug, Clone)]
-    pub struct UpdateUserPermissionLevel<'a> {
+    pub struct UpdateUserPermissionLevelV2<'a> {
         client: &'a super::Client,
         id: Result<::uuid::Uuid, String>,
-        body: Result<types::builder::UpdateUserPermissionsRequest, String>,
+        body: Result<types::builder::UpdateUserPermissionsRequestV2, String>,
     }
-    impl<'a> UpdateUserPermissionLevel<'a> {
+    impl<'a> UpdateUserPermissionLevelV2<'a> {
         pub fn new(client: &'a super::Client) -> Self {
             Self {
                 client: client,
@@ -47964,13 +60970,13 @@ pub mod builder {
         }
         pub fn body<V>(mut self, value: V) -> Self
         where
-            V: std::convert::TryInto<types::UpdateUserPermissionsRequest>,
-            <V as std::convert::TryInto<types::UpdateUserPermissionsRequest>>::Error:
+            V: std::convert::TryInto<types::UpdateUserPermissionsRequestV2>,
+            <V as std::convert::TryInto<types::UpdateUserPermissionsRequestV2>>::Error:
                 std::fmt::Display,
         {
             self.body = value.try_into().map(From::from).map_err(|s| {
                 format!(
-                    "conversion to `UpdateUserPermissionsRequest` for body failed: {}",
+                    "conversion to `UpdateUserPermissionsRequestV2` for body failed: {}",
                     s
                 )
             });
@@ -47979,23 +60985,23 @@ pub mod builder {
         pub fn body_map<F>(mut self, f: F) -> Self
         where
             F: std::ops::FnOnce(
-                types::builder::UpdateUserPermissionsRequest,
-            ) -> types::builder::UpdateUserPermissionsRequest,
+                types::builder::UpdateUserPermissionsRequestV2,
+            ) -> types::builder::UpdateUserPermissionsRequestV2,
         {
             self.body = self.body.map(f);
             self
         }
-        ///Sends a `PATCH` request to `/api/user/{id}/permission`
+        ///Sends a `PATCH` request to `/user/{id}/permission`
         pub async fn send(self) -> Result<ResponseValue<types::User>, Error<()>> {
             let Self { client, id, body } = self;
             let id = id.map_err(Error::InvalidRequest)?;
             let body = body
                 .and_then(|v| {
-                    types::UpdateUserPermissionsRequest::try_from(v).map_err(|e| e.to_string())
+                    types::UpdateUserPermissionsRequestV2::try_from(v).map_err(|e| e.to_string())
                 })
                 .map_err(Error::InvalidRequest)?;
             let url = format!(
-                "{}/api/user/{}/permission",
+                "{}/user/{}/permission",
                 client.baseurl,
                 encode_path(&id.to_string()),
             );
@@ -48016,7 +61022,7 @@ pub mod builder {
                 .headers(header_map)
                 .build()?;
             let info = OperationInfo {
-                operation_id: "update_user_permission_level",
+                operation_id: "update_user_permission_level_v2",
             };
             client.pre(&mut request, &info).await?;
             let result = client.exec(request, &info).await;

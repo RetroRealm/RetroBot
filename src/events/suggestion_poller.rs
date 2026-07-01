@@ -2,11 +2,11 @@ use crate::abstraction::command::CommandData;
 use crate::command::SUGGESTION_CHANNEL_ID;
 use crate::command::playmatch::{
 	SuggestionMessageHandleData, SuggestionSubmitter, SuggestionType, handle_suggestion_message,
-	mark_external_resolved,
 };
 use lazy_static::lazy_static;
-use log::{info, warn};
+use log::{debug, info, warn};
 use playmatch_client::types::{ExternalMetadata, MetadataMatchType, MetadataProvider, Suggestion};
+use reqwest::StatusCode;
 use serenity::all::{
 	ActionRowComponent, ButtonKind, ChannelId, Component, ContainerComponent, Context, GetMessages,
 	Http, Message, MessageId, TeamMemberRole, UserId,
@@ -49,10 +49,15 @@ pub async fn run(ctx: Context, data: Arc<CommandData>) {
 
 	seed_from_channel_if_needed(&http, channel_id, &data).await;
 
-	// Reconcile once at startup: post anything new, edit anything resolved externally.
-	if let Err(e) = reconcile(&ctx, &data, &owners).await {
-		warn!("suggestion poller: initial reconcile failed: {e}");
-	}
+	// Reconcile once at startup: post anything new, delete anything resolved externally.
+	let pending = match reconcile(&ctx, &data, &owners).await {
+		Ok(p) => p,
+		Err(e) => {
+			warn!("suggestion poller: initial reconcile failed: {e}");
+			Vec::new()
+		}
+	};
+	let mut by_id: HashMap<Uuid, Suggestion> = pending.into_iter().map(|s| (s.id, s)).collect();
 
 	// Re-arm collectors for everything currently tracked in Redis.
 	let posted = match data.suggestion_store.list_all().await {
@@ -63,7 +68,10 @@ pub async fn run(ctx: Context, data: Arc<CommandData>) {
 		}
 	};
 	for (uuid, msg_id) in posted {
-		spawn_collector(ctx.clone(), data.clone(), owners.clone(), msg_id, uuid);
+		match by_id.remove(&uuid) {
+			Some(s) => spawn_collector(ctx.clone(), data.clone(), owners.clone(), msg_id, s),
+			None => debug!("suggestion poller: {uuid} tracked but not pending, skipping re-arm"),
+		}
 	}
 
 	let mut tick = interval(Duration::from_secs(*POLL_INTERVAL_SECS));
@@ -119,17 +127,41 @@ async fn seed_from_channel_if_needed(http: &Http, channel_id: ChannelId, data: &
 	);
 }
 
+/// Removes a resolved suggestion card from the channel. Discord 404 means a human
+/// already deleted it, which is the outcome we wanted anyway.
+async fn delete_suggestion_card(http: &Http, message_id: MessageId) -> serenity::Result<()> {
+	let channel_id = ChannelId::new(*SUGGESTION_CHANNEL_ID);
+	match channel_id
+		.widen()
+		.delete_message(http, message_id, None)
+		.await
+	{
+		Err(serenity::Error::Http(e)) if e.status_code() == Some(StatusCode::NOT_FOUND) => Ok(()),
+		other => other,
+	}
+}
+
 /// Compare playmatch's pending queue against Redis. First tears down any suggestions
 /// whose target game already has an active mapping for the suggested provider, then
-/// posts anything new and edits anything that's been resolved outside Discord. Does
+/// posts anything new and deletes the card of anything resolved outside Discord. Does
 /// not spawn collectors for new posts: the `handle_suggestion_message` call wraps
-/// both the post and the collector wait.
+/// both the post and the collector wait. Returns the full fetched pending list so the
+/// caller can re-arm collectors without a second round trip.
 async fn reconcile(
 	ctx: &Context,
 	data: &Arc<CommandData>,
 	owners: &HashSet<UserId>,
-) -> anyhow::Result<()> {
+) -> anyhow::Result<Vec<Suggestion>> {
 	let http = ctx.http.clone();
+
+	// Freeze the delete-candidate set before fetching pending and running the
+	// rate-limited sweep below. A user-submitted (source=None) suggestion created and
+	// mark_posted'd during this same tick would otherwise show up in `posted` but not in
+	// the pending snapshot, get its fresh card deleted, and never be reposted. Reading
+	// `posted` first keeps it off the delete list this tick; by the next tick it is in
+	// `pending`, so `pending_uuids` guards it.
+	let posted = data.suggestion_store.list_all().await?;
+
 	let pending = data.playmatch_client.get_all_suggestions().await?;
 
 	let cleanup = sweep_redundant_suggestions(&http, data, &pending).await;
@@ -141,34 +173,33 @@ async fn reconcile(
 	}
 	let cleaned: HashSet<Uuid> = cleanup.cleaned.iter().copied().collect();
 
-	let pending_external: Vec<Suggestion> = pending
-		.into_iter()
-		.filter(|s| s.source.is_some() && !cleaned.contains(&s.id))
-		.collect();
-	let pending_uuids: HashSet<Uuid> = pending_external.iter().map(|s| s.id).collect();
+	// Any suggestion still pending, whatever its source, must never be classified as
+	// resolved externally, otherwise its live card would be deleted.
+	let pending_uuids: HashSet<Uuid> = pending.iter().map(|s| s.id).collect();
 
-	let posted = data.suggestion_store.list_all().await?;
-
-	for s in pending_external {
-		if posted.contains_key(&s.id) {
+	for s in &pending {
+		if s.source.is_none() || cleaned.contains(&s.id) || posted.contains_key(&s.id) {
 			continue;
 		}
-		spawn_new_post(ctx.clone(), data.clone(), owners.clone(), s);
+		spawn_new_post(ctx.clone(), data.clone(), owners.clone(), s.clone());
 	}
 
 	for (uuid, msg_id) in &posted {
 		if pending_uuids.contains(uuid) || cleaned.contains(uuid) {
 			continue;
 		}
-		if let Err(e) = mark_external_resolved(&http, *msg_id).await {
-			warn!("suggestion poller: cannot edit message {msg_id} for {uuid}: {e}");
-		}
-		if let Err(e) = data.suggestion_store.remove(*uuid).await {
-			warn!("suggestion poller: cannot remove {uuid} from store: {e}");
+		match delete_suggestion_card(&http, *msg_id).await {
+			Ok(()) => {
+				if let Err(e) = data.suggestion_store.remove(*uuid).await {
+					warn!("suggestion poller: cannot remove {uuid} from store: {e}");
+				}
+			}
+			// Keep the store entry so the next tick retries the delete.
+			Err(e) => warn!("suggestion poller: cannot delete message {msg_id} for {uuid}: {e}"),
 		}
 	}
 
-	Ok(())
+	Ok(pending)
 }
 
 /// Outcome of one sweep pass: how many game suggestions were inspected and which
@@ -181,12 +212,12 @@ pub struct CleanupReport {
 
 /// Tear down any game-mapping suggestions in `pending` whose target game already
 /// has an `Automatic` or `Manual` mapping for the suggested provider. For each
-/// redundant suggestion: delete it on playmatch, remove the Redis entry, and edit
-/// the Discord card to the "resolved externally" state.
+/// redundant suggestion: delete it on playmatch, delete the Discord card, and
+/// remove the Redis entry.
 ///
-/// Game lookups are cached so the same `game_id` only costs one round trip per
-/// sweep. Individual failures are logged and skipped so one bad suggestion does
-/// not abort the rest.
+/// All distinct game ids are resolved in a single bulk lookup (up to 100 ids per
+/// request, chunked by the wrapper). Individual failures are logged and skipped so
+/// one bad suggestion does not abort the rest.
 pub async fn sweep_redundant_suggestions(
 	http: &Http,
 	data: &CommandData,
@@ -195,39 +226,39 @@ pub async fn sweep_redundant_suggestions(
 	let game_suggestions: Vec<&Suggestion> =
 		pending.iter().filter(|s| s.game_id.is_some()).collect();
 	let checked = game_suggestions.len();
-	let mut game_cache: HashMap<Uuid, Vec<ExternalMetadata>> = HashMap::new();
 	let mut cleaned: Vec<Uuid> = Vec::new();
 
+	let distinct_ids: Vec<Uuid> = game_suggestions
+		.iter()
+		.filter_map(|s| s.game_id)
+		.collect::<HashSet<_>>()
+		.into_iter()
+		.collect();
+	if distinct_ids.is_empty() {
+		return CleanupReport { checked, cleaned };
+	}
+
+	let metadata_by_game: HashMap<Uuid, Vec<ExternalMetadata>> =
+		match data.playmatch_client.get_games_bulk(&distinct_ids).await {
+			Ok(results) => results
+				.into_iter()
+				.filter_map(|r| r.data.map(|g| (r.id, g.external_metadata)))
+				.collect(),
+			Err(e) => {
+				warn!("suggestion cleanup: bulk game lookup failed: {e}");
+				return CleanupReport { checked, cleaned };
+			}
+		};
+
 	for suggestion in game_suggestions {
-		let game_id = match suggestion.game_id {
-			Some(id) => id,
-			None => continue,
+		let Some(game_id) = suggestion.game_id else {
+			continue;
 		};
-
-		let already_active = match game_cache.get(&game_id) {
-			Some(metas) => has_active_provider_match(metas, suggestion.provider),
-			None => match data
-				.playmatch_client
-				.get_playmatch_game_with_relations_by_id(game_id)
-				.await
-			{
-				Ok(rel) => {
-					let active =
-						has_active_provider_match(&rel.external_metadata, suggestion.provider);
-					game_cache.insert(game_id, rel.external_metadata);
-					active
-				}
-				Err(e) => {
-					warn!(
-						"suggestion cleanup: fetch game {game_id} for suggestion {} failed: {e}",
-						suggestion.id
-					);
-					continue;
-				}
-			},
+		// A game deleted server-side is absent from the map; skip it like a failed fetch.
+		let Some(metas) = metadata_by_game.get(&game_id) else {
+			continue;
 		};
-
-		if !already_active {
+		if !has_active_provider_match(metas, suggestion.provider) {
 			continue;
 		}
 
@@ -241,20 +272,21 @@ pub async fn sweep_redundant_suggestions(
 		}
 
 		match data.suggestion_store.get(suggestion.id).await {
-			Ok(Some(msg_id)) => {
-				if let Err(e) = mark_external_resolved(http, msg_id).await {
-					warn!(
-						"suggestion cleanup: edit message {msg_id} for {} failed: {e}",
-						suggestion.id
-					);
+			Ok(Some(msg_id)) => match delete_suggestion_card(http, msg_id).await {
+				Ok(()) => {
+					if let Err(e) = data.suggestion_store.remove(suggestion.id).await {
+						warn!(
+							"suggestion cleanup: redis remove {} failed: {e}",
+							suggestion.id
+						);
+					}
 				}
-				if let Err(e) = data.suggestion_store.remove(suggestion.id).await {
-					warn!(
-						"suggestion cleanup: redis remove {} failed: {e}",
-						suggestion.id
-					);
-				}
-			}
+				// The next reconcile's externally-resolved pass retries this delete.
+				Err(e) => warn!(
+					"suggestion cleanup: delete message {msg_id} for {} failed: {e}",
+					suggestion.id
+				),
+			},
 			Ok(None) => {}
 			Err(e) => warn!(
 				"suggestion cleanup: redis lookup {} failed: {e}",
@@ -308,22 +340,10 @@ fn spawn_collector(
 	data: Arc<CommandData>,
 	owners: HashSet<UserId>,
 	message_id: MessageId,
-	suggestion_id: Uuid,
+	suggestion: Suggestion,
 ) {
 	tokio::spawn(async move {
-		let suggestion = match data
-			.playmatch_client
-			.get_suggestion_by_id(suggestion_id)
-			.await
-		{
-			Ok(s) => s,
-			Err(e) => {
-				warn!(
-					"suggestion poller: cannot fetch suggestion {suggestion_id} for collector re-arm: {e}"
-				);
-				return;
-			}
-		};
+		let suggestion_id = suggestion.id;
 		let payload = match build_handle_data(ctx.clone(), data.clone(), owners, suggestion).await {
 			Ok(p) => p,
 			Err(e) => {
@@ -401,7 +421,7 @@ async fn build_handle_data(
 	let (kind, name, platform, company): (SuggestionType, String, Option<String>, Option<String>) =
 		if let Some(game_id) = suggestion.game_id {
 			let game = playmatch_client
-				.get_playmatch_game_with_relations_by_id(game_id)
+				.get_game_with_relations_by_id(game_id)
 				.await?;
 			(
 				SuggestionType::Game,
@@ -443,6 +463,7 @@ async fn build_handle_data(
 		submitter,
 		r#type: kind,
 		provider: suggestion.provider,
+		provider_id: suggestion.provider_id,
 		name,
 		platform,
 		company,

@@ -13,7 +13,6 @@ pub enum Status {
 	Success,
 	Error,
 	Info,
-	Warning,
 }
 
 fn accent(status: Status) -> Colour {
@@ -21,12 +20,11 @@ fn accent(status: Status) -> Colour {
 		Status::Success => Colour(0x2ECC71),
 		Status::Error => Colour::RED,
 		Status::Info => Colour(0x3498DB),
-		Status::Warning => Colour::ORANGE,
 	}
 }
 
 fn is_ephemeral(status: Status) -> bool {
-	matches!(status, Status::Error | Status::Warning)
+	matches!(status, Status::Error)
 }
 
 fn container_reply<'a>(container: CreateContainer<'a>) -> CreateReply<'a> {

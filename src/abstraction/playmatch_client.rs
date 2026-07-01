@@ -1,4 +1,4 @@
-use std::num::NonZeroU32;
+use std::num::{NonZeroU32, NonZeroU64};
 use std::time::Duration;
 
 use governor::Quota;
@@ -7,12 +7,13 @@ use governor::clock::DefaultClock;
 use governor::state::{InMemoryState, NotKeyed};
 use log::warn;
 use playmatch_client::types::{
-	Company, CompanyLogo, CompanyMetadataResponse, CompanyOrPlatformMatchRequest,
-	CompanyOrPlatformSuggestionRequest, Cover, CreateOrGetUserRequest, Game,
-	GameAndRelationMatchResult, GameAndRelationsResult, GameMatchRequest, GameSuggestionRequest,
-	LbGame, LbGameImage, MgGame, OvgdbRelease, Platform, PlatformLogo, PlatformMetadataResponse,
-	RaGame, Screenshot, SgdbGame, SsGame, Suggestion, UpdateUserPermissionsRequest,
-	UpdatedMatchResult, UpdatedMetadataMatchesFromSuggestionResponse, User,
+	BulkGamesByIdResult, BulkIdsRequest, Company, CompanyLogo, CompanyMetadataResponse,
+	CompanyOrPlatformMatchRequest, CompanyOrPlatformSuggestionRequest, Cover,
+	CreateOrGetUserRequestV2, Game, GameAndRelationMatchResultV2, GameAndRelationsResultV2,
+	GameMatchRequest, GameSuggestionRequest, LbGame, LbGameImage, MgGame, OvgdbRelease, Platform,
+	PlatformLogo, PlatformMetadataResponse, RaGame, Screenshot, SgdbGame, SsGame, Suggestion,
+	UpdateUserPermissionsRequestV2, UpdatedMatchResult,
+	UpdatedMetadataMatchesFromSuggestionResponse, User, V2ErrorBody,
 };
 use playmatch_client::{Client as Inner, Error, ResponseValue};
 use reqwest::StatusCode;
@@ -32,6 +33,10 @@ pub struct PlaymatchClient {
 }
 
 const MAX_RETRIES: u32 = 5;
+/// v2 list endpoints clamp `limit` to 50; ask for the max so full listings need the fewest pages.
+const PAGE_LIMIT: NonZeroU64 = NonZeroU64::new(50).unwrap();
+/// `/games/bulk` rejects batches above 100 ids.
+const BULK_MAX_IDS: usize = 100;
 
 impl PlaymatchClient {
 	pub fn new(inner: Inner) -> Self {
@@ -43,10 +48,10 @@ impl PlaymatchClient {
 		}
 	}
 
-	async fn run<T, Fut, F>(&self, make: F) -> Result<T, Error<()>>
+	async fn run<T, E, Fut, F>(&self, make: F) -> Result<T, Error<E>>
 	where
 		F: Fn() -> Fut,
-		Fut: std::future::Future<Output = Result<ResponseValue<T>, Error<()>>>,
+		Fut: std::future::Future<Output = Result<ResponseValue<T>, Error<E>>>,
 	{
 		let mut attempt: u32 = 0;
 		loop {
@@ -73,38 +78,84 @@ impl PlaymatchClient {
 		}
 	}
 
-	pub async fn get_all_companies(&self) -> Result<Vec<CompanyMetadataResponse>, Error<()>> {
-		self.run(|| self.inner.get_all_companies().send()).await
+	/// Walk every page of a cursor-paginated endpoint, funnelling each request through
+	/// `run` so rate limiting and retries apply per page.
+	async fn collect_pages<T, P, E, F, Fut>(
+		&self,
+		fetch: F,
+		split: impl Fn(P) -> (Vec<T>, Option<String>),
+	) -> Result<Vec<T>, Error<E>>
+	where
+		F: Fn(Option<String>) -> Fut,
+		Fut: std::future::Future<Output = Result<ResponseValue<P>, Error<E>>>,
+	{
+		let mut all = Vec::new();
+		let mut cursor: Option<String> = None;
+		loop {
+			let page = self.run(|| fetch(cursor.clone())).await?;
+			let (data, next) = split(page);
+			all.extend(data);
+			match next {
+				Some(c) => cursor = Some(c),
+				None => return Ok(all),
+			}
+		}
 	}
 
-	pub async fn get_all_platforms(&self) -> Result<Vec<PlatformMetadataResponse>, Error<()>> {
-		self.run(|| self.inner.get_all_platforms().send()).await
+	pub async fn get_all_companies(
+		&self,
+	) -> Result<Vec<CompanyMetadataResponse>, Error<V2ErrorBody>> {
+		self.collect_pages(
+			|cursor| {
+				let mut b = self.inner.list_companies_v2().limit(PAGE_LIMIT);
+				if let Some(c) = cursor {
+					b = b.cursor(c);
+				}
+				b.send()
+			},
+			|p| (p.data, p.pagination.next_cursor),
+		)
+		.await
 	}
 
-	pub async fn get_company_by_id(&self, id: Uuid) -> Result<CompanyMetadataResponse, Error<()>> {
-		self.run(|| self.inner.get_company_by_id().id(id).send())
+	pub async fn get_all_platforms(
+		&self,
+	) -> Result<Vec<PlatformMetadataResponse>, Error<V2ErrorBody>> {
+		self.collect_pages(
+			|cursor| {
+				let mut b = self.inner.list_platforms_v2().limit(PAGE_LIMIT);
+				if let Some(c) = cursor {
+					b = b.cursor(c);
+				}
+				b.send()
+			},
+			|p| (p.data, p.pagination.next_cursor),
+		)
+		.await
+	}
+
+	pub async fn get_company_by_id(
+		&self,
+		id: Uuid,
+	) -> Result<CompanyMetadataResponse, Error<V2ErrorBody>> {
+		self.run(|| self.inner.get_company_by_id_v2().id(id).send())
 			.await
 	}
 
 	pub async fn get_platform_by_id(
 		&self,
 		id: Uuid,
-	) -> Result<PlatformMetadataResponse, Error<()>> {
-		self.run(|| self.inner.get_platform_by_id().id(id).send())
+	) -> Result<PlatformMetadataResponse, Error<V2ErrorBody>> {
+		self.run(|| self.inner.get_platform_by_id_v2().id(id).send())
 			.await
 	}
 
-	pub async fn get_playmatch_game_with_relations_by_id(
+	pub async fn get_game_with_relations_by_id(
 		&self,
 		id: Uuid,
-	) -> Result<GameAndRelationsResult, Error<()>> {
-		self.run(|| {
-			self.inner
-				.get_playmatch_game_with_relations_by_id()
-				.id(id)
-				.send()
-		})
-		.await
+	) -> Result<GameAndRelationsResultV2, Error<V2ErrorBody>> {
+		self.run(|| self.inner.get_game_with_relations_by_id_v2().id(id).send())
+			.await
 	}
 
 	pub async fn identify_game_and_relations(
@@ -114,11 +165,11 @@ impl PlaymatchClient {
 		md5: Option<String>,
 		sha1: Option<String>,
 		sha256: Option<String>,
-	) -> Result<GameAndRelationMatchResult, Error<()>> {
+	) -> Result<GameAndRelationMatchResultV2, Error<V2ErrorBody>> {
 		self.run(|| {
 			let mut b = self
 				.inner
-				.identify_game_and_relations()
+				.identify_game_and_relations_v2()
 				.file_name(file_name.clone())
 				.file_size(file_size);
 			if let Some(v) = md5.clone() {
@@ -135,13 +186,41 @@ impl PlaymatchClient {
 		.await
 	}
 
-	pub async fn get_all_suggestions(&self) -> Result<Vec<Suggestion>, Error<()>> {
-		self.run(|| self.inner.get_all_suggestions().send()).await
+	/// One result per distinct id; ids missing on the server come back as per-item
+	/// `NotFound`, never a batch 404.
+	pub async fn get_games_bulk(
+		&self,
+		ids: &[Uuid],
+	) -> Result<Vec<BulkGamesByIdResult>, Error<V2ErrorBody>> {
+		let mut results = Vec::with_capacity(ids.len());
+		for chunk in ids.chunks(BULK_MAX_IDS) {
+			let resp = self
+				.run(|| {
+					self.inner
+						.bulk_games_by_id_v2()
+						.body(BulkIdsRequest {
+							ids: chunk.to_vec(),
+						})
+						.send()
+				})
+				.await?;
+			results.extend(resp.results);
+		}
+		Ok(results)
 	}
 
-	pub async fn get_suggestion_by_id(&self, id: Uuid) -> Result<Suggestion, Error<()>> {
-		self.run(|| self.inner.get_suggestion_by_id().id(id).send())
-			.await
+	pub async fn get_all_suggestions(&self) -> Result<Vec<Suggestion>, Error<()>> {
+		self.collect_pages(
+			|cursor| {
+				let mut b = self.inner.list_suggestions_v2().limit(PAGE_LIMIT);
+				if let Some(c) = cursor {
+					b = b.cursor(c);
+				}
+				b.send()
+			},
+			|p| (p.data, p.pagination.next_cursor),
+		)
+		.await
 	}
 
 	pub async fn approve_suggestion(
@@ -232,11 +311,11 @@ impl PlaymatchClient {
 
 	pub async fn create_or_get_by_discord_id(
 		&self,
-		body: CreateOrGetUserRequest,
+		body: CreateOrGetUserRequestV2,
 	) -> Result<User, Error<()>> {
 		self.run(|| {
 			self.inner
-				.create_or_get_by_discord_id()
+				.create_or_get_by_discord_id_v2()
 				.body(body.clone())
 				.send()
 		})
@@ -246,11 +325,11 @@ impl PlaymatchClient {
 	pub async fn update_user_permission_level(
 		&self,
 		id: Uuid,
-		body: UpdateUserPermissionsRequest,
+		body: UpdateUserPermissionsRequestV2,
 	) -> Result<User, Error<()>> {
 		self.run(|| {
 			self.inner
-				.update_user_permission_level()
+				.update_user_permission_level_v2()
 				.id(id)
 				.body(body.clone())
 				.send()
@@ -268,9 +347,17 @@ impl PlaymatchClient {
 			.await
 	}
 
-	pub async fn get_igdb_screenshot_by_id(&self, id: i32) -> Result<Screenshot, Error<()>> {
-		self.run(|| self.inner.get_igdb_screenshot_by_id().id(id).send())
-			.await
+	pub async fn get_igdb_screenshots_by_ids(
+		&self,
+		ids: Vec<i32>,
+	) -> Result<Vec<Screenshot>, Error<()>> {
+		self.run(|| {
+			self.inner
+				.get_igdb_screenshots_by_ids()
+				.ids(ids.clone())
+				.send()
+		})
+		.await
 	}
 
 	pub async fn get_igdb_company_by_id(&self, id: i32) -> Result<Company, Error<()>> {
@@ -364,8 +451,12 @@ mod tests {
 	use super::*;
 	use reqwest::header::HeaderMap;
 	use std::time::Instant;
-	use wiremock::matchers::{any, method, path};
+	use wiremock::matchers::{any, method, path, query_param, query_param_is_missing};
 	use wiremock::{Mock, MockServer, ResponseTemplate};
+
+	/// Empty first page: no data, no next cursor.
+	const EMPTY_PAGE: &str =
+		r#"{"data":[],"pagination":{"limit":50,"hasNextPage":false,"hasPreviousPage":false}}"#;
 
 	fn headers(pairs: &[(&'static str, &str)]) -> HeaderMap {
 		let mut h = HeaderMap::new();
@@ -436,18 +527,18 @@ mod tests {
 	}
 
 	fn make_client(uri: &str) -> PlaymatchClient {
-		PlaymatchClient::new(playmatch_client::Client::new(uri))
+		PlaymatchClient::new(playmatch_client::Client::new(&format!("{uri}/api/v2")))
 	}
 
 	#[tokio::test]
 	async fn immediate_200_does_not_retry() {
 		let server = MockServer::start().await;
 		Mock::given(method("GET"))
-			.and(path("/api/companies"))
+			.and(path("/api/v2/companies"))
 			.respond_with(
 				ResponseTemplate::new(200)
 					.insert_header("content-type", "application/json")
-					.set_body_string("[]"),
+					.set_body_string(EMPTY_PAGE),
 			)
 			.expect(1)
 			.mount(&server)
@@ -462,18 +553,18 @@ mod tests {
 	async fn retries_on_429_then_succeeds() {
 		let server = MockServer::start().await;
 		Mock::given(method("GET"))
-			.and(path("/api/companies"))
+			.and(path("/api/v2/companies"))
 			.respond_with(ResponseTemplate::new(429).insert_header("retry-after", "0"))
 			.up_to_n_times(2)
 			.expect(2)
 			.mount(&server)
 			.await;
 		Mock::given(method("GET"))
-			.and(path("/api/companies"))
+			.and(path("/api/v2/companies"))
 			.respond_with(
 				ResponseTemplate::new(200)
 					.insert_header("content-type", "application/json")
-					.set_body_string("[]"),
+					.set_body_string(EMPTY_PAGE),
 			)
 			.expect(1)
 			.mount(&server)
@@ -488,7 +579,7 @@ mod tests {
 	async fn gives_up_after_max_retries() {
 		let server = MockServer::start().await;
 		Mock::given(method("GET"))
-			.and(path("/api/companies"))
+			.and(path("/api/v2/companies"))
 			.respond_with(ResponseTemplate::new(429).insert_header("retry-after", "0"))
 			.expect((MAX_RETRIES + 1) as u64)
 			.mount(&server)
@@ -511,18 +602,18 @@ mod tests {
 	async fn retries_on_500_then_succeeds() {
 		let server = MockServer::start().await;
 		Mock::given(method("GET"))
-			.and(path("/api/companies"))
+			.and(path("/api/v2/companies"))
 			.respond_with(ResponseTemplate::new(500))
 			.up_to_n_times(1)
 			.expect(1)
 			.mount(&server)
 			.await;
 		Mock::given(method("GET"))
-			.and(path("/api/companies"))
+			.and(path("/api/v2/companies"))
 			.respond_with(
 				ResponseTemplate::new(200)
 					.insert_header("content-type", "application/json")
-					.set_body_string("[]"),
+					.set_body_string(EMPTY_PAGE),
 			)
 			.expect(1)
 			.mount(&server)
@@ -537,18 +628,18 @@ mod tests {
 	async fn retries_on_503_then_succeeds() {
 		let server = MockServer::start().await;
 		Mock::given(method("GET"))
-			.and(path("/api/companies"))
+			.and(path("/api/v2/companies"))
 			.respond_with(ResponseTemplate::new(503))
 			.up_to_n_times(2)
 			.expect(2)
 			.mount(&server)
 			.await;
 		Mock::given(method("GET"))
-			.and(path("/api/companies"))
+			.and(path("/api/v2/companies"))
 			.respond_with(
 				ResponseTemplate::new(200)
 					.insert_header("content-type", "application/json")
-					.set_body_string("[]"),
+					.set_body_string(EMPTY_PAGE),
 			)
 			.expect(1)
 			.mount(&server)
@@ -571,6 +662,41 @@ mod tests {
 		let client = make_client(&server.uri());
 		let result = client.get_all_companies().await;
 		assert!(result.is_err());
+	}
+
+	#[tokio::test]
+	async fn get_all_companies_follows_next_cursor() {
+		let server = MockServer::start().await;
+		Mock::given(method("GET"))
+			.and(path("/api/v2/companies"))
+			.and(query_param_is_missing("cursor"))
+			.respond_with(
+				ResponseTemplate::new(200)
+					.insert_header("content-type", "application/json")
+					.set_body_string(
+						r#"{"data":[{"id":"00000000-0000-0000-0000-000000000001","name":"One"}],"pagination":{"limit":50,"hasNextPage":true,"hasPreviousPage":false,"nextCursor":"c1"}}"#,
+					),
+			)
+			.expect(1)
+			.mount(&server)
+			.await;
+		Mock::given(method("GET"))
+			.and(path("/api/v2/companies"))
+			.and(query_param("cursor", "c1"))
+			.respond_with(
+				ResponseTemplate::new(200)
+					.insert_header("content-type", "application/json")
+					.set_body_string(
+						r#"{"data":[{"id":"00000000-0000-0000-0000-000000000002","name":"Two"}],"pagination":{"limit":50,"hasNextPage":false,"hasPreviousPage":true}}"#,
+					),
+			)
+			.expect(1)
+			.mount(&server)
+			.await;
+
+		let client = make_client(&server.uri());
+		let result = client.get_all_companies().await.unwrap();
+		assert_eq!(result.len(), 2);
 	}
 
 	#[test]

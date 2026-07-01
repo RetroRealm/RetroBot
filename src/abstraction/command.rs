@@ -45,9 +45,10 @@ impl CommandData {
 			.build()
 			.expect("failed to build reqwest client");
 
+		let base = env::var("PLAYMATCH_API_URL")
+			.unwrap_or_else(|_| "https://playmatch.retrorealm.dev".to_string());
 		let inner = playmatch_client::Client::new_with_client(
-			&env::var("PLAYMATCH_API_URL")
-				.unwrap_or("https://playmatch.retrorealm.dev".to_string()),
+			&format!("{}/api/v2", base.trim_end_matches('/')),
 			client.clone(),
 		);
 

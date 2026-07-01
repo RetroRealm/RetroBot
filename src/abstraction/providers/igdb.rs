@@ -60,16 +60,16 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 
 	let mut screenshot_urls = Vec::new();
 	if let Some(ids) = game.screenshots.as_ref() {
-		for screenshot_id in ids.iter().take(3) {
-			match client.get_igdb_screenshot_by_id(*screenshot_id).await {
-				Ok(shot) => {
-					let url = normalize_image_url(&shot.url, "t_1080p");
-					debug!("IGDB screenshot {screenshot_id} resolved to {url}");
-					screenshot_urls.push(url);
+		let wanted: Vec<i32> = ids.iter().copied().take(3).collect();
+		if !wanted.is_empty() {
+			match client.get_igdb_screenshots_by_ids(wanted).await {
+				Ok(shots) => {
+					screenshot_urls = shots
+						.iter()
+						.map(|s| normalize_image_url(&s.url, "t_1080p"))
+						.collect();
 				}
-				Err(e) => {
-					warn!("IGDB screenshot lookup failed for id {screenshot_id}: {e}");
-				}
+				Err(e) => warn!("IGDB screenshots lookup failed for game {id}: {e}"),
 			}
 		}
 	}

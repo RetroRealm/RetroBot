@@ -11,14 +11,14 @@ use anyhow::anyhow;
 use log::{debug, error, warn};
 use playmatch_client::types::ManualMatchMode::{Admin, Trusted};
 use playmatch_client::types::{
-	CompanyOrPlatformMatchRequest, CompanyOrPlatformSuggestionRequest, CreateOrGetUserRequest,
+	CompanyOrPlatformMatchRequest, CompanyOrPlatformSuggestionRequest, CreateOrGetUserRequestV2,
 	GameMatchRequest, GameMatchType, GameSuggestionRequest, ManualMatchMode, MetadataMatchType,
-	MetadataProvider, UpdateUserPermissionsRequest, UserPermissions,
+	MetadataProvider, UpdateUserPermissionsRequestV2, UserPermissions,
 };
 use serenity::all::{
 	ButtonStyle, Cache, ChannelId, ComponentInteractionCollector, Context, CreateButton,
-	CreateComponent, CreateInteractionResponse, CreateInteractionResponseMessage, EditMessage,
-	MessageFlags, UserId,
+	CreateComponent, CreateInteractionResponse, CreateInteractionResponseMessage, MessageFlags,
+	UserId,
 };
 use serenity::http::Http;
 use std::collections::HashSet;
@@ -351,7 +351,7 @@ pub async fn create_game_suggestion(
 	let game_response = ctx
 		.data()
 		.playmatch_client
-		.get_playmatch_game_with_relations_by_id(game_id)
+		.get_game_with_relations_by_id(game_id)
 		.await?;
 
 	tokio::spawn({
@@ -360,6 +360,7 @@ pub async fn create_game_suggestion(
 		let serenity_ctx = ctx.serenity_context().clone();
 		let owners = ctx.framework().options().owners.clone();
 		let author_id = ctx.author().id;
+		let suggestion_provider_id = provider_id.clone();
 		let game_name = game_response.game.name.clone();
 		let platform = game_response.platform.name.clone();
 		let company = game_response.company.clone().map(|c| c.name);
@@ -374,6 +375,7 @@ pub async fn create_game_suggestion(
 					submitter: SuggestionSubmitter::DiscordUser(author_id),
 					r#type: SuggestionType::Game,
 					provider: provider_meta,
+					provider_id: suggestion_provider_id,
 					name: game_name,
 					platform: Some(platform),
 					company,
@@ -453,6 +455,7 @@ pub async fn create_company_suggestion(
 		let serenity_ctx = ctx.serenity_context().clone();
 		let owners = ctx.framework().options().owners.clone();
 		let author_id = ctx.author().id;
+		let suggestion_provider_id = provider_id.clone();
 		let company_name = name.clone();
 		async move {
 			handle_suggestion_message(
@@ -465,6 +468,7 @@ pub async fn create_company_suggestion(
 					submitter: SuggestionSubmitter::DiscordUser(author_id),
 					r#type: SuggestionType::Company,
 					provider: provider_meta,
+					provider_id: suggestion_provider_id,
 					name: company_name,
 					platform: None,
 					company: None,
@@ -563,6 +567,7 @@ pub async fn create_platform_suggestion(
 		let serenity_ctx = ctx.serenity_context().clone();
 		let owners = ctx.framework().options().owners.clone();
 		let author_id = ctx.author().id;
+		let suggestion_provider_id = provider_id.clone();
 		let platform_name = name.clone();
 		let company = platform.company_name.clone();
 		async move {
@@ -576,6 +581,7 @@ pub async fn create_platform_suggestion(
 					submitter: SuggestionSubmitter::DiscordUser(author_id),
 					r#type: SuggestionType::Platform,
 					provider: provider_meta,
+					provider_id: suggestion_provider_id,
 					name: platform_name,
 					platform: None,
 					company,
@@ -894,6 +900,7 @@ pub(crate) struct SuggestionMessageHandleData {
 	pub submitter: SuggestionSubmitter,
 	pub r#type: SuggestionType,
 	pub provider: MetadataProvider,
+	pub provider_id: String,
 	pub name: String,
 	pub platform: Option<String>,
 	pub company: Option<String>,
@@ -920,11 +927,6 @@ pub(crate) async fn handle_suggestion_message(
 		return Err(anyhow!("Suggestion channel not found"));
 	}
 
-	let suggestion = data
-		.playmatch_client
-		.get_suggestion_by_id(data.suggestion_id)
-		.await?;
-
 	let (author_label, dm_target): (String, Option<UserId>) = match &data.submitter {
 		SuggestionSubmitter::DiscordUser(id) => {
 			let user = http.get_user(*id).await?;
@@ -940,27 +942,21 @@ pub(crate) async fn handle_suggestion_message(
 	};
 
 	let provider_page_url: Option<String> = match data.r#type {
-		SuggestionType::Game => providers::fetch_game(
-			&data.playmatch_client,
-			data.provider,
-			&suggestion.provider_id,
-		)
-		.await
-		.and_then(|i| i.page_url),
-		SuggestionType::Company => providers::fetch_company(
-			&data.playmatch_client,
-			data.provider,
-			&suggestion.provider_id,
-		)
-		.await
-		.and_then(|i| i.page_url),
-		SuggestionType::Platform => providers::fetch_platform(
-			&data.playmatch_client,
-			data.provider,
-			&suggestion.provider_id,
-		)
-		.await
-		.and_then(|i| i.page_url),
+		SuggestionType::Game => {
+			providers::fetch_game(&data.playmatch_client, data.provider, &data.provider_id)
+				.await
+				.and_then(|i| i.page_url)
+		}
+		SuggestionType::Company => {
+			providers::fetch_company(&data.playmatch_client, data.provider, &data.provider_id)
+				.await
+				.and_then(|i| i.page_url)
+		}
+		SuggestionType::Platform => {
+			providers::fetch_platform(&data.playmatch_client, data.provider, &data.provider_id)
+				.await
+				.and_then(|i| i.page_url)
+		}
 	};
 
 	let provider_label = display_name(data.provider);
@@ -976,7 +972,7 @@ pub(crate) async fn handle_suggestion_message(
 		}
 		card = card.row(
 			format!("{provider_label} ID"),
-			format!("`{}`", suggestion.provider_id.clone()),
+			format!("`{}`", data.provider_id),
 		);
 		card = card.row(
 			"Comment",
@@ -1134,29 +1130,6 @@ pub(crate) async fn handle_suggestion_message(
 	Ok(())
 }
 
-/// Edits an existing suggestion card into a "Resolved externally" state with no buttons.
-/// Used by the poller when it notices a suggestion was actioned via the playmatch API
-/// while the bot was down or before the bot saw it.
-pub(crate) async fn mark_external_resolved(
-	http: &Http,
-	message_id: serenity::all::MessageId,
-) -> Result<(), serenity::Error> {
-	let channel_id = ChannelId::new(*SUGGESTION_CHANNEL_ID);
-	let card = Card::new(
-		Status::Warning,
-		"Suggestion Resolved Externally".to_string(),
-	)
-	.text("This suggestion was approved or declined outside Discord.");
-	let edit = EditMessage::new()
-		.flags(MessageFlags::IS_COMPONENTS_V2)
-		.components(vec![CreateComponent::Container(card.into_container())]);
-	channel_id
-		.widen()
-		.edit_message(http, message_id, edit)
-		.await
-		.map(|_| ())
-}
-
 async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<PlaymatchUserCtx> {
 	let author = ctx.author();
 	let member_opt = ctx.author_member().await;
@@ -1181,7 +1154,7 @@ async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<Playm
 	let mut playmatch_user = ctx
 		.data()
 		.playmatch_client
-		.create_or_get_by_discord_id(CreateOrGetUserRequest {
+		.create_or_get_by_discord_id(CreateOrGetUserRequestV2 {
 			discord_id: author.id.get() as i64,
 			permissions,
 			username: author.name.to_string(),
@@ -1204,7 +1177,7 @@ async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<Playm
 			.playmatch_client
 			.update_user_permission_level(
 				playmatch_user.id,
-				UpdateUserPermissionsRequest { new_permission },
+				UpdateUserPermissionsRequestV2 { new_permission },
 			)
 			.await?;
 

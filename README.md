@@ -41,7 +41,7 @@ Every response is rendered with Discord's Components V2 (top-level `Container`, 
 |---|---|---|
 | `DISCORD_TOKEN` | yes | Bot token from the Discord Developer Portal |
 | `PLAYMATCH_API_AUTH` | yes | Bearer token for the Playmatch API |
-| `PLAYMATCH_API_URL` | no | Playmatch base URL, defaults to `https://playmatch.retrorealm.dev` |
+| `PLAYMATCH_API_URL` | no | Playmatch host URL, defaults to `https://playmatch.retrorealm.dev`. The bot appends the `/api/v2` base path. |
 | `REDIS_URL` | yes | Redis connection string (e.g. `redis://localhost:6379`), used to persist posted suggestion cards across restarts |
 | `DISCORD_STATUS` | no | Activity kind (`playing`, `listening`, `watching`, `competing`) |
 | `DISCORD_STATUS_NAME` | no | Activity text shown next to the kind |
@@ -50,6 +50,16 @@ Every response is rendered with Discord's Components V2 (top-level `Container`, 
 | `DISCORD_TRUSTED_ROLE_IDS` | no | Comma-separated role ids allowed to run `/match` |
 | `DISCORD_RETROREALM_UPDATE_ROLE_ID` | no | Role id toggled by `/toggle_update` |
 | `DISCORD_RETROREALM_SUGGESTION_CHANNEL_ID` | no | Channel id where suggestion review cards are posted |
+
+#### Regenerating the playmatch client
+
+The `playmatch_client` crate is generated with [cargo-progenitor](https://github.com/oxidecomputer/progenitor) 0.14 from the checked-in spec. The pristine spec breaks progenitor in two places (operations with more than one error payload type, and object-typed query parameters), so it is normalized first:
+
+1. Fetch the current spec to `resources/playmatch-openapi.json`.
+2. `python scripts/normalize_openapi.py resources/playmatch-openapi.json /tmp/playmatch-normalized.json`
+3. `cargo progenitor -i /tmp/playmatch-normalized.json -o playmatch_client -n playmatch_client -v 0.2.0 --interface builder --license-name MIT --include-client true`
+
+progenitor 0.14 emits the builder module's imports as `use super::types;`. After regenerating, change that one line in `playmatch_client/src/lib.rs` to `use super::{progenitor_client, types};` so the included client code resolves. This is the only manual edit; never change `playmatch_client/` otherwise.
 
 ## Deployment
 

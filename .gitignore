@@ -11,4 +11,5 @@ target/
 .env
 dats
 .DS_Store
-scripts/
+scripts/*
+!scripts/normalize_openapi.py
