@@ -1,5 +1,6 @@
 use log::warn;
 use poise::CreateReply;
+use reqwest::Url;
 use serenity::all::{
 	Colour, CreateActionRow, CreateButton, CreateComponent, CreateContainer,
 	CreateContainerComponent, CreateMediaGallery, CreateMediaGalleryItem, CreateMessage,
@@ -7,6 +8,56 @@ use serenity::all::{
 	CreateTextDisplay, CreateThumbnail, CreateUnfurledMediaItem, MessageFlags,
 };
 use std::borrow::Cow;
+
+/// Normalizes a URL that came from an external metadata source before it is
+/// handed to a Discord component (link button, thumbnail, media gallery).
+///
+/// Discord rejects the *entire* message payload if a single link button's URL
+/// lacks an `http`/`https`/`discord` scheme, so one bad field (e.g. LaunchBox's
+/// bare-domain `en.wikipedia.org/wiki/...` Wikipedia links) would otherwise take
+/// down the whole card. Callers turn `None` into "omit that link/section" so a
+/// malformed value degrades gracefully instead of failing the post.
+///
+/// Behavior:
+/// - trims surrounding whitespace,
+/// - accepts an absolute `http`/`https` URL as-is,
+/// - treats a protocol-relative `//host/path` as `https://host/path` (mirrors the
+///   IGDB image normalizer, which already upgrades IGDB's `//images.igdb.com/...`
+///   URLs the same way),
+/// - retries a scheme-less bare host/path (`en.wikipedia.org/wiki/...`) with
+///   `https://` prepended,
+/// - rejects everything else, including `discord://` deep links (not useful on the
+///   link buttons we build) and other non-http(s) schemes.
+pub fn normalize_external_url(raw: &str) -> Option<String> {
+	let trimmed = raw.trim();
+	if trimmed.is_empty() {
+		return None;
+	}
+
+	// Protocol-relative "//host/path": upgrade to https before parsing so it goes
+	// down the absolute-URL path below instead of being treated as bare host/path.
+	let candidate = match trimmed.strip_prefix("//") {
+		Some(rest) => Cow::Owned(format!("https://{rest}")),
+		None => Cow::Borrowed(trimmed),
+	};
+
+	match Url::parse(&candidate) {
+		// Already absolute with a Discord-accepted scheme: pass through.
+		Ok(url) if matches!(url.scheme(), "http" | "https") => Some(url.into()),
+		// Absolute URL with some other scheme (mailto:, discord://, ftp://, …).
+		// Reject: Discord only allows http/https/discord on link buttons and we
+		// never build discord:// links, so anything non-http here is unusable.
+		Ok(_) => None,
+		// Any parse error is treated as a possible scheme-less bare host/path
+		// (`en.wikipedia.org/wiki/...`). Retry with an explicit https:// prefix
+		// and keep it only if it now parses into a real, non-empty host. This
+		// drops garbage like "not a url" whose prefixed form has no valid host.
+		Err(_) => Url::parse(&format!("https://{candidate}"))
+			.ok()
+			.filter(|url| url.host_str().is_some_and(|h| !h.is_empty()))
+			.map(Into::into),
+	}
+}
 
 #[derive(Clone, Copy)]
 pub enum Status {
@@ -128,8 +179,10 @@ impl<'a> Card<'a> {
 		self
 	}
 
+	/// External image URL from a provider. A URL that can't be normalized to an
+	/// http(s) scheme is dropped so it can't fail the whole message.
 	pub fn thumbnail(mut self, url: impl Into<Cow<'a, str>>) -> Self {
-		self.thumbnail_url = Some(url.into());
+		self.thumbnail_url = normalize_external_url(&url.into()).map(Cow::Owned);
 		self
 	}
 
@@ -156,12 +209,18 @@ impl<'a> Card<'a> {
 		self
 	}
 
+	/// External image URLs from a provider. Any URL that can't be normalized to
+	/// an http(s) scheme is skipped so it can't fail the whole message.
 	pub fn media(mut self, urls: impl IntoIterator<Item = String>) -> Self {
 		for url in urls {
 			if self.media.len() >= 10 {
 				warn!("Card media gallery capped at 10 items, dropping extras");
 				break;
 			}
+			let Some(url) = normalize_external_url(&url) else {
+				warn!("dropping malformed media URL from card");
+				continue;
+			};
 			self.media
 				.push(CreateMediaGalleryItem::new(CreateUnfurledMediaItem::new(
 					url,
@@ -170,8 +229,28 @@ impl<'a> Card<'a> {
 		self
 	}
 
+	/// Adds a pre-built button (e.g. an Approve/Decline `custom_id` button).
+	/// For externally sourced link URLs use [`Card::link_external`] instead, which
+	/// validates the scheme so a bad URL can't fail the whole message.
 	pub fn link(mut self, button: CreateButton<'a>) -> Self {
 		self.links.push(button);
+		self
+	}
+
+	/// Adds a link button for an externally sourced URL. The URL is normalized to
+	/// an http(s) scheme; if it can't be, the button is omitted (the rest of the
+	/// card still posts) rather than letting Discord reject the whole message.
+	pub fn link_external(
+		mut self,
+		url: impl Into<Cow<'a, str>>,
+		label: impl Into<Cow<'a, str>>,
+	) -> Self {
+		match normalize_external_url(&url.into()) {
+			Some(url) => self
+				.links
+				.push(CreateButton::new_link(url).label(label.into())),
+			None => warn!("dropping malformed link URL from card"),
+		}
 		self
 	}
 
@@ -275,5 +354,77 @@ impl<'a> Card<'a> {
 
 	pub fn into_message(self) -> CreateMessage<'a> {
 		container_message(self.into_container())
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use super::normalize_external_url;
+
+	#[test]
+	fn scheme_less_host_path_gets_https() {
+		// The production incident: LaunchBox's bare-domain Wikipedia link.
+		assert_eq!(
+			normalize_external_url("en.wikipedia.org/wiki/Sink_or_Swim_(video_game)").as_deref(),
+			Some("https://en.wikipedia.org/wiki/Sink_or_Swim_(video_game)"),
+		);
+	}
+
+	#[test]
+	fn valid_https_passes_through() {
+		assert_eq!(
+			normalize_external_url("https://www.igdb.com/games/foo").as_deref(),
+			Some("https://www.igdb.com/games/foo"),
+		);
+	}
+
+	#[test]
+	fn valid_http_passes_through() {
+		assert_eq!(
+			normalize_external_url("http://example.com/").as_deref(),
+			Some("http://example.com/"),
+		);
+	}
+
+	#[test]
+	fn whitespace_is_trimmed() {
+		assert_eq!(
+			normalize_external_url("  https://example.com/path  ").as_deref(),
+			Some("https://example.com/path"),
+		);
+	}
+
+	#[test]
+	fn garbage_is_rejected() {
+		assert_eq!(normalize_external_url("not a url"), None);
+	}
+
+	#[test]
+	fn empty_is_rejected() {
+		assert_eq!(normalize_external_url(""), None);
+		assert_eq!(normalize_external_url("   "), None);
+	}
+
+	#[test]
+	fn protocol_relative_is_upgraded_to_https() {
+		// Matches the IGDB image normalizer, which turns IGDB's //images.igdb.com
+		// URLs into https. Discord needs an explicit scheme, so we supply https.
+		assert_eq!(
+			normalize_external_url("//images.example.com/a.png").as_deref(),
+			Some("https://images.example.com/a.png"),
+		);
+	}
+
+	#[test]
+	fn discord_scheme_is_rejected() {
+		// Discord technically allows discord:// on buttons, but we never build
+		// deep links, so an incoming discord:// from a metadata source is unusable.
+		assert_eq!(normalize_external_url("discord://channel/1"), None);
+	}
+
+	#[test]
+	fn other_absolute_schemes_are_rejected() {
+		assert_eq!(normalize_external_url("mailto:a@b.com"), None);
+		assert_eq!(normalize_external_url("ftp://host/file"), None);
 	}
 }

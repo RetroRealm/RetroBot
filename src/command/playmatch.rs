@@ -270,13 +270,10 @@ pub async fn get_game_metadata(
 	if let Some(info) = enriched_info.as_ref()
 		&& let Some(page_url) = info.page_url.clone()
 	{
-		card = card.link(
-			CreateButton::new_link(page_url)
-				.label(format!("View on {}", display_name(info.provider))),
-		);
+		card = card.link_external(page_url, format!("View on {}", display_name(info.provider)));
 	}
 	if let Some(link) = signature_group.website_link.clone() {
-		card = card.link(CreateButton::new_link(link).label("Signature Group"));
+		card = card.link_external(link, "Signature Group");
 	}
 
 	card = card.footer(format!("Playmatch Game ID: `{}`", game.id));
@@ -406,10 +403,7 @@ pub async fn create_game_suggestion(
 	if let Some(info) = info.as_ref()
 		&& let Some(page_url) = info.page_url.clone()
 	{
-		card = card.link(
-			CreateButton::new_link(page_url)
-				.label(format!("View on {}", display_name(info.provider))),
-		);
+		card = card.link_external(page_url, format!("View on {}", display_name(info.provider)));
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -499,10 +493,7 @@ pub async fn create_company_suggestion(
 	if let Some(info) = info.as_ref()
 		&& let Some(page_url) = info.page_url.clone()
 	{
-		card = card.link(
-			CreateButton::new_link(page_url)
-				.label(format!("View on {}", display_name(info.provider))),
-		);
+		card = card.link_external(page_url, format!("View on {}", display_name(info.provider)));
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -612,10 +603,7 @@ pub async fn create_platform_suggestion(
 	if let Some(info) = info.as_ref()
 		&& let Some(page_url) = info.page_url.clone()
 	{
-		card = card.link(
-			CreateButton::new_link(page_url)
-				.label(format!("View on {}", display_name(info.provider))),
-		);
+		card = card.link_external(page_url, format!("View on {}", display_name(info.provider)));
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -718,10 +706,7 @@ pub async fn manual_match_platform(
 	if let Some(info) = info.as_ref()
 		&& let Some(page_url) = info.page_url.clone()
 	{
-		card = card.link(
-			CreateButton::new_link(page_url)
-				.label(format!("View on {}", display_name(info.provider))),
-		);
+		card = card.link_external(page_url, format!("View on {}", display_name(info.provider)));
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -777,10 +762,7 @@ pub async fn manual_match_company(
 	if let Some(info) = info.as_ref()
 		&& let Some(page_url) = info.page_url.clone()
 	{
-		card = card.link(
-			CreateButton::new_link(page_url)
-				.label(format!("View on {}", display_name(info.provider))),
-		);
+		card = card.link_external(page_url, format!("View on {}", display_name(info.provider)));
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -858,10 +840,7 @@ pub async fn manual_match_game(
 	if let Some(info) = info.as_ref()
 		&& let Some(page_url) = info.page_url.clone()
 	{
-		card = card.link(
-			CreateButton::new_link(page_url)
-				.label(format!("View on {}", display_name(info.provider))),
-		);
+		card = card.link_external(page_url, format!("View on {}", display_name(info.provider)));
 	}
 
 	ctx.send(card.into_reply()).await?;
@@ -989,8 +968,7 @@ pub(crate) async fn handle_suggestion_message(
 				format!("New {display_type} Metadata Suggestion"),
 			);
 			if let Some(url) = provider_page_url.clone() {
-				staff_card = staff_card
-					.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
+				staff_card = staff_card.link_external(url, format!("View on {provider_label}"));
 			}
 			staff_card = staff_card
 				.link(
@@ -1049,8 +1027,7 @@ pub(crate) async fn handle_suggestion_message(
 				resolution = resolution.row("ROMs updated", updated.updated.to_string());
 			}
 			if let Some(url) = provider_page_url.clone() {
-				resolution = resolution
-					.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
+				resolution = resolution.link_external(url, format!("View on {provider_label}"));
 			}
 
 			interaction
@@ -1093,8 +1070,7 @@ pub(crate) async fn handle_suggestion_message(
 			let mut resolution = build_card(Status::Error, "Suggestion Declined".to_string())
 				.row("Handled by", format!("<@{staff_id}>"));
 			if let Some(url) = provider_page_url.clone() {
-				resolution = resolution
-					.link(CreateButton::new_link(url).label(format!("View on {provider_label}")));
+				resolution = resolution.link_external(url, format!("View on {provider_label}"));
 			}
 
 			interaction
