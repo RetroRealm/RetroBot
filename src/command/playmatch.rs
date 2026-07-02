@@ -16,6 +16,7 @@ use playmatch_client::types::{
 	GameMatchRequest, GameMatchType, GameSuggestionRequest, ManualMatchMode, MetadataMatchType,
 	MetadataProvider, UpdateUserPermissionsRequestV2, UserPermissions,
 };
+use reqwest::StatusCode;
 use serenity::all::{
 	ButtonStyle, Cache, ChannelId, ComponentInteractionCollector, Context, CreateButton,
 	CreateComponent, CreateInteractionResponse, CreateInteractionResponseMessage, MessageFlags,
@@ -1083,30 +1084,70 @@ pub(crate) async fn handle_suggestion_message(
 			}
 		};
 
-	let message_id = match existing_message_id {
-		Some(id) => id,
-		None => {
-			let mut staff_card =
-				build_card(Status::Info, format!("New {display_type} Suggestion"), None);
-			if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
-				staff_card = staff_card.link_external(url, format!("View on {provider_label}"));
-			}
-			staff_card = staff_card
-				.link(
-					CreateButton::new(format!("approve:{}", data.suggestion_id))
-						.label("Approve")
-						.style(ButtonStyle::Success),
-				)
-				.link(
-					CreateButton::new(format!("decline:{}", data.suggestion_id))
-						.label("Decline")
-						.style(ButtonStyle::Danger),
-				)
-				.footer("Only bot owners can approve or decline.");
+	// The full staff card: the shared body plus the provider link, Approve/Decline
+	// buttons and owners footer. Built identically for the initial post and for the
+	// re-arm edit so old-layout cards migrate to the current layout on boot.
+	let build_staff_card = || -> Card<'static> {
+		let mut staff_card =
+			build_card(Status::Info, format!("New {display_type} Suggestion"), None);
+		if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
+			staff_card = staff_card.link_external(url, format!("View on {provider_label}"));
+		}
+		staff_card
+			.link(
+				CreateButton::new(format!("approve:{}", data.suggestion_id))
+					.label("Approve")
+					.style(ButtonStyle::Success),
+			)
+			.link(
+				CreateButton::new(format!("decline:{}", data.suggestion_id))
+					.label("Decline")
+					.style(ButtonStyle::Danger),
+			)
+			.footer("Only bot owners can approve or decline.")
+	};
 
+	let message_id = match existing_message_id {
+		Some(id) => {
+			// Re-arm path: rewrite the tracked card with the freshly built staff card
+			// before arming the collector. This is idempotent, so cards posted under an
+			// older layout migrate on the next boot and stale context (existing matches,
+			// enrichment) is refreshed as a bonus.
+			match channel_id
+				.widen()
+				.edit_message(http, id, build_staff_card().into_edit())
+				.await
+			{
+				Ok(_) => id,
+				// A 404 means the card was deleted out from under us. Treat it like a
+				// dead entry, exactly as delete_suggestion_card does: drop the store
+				// entry and skip arming a collector (a card that does not exist cannot be
+				// approved). The next reconcile reposts the suggestion fresh from its
+				// source if it is still pending, so the end state stays coherent.
+				Err(serenity::Error::Http(e)) if e.status_code() == Some(StatusCode::NOT_FOUND) => {
+					if let Err(e) = data.suggestion_store.remove(data.suggestion_id).await {
+						warn!(
+							"failed to remove suggestion {} from store after 404 on re-arm edit: {e}",
+							data.suggestion_id
+						);
+					}
+					return Ok(());
+				}
+				// Transient Discord blips must not kill the re-arm; arm the collector on
+				// the existing (still old-layout) card and let the next boot retry.
+				Err(e) => {
+					warn!(
+						"failed to refresh suggestion card {} on re-arm, arming collector anyway: {e}",
+						data.suggestion_id
+					);
+					id
+				}
+			}
+		}
+		None => {
 			let message = channel_id
 				.widen()
-				.send_message(http, staff_card.into_message())
+				.send_message(http, build_staff_card().into_message())
 				.await?;
 			data.suggestion_store
 				.mark_posted(data.suggestion_id, message.id)

@@ -6,7 +6,7 @@ use serenity::all::{
 	Colour, CreateActionRow, CreateButton, CreateComponent, CreateContainer,
 	CreateContainerComponent, CreateMediaGallery, CreateMediaGalleryItem, CreateMessage,
 	CreateSection, CreateSectionAccessory, CreateSectionComponent, CreateSeparator,
-	CreateTextDisplay, CreateThumbnail, CreateUnfurledMediaItem, MessageFlags,
+	CreateTextDisplay, CreateThumbnail, CreateUnfurledMediaItem, EditMessage, MessageFlags,
 };
 use std::borrow::Cow;
 
@@ -97,6 +97,12 @@ fn container_reply<'a>(container: CreateContainer<'a>) -> CreateReply<'a> {
 
 fn container_message<'a>(container: CreateContainer<'a>) -> CreateMessage<'a> {
 	CreateMessage::new()
+		.flags(MessageFlags::IS_COMPONENTS_V2)
+		.components(vec![CreateComponent::Container(container)])
+}
+
+fn container_edit<'a>(container: CreateContainer<'a>) -> EditMessage<'a> {
+	EditMessage::new()
 		.flags(MessageFlags::IS_COMPONENTS_V2)
 		.components(vec![CreateComponent::Container(container)])
 }
@@ -378,6 +384,10 @@ impl<'a> Card<'a> {
 
 	pub fn into_message(self) -> CreateMessage<'a> {
 		container_message(self.into_container())
+	}
+
+	pub fn into_edit(self) -> EditMessage<'a> {
+		container_edit(self.into_container())
 	}
 }
 
