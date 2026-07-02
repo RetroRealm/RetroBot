@@ -1,7 +1,7 @@
 use log::warn;
 use playmatch_client::types::MetadataProvider;
 
-use super::{ProviderGameInfo, truncate_summary};
+use super::{ProviderGameInfo, log_fetch_error, truncate_summary};
 use crate::abstraction::playmatch_client::PlaymatchClient;
 
 pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<ProviderGameInfo> {
@@ -16,7 +16,7 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 	let release = match client.get_ovgdb_release_by_id(id).await {
 		Ok(r) => r,
 		Err(e) => {
-			warn!("OpenVGDB release lookup failed for id {id}: {e}");
+			log_fetch_error(MetadataProvider::OpenVgdb, "release", id, &e);
 			return None;
 		}
 	};

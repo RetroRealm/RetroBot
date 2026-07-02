@@ -1,5 +1,8 @@
 use chrono::{DateTime, Utc};
+use log::{debug, warn};
+use playmatch_client::Error;
 use playmatch_client::types::MetadataProvider;
+use reqwest::StatusCode;
 
 use crate::abstraction::playmatch_client::PlaymatchClient;
 
@@ -174,6 +177,49 @@ pub(super) fn truncate_summary(s: &str) -> String {
 	}
 }
 
+/// Concise, one-line rendering of a fetch error for logs.
+///
+/// The progenitor `Display` for `ErrorResponse`/`UnexpectedResponse` dumps the
+/// full response including every header, turning one 404 into hundreds of
+/// characters of noise. For those variants we emit only the status code; for the
+/// rest (transport errors, decode failures) `Display` is already terse and has no
+/// header dump, so we defer to it.
+pub(super) fn describe<E: std::fmt::Debug>(e: &Error<E>) -> String {
+	match e.status() {
+		Some(status) => status.to_string(),
+		None => e.to_string(),
+	}
+}
+
+/// A fetch against playmatch's provider mirror returned 404: the entry is absent
+/// from the mirror. This is expected (an id can exist on the provider's own site
+/// yet not be mirrored) and must not warn or dump headers.
+fn is_absent<E>(e: &Error<E>) -> bool {
+	e.status() == Some(StatusCode::NOT_FOUND)
+}
+
+/// Log a provider fetch error at the right level.
+///
+/// A 404 means the entry is not in playmatch's mirror, an expected absence, so it
+/// drops to `debug!`. Anything else is a real failure and warns with a concise
+/// status/kind rendering, never the header dump.
+pub(super) fn log_fetch_error<E: std::fmt::Debug>(
+	provider: MetadataProvider,
+	entity: &str,
+	id: impl std::fmt::Display,
+	e: &Error<E>,
+) {
+	let provider = display_name(provider);
+	if is_absent(e) {
+		debug!("no {provider} {entity} for id {id} in playmatch");
+	} else {
+		warn!(
+			"{provider} {entity} lookup failed for id {id}: {}",
+			describe(e)
+		);
+	}
+}
+
 pub async fn fetch_game(
 	client: &PlaymatchClient,
 	provider: MetadataProvider,
@@ -219,8 +265,47 @@ pub async fn fetch_platform(
 
 #[cfg(test)]
 mod tests {
-	use super::game_page_url;
+	use super::{describe, game_page_url, is_absent};
 	use playmatch_client::types::MetadataProvider;
+	use playmatch_client::{Error, ResponseValue};
+	use reqwest::StatusCode;
+	use reqwest::header::HeaderMap;
+
+	fn error_response(status: StatusCode) -> Error<()> {
+		let mut headers = HeaderMap::new();
+		// A real 404 carries a pile of headers; describe() must not surface any of them.
+		headers.insert(
+			"x-noise",
+			"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".parse().unwrap(),
+		);
+		Error::ErrorResponse(ResponseValue::new((), status, headers))
+	}
+
+	#[test]
+	fn is_absent_only_matches_404() {
+		assert!(is_absent(&error_response(StatusCode::NOT_FOUND)));
+		assert!(!is_absent(&error_response(
+			StatusCode::INTERNAL_SERVER_ERROR
+		)));
+		assert!(!is_absent(&Error::<()>::InvalidRequest("bad".to_string())));
+	}
+
+	#[test]
+	fn describe_renders_status_without_headers() {
+		let s = describe(&error_response(StatusCode::NOT_FOUND));
+		assert_eq!(s, "404 Not Found");
+		assert!(!s.contains("x-noise"), "must not leak headers: {s}");
+
+		let s = describe(&error_response(StatusCode::INTERNAL_SERVER_ERROR));
+		assert_eq!(s, "500 Internal Server Error");
+		assert!(!s.contains("x-noise"), "must not leak headers: {s}");
+	}
+
+	#[test]
+	fn describe_falls_back_to_display_for_statusless_errors() {
+		let s = describe(&Error::<()>::InvalidRequest("bad".to_string()));
+		assert_eq!(s, "Invalid Request: bad");
+	}
 
 	#[test]
 	fn game_page_url_templates() {

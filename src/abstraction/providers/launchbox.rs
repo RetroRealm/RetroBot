@@ -1,7 +1,7 @@
 use log::warn;
 use playmatch_client::types::{LbGameImage, MetadataProvider};
 
-use super::{ProviderGameInfo, game_page_url, truncate_summary};
+use super::{ProviderGameInfo, game_page_url, log_fetch_error, truncate_summary};
 use crate::abstraction::playmatch_client::PlaymatchClient;
 
 fn is_cover(img: &LbGameImage) -> bool {
@@ -25,7 +25,7 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 	let game = match client.get_lb_game_by_id(id).await {
 		Ok(g) => g,
 		Err(e) => {
-			warn!("LaunchBox game lookup failed for id {id}: {e}");
+			log_fetch_error(MetadataProvider::LaunchBox, "game", id, &e);
 			return None;
 		}
 	};
@@ -46,7 +46,7 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 			(cover, screenshots)
 		}
 		Err(e) => {
-			warn!("LaunchBox image lookup failed for id {id}: {e}");
+			log_fetch_error(MetadataProvider::LaunchBox, "images", id, &e);
 			(None, Vec::new())
 		}
 	};

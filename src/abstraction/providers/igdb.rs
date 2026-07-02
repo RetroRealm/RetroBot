@@ -2,7 +2,9 @@ use chrono::{DateTime, Utc};
 use log::{debug, warn};
 use playmatch_client::types::MetadataProvider;
 
-use super::{ProviderCompanyInfo, ProviderGameInfo, ProviderPlatformInfo, truncate_summary};
+use super::{
+	ProviderCompanyInfo, ProviderGameInfo, ProviderPlatformInfo, log_fetch_error, truncate_summary,
+};
 use crate::abstraction::playmatch_client::PlaymatchClient;
 
 fn normalize_image_url(raw: &str, size: &str) -> String {
@@ -32,7 +34,7 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 	let game = match client.get_igdb_game_by_id(id).await {
 		Ok(g) => g,
 		Err(e) => {
-			warn!("IGDB game lookup failed for id {id}: {e}");
+			log_fetch_error(MetadataProvider::Igdb, "game", id, &e);
 			return None;
 		}
 	};
@@ -51,7 +53,7 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 				Some(url)
 			}
 			Err(e) => {
-				warn!("IGDB cover lookup failed for id {cover_id}: {e}");
+				log_fetch_error(MetadataProvider::Igdb, "cover", cover_id, &e);
 				None
 			}
 		},
@@ -69,7 +71,7 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 						.map(|s| normalize_image_url(&s.url, "t_1080p"))
 						.collect();
 				}
-				Err(e) => warn!("IGDB screenshots lookup failed for game {id}: {e}"),
+				Err(e) => log_fetch_error(MetadataProvider::Igdb, "screenshots", id, &e),
 			}
 		}
 	}
@@ -100,7 +102,7 @@ pub async fn fetch_company(
 	let company = match client.get_igdb_company_by_id(id).await {
 		Ok(c) => c,
 		Err(e) => {
-			warn!("IGDB company lookup failed for id {id}: {e}");
+			log_fetch_error(MetadataProvider::Igdb, "company", id, &e);
 			return None;
 		}
 	};
@@ -113,7 +115,7 @@ pub async fn fetch_company(
 				Some(url)
 			}
 			Err(e) => {
-				warn!("IGDB company logo lookup failed for id {logo_id}: {e}");
+				log_fetch_error(MetadataProvider::Igdb, "company logo", logo_id, &e);
 				None
 			}
 		},
@@ -144,7 +146,7 @@ pub async fn fetch_platform(
 	let platform = match client.get_igdb_platform_by_id(id).await {
 		Ok(p) => p,
 		Err(e) => {
-			warn!("IGDB platform lookup failed for id {id}: {e}");
+			log_fetch_error(MetadataProvider::Igdb, "platform", id, &e);
 			return None;
 		}
 	};
@@ -157,7 +159,7 @@ pub async fn fetch_platform(
 				Some(url)
 			}
 			Err(e) => {
-				warn!("IGDB platform logo lookup failed for id {logo_id}: {e}");
+				log_fetch_error(MetadataProvider::Igdb, "platform logo", logo_id, &e);
 				None
 			}
 		},
