@@ -3,7 +3,8 @@ use crate::abstraction::command::{
 };
 use crate::abstraction::components_v2::{self, Card, Status, long_date, relative_timestamp};
 use crate::abstraction::playmatch::{
-	ApiErrorAction, format_match_summaries, paginate_playmatch_response, send_playmatch_api_error,
+	ApiErrorAction, ConciseError, describe, format_match_summaries, paginate_playmatch_response,
+	send_playmatch_api_error,
 };
 use crate::abstraction::providers::{self, ENRICHMENT_PRIORITY, ProviderChoice, display_name};
 use crate::command::SUGGESTION_CHANNEL_ID;
@@ -69,14 +70,24 @@ pub async fn suggest(_: CommandContext<'_>) -> CommandResult {
 /// Shows a list of companies with its metadata matches
 #[poise::command(slash_command, category = "Playmatch", rename = "companies")]
 pub async fn list_companies(ctx: CommandContext<'_>) -> CommandResult {
-	let companies = ctx.data().playmatch_client.get_all_companies().await?;
+	let companies = ctx
+		.data()
+		.playmatch_client
+		.get_all_companies()
+		.await
+		.concise()?;
 	paginate_playmatch_response(ctx, companies).await
 }
 
 /// Shows a list of platforms with its metadata matches
 #[poise::command(slash_command, category = "Playmatch", rename = "platforms")]
 pub async fn list_platforms(ctx: CommandContext<'_>) -> CommandResult {
-	let platforms = ctx.data().playmatch_client.get_all_platforms().await?;
+	let platforms = ctx
+		.data()
+		.playmatch_client
+		.get_all_platforms()
+		.await
+		.concise()?;
 	paginate_playmatch_response(ctx, platforms).await
 }
 
@@ -94,7 +105,8 @@ pub async fn get_game_metadata(
 		.data()
 		.playmatch_client
 		.identify_game_and_relations(file_name, file_size, md5_hash, sha1_hash, sha256_hash)
-		.await?;
+		.await
+		.concise()?;
 
 	if inner.game_match_type == GameMatchType::NoMatch {
 		ctx.send(components_v2::status_reply(
@@ -351,7 +363,8 @@ pub async fn create_game_suggestion(
 		.data()
 		.playmatch_client
 		.get_game_with_relations_by_id(game_id)
-		.await?;
+		.await
+		.concise()?;
 
 	tokio::spawn({
 		let playmatch_client = ctx.data().playmatch_client.clone();
@@ -467,7 +480,10 @@ pub async fn create_company_suggestion(
 			{
 				Ok(company) => company.external_metadata.iter().map(Into::into).collect(),
 				Err(e) => {
-					warn!("failed to fetch company {company_id} for existing matches: {e}");
+					warn!(
+						"failed to fetch company {company_id} for existing matches: {}",
+						describe(&e)
+					);
 					Vec::new()
 				}
 			},
@@ -585,7 +601,8 @@ pub async fn create_platform_suggestion(
 		.data()
 		.playmatch_client
 		.get_platform_by_id(platform_id)
-		.await?;
+		.await
+		.concise()?;
 
 	tokio::spawn({
 		let playmatch_client = ctx.data().playmatch_client.clone();
@@ -665,7 +682,11 @@ pub async fn cleanup_suggestions(ctx: CommandContext<'_>) -> CommandResult {
 
 	let data = ctx.data();
 	let http = ctx.serenity_context().http.clone();
-	let pending = data.playmatch_client.get_all_suggestions().await?;
+	let pending = data
+		.playmatch_client
+		.get_all_suggestions()
+		.await
+		.concise()?;
 	let report = crate::events::suggestion_poller::sweep_redundant_suggestions(
 		http.as_ref(),
 		&data,
@@ -1174,7 +1195,8 @@ pub(crate) async fn handle_suggestion_message(
 			let updated = data
 				.playmatch_client
 				.approve_suggestion(data.suggestion_id)
-				.await?;
+				.await
+				.concise()?;
 
 			if let Err(e) = data.suggestion_store.remove(data.suggestion_id).await {
 				warn!(
@@ -1235,7 +1257,8 @@ pub(crate) async fn handle_suggestion_message(
 		"decline" => {
 			data.playmatch_client
 				.delete_suggestion(data.suggestion_id)
-				.await?;
+				.await
+				.concise()?;
 
 			if let Err(e) = data.suggestion_store.remove(data.suggestion_id).await {
 				warn!(
@@ -1330,7 +1353,8 @@ async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<Playm
 			permissions,
 			username: author.name.to_string(),
 		})
-		.await?;
+		.await
+		.concise()?;
 
 	if playmatch_user.permissions == UserPermissions::User && (is_trusted || is_admin) {
 		debug!(
@@ -1350,7 +1374,8 @@ async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<Playm
 				playmatch_user.id,
 				UpdateUserPermissionsRequestV2 { new_permission },
 			)
-			.await?;
+			.await
+			.concise()?;
 
 		debug!("User permission updated for user: {}", author.id);
 

@@ -1,4 +1,5 @@
 use crate::abstraction::command::CommandData;
+use crate::abstraction::playmatch::{ConciseError, describe};
 use crate::command::SUGGESTION_CHANNEL_ID;
 use crate::command::playmatch::{
 	SuggestionMessageHandleData, SuggestionSubmitter, SuggestionType, handle_suggestion_message,
@@ -162,7 +163,11 @@ async fn reconcile(
 	// `pending`, so `pending_uuids` guards it.
 	let posted = data.suggestion_store.list_all().await?;
 
-	let pending = data.playmatch_client.get_all_suggestions().await?;
+	let pending = data
+		.playmatch_client
+		.get_all_suggestions()
+		.await
+		.concise()?;
 
 	let cleanup = sweep_redundant_suggestions(&http, data, &pending).await;
 	if !cleanup.cleaned.is_empty() {
@@ -245,7 +250,10 @@ pub async fn sweep_redundant_suggestions(
 				.filter_map(|r| r.data.map(|g| (r.id, g.external_metadata)))
 				.collect(),
 			Err(e) => {
-				warn!("suggestion cleanup: bulk game lookup failed: {e}");
+				warn!(
+					"suggestion cleanup: bulk game lookup failed: {}",
+					describe(&e)
+				);
 				return CleanupReport { checked, cleaned };
 			}
 		};
@@ -265,8 +273,9 @@ pub async fn sweep_redundant_suggestions(
 		// Playmatch is the source of truth, tear that down first.
 		if let Err(e) = data.playmatch_client.delete_suggestion(suggestion.id).await {
 			warn!(
-				"suggestion cleanup: delete_suggestion({}) failed: {e}",
-				suggestion.id
+				"suggestion cleanup: delete_suggestion({}) failed: {}",
+				suggestion.id,
+				describe(&e)
 			);
 			continue;
 		}
@@ -431,7 +440,8 @@ async fn build_handle_data(
 	let relations = if let Some(game_id) = suggestion.game_id {
 		let game = playmatch_client
 			.get_game_with_relations_by_id(game_id)
-			.await?;
+			.await
+			.concise()?;
 		SuggestionRelations {
 			existing_matches: game.external_metadata.iter().map(Into::into).collect(),
 			kind: SuggestionType::Game,
@@ -440,7 +450,10 @@ async fn build_handle_data(
 			company: game.company.map(|c| c.name),
 		}
 	} else if let Some(company_id) = suggestion.company_id {
-		let c = playmatch_client.get_company_by_id(company_id).await?;
+		let c = playmatch_client
+			.get_company_by_id(company_id)
+			.await
+			.concise()?;
 		SuggestionRelations {
 			existing_matches: c.external_metadata.iter().map(Into::into).collect(),
 			kind: SuggestionType::Company,
@@ -449,7 +462,10 @@ async fn build_handle_data(
 			company: None,
 		}
 	} else if let Some(platform_id) = suggestion.platform_id {
-		let p = playmatch_client.get_platform_by_id(platform_id).await?;
+		let p = playmatch_client
+			.get_platform_by_id(platform_id)
+			.await
+			.concise()?;
 		SuggestionRelations {
 			existing_matches: p.external_metadata.iter().map(Into::into).collect(),
 			kind: SuggestionType::Platform,

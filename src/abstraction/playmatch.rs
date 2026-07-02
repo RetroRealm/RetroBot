@@ -16,6 +16,36 @@ pub enum ApiErrorAction {
 	Match,
 }
 
+/// Concise, one-line rendering of a playmatch error for logs and user-facing text.
+///
+/// The progenitor `Display`/`Debug` for `ErrorResponse`/`UnexpectedResponse` dumps
+/// the full response including every header, turning one 404 into hundreds of
+/// characters of noise. For those variants we emit only the status code; for the
+/// rest (transport errors, decode failures) `Display` is already terse and has no
+/// header dump, so we defer to it.
+pub fn describe<E: std::fmt::Debug>(e: &Error<E>) -> String {
+	match e.status() {
+		Some(status) => status.to_string(),
+		None => e.to_string(),
+	}
+}
+
+/// Turn a playmatch `Error` into an `anyhow::Error` at the boundary where it enters
+/// an anyhow chain.
+///
+/// The fresh error carries only `describe`'s concise string and drops the playmatch
+/// error as a source, so no downstream formatter (`{e}`, `{e:?}`, `{e:#}`) can walk
+/// back into it and re-dump response headers.
+pub trait ConciseError<T> {
+	fn concise(self) -> anyhow::Result<T>;
+}
+
+impl<T, E: std::fmt::Debug> ConciseError<T> for Result<T, Error<E>> {
+	fn concise(self) -> anyhow::Result<T> {
+		self.map_err(|e| anyhow::anyhow!(describe(&e)))
+	}
+}
+
 pub async fn send_playmatch_api_error<E: std::fmt::Debug>(
 	ctx: CommandContext<'_>,
 	e: &Error<E>,
@@ -47,12 +77,13 @@ pub async fn send_playmatch_api_error<E: std::fmt::Debug>(
 		}
 	}
 
+	let rendered = describe(e);
 	ctx.send(components_v2::status_reply(
 		Status::Error,
-		format!("Failed to {action_verb} {entity}: {e}"),
+		format!("Failed to {action_verb} {entity}: {rendered}"),
 	))
 	.await?;
-	warn!("Failed to {action_verb} {entity}: {e}");
+	warn!("Failed to {action_verb} {entity}: {rendered}");
 	Ok(())
 }
 
@@ -222,11 +253,60 @@ pub fn format_match_summaries(matches: &[MatchSummary]) -> String {
 
 #[cfg(test)]
 mod tests {
-	use super::{MatchSummary, format_match_summaries};
+	use super::{ConciseError, MatchSummary, describe, format_match_summaries};
 	use playmatch_client::types::{
 		AutomaticMatchReasonV2, ExternalMetadataV2, FailedMatchReason, ManualMatchMode,
 		MetadataMatchType, MetadataProvider,
 	};
+	use playmatch_client::{Error, ResponseValue};
+	use reqwest::StatusCode;
+	use reqwest::header::HeaderMap;
+
+	fn error_response(status: StatusCode) -> Error<()> {
+		let mut headers = HeaderMap::new();
+		// A real 404 carries a pile of headers; describe() must not surface any of them.
+		headers.insert(
+			"x-noise",
+			"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".parse().unwrap(),
+		);
+		Error::ErrorResponse(ResponseValue::new((), status, headers))
+	}
+
+	#[test]
+	fn describe_renders_status_without_headers() {
+		let s = describe(&error_response(StatusCode::NOT_FOUND));
+		assert_eq!(s, "404 Not Found");
+		assert!(!s.contains("x-noise"), "must not leak headers: {s}");
+
+		let s = describe(&error_response(StatusCode::INTERNAL_SERVER_ERROR));
+		assert_eq!(s, "500 Internal Server Error");
+		assert!(!s.contains("x-noise"), "must not leak headers: {s}");
+	}
+
+	#[test]
+	fn describe_falls_back_to_display_for_statusless_errors() {
+		let s = describe(&Error::<()>::InvalidRequest("bad".to_string()));
+		assert_eq!(s, "Invalid Request: bad");
+	}
+
+	#[test]
+	fn concise_keeps_headers_out_of_the_whole_anyhow_chain() {
+		let err = Result::<(), _>::Err(error_response(StatusCode::NOT_FOUND))
+			.concise()
+			.unwrap_err();
+		// Every render mode an unsuspecting log site might reach for must stay clean,
+		// including the alternate/debug forms that walk the source chain.
+		for rendered in [format!("{err}"), format!("{err:?}"), format!("{err:#}")] {
+			assert!(
+				!rendered.contains("x-noise"),
+				"must not leak headers: {rendered}"
+			);
+			assert!(
+				rendered.contains("404 Not Found"),
+				"expected concise status: {rendered}"
+			);
+		}
+	}
 
 	fn meta(
 		provider: MetadataProvider,
