@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 use log::warn;
 use poise::CreateReply;
 use reqwest::Url;
@@ -57,6 +58,16 @@ pub fn normalize_external_url(raw: &str) -> Option<String> {
 			.filter(|url| url.host_str().is_some_and(|h| !h.is_empty()))
 			.map(Into::into),
 	}
+}
+
+/// `<t:unix:R>` — renders as a live, localized relative time ("3 hours ago").
+pub fn relative_timestamp(dt: DateTime<Utc>) -> String {
+	format!("<t:{}:R>", dt.timestamp())
+}
+
+/// `<t:unix:D>` — renders as a localized long date ("21 November 1992").
+pub fn long_date(dt: DateTime<Utc>) -> String {
+	format!("<t:{}:D>", dt.timestamp())
 }
 
 #[derive(Clone, Copy)]
@@ -201,6 +212,19 @@ impl<'a> Card<'a> {
 
 	pub fn text(mut self, body: impl Into<Cow<'a, str>>) -> Self {
 		self.body.push(CardBlock::Text(body.into()));
+		self
+	}
+
+	/// Body text rendered as a Discord blockquote. Each line is prefixed
+	/// individually because Discord's `> ` only quotes a single line.
+	pub fn quote(mut self, text: impl AsRef<str>) -> Self {
+		let quoted = text
+			.as_ref()
+			.lines()
+			.map(|line| format!("> {line}"))
+			.collect::<Vec<_>>()
+			.join("\n");
+		self.body.push(CardBlock::Text(quoted.into()));
 		self
 	}
 
@@ -359,7 +383,26 @@ impl<'a> Card<'a> {
 
 #[cfg(test)]
 mod tests {
-	use super::normalize_external_url;
+	use super::{Card, Status, long_date, normalize_external_url, relative_timestamp};
+	use chrono::{TimeZone, Utc};
+
+	#[test]
+	fn quote_prefixes_every_line() {
+		let card = Card::new(Status::Info, "h").quote("first line\nsecond line");
+		match &card.body[0] {
+			super::CardBlock::Text(t) => assert_eq!(t.as_ref(), "> first line\n> second line"),
+			_ => panic!("quote should push a Text block"),
+		}
+	}
+
+	#[test]
+	fn timestamps_format_as_discord_markers() {
+		// 1992-11-21T00:00:00Z.
+		let dt = Utc.with_ymd_and_hms(1992, 11, 21, 0, 0, 0).unwrap();
+		let unix = dt.timestamp();
+		assert_eq!(relative_timestamp(dt), format!("<t:{unix}:R>"));
+		assert_eq!(long_date(dt), format!("<t:{unix}:D>"));
+	}
 
 	#[test]
 	fn scheme_less_host_path_gets_https() {

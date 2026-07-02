@@ -5,7 +5,8 @@ use crate::util::create_discord_markdown_table;
 use log::warn;
 use playmatch_client::Error;
 use playmatch_client::types::{
-	CompanyMetadataResponse, ExternalMetadata, MetadataMatchType, PlatformMetadataResponse,
+	CompanyMetadataResponse, ExternalMetadata, ExternalMetadataV2, MetadataMatchType,
+	MetadataProvider, PlatformMetadataResponse,
 };
 use reqwest::StatusCode;
 use uuid::Uuid;
@@ -154,4 +155,165 @@ where
 	paginate(ctx, markdown_pages_ref.as_slice()).await?;
 
 	Ok(())
+}
+
+/// One existing provider match on a game/company/platform, reduced to what a
+/// reviewer needs on a suggestion card.
+pub struct MatchSummary {
+	pub provider: MetadataProvider,
+	pub match_type: MetadataMatchType,
+	/// Automatic → match reason, Manual → match mode, Failed → failure reason.
+	pub detail: Option<String>,
+}
+
+impl From<&ExternalMetadata> for MatchSummary {
+	fn from(m: &ExternalMetadata) -> Self {
+		let detail = match m.match_type {
+			MetadataMatchType::Automatic => m.automatic_match_reason.map(|r| r.to_string()),
+			MetadataMatchType::Manual => m.manual_match_type.map(|m| m.to_string()),
+			MetadataMatchType::Failed => m.failed_match_reason.map(|r| r.to_string()),
+			MetadataMatchType::None => None,
+		};
+		Self {
+			provider: m.provider_name,
+			match_type: m.match_type,
+			detail,
+		}
+	}
+}
+
+impl From<&ExternalMetadataV2> for MatchSummary {
+	fn from(m: &ExternalMetadataV2) -> Self {
+		let detail = match m.match_type {
+			MetadataMatchType::Automatic => m.automatic_match_reason.map(|r| r.to_string()),
+			MetadataMatchType::Manual => m.manual_match_type.map(|m| m.to_string()),
+			MetadataMatchType::Failed => m.failed_match_reason.map(|r| r.to_string()),
+			MetadataMatchType::None => None,
+		};
+		Self {
+			provider: m.provider_name,
+			match_type: m.match_type,
+			detail,
+		}
+	}
+}
+
+/// "IGDB `Automatic: DirectName` · MG `Failed: NoDirectMatch`", or "None".
+/// Entries whose match_type is `None` are skipped.
+pub fn format_match_summaries(matches: &[MatchSummary]) -> String {
+	let mut parts: Vec<String> = Vec::new();
+	for m in matches {
+		if matches!(m.match_type, MetadataMatchType::None) {
+			continue;
+		}
+		let label = short_label(m.provider);
+		let inner = match &m.detail {
+			Some(detail) => format!("{}: {detail}", m.match_type),
+			None => m.match_type.to_string(),
+		};
+		parts.push(format!("{label} `{inner}`"));
+	}
+	if parts.is_empty() {
+		"None".to_string()
+	} else {
+		parts.join(" · ")
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use super::{MatchSummary, format_match_summaries};
+	use playmatch_client::types::{
+		AutomaticMatchReasonV2, ExternalMetadataV2, FailedMatchReason, ManualMatchMode,
+		MetadataMatchType, MetadataProvider,
+	};
+
+	fn meta(
+		provider: MetadataProvider,
+		match_type: MetadataMatchType,
+		automatic: Option<AutomaticMatchReasonV2>,
+		manual: Option<ManualMatchMode>,
+		failed: Option<FailedMatchReason>,
+	) -> ExternalMetadataV2 {
+		ExternalMetadataV2 {
+			automatic_match_reason: automatic,
+			comment: None,
+			failed_match_reason: failed,
+			manual_match_type: manual,
+			match_type,
+			provider_id: None,
+			provider_name: provider,
+		}
+	}
+
+	#[test]
+	fn detail_picks_field_by_match_type() {
+		let automatic = MatchSummary::from(&meta(
+			MetadataProvider::Igdb,
+			MetadataMatchType::Automatic,
+			Some(AutomaticMatchReasonV2::DirectName),
+			None,
+			None,
+		));
+		assert_eq!(automatic.detail.as_deref(), Some("DirectName"));
+
+		let manual = MatchSummary::from(&meta(
+			MetadataProvider::Igdb,
+			MetadataMatchType::Manual,
+			None,
+			Some(ManualMatchMode::Admin),
+			None,
+		));
+		assert_eq!(manual.detail.as_deref(), Some("Admin"));
+
+		let failed = MatchSummary::from(&meta(
+			MetadataProvider::MobyGames,
+			MetadataMatchType::Failed,
+			None,
+			None,
+			Some(FailedMatchReason::NoDirectMatch),
+		));
+		assert_eq!(failed.detail.as_deref(), Some("NoDirectMatch"));
+	}
+
+	#[test]
+	fn empty_renders_none() {
+		assert_eq!(format_match_summaries(&[]), "None");
+	}
+
+	#[test]
+	fn none_match_type_is_skipped() {
+		let summaries = [MatchSummary::from(&meta(
+			MetadataProvider::Igdb,
+			MetadataMatchType::None,
+			None,
+			None,
+			None,
+		))];
+		assert_eq!(format_match_summaries(&summaries), "None");
+	}
+
+	#[test]
+	fn two_entries_join_with_dot_and_short_labels() {
+		let summaries = [
+			MatchSummary::from(&meta(
+				MetadataProvider::Igdb,
+				MetadataMatchType::Automatic,
+				Some(AutomaticMatchReasonV2::DirectName),
+				None,
+				None,
+			)),
+			MatchSummary::from(&meta(
+				MetadataProvider::MobyGames,
+				MetadataMatchType::Failed,
+				None,
+				None,
+				Some(FailedMatchReason::NoDirectMatch),
+			)),
+		];
+		assert_eq!(
+			format_match_summaries(&summaries),
+			"IGDB `Automatic: DirectName` · MG `Failed: NoDirectMatch`",
+		);
+	}
 }

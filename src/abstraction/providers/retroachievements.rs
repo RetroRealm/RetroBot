@@ -1,7 +1,7 @@
 use log::warn;
 use playmatch_client::types::MetadataProvider;
 
-use super::ProviderGameInfo;
+use super::{ProviderGameInfo, game_page_url};
 use crate::abstraction::playmatch_client::PlaymatchClient;
 
 pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<ProviderGameInfo> {
@@ -21,12 +21,10 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 		}
 	};
 
-	let page_url = Some(format!("https://retroachievements.org/game/{id}"));
-
 	Some(ProviderGameInfo {
 		provider: MetadataProvider::RetroAchievements,
 		name: game.title,
-		page_url,
+		page_url: game_page_url(MetadataProvider::RetroAchievements, provider_id),
 		summary: None,
 		first_release_date: None,
 		cover_url: game.image_icon,

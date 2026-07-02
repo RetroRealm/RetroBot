@@ -24,7 +24,9 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 	Some(ProviderGameInfo {
 		provider: MetadataProvider::OpenVgdb,
 		name: release.title_name,
-		page_url: release.reference_url,
+		// `reference_url` points at arbitrary third-party sites, not an OpenVGDB
+		// page. OpenVGDB has no website, so the card shows no link button.
+		page_url: None,
 		summary: release.description.map(|s| truncate_summary(&s)),
 		first_release_date: None,
 		cover_url: release.cover_front,

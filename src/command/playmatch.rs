@@ -1,13 +1,14 @@
 use crate::abstraction::command::{
 	CommandContext, CommandResult, TRUSTED_ROLE_IDS, is_user_trusted_or_above,
 };
-use crate::abstraction::components_v2::{self, Card, Status};
+use crate::abstraction::components_v2::{self, Card, Status, long_date, relative_timestamp};
 use crate::abstraction::playmatch::{
-	ApiErrorAction, paginate_playmatch_response, send_playmatch_api_error,
+	ApiErrorAction, format_match_summaries, paginate_playmatch_response, send_playmatch_api_error,
 };
 use crate::abstraction::providers::{self, ENRICHMENT_PRIORITY, ProviderChoice, display_name};
 use crate::command::SUGGESTION_CHANNEL_ID;
 use anyhow::anyhow;
+use chrono::Utc;
 use log::{debug, error, warn};
 use playmatch_client::types::ManualMatchMode::{Admin, Trusted};
 use playmatch_client::types::{
@@ -361,6 +362,12 @@ pub async fn create_game_suggestion(
 		let game_name = game_response.game.name.clone();
 		let platform = game_response.platform.name.clone();
 		let company = game_response.company.clone().map(|c| c.name);
+		let created_at = suggestion.created_at;
+		let existing_matches = game_response
+			.external_metadata
+			.iter()
+			.map(Into::into)
+			.collect();
 		async move {
 			handle_suggestion_message(
 				SuggestionMessageHandleData {
@@ -377,6 +384,8 @@ pub async fn create_game_suggestion(
 					platform: Some(platform),
 					company,
 					comment: suggestion.comment,
+					created_at,
+					existing_matches,
 				},
 				None,
 			)
@@ -388,13 +397,15 @@ pub async fn create_game_suggestion(
 		providers::fetch_game(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Suggestion Submitted");
-	if let Some(info) = info.as_ref()
-		&& let Some(cover) = info.cover_url.clone()
-	{
-		card = card.thumbnail(cover);
+	if let Some(info) = info.as_ref() {
+		if let Some(cover) = info.cover_url.clone() {
+			card = card.thumbnail(cover);
+		}
+		card = card.subheading(info.name.clone());
 	}
 	card = card
 		.row("Game", game_response.game.name.clone())
+		.row("Platform", game_response.platform.name.clone())
 		.row(
 			format!("{} ID", display_name(provider_meta)),
 			format!("`{provider_id}`"),
@@ -443,6 +454,25 @@ pub async fn create_company_suggestion(
 		}
 	};
 
+	// Existing matches mirror the poller's company card. The card must still post if
+	// this lookup fails, so a failure logs and falls back to an empty list.
+	let existing_matches: Vec<crate::abstraction::playmatch::MatchSummary> =
+		match suggestion.company_id {
+			Some(company_id) => match ctx
+				.data()
+				.playmatch_client
+				.get_company_by_id(company_id)
+				.await
+			{
+				Ok(company) => company.external_metadata.iter().map(Into::into).collect(),
+				Err(e) => {
+					warn!("failed to fetch company {company_id} for existing matches: {e}");
+					Vec::new()
+				}
+			},
+			None => Vec::new(),
+		};
+
 	tokio::spawn({
 		let playmatch_client = ctx.data().playmatch_client.clone();
 		let suggestion_store = ctx.data().suggestion_store.clone();
@@ -451,6 +481,7 @@ pub async fn create_company_suggestion(
 		let author_id = ctx.author().id;
 		let suggestion_provider_id = provider_id.clone();
 		let company_name = name.clone();
+		let created_at = suggestion.created_at;
 		async move {
 			handle_suggestion_message(
 				SuggestionMessageHandleData {
@@ -467,6 +498,8 @@ pub async fn create_company_suggestion(
 					platform: None,
 					company: None,
 					comment: suggestion.comment,
+					created_at,
+					existing_matches,
 				},
 				None,
 			)
@@ -478,10 +511,11 @@ pub async fn create_company_suggestion(
 		providers::fetch_company(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Suggestion Submitted");
-	if let Some(info) = info.as_ref()
-		&& let Some(logo) = info.logo_url.clone()
-	{
-		card = card.thumbnail(logo);
+	if let Some(info) = info.as_ref() {
+		if let Some(logo) = info.logo_url.clone() {
+			card = card.thumbnail(logo);
+		}
+		card = card.subheading(info.name.clone());
 	}
 	card = card
 		.row("Company", name.clone())
@@ -561,6 +595,8 @@ pub async fn create_platform_suggestion(
 		let suggestion_provider_id = provider_id.clone();
 		let platform_name = name.clone();
 		let company = platform.company_name.clone();
+		let created_at = suggestion.created_at;
+		let existing_matches = platform.external_metadata.iter().map(Into::into).collect();
 		async move {
 			handle_suggestion_message(
 				SuggestionMessageHandleData {
@@ -577,6 +613,8 @@ pub async fn create_platform_suggestion(
 					platform: None,
 					company,
 					comment: suggestion.comment,
+					created_at,
+					existing_matches,
 				},
 				None,
 			)
@@ -588,10 +626,11 @@ pub async fn create_platform_suggestion(
 		providers::fetch_platform(&ctx.data().playmatch_client, provider_meta, &provider_id).await;
 
 	let mut card = Card::new(Status::Success, "Suggestion Submitted");
-	if let Some(info) = info.as_ref()
-		&& let Some(logo) = info.logo_url.clone()
-	{
-		card = card.thumbnail(logo);
+	if let Some(info) = info.as_ref() {
+		if let Some(logo) = info.logo_url.clone() {
+			card = card.thumbnail(logo);
+		}
+		card = card.subheading(info.name.clone());
 	}
 	card = card
 		.row("Platform", name.clone())
@@ -884,6 +923,29 @@ pub(crate) struct SuggestionMessageHandleData {
 	pub platform: Option<String>,
 	pub company: Option<String>,
 	pub comment: Option<String>,
+	pub created_at: chrono::DateTime<chrono::Utc>,
+	pub existing_matches: Vec<crate::abstraction::playmatch::MatchSummary>,
+}
+
+/// Provider enrichment shared by the staff card, resolution cards and DMs.
+/// Built from whichever of `ProviderGameInfo` / `ProviderCompanyInfo` /
+/// `ProviderPlatformInfo` the suggestion type fetched. One fetch, as before.
+struct Enrichment {
+	page_url: Option<String>,
+	thumbnail_url: Option<String>,
+	entry_name: String,
+	/// Game summary / company description / platform summary.
+	summary: Option<String>,
+	/// Games only (IGDB today).
+	released: Option<chrono::DateTime<chrono::Utc>>,
+}
+
+/// Set when the staff card is being rewritten into an Approved/Declined card.
+struct Resolution {
+	staff_id: UserId,
+	/// `Some` for approved game suggestions.
+	roms_updated: Option<u64>,
+	resolved_at: chrono::DateTime<chrono::Utc>,
 }
 
 /// Posts the staff card and waits on the Approve/Decline buttons.
@@ -920,54 +982,113 @@ pub(crate) async fn handle_suggestion_message(
 		SuggestionType::Game => "Game",
 	};
 
-	let provider_page_url: Option<String> = match data.r#type {
+	let enrichment: Option<Enrichment> = match data.r#type {
 		SuggestionType::Game => {
 			providers::fetch_game(&data.playmatch_client, data.provider, &data.provider_id)
 				.await
-				.and_then(|i| i.page_url)
+				.map(|i| Enrichment {
+					page_url: i.page_url,
+					thumbnail_url: i.cover_url,
+					entry_name: i.name,
+					summary: i.summary,
+					released: i.first_release_date,
+				})
 		}
 		SuggestionType::Company => {
 			providers::fetch_company(&data.playmatch_client, data.provider, &data.provider_id)
 				.await
-				.and_then(|i| i.page_url)
+				.map(|i| Enrichment {
+					page_url: i.page_url,
+					thumbnail_url: i.logo_url,
+					entry_name: i.name,
+					summary: i.description,
+					released: None,
+				})
 		}
 		SuggestionType::Platform => {
 			providers::fetch_platform(&data.playmatch_client, data.provider, &data.provider_id)
 				.await
-				.and_then(|i| i.page_url)
+				.map(|i| Enrichment {
+					page_url: i.page_url,
+					thumbnail_url: i.logo_url,
+					entry_name: i.name,
+					summary: i.summary,
+					released: None,
+				})
 		}
 	};
 
 	let provider_label = display_name(data.provider);
+	let matches_line = format_match_summaries(&data.existing_matches);
 
-	let build_card = |status: Status, heading: String| -> Card<'static> {
-		let mut card = Card::new(status, heading).row("Suggested by", author_label.clone());
-		card = card.row(display_type.to_string(), data.name.clone());
-		if let Some(platform) = data.platform.clone() {
-			card = card.row("Platform", platform);
-		}
-		if let Some(company) = data.company.clone() {
-			card = card.row("Company", company);
-		}
-		card = card.row(
-			format!("{provider_label} ID"),
-			format!("`{}`", data.provider_id),
-		);
-		card = card.row(
-			"Comment",
-			data.comment.clone().unwrap_or_else(|| "—".to_string()),
-		);
-		card
-	};
+	let build_card =
+		|status: Status, heading: String, resolution: Option<&Resolution>| -> Card<'static> {
+			let subheading = match resolution {
+				Some(res) => format!(
+					"Suggested {} · resolved {}",
+					relative_timestamp(data.created_at),
+					relative_timestamp(res.resolved_at),
+				),
+				None => format!("Suggested {}", relative_timestamp(data.created_at)),
+			};
+
+			let mut card = Card::new(status, heading).subheading(subheading);
+			if let Some(thumb) = enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
+				card = card.thumbnail(thumb);
+			}
+
+			// Claim rows.
+			card = card.row(display_type.to_string(), data.name.clone());
+			if let Some(platform) = data.platform.clone() {
+				card = card.row("Platform", platform);
+			}
+			if let Some(company) = data.company.clone() {
+				card = card.row("Company", company);
+			}
+			card = card.row(
+				format!("{provider_label} ID"),
+				format!("`{}`", data.provider_id),
+			);
+
+			// Provenance rows.
+			card = card.row("Suggested by", author_label.clone());
+			if let Some(comment) = data.comment.clone() {
+				card = card.row("Comment", comment);
+			}
+			if let Some(res) = resolution {
+				card = card.row("Handled by", format!("<@{}>", res.staff_id));
+				if let Some(roms) = res.roms_updated {
+					card = card.row("ROMs updated", roms.to_string());
+				}
+			}
+
+			// Provider entry section.
+			if let Some(e) = enrichment.as_ref() {
+				card = card.section(format!("{provider_label} Entry"));
+				card = card.row("Name", e.entry_name.clone());
+				if let Some(released) = e.released {
+					card = card.row("Released", long_date(released));
+				}
+				if let Some(summary) = e.summary.clone() {
+					card = card.quote(summary);
+				}
+			}
+
+			// Existing matches section.
+			card = card.section("Existing Matches").text(matches_line.clone());
+
+			match resolution {
+				Some(_) => card.footer(format!("Suggestion `{}`", data.suggestion_id)),
+				None => card,
+			}
+		};
 
 	let message_id = match existing_message_id {
 		Some(id) => id,
 		None => {
-			let mut staff_card = build_card(
-				Status::Info,
-				format!("New {display_type} Metadata Suggestion"),
-			);
-			if let Some(url) = provider_page_url.clone() {
+			let mut staff_card =
+				build_card(Status::Info, format!("New {display_type} Suggestion"), None);
+			if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
 				staff_card = staff_card.link_external(url, format!("View on {provider_label}"));
 			}
 			staff_card = staff_card
@@ -1021,12 +1142,18 @@ pub(crate) async fn handle_suggestion_message(
 				);
 			}
 
-			let mut resolution = build_card(Status::Success, "Suggestion Approved".to_string())
-				.row("Handled by", format!("<@{staff_id}>"));
-			if matches!(data.r#type, SuggestionType::Game) {
-				resolution = resolution.row("ROMs updated", updated.updated.to_string());
-			}
-			if let Some(url) = provider_page_url.clone() {
+			let roms_updated =
+				matches!(data.r#type, SuggestionType::Game).then(|| updated.updated.max(0) as u64);
+			let mut resolution = build_card(
+				Status::Success,
+				"Suggestion Approved".to_string(),
+				Some(&Resolution {
+					staff_id,
+					roms_updated,
+					resolved_at: Utc::now(),
+				}),
+			);
+			if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
 				resolution = resolution.link_external(url, format!("View on {provider_label}"));
 			}
 
@@ -1044,12 +1171,21 @@ pub(crate) async fn handle_suggestion_message(
 				.await?;
 
 			if let Some(dm_id) = dm_target {
-				let mut dm = Card::new(Status::Success, "Suggestion Approved")
-					.row(display_type.to_string(), data.name.clone());
-				if matches!(data.r#type, SuggestionType::Game) {
-					dm = dm.row("ROMs updated", updated.updated.to_string());
+				let mut dm = Card::new(Status::Success, "Suggestion Approved");
+				if let Some(thumb) = enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
+					dm = dm.thumbnail(thumb);
+				}
+				dm = dm.row(display_type.to_string(), data.name.clone()).row(
+					format!("{provider_label} ID"),
+					format!("`{}`", data.provider_id),
+				);
+				if let Some(roms) = roms_updated {
+					dm = dm.row("ROMs updated", roms.to_string());
 				}
 				dm = dm.text("Thanks for contributing.");
+				if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
+					dm = dm.link_external(url, format!("View on {provider_label}"));
+				}
 				if let Err(e) = dm_id.dm(http, dm.into_message()).await {
 					error!("failed to DM submitter on approval: {e}");
 				}
@@ -1067,9 +1203,16 @@ pub(crate) async fn handle_suggestion_message(
 				);
 			}
 
-			let mut resolution = build_card(Status::Error, "Suggestion Declined".to_string())
-				.row("Handled by", format!("<@{staff_id}>"));
-			if let Some(url) = provider_page_url.clone() {
+			let mut resolution = build_card(
+				Status::Error,
+				"Suggestion Declined".to_string(),
+				Some(&Resolution {
+					staff_id,
+					roms_updated: None,
+					resolved_at: Utc::now(),
+				}),
+			);
+			if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
 				resolution = resolution.link_external(url, format!("View on {provider_label}"));
 			}
 
@@ -1087,9 +1230,20 @@ pub(crate) async fn handle_suggestion_message(
 				.await?;
 
 			if let Some(dm_id) = dm_target {
-				let dm = Card::new(Status::Error, "Suggestion Declined")
+				let mut dm = Card::new(Status::Error, "Suggestion Declined");
+				if let Some(thumb) = enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
+					dm = dm.thumbnail(thumb);
+				}
+				dm = dm
 					.row(display_type.to_string(), data.name.clone())
+					.row(
+						format!("{provider_label} ID"),
+						format!("`{}`", data.provider_id),
+					)
 					.text("If you'd like context, reach out to the Playmatch team.");
+				if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
+					dm = dm.link_external(url, format!("View on {provider_label}"));
+				}
 				if let Err(e) = dm_id.dm(http, dm.into_message()).await {
 					error!("failed to DM submitter on decline: {e}");
 				}

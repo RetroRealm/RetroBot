@@ -1,7 +1,7 @@
 use log::warn;
 use playmatch_client::types::MetadataProvider;
 
-use super::ProviderGameInfo;
+use super::{ProviderGameInfo, game_page_url};
 use crate::abstraction::playmatch_client::PlaymatchClient;
 
 pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<ProviderGameInfo> {
@@ -31,7 +31,7 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 	Some(ProviderGameInfo {
 		provider: MetadataProvider::ScreenScraper,
 		name,
-		page_url: None,
+		page_url: game_page_url(MetadataProvider::ScreenScraper, provider_id),
 		summary: None,
 		first_release_date: None,
 		cover_url: None,

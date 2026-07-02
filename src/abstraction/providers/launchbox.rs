@@ -1,7 +1,7 @@
 use log::warn;
 use playmatch_client::types::{LbGameImage, MetadataProvider};
 
-use super::{ProviderGameInfo, truncate_summary};
+use super::{ProviderGameInfo, game_page_url, truncate_summary};
 use crate::abstraction::playmatch_client::PlaymatchClient;
 
 fn is_cover(img: &LbGameImage) -> bool {
@@ -54,7 +54,7 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 	Some(ProviderGameInfo {
 		provider: MetadataProvider::LaunchBox,
 		name: game.name,
-		page_url: game.wikipedia_url,
+		page_url: game_page_url(MetadataProvider::LaunchBox, provider_id),
 		summary: game.overview.map(|s| truncate_summary(&s)),
 		first_release_date: None,
 		cover_url,

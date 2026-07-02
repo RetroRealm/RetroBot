@@ -1,7 +1,7 @@
 use log::warn;
 use playmatch_client::types::MetadataProvider;
 
-use super::ProviderGameInfo;
+use super::{ProviderGameInfo, game_page_url};
 use crate::abstraction::playmatch_client::PlaymatchClient;
 
 pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<ProviderGameInfo> {
@@ -24,7 +24,7 @@ pub async fn fetch_game(client: &PlaymatchClient, provider_id: &str) -> Option<P
 	Some(ProviderGameInfo {
 		provider: MetadataProvider::SteamGridDb,
 		name: game.name,
-		page_url: Some(format!("https://www.steamgriddb.com/game/{id}")),
+		page_url: game_page_url(MetadataProvider::SteamGridDb, provider_id),
 		summary: None,
 		first_release_date: None,
 		cover_url: None,

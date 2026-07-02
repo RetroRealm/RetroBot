@@ -135,6 +135,34 @@ pub fn short_label(provider: MetadataProvider) -> &'static str {
 	}
 }
 
+/// The provider's own website page for a game, built from the provider id.
+///
+/// Only providers with a verified id-addressable page template appear here.
+/// IGDB pages are slug-based, so `igdb::fetch_game` uses the API-supplied
+/// `Game.url` instead. OpenVGDB is a distributed SQLite database with no
+/// website. EmuReady, TheGamesDB and Hasheous have no read endpoints and no
+/// verified page scheme.
+pub fn game_page_url(provider: MetadataProvider, provider_id: &str) -> Option<String> {
+	// Every template provider keys pages by a numeric id. Rejecting anything
+	// non-numeric means we never interpolate an arbitrary string into a URL.
+	let id: i64 = provider_id.trim().parse().ok()?;
+	let url = match provider {
+		MetadataProvider::LaunchBox => {
+			format!("https://gamesdb.launchbox-app.com/games/details/{id}")
+		}
+		MetadataProvider::ScreenScraper => {
+			format!("https://www.screenscraper.fr/gameinfos.php?gameid={id}")
+		}
+		MetadataProvider::RetroAchievements => {
+			format!("https://retroachievements.org/game/{id}")
+		}
+		MetadataProvider::SteamGridDb => format!("https://www.steamgriddb.com/game/{id}"),
+		MetadataProvider::MobyGames => format!("https://www.mobygames.com/game/{id}/"),
+		_ => return None,
+	};
+	Some(url)
+}
+
 const SUMMARY_MAX: usize = 280;
 
 pub(super) fn truncate_summary(s: &str) -> String {
@@ -186,5 +214,61 @@ pub async fn fetch_platform(
 	match provider {
 		MetadataProvider::Igdb => igdb::fetch_platform(client, provider_id).await,
 		_ => None,
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use super::game_page_url;
+	use playmatch_client::types::MetadataProvider;
+
+	#[test]
+	fn game_page_url_templates() {
+		// LaunchBox must use /games/details/{database_id}. /games/dbid/{id} uses a
+		// different internal numbering and redirects to the wrong game.
+		assert_eq!(
+			game_page_url(MetadataProvider::LaunchBox, "3735").as_deref(),
+			Some("https://gamesdb.launchbox-app.com/games/details/3735"),
+		);
+		assert_eq!(
+			game_page_url(MetadataProvider::ScreenScraper, "3").as_deref(),
+			Some("https://www.screenscraper.fr/gameinfos.php?gameid=3"),
+		);
+		assert_eq!(
+			game_page_url(MetadataProvider::RetroAchievements, "1").as_deref(),
+			Some("https://retroachievements.org/game/1"),
+		);
+		assert_eq!(
+			game_page_url(MetadataProvider::SteamGridDb, "5254").as_deref(),
+			Some("https://www.steamgriddb.com/game/5254"),
+		);
+		assert_eq!(
+			game_page_url(MetadataProvider::MobyGames, "616").as_deref(),
+			Some("https://www.mobygames.com/game/616/"),
+		);
+	}
+
+	#[test]
+	fn game_page_url_providers_without_template() {
+		for provider in [
+			MetadataProvider::OpenVgdb,
+			MetadataProvider::EmuReady,
+			MetadataProvider::TheGamesDb,
+			MetadataProvider::Hasheous,
+			MetadataProvider::Igdb,
+		] {
+			assert_eq!(game_page_url(provider, "1"), None);
+		}
+	}
+
+	#[test]
+	fn game_page_url_rejects_non_numeric_id() {
+		assert_eq!(game_page_url(MetadataProvider::LaunchBox, "abc"), None);
+		assert_eq!(game_page_url(MetadataProvider::LaunchBox, ""), None);
+		// Whitespace-padded numeric ids are accepted.
+		assert_eq!(
+			game_page_url(MetadataProvider::LaunchBox, " 3735 ").as_deref(),
+			Some("https://gamesdb.launchbox-app.com/games/details/3735"),
+		);
 	}
 }

@@ -409,6 +409,16 @@ fn find_button_uuid_in_row(row: &serenity::all::ActionRow) -> Option<Uuid> {
 	None
 }
 
+/// The suggestion's target entity resolved for the card, plus the existing
+/// provider matches already fetched alongside it.
+struct SuggestionRelations {
+	kind: SuggestionType,
+	name: String,
+	platform: Option<String>,
+	company: Option<String>,
+	existing_matches: Vec<crate::abstraction::playmatch::MatchSummary>,
+}
+
 async fn build_handle_data(
 	serenity_ctx: Context,
 	data: Arc<CommandData>,
@@ -418,34 +428,48 @@ async fn build_handle_data(
 	let playmatch_client = data.playmatch_client.clone();
 	let suggestion_store = data.suggestion_store.clone();
 
-	let (kind, name, platform, company): (SuggestionType, String, Option<String>, Option<String>) =
-		if let Some(game_id) = suggestion.game_id {
-			let game = playmatch_client
-				.get_game_with_relations_by_id(game_id)
-				.await?;
-			(
-				SuggestionType::Game,
-				game.game.name.clone(),
-				Some(game.platform.name.clone()),
-				game.company.map(|c| c.name),
-			)
-		} else if let Some(company_id) = suggestion.company_id {
-			let c = playmatch_client.get_company_by_id(company_id).await?;
-			(SuggestionType::Company, c.name.clone(), None, None)
-		} else if let Some(platform_id) = suggestion.platform_id {
-			let p = playmatch_client.get_platform_by_id(platform_id).await?;
-			(
-				SuggestionType::Platform,
-				p.name.clone(),
-				None,
-				p.company_name.clone(),
-			)
-		} else {
-			anyhow::bail!(
-				"suggestion {} has no game/company/platform id",
-				suggestion.id
-			);
-		};
+	let relations = if let Some(game_id) = suggestion.game_id {
+		let game = playmatch_client
+			.get_game_with_relations_by_id(game_id)
+			.await?;
+		SuggestionRelations {
+			existing_matches: game.external_metadata.iter().map(Into::into).collect(),
+			kind: SuggestionType::Game,
+			name: game.game.name.clone(),
+			platform: Some(game.platform.name.clone()),
+			company: game.company.map(|c| c.name),
+		}
+	} else if let Some(company_id) = suggestion.company_id {
+		let c = playmatch_client.get_company_by_id(company_id).await?;
+		SuggestionRelations {
+			existing_matches: c.external_metadata.iter().map(Into::into).collect(),
+			kind: SuggestionType::Company,
+			name: c.name.clone(),
+			platform: None,
+			company: None,
+		}
+	} else if let Some(platform_id) = suggestion.platform_id {
+		let p = playmatch_client.get_platform_by_id(platform_id).await?;
+		SuggestionRelations {
+			existing_matches: p.external_metadata.iter().map(Into::into).collect(),
+			kind: SuggestionType::Platform,
+			name: p.name.clone(),
+			platform: None,
+			company: p.company_name.clone(),
+		}
+	} else {
+		anyhow::bail!(
+			"suggestion {} has no game/company/platform id",
+			suggestion.id
+		);
+	};
+	let SuggestionRelations {
+		kind,
+		name,
+		platform,
+		company,
+		existing_matches,
+	} = relations;
 
 	let submitter = match suggestion.source.clone() {
 		Some(source) => SuggestionSubmitter::External { source },
@@ -468,5 +492,7 @@ async fn build_handle_data(
 		platform,
 		company,
 		comment: suggestion.comment,
+		created_at: suggestion.created_at,
+		existing_matches,
 	})
 }
