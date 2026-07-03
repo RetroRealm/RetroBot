@@ -60,6 +60,41 @@ pub fn normalize_external_url(raw: &str) -> Option<String> {
 	}
 }
 
+/// Normalizes an image URL bound for a Discord media field (a Section's
+/// thumbnail accessory or a media gallery item).
+///
+/// Unlike [`normalize_external_url`], this must NOT promote a scheme-less
+/// bare host/path with `https://`. That promotion is what turned a bare
+/// provider filename (`24fcea1e-....png`) into a parseable-but-garbage
+/// `https://24fcea1e-....png`, which Discord accepts syntactically but then
+/// rejects with `accessory.media.url: Not a well formed URL`, failing the
+/// whole message. Media URLs must already be absolute (a provider that hands
+/// back a bare path must join its CDN base at the source). Only the absolute
+/// `http(s)` and protocol-relative `//host/path` shapes are accepted here;
+/// everything else is dropped so a single bad image degrades to no image
+/// instead of a failed post.
+pub fn normalize_media_url(raw: &str) -> Option<String> {
+	let trimmed = raw.trim();
+	if trimmed.is_empty() {
+		return None;
+	}
+
+	// Protocol-relative "//host/path": upgrade to https so it parses as an
+	// absolute URL. This mirrors the IGDB image normalizer's `//images.igdb.com`
+	// handling and is the only rewrite we apply.
+	let candidate = match trimmed.strip_prefix("//") {
+		Some(rest) => Cow::Owned(format!("https://{rest}")),
+		None => Cow::Borrowed(trimmed),
+	};
+
+	match Url::parse(&candidate) {
+		Ok(url) if matches!(url.scheme(), "http" | "https") => Some(url.into()),
+		// Non-http(s) absolute, or a scheme-less bare filename/path that would
+		// only become a garbage host if we prepended https. Reject both.
+		_ => None,
+	}
+}
+
 /// `<t:unix:R>` — renders as a live, localized relative time ("3 hours ago").
 pub fn relative_timestamp(dt: DateTime<Utc>) -> String {
 	format!("<t:{}:R>", dt.timestamp())
@@ -199,10 +234,12 @@ impl<'a> Card<'a> {
 		self
 	}
 
-	/// External image URL from a provider. A URL that can't be normalized to an
-	/// http(s) scheme is dropped so it can't fail the whole message.
+	/// External image URL from a provider. A URL that isn't already absolute
+	/// http(s) (or protocol-relative) is dropped so it can't fail the whole
+	/// message. Unlike link buttons, media URLs are not promoted from a bare
+	/// path: see [`normalize_media_url`].
 	pub fn thumbnail(mut self, url: impl Into<Cow<'a, str>>) -> Self {
-		self.thumbnail_url = normalize_external_url(&url.into()).map(Cow::Owned);
+		self.thumbnail_url = normalize_media_url(&url.into()).map(Cow::Owned);
 		self
 	}
 
@@ -242,15 +279,16 @@ impl<'a> Card<'a> {
 		self
 	}
 
-	/// External image URLs from a provider. Any URL that can't be normalized to
-	/// an http(s) scheme is skipped so it can't fail the whole message.
+	/// External image URLs from a provider. Any URL that isn't already absolute
+	/// http(s) (or protocol-relative) is skipped so it can't fail the whole
+	/// message. See [`normalize_media_url`] for why media isn't path-promoted.
 	pub fn media(mut self, urls: impl IntoIterator<Item = String>) -> Self {
 		for url in urls {
 			if self.media.len() >= 10 {
 				warn!("Card media gallery capped at 10 items, dropping extras");
 				break;
 			}
-			let Some(url) = normalize_external_url(&url) else {
+			let Some(url) = normalize_media_url(&url) else {
 				warn!("dropping malformed media URL from card");
 				continue;
 			};
@@ -396,7 +434,9 @@ impl<'a> Card<'a> {
 
 #[cfg(test)]
 mod tests {
-	use super::{Card, Status, long_date, normalize_external_url, relative_timestamp};
+	use super::{
+		Card, Status, long_date, normalize_external_url, normalize_media_url, relative_timestamp,
+	};
 	use chrono::{TimeZone, Utc};
 
 	#[test]
@@ -482,5 +522,61 @@ mod tests {
 	fn other_absolute_schemes_are_rejected() {
 		assert_eq!(normalize_external_url("mailto:a@b.com"), None);
 		assert_eq!(normalize_external_url("ftp://host/file"), None);
+	}
+
+	#[test]
+	fn media_accepts_absolute_http_and_https() {
+		assert_eq!(
+			normalize_media_url("https://images.launchbox-app.com/24fcea1e.png").as_deref(),
+			Some("https://images.launchbox-app.com/24fcea1e.png"),
+		);
+		assert_eq!(
+			normalize_media_url("http://media.retroachievements.org/Images/080107.png").as_deref(),
+			Some("http://media.retroachievements.org/Images/080107.png"),
+		);
+	}
+
+	#[test]
+	fn media_upgrades_protocol_relative() {
+		assert_eq!(
+			normalize_media_url("//images.igdb.com/igdb/image/upload/t_thumb/co.jpg").as_deref(),
+			Some("https://images.igdb.com/igdb/image/upload/t_thumb/co.jpg"),
+		);
+	}
+
+	#[test]
+	fn media_rejects_bare_filename() {
+		// The incident payload: a space-free bare filename that would parse as a
+		// garbage host if https:// were prepended. Media must NOT promote it.
+		assert_eq!(
+			normalize_media_url("24fcea1e-451e-4f72-9092-a22a2455f4ad.png"),
+			None,
+		);
+	}
+
+	#[test]
+	fn media_rejects_bare_host_path() {
+		// A bare host/path is fine for a link button but must never be promoted
+		// into a media URL.
+		assert_eq!(normalize_media_url("en.wikipedia.org/wiki/Foo"), None);
+		assert_eq!(normalize_media_url("/Images/080107.png"), None);
+	}
+
+	#[test]
+	fn media_rejects_non_http_scheme_and_empty() {
+		assert_eq!(normalize_media_url("ftp://host/file.png"), None);
+		assert_eq!(normalize_media_url("discord://channel/1"), None);
+		assert_eq!(normalize_media_url(""), None);
+		assert_eq!(normalize_media_url("   "), None);
+	}
+
+	#[test]
+	fn link_still_promotes_bare_wikipedia_host() {
+		// Regression: the link-button bare-host promotion must keep working even
+		// though the media guard no longer promotes anything.
+		assert_eq!(
+			normalize_external_url("en.wikipedia.org/wiki/Sink_or_Swim_(video_game)").as_deref(),
+			Some("https://en.wikipedia.org/wiki/Sink_or_Swim_(video_game)"),
+		);
 	}
 }
