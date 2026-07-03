@@ -1,6 +1,8 @@
 extern crate unicode_width;
 use unicode_width::UnicodeWidthStr;
 
+pub mod retry;
+
 fn pad_string(input: &str, width: usize) -> String {
 	let length = UnicodeWidthStr::width(input);
 	if length >= width {

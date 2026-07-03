@@ -931,6 +931,21 @@ pub(crate) enum SuggestionSubmitter {
 	External { source: String },
 }
 
+/// Version of the rendered suggestion card layout. Bump this when the rendered
+/// suggestion card changes: `build_card`/`build_staff_card` below, or the `Card` builder
+/// in `components_v2`. Tracked cards whose stored version differs are re-rendered once
+/// (paced) on the next boot; matching cards are left untouched. Suggestion cards are the
+/// only persistent cards the bot owns, so the version is scoped to them, not to `Card`.
+pub(crate) const SUGGESTION_CARD_LAYOUT_VERSION: u32 = 1;
+
+/// A tracked card the poller wants `handle_suggestion_message` to re-attach to.
+/// `refresh` is set only when the stored layout version is stale, so a steady-state
+/// boot arms the collector without touching Discord.
+pub(crate) struct ExistingCard {
+	pub message_id: serenity::all::MessageId,
+	pub refresh: bool,
+}
+
 pub(crate) struct SuggestionMessageHandleData {
 	pub playmatch_client: Arc<crate::abstraction::playmatch_client::PlaymatchClient>,
 	pub suggestion_store: Arc<crate::abstraction::suggestion_store::SuggestionStore>,
@@ -971,10 +986,11 @@ struct Resolution {
 }
 
 /// Posts the staff card and waits on the Approve/Decline buttons.
-/// Pass `Some(message_id)` to re-attach to an existing card instead of posting a new one.
+/// Pass `Some(ExistingCard { .. })` to re-attach to an existing card instead of posting
+/// a new one; `refresh` there decides whether the card is re-rendered first.
 pub(crate) async fn handle_suggestion_message(
 	data: SuggestionMessageHandleData,
-	existing_message_id: Option<serenity::all::MessageId>,
+	existing: Option<ExistingCard>,
 ) -> CommandResult {
 	let http: &Http = data.serenity_ctx.http.as_ref();
 	let cache: Arc<Cache> = data.serenity_ctx.cache.clone();
@@ -1107,7 +1123,7 @@ pub(crate) async fn handle_suggestion_message(
 
 	// The full staff card: the shared body plus the provider link, Approve/Decline
 	// buttons and owners footer. Built identically for the initial post and for the
-	// re-arm edit so old-layout cards migrate to the current layout on boot.
+	// re-arm edit. Any change to this layout must bump SUGGESTION_CARD_LAYOUT_VERSION.
 	let build_staff_card = || -> Card<'static> {
 		let mut staff_card =
 			build_card(Status::Info, format!("New {display_type} Suggestion"), None);
@@ -1128,18 +1144,40 @@ pub(crate) async fn handle_suggestion_message(
 			.footer("Only bot owners can approve or decline.")
 	};
 
-	let message_id = match existing_message_id {
-		Some(id) => {
-			// Re-arm path: rewrite the tracked card with the freshly built staff card
-			// before arming the collector. This is idempotent, so cards posted under an
-			// older layout migrate on the next boot and stale context (existing matches,
-			// enrichment) is refreshed as a bonus.
+	let message_id = match existing {
+		// Layout is current: arm the collector on the stored card without any Discord
+		// write. Steady-state boots make zero edits.
+		Some(ExistingCard {
+			message_id,
+			refresh: false,
+		}) => message_id,
+		// Re-arm path: the stored layout is stale (or unknown), so rewrite the card with
+		// the freshly built staff card before arming the collector, then record the
+		// current version. Version is written only after the edit succeeds, so a crash
+		// in between skews toward one redundant (paced) refresh next boot, never toward a
+		// silently-stale card.
+		Some(ExistingCard {
+			message_id: id,
+			refresh: true,
+		}) => {
 			match channel_id
 				.widen()
 				.edit_message(http, id, build_staff_card().into_edit())
 				.await
 			{
-				Ok(_) => id,
+				Ok(_) => {
+					if let Err(e) = data
+						.suggestion_store
+						.mark_posted(data.suggestion_id, id, Some(SUGGESTION_CARD_LAYOUT_VERSION))
+						.await
+					{
+						warn!(
+							"failed to record layout version for suggestion {} after re-arm edit: {e}",
+							data.suggestion_id
+						);
+					}
+					id
+				}
 				// A 404 means the card was deleted out from under us. Treat it like a
 				// dead entry, exactly as delete_suggestion_card does: drop the store
 				// entry and skip arming a collector (a card that does not exist cannot be
@@ -1155,7 +1193,8 @@ pub(crate) async fn handle_suggestion_message(
 					return Ok(());
 				}
 				// Transient Discord blips must not kill the re-arm; arm the collector on
-				// the existing (still old-layout) card and let the next boot retry.
+				// the existing (still stale) card without a version write so the next
+				// boot retries the refresh.
 				Err(e) => {
 					warn!(
 						"failed to refresh suggestion card {} on re-arm, arming collector anyway: {e}",
@@ -1171,7 +1210,11 @@ pub(crate) async fn handle_suggestion_message(
 				.send_message(http, build_staff_card().into_message())
 				.await?;
 			data.suggestion_store
-				.mark_posted(data.suggestion_id, message.id)
+				.mark_posted(
+					data.suggestion_id,
+					message.id,
+					Some(SUGGESTION_CARD_LAYOUT_VERSION),
+				)
 				.await?;
 			message.id
 		}

@@ -1,9 +1,12 @@
 use crate::abstraction::command::CommandData;
 use crate::abstraction::playmatch::{ConciseError, describe};
+use crate::abstraction::suggestion_store::TrackedCard;
 use crate::command::SUGGESTION_CHANNEL_ID;
 use crate::command::playmatch::{
-	SuggestionMessageHandleData, SuggestionSubmitter, SuggestionType, handle_suggestion_message,
+	ExistingCard, SUGGESTION_CARD_LAYOUT_VERSION, SuggestionMessageHandleData, SuggestionSubmitter,
+	SuggestionType, handle_suggestion_message,
 };
+use governor::{Quota, RateLimiter};
 use lazy_static::lazy_static;
 use log::{debug, info, warn};
 use playmatch_client::types::{ExternalMetadata, MetadataMatchType, MetadataProvider, Suggestion};
@@ -24,11 +27,40 @@ lazy_static! {
 		.ok()
 		.and_then(|v| v.parse().ok())
 		.unwrap_or(300);
+	/// Paces the poller's bulk Discord writes to one per second. Suggestion cards all
+	/// live in one channel, so every write shares one per-route bucket; 1/s keeps
+	/// serenity's learned per-route limiter far from `remaining == 0` and produces zero
+	/// 429s, so nothing feeds Discord's invalid-request ban counter. Interactive paths
+	/// (approve/decline, DMs, command responses) never go through here and stay instant.
+	static ref BULK_WRITE_PACER: RateLimiter<
+		governor::state::NotKeyed,
+		governor::state::InMemoryState,
+		governor::clock::DefaultClock,
+	> = RateLimiter::direct(bulk_write_quota());
+}
+
+/// The quota behind `BULK_WRITE_PACER`, split out so the constants are unit-testable.
+fn bulk_write_quota() -> Quota {
+	Quota::per_second(std::num::NonZeroU32::new(1).unwrap())
+		.allow_burst(std::num::NonZeroU32::new(1).unwrap())
+}
+
+/// Blocks until the shared 1/s bucket has a permit. Maintenance-path Discord writes
+/// only (re-arm refresh, reconcile posts/deletes, sweep deletes); never interactive
+/// responses.
+async fn pace_bulk_write() {
+	BULK_WRITE_PACER.until_ready().await;
 }
 
 const APPROVE_PREFIX: &str = "approve:";
 const DECLINE_PREFIX: &str = "decline:";
 const CHANNEL_SEED_SCAN_LIMIT: u8 = 100;
+
+/// A tracked card needs a re-render when its stored layout version is unknown (legacy or
+/// seeded) or differs from the current layout.
+fn needs_layout_refresh(stored: Option<u32>) -> bool {
+	stored != Some(SUGGESTION_CARD_LAYOUT_VERSION)
+}
 
 pub async fn run(ctx: Context, data: Arc<CommandData>) {
 	info!(
@@ -68,12 +100,23 @@ pub async fn run(ctx: Context, data: Arc<CommandData>) {
 			HashMap::new()
 		}
 	};
-	for (uuid, msg_id) in posted {
+	let mut armed = 0usize;
+	let mut refreshing = 0usize;
+	for (uuid, tracked) in posted {
 		match by_id.remove(&uuid) {
-			Some(s) => spawn_collector(ctx.clone(), data.clone(), owners.clone(), msg_id, s),
+			Some(s) => {
+				if needs_layout_refresh(tracked.layout_version) {
+					refreshing += 1;
+				}
+				spawn_collector(ctx.clone(), data.clone(), owners.clone(), tracked, s);
+				armed += 1;
+			}
 			None => debug!("suggestion poller: {uuid} tracked but not pending, skipping re-arm"),
 		}
 	}
+	info!(
+		"suggestion poller: re-arming {armed} collectors ({refreshing} scheduled for layout v{SUGGESTION_CARD_LAYOUT_VERSION} refresh)"
+	);
 
 	let mut tick = interval(Duration::from_secs(*POLL_INTERVAL_SECS));
 	tick.tick().await; // initial reconcile already ran
@@ -114,7 +157,9 @@ async fn seed_from_channel_if_needed(http: &Http, channel_id: ChannelId, data: &
 	let mut seeded = 0usize;
 	for msg in &messages {
 		if let Some(uuid) = extract_suggestion_uuid(msg) {
-			if let Err(e) = data.suggestion_store.mark_posted(uuid, msg.id).await {
+			// Seeded cards were posted by an older build, layout unknown ⇒ None ⇒ exactly
+			// one paced refresh on the next boot.
+			if let Err(e) = data.suggestion_store.mark_posted(uuid, msg.id, None).await {
 				warn!("suggestion poller: seed mark_posted({uuid}) failed: {e}");
 				continue;
 			}
@@ -189,11 +234,13 @@ async fn reconcile(
 		spawn_new_post(ctx.clone(), data.clone(), owners.clone(), s.clone());
 	}
 
-	for (uuid, msg_id) in &posted {
+	for (uuid, tracked) in &posted {
 		if pending_uuids.contains(uuid) || cleaned.contains(uuid) {
 			continue;
 		}
-		match delete_suggestion_card(&http, *msg_id).await {
+		let msg_id = tracked.message_id;
+		pace_bulk_write().await;
+		match delete_suggestion_card(&http, msg_id).await {
 			Ok(()) => {
 				if let Err(e) = data.suggestion_store.remove(*uuid).await {
 					warn!("suggestion poller: cannot remove {uuid} from store: {e}");
@@ -281,21 +328,25 @@ pub async fn sweep_redundant_suggestions(
 		}
 
 		match data.suggestion_store.get(suggestion.id).await {
-			Ok(Some(msg_id)) => match delete_suggestion_card(http, msg_id).await {
-				Ok(()) => {
-					if let Err(e) = data.suggestion_store.remove(suggestion.id).await {
-						warn!(
-							"suggestion cleanup: redis remove {} failed: {e}",
-							suggestion.id
-						);
+			Ok(Some(tracked)) => {
+				let msg_id = tracked.message_id;
+				pace_bulk_write().await;
+				match delete_suggestion_card(http, msg_id).await {
+					Ok(()) => {
+						if let Err(e) = data.suggestion_store.remove(suggestion.id).await {
+							warn!(
+								"suggestion cleanup: redis remove {} failed: {e}",
+								suggestion.id
+							);
+						}
 					}
+					// The next reconcile's externally-resolved pass retries this delete.
+					Err(e) => warn!(
+						"suggestion cleanup: delete message {msg_id} for {} failed: {e}",
+						suggestion.id
+					),
 				}
-				// The next reconcile's externally-resolved pass retries this delete.
-				Err(e) => warn!(
-					"suggestion cleanup: delete message {msg_id} for {} failed: {e}",
-					suggestion.id
-				),
-			},
+			}
 			Ok(None) => {}
 			Err(e) => warn!(
 				"suggestion cleanup: redis lookup {} failed: {e}",
@@ -338,6 +389,9 @@ fn spawn_new_post(
 				return;
 			}
 		};
+		// Permit taken after the playmatch reads, immediately before the send inside
+		// handle_suggestion_message.
+		pace_bulk_write().await;
 		if let Err(e) = handle_suggestion_message(payload, None).await {
 			warn!("suggestion poller: posting {suggestion_id} ended with error: {e}");
 		}
@@ -348,7 +402,7 @@ fn spawn_collector(
 	ctx: Context,
 	data: Arc<CommandData>,
 	owners: HashSet<UserId>,
-	message_id: MessageId,
+	tracked: TrackedCard,
 	suggestion: Suggestion,
 ) {
 	tokio::spawn(async move {
@@ -360,7 +414,18 @@ fn spawn_collector(
 				return;
 			}
 		};
-		if let Err(e) = handle_suggestion_message(payload, Some(message_id)).await {
+		let refresh = needs_layout_refresh(tracked.layout_version);
+		// Only a refresh issues a Discord write, so only a refresh takes a permit. The
+		// permit is acquired after build_handle_data's playmatch reads, immediately
+		// before the edit inside handle_suggestion_message.
+		if refresh {
+			pace_bulk_write().await;
+		}
+		let existing = ExistingCard {
+			message_id: tracked.message_id,
+			refresh,
+		};
+		if let Err(e) = handle_suggestion_message(payload, Some(existing)).await {
 			warn!("suggestion poller: collector for {suggestion_id} ended with error: {e}");
 		}
 	});
@@ -511,4 +576,25 @@ async fn build_handle_data(
 		created_at: suggestion.created_at,
 		existing_matches,
 	})
+}
+
+#[cfg(test)]
+mod tests {
+	use super::*;
+
+	#[test]
+	fn layout_refresh_decision() {
+		assert!(needs_layout_refresh(None));
+		assert!(needs_layout_refresh(Some(
+			SUGGESTION_CARD_LAYOUT_VERSION - 1
+		)));
+		assert!(!needs_layout_refresh(Some(SUGGESTION_CARD_LAYOUT_VERSION)));
+	}
+
+	#[test]
+	fn bulk_write_quota_is_one_per_second() {
+		let quota = bulk_write_quota();
+		assert_eq!(quota.replenish_interval(), Duration::from_secs(1));
+		assert_eq!(quota.burst_size().get(), 1);
+	}
 }

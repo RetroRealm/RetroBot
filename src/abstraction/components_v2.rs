@@ -159,6 +159,9 @@ enum CardBlock<'a> {
 	SectionHeader(Cow<'a, str>),
 }
 
+/// Changing how a `Card` renders changes any persistent card built from it: bump
+/// `command::playmatch::SUGGESTION_CARD_LAYOUT_VERSION` so tracked suggestion cards
+/// re-render on the next boot.
 pub struct Card<'a> {
 	status: Status,
 	heading: Cow<'a, str>,
