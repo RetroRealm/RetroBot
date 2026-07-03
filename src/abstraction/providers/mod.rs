@@ -152,7 +152,7 @@ pub fn game_page_url(provider: MetadataProvider, provider_id: &str) -> Option<St
 	let id: i64 = provider_id.trim().parse().ok()?;
 	let url = match provider {
 		MetadataProvider::LaunchBox => {
-			format!("https://gamesdb.launchbox-app.com/games/details/{id}")
+			format!("https://gamesdb.launchbox-app.com/games/dbid/{id}")
 		}
 		MetadataProvider::ScreenScraper => {
 			format!("https://www.screenscraper.fr/gameinfos.php?gameid={id}")
@@ -273,11 +273,11 @@ mod tests {
 
 	#[test]
 	fn game_page_url_templates() {
-		// LaunchBox must use /games/details/{database_id}. /games/dbid/{id} uses a
-		// different internal numbering and redirects to the wrong game.
+		// LaunchBox must use /games/dbid/{database_id}, which redirects to the site's
+		// own numbering. /games/details/{id} takes website ids, not database ids.
 		assert_eq!(
 			game_page_url(MetadataProvider::LaunchBox, "3735").as_deref(),
-			Some("https://gamesdb.launchbox-app.com/games/details/3735"),
+			Some("https://gamesdb.launchbox-app.com/games/dbid/3735"),
 		);
 		assert_eq!(
 			game_page_url(MetadataProvider::ScreenScraper, "3").as_deref(),
@@ -317,7 +317,7 @@ mod tests {
 		// Whitespace-padded numeric ids are accepted.
 		assert_eq!(
 			game_page_url(MetadataProvider::LaunchBox, " 3735 ").as_deref(),
-			Some("https://gamesdb.launchbox-app.com/games/details/3735"),
+			Some("https://gamesdb.launchbox-app.com/games/dbid/3735"),
 		);
 	}
 }
