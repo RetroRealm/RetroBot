@@ -24,12 +24,17 @@ type Limiter = RateLimiter<NotKeyed, InMemoryState, DefaultClock>;
 /// Thin newtype wrapper that paces every outbound playmatch request at one per 250 ms,
 /// matching the server's `milliseconds_per_request(250)` exactly. No burst: the local
 /// bucket holds at most one token, so two requests can never fire closer together than
-/// the server's refill interval. The retry layer (429 or 5xx with exponential backoff:
-/// 250 ms, 500 ms, 1 s, 2 s, 4 s) stays as a defence in depth for transient
-/// server-side blips.
+/// the server's refill interval. On a 429 every request shares one cooldown
+/// (`cooldown_until`): the host sits behind Cloudflare, and per Cloudflare's guidance
+/// continuing to send during a block extends it, so one limited response stands the whole
+/// client down until the block clears. 5xx keeps a short per-request exponential backoff
+/// (250 ms, 500 ms, 1 s, 2 s, 4 s) as defence in depth for transient server blips.
 pub struct PlaymatchClient {
 	inner: Inner,
 	limiter: Limiter,
+	/// Shared stand-down deadline after a 429. `None` or a past instant means requests
+	/// flow; all requests wait out a future instant before taking a limiter permit.
+	cooldown_until: std::sync::Mutex<Option<tokio::time::Instant>>,
 }
 
 const MAX_RETRIES: u32 = 5;
@@ -45,6 +50,29 @@ impl PlaymatchClient {
 		Self {
 			inner,
 			limiter: RateLimiter::direct(quota),
+			cooldown_until: std::sync::Mutex::new(None),
+		}
+	}
+
+	/// Blocks until any active shared 429 cooldown has passed. Loops because another
+	/// request can extend the deadline while this one sleeps.
+	async fn wait_for_cooldown(&self) {
+		loop {
+			let until = *self.cooldown_until.lock().unwrap();
+			match until {
+				Some(t) if t > tokio::time::Instant::now() => tokio::time::sleep_until(t).await,
+				_ => return,
+			}
+		}
+	}
+
+	/// Pushes the shared cooldown deadline out to `now + wait`, never pulling an
+	/// already-later deadline in.
+	fn extend_cooldown(&self, wait: Duration) {
+		let target = tokio::time::Instant::now() + wait;
+		let mut until = self.cooldown_until.lock().unwrap();
+		if until.is_none_or(|t| t < target) {
+			*until = Some(target);
 		}
 	}
 
@@ -55,22 +83,38 @@ impl PlaymatchClient {
 	{
 		let mut attempt: u32 = 0;
 		loop {
+			self.wait_for_cooldown().await;
 			self.limiter.until_ready().await;
 			match make().await {
 				Ok(resp) => return Ok(resp.into_inner()),
 				Err(Error::UnexpectedResponse(resp))
 					if is_retryable_status(resp.status()) && attempt < MAX_RETRIES =>
 				{
-					let wait = backoff_duration(resp.headers(), attempt);
-					warn!(
-						"playmatch_client: {} on {} (attempt {}/{}), sleeping {:?}",
-						resp.status(),
-						resp.url(),
-						attempt + 1,
-						MAX_RETRIES + 1,
-						wait
-					);
-					tokio::time::sleep(wait).await;
+					if resp.status() == StatusCode::TOO_MANY_REQUESTS {
+						let wait = rate_limit_cooldown(resp.headers(), attempt);
+						warn!(
+							"playmatch_client: 429 on {} ({}), standing down all requests for {:?} (attempt {}/{})",
+							resp.url(),
+							describe_429(resp.headers()),
+							wait,
+							attempt + 1,
+							MAX_RETRIES + 1
+						);
+						// The retry sleeps via wait_for_cooldown at the top of the loop,
+						// alongside every other request.
+						self.extend_cooldown(wait);
+					} else {
+						let wait = backoff_duration(resp.headers(), attempt);
+						warn!(
+							"playmatch_client: {} on {} (attempt {}/{}), sleeping {:?}",
+							resp.status(),
+							resp.url(),
+							attempt + 1,
+							MAX_RETRIES + 1,
+							wait
+						);
+						tokio::time::sleep(wait).await;
+					}
 					attempt += 1;
 				}
 				Err(e) => return Err(e),
@@ -437,13 +481,47 @@ fn parse_retry_after(headers: &reqwest::header::HeaderMap) -> Option<Duration> {
 		.map(Duration::from_secs)
 }
 
-/// Pick a backoff for the next attempt: 250 ms, 500 ms, 1 s, 2 s, 4 s.
-/// Playmatch's `retry-after` is rounded down to zero (the bucket replenishes every 250 ms),
-/// so respect it when non-zero but otherwise lean on the exponential schedule.
+/// Pick a 5xx backoff for the next attempt: 250 ms, 500 ms, 1 s, 2 s, 4 s, respecting a
+/// larger `retry-after` when the server sends one.
 fn backoff_duration(headers: &reqwest::header::HeaderMap, attempt: u32) -> Duration {
 	let header_wait = parse_retry_after(headers).unwrap_or(Duration::ZERO);
 	let exp_backoff = Duration::from_millis(250u64 << attempt.min(4));
 	header_wait.max(exp_backoff)
+}
+
+/// How long the whole client stands down after a 429. An origin 429 carries
+/// `retry-after` and is respected, floored at 1 s (playmatch rounds sub-second waits
+/// down to zero). A 429 without the header is the Cloudflare edge-block shape; fast
+/// retries extend a block, so wait on a seconds scale that grows with each attempt.
+fn rate_limit_cooldown(headers: &reqwest::header::HeaderMap, attempt: u32) -> Duration {
+	const MAX_COOLDOWN: Duration = Duration::from_secs(60);
+	match parse_retry_after(headers) {
+		Some(d) => d.max(Duration::from_secs(1)),
+		None => Duration::from_secs(10) * (attempt + 1),
+	}
+	.min(MAX_COOLDOWN)
+}
+
+/// One-line 429 provenance so logs can tell playmatch's own limiter (JSON,
+/// `retry-after`) from a Cloudflare edge block (HTML, `cf-mitigated`, no `retry-after`)
+/// without dumping headers.
+fn describe_429(headers: &reqwest::header::HeaderMap) -> String {
+	let content_type = headers
+		.get(reqwest::header::CONTENT_TYPE)
+		.and_then(|v| v.to_str().ok())
+		.unwrap_or("<none>");
+	let retry_after = if headers.contains_key("retry-after") || headers.contains_key("x-ratelimit-after")
+	{
+		"present"
+	} else {
+		"absent"
+	};
+	let cf_mitigated = if headers.contains_key("cf-mitigated") {
+		"present"
+	} else {
+		"absent"
+	};
+	format!("content-type {content_type}, retry-after {retry_after}, cf-mitigated {cf_mitigated}")
 }
 
 #[cfg(test)]
@@ -526,6 +604,57 @@ mod tests {
 		);
 	}
 
+	#[test]
+	fn rate_limit_cooldown_floors_header_at_one_second() {
+		let h = headers(&[("retry-after", "0")]);
+		assert_eq!(rate_limit_cooldown(&h, 0), Duration::from_secs(1));
+	}
+
+	#[test]
+	fn rate_limit_cooldown_respects_larger_header() {
+		let h = headers(&[("retry-after", "7")]);
+		assert_eq!(rate_limit_cooldown(&h, 0), Duration::from_secs(7));
+	}
+
+	#[test]
+	fn rate_limit_cooldown_without_header_grows_per_attempt_and_caps() {
+		let h = HeaderMap::new();
+		assert_eq!(rate_limit_cooldown(&h, 0), Duration::from_secs(10));
+		assert_eq!(rate_limit_cooldown(&h, 1), Duration::from_secs(20));
+		assert_eq!(rate_limit_cooldown(&h, 4), Duration::from_secs(50));
+		// Header and no-header shapes both cap at 60 s.
+		assert_eq!(rate_limit_cooldown(&h, 99), Duration::from_secs(60));
+		let h = headers(&[("retry-after", "600")]);
+		assert_eq!(rate_limit_cooldown(&h, 0), Duration::from_secs(60));
+	}
+
+	#[test]
+	fn describe_429_distinguishes_origin_from_edge_block() {
+		let origin = headers(&[("content-type", "application/json"), ("retry-after", "1")]);
+		assert_eq!(
+			describe_429(&origin),
+			"content-type application/json, retry-after present, cf-mitigated absent"
+		);
+		let edge = headers(&[("content-type", "text/html"), ("cf-mitigated", "challenge")]);
+		assert_eq!(
+			describe_429(&edge),
+			"content-type text/html, retry-after absent, cf-mitigated present"
+		);
+	}
+
+	#[tokio::test]
+	async fn extend_cooldown_never_shortens_the_deadline() {
+		let client = make_client("http://localhost:1");
+		client.extend_cooldown(Duration::from_secs(60));
+		let first = client.cooldown_until.lock().unwrap().unwrap();
+		client.extend_cooldown(Duration::from_secs(1));
+		let second = client.cooldown_until.lock().unwrap().unwrap();
+		assert_eq!(first, second, "shorter cooldown must not pull the deadline in");
+		client.extend_cooldown(Duration::from_secs(120));
+		let third = client.cooldown_until.lock().unwrap().unwrap();
+		assert!(third > second, "longer cooldown must push the deadline out");
+	}
+
 	fn make_client(uri: &str) -> PlaymatchClient {
 		PlaymatchClient::new(playmatch_client::Client::new(&format!("{uri}/api/v2")))
 	}
@@ -589,8 +718,9 @@ mod tests {
 		let client = make_client(&server.uri());
 		let result = client.get_all_companies().await;
 		assert!(result.is_err());
-		// Sanity check that we actually backed off; full schedule sums to 7.75 s,
-		// allow generous slack for CI flakiness.
+		// Sanity check that we actually backed off. Each 429 stands the client down for
+		// at least 1 s (retry-after 0 floors to 1 s), so five retries idle >= 5 s; allow
+		// generous slack for CI flakiness.
 		assert!(
 			start.elapsed() >= Duration::from_secs(1),
 			"expected at least 1s of backoff, took {:?}",

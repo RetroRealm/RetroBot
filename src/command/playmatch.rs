@@ -19,9 +19,8 @@ use playmatch_client::types::{
 };
 use reqwest::StatusCode;
 use serenity::all::{
-	ButtonStyle, Cache, ChannelId, ComponentInteractionCollector, Context, CreateButton,
-	CreateComponent, CreateInteractionResponse, CreateInteractionResponseMessage, MessageFlags,
-	UserId,
+	ButtonStyle, Cache, ChannelId, ComponentInteraction, ComponentInteractionCollector, Context,
+	CreateButton, CreateInteractionResponse, MessageId, UserId,
 };
 use serenity::http::Http;
 use std::collections::HashSet;
@@ -401,7 +400,7 @@ pub async fn create_game_suggestion(
 					created_at,
 					existing_matches,
 				},
-				None,
+				CardPresentation::New,
 			)
 			.await
 		}
@@ -518,7 +517,7 @@ pub async fn create_company_suggestion(
 					created_at,
 					existing_matches,
 				},
-				None,
+				CardPresentation::New,
 			)
 			.await
 		}
@@ -634,7 +633,7 @@ pub async fn create_platform_suggestion(
 					created_at,
 					existing_matches,
 				},
-				None,
+				CardPresentation::New,
 			)
 			.await
 		}
@@ -938,12 +937,15 @@ pub(crate) enum SuggestionSubmitter {
 /// only persistent cards the bot owns, so the version is scoped to them, not to `Card`.
 pub(crate) const SUGGESTION_CARD_LAYOUT_VERSION: u32 = 1;
 
-/// A tracked card the poller wants `handle_suggestion_message` to re-attach to.
-/// `refresh` is set only when the stored layout version is stale, so a steady-state
-/// boot arms the collector without touching Discord.
-pub(crate) struct ExistingCard {
-	pub message_id: serenity::all::MessageId,
-	pub refresh: bool,
+/// How `handle_suggestion_message` should present the staff card before it arms the
+/// collector. A steady-state re-arm renders nothing and never lands here: it goes through
+/// the poller's zero-read `rearm_existing_collector`, which fetches card data only if a
+/// button is actually pressed.
+pub(crate) enum CardPresentation {
+	/// Post a brand-new staff card into the suggestion channel.
+	New,
+	/// Rewrite an existing card that is on a stale layout, keeping its message id.
+	Refresh(serenity::all::MessageId),
 }
 
 pub(crate) struct SuggestionMessageHandleData {
@@ -985,12 +987,192 @@ struct Resolution {
 	resolved_at: chrono::DateTime<chrono::Utc>,
 }
 
-/// Posts the staff card and waits on the Approve/Decline buttons.
-/// Pass `Some(ExistingCard { .. })` to re-attach to an existing card instead of posting
-/// a new one; `refresh` there decides whether the card is re-rendered first.
+/// Card data fetched once and shared between the staff card and the resolution card: the
+/// submitter label, the provider enrichment, and the pre-rendered match list. `build` is
+/// the only place that issues the provider reads, so a caller that never renders a card
+/// never pays for them.
+pub(crate) struct RenderContext {
+	display_type: &'static str,
+	provider_label: &'static str,
+	author_label: String,
+	dm_target: Option<UserId>,
+	enrichment: Option<Enrichment>,
+	matches_line: String,
+}
+
+impl RenderContext {
+	/// Resolve the submitter and fetch provider enrichment. This is where the card's
+	/// playmatch reads happen, so it runs only when a card is about to be rendered (a
+	/// fresh post, a layout refresh, or a resolution), never on a steady-state re-arm.
+	pub(crate) async fn build(data: &SuggestionMessageHandleData) -> anyhow::Result<Self> {
+		let http: &Http = data.serenity_ctx.http.as_ref();
+
+		let (author_label, dm_target): (String, Option<UserId>) = match &data.submitter {
+			SuggestionSubmitter::DiscordUser(id) => {
+				let user = http.get_user(*id).await?;
+				(format!("<@{}> ({})", user.id, user.name), Some(user.id))
+			}
+			SuggestionSubmitter::External { source } => (format!("External ({source})"), None),
+		};
+
+		let display_type = match data.r#type {
+			SuggestionType::Platform => "Platform",
+			SuggestionType::Company => "Company",
+			SuggestionType::Game => "Game",
+		};
+
+		let enrichment: Option<Enrichment> = match data.r#type {
+			SuggestionType::Game => {
+				providers::fetch_game(&data.playmatch_client, data.provider, &data.provider_id)
+					.await
+					.map(|i| Enrichment {
+						page_url: i.page_url,
+						thumbnail_url: i.cover_url,
+						entry_name: i.name,
+						summary: i.summary,
+						released: i.first_release_date,
+					})
+			}
+			SuggestionType::Company => {
+				providers::fetch_company(&data.playmatch_client, data.provider, &data.provider_id)
+					.await
+					.map(|i| Enrichment {
+						page_url: i.page_url,
+						thumbnail_url: i.logo_url,
+						entry_name: i.name,
+						summary: i.description,
+						released: None,
+					})
+			}
+			SuggestionType::Platform => {
+				providers::fetch_platform(&data.playmatch_client, data.provider, &data.provider_id)
+					.await
+					.map(|i| Enrichment {
+						page_url: i.page_url,
+						thumbnail_url: i.logo_url,
+						entry_name: i.name,
+						summary: i.summary,
+						released: None,
+					})
+			}
+		};
+
+		Ok(Self {
+			display_type,
+			provider_label: display_name(data.provider),
+			author_label,
+			dm_target,
+			enrichment,
+			matches_line: format_match_summaries(&data.existing_matches),
+		})
+	}
+
+	/// The shared card body (claim rows, provenance, provider entry, matches).
+	/// `resolution` switches it between the pending staff card and a resolution card.
+	fn card(
+		&self,
+		data: &SuggestionMessageHandleData,
+		status: Status,
+		heading: String,
+		resolution: Option<&Resolution>,
+	) -> Card<'static> {
+		let provider_label = self.provider_label;
+		let subheading = match resolution {
+			Some(res) => format!(
+				"Suggested {} · resolved {}",
+				relative_timestamp(data.created_at),
+				relative_timestamp(res.resolved_at),
+			),
+			None => format!("Suggested {}", relative_timestamp(data.created_at)),
+		};
+
+		let mut card = Card::new(status, heading).subheading(subheading);
+		if let Some(thumb) = self.enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
+			card = card.thumbnail(thumb);
+		}
+
+		// Claim rows.
+		card = card.row(self.display_type.to_string(), data.name.clone());
+		if let Some(platform) = data.platform.clone() {
+			card = card.row("Platform", platform);
+		}
+		if let Some(company) = data.company.clone() {
+			card = card.row("Company", company);
+		}
+		card = card.row(
+			format!("{provider_label} ID"),
+			format!("`{}`", data.provider_id),
+		);
+
+		// Provenance rows.
+		card = card.row("Suggested by", self.author_label.clone());
+		if let Some(comment) = data.comment.clone() {
+			card = card.row("Comment", comment);
+		}
+		if let Some(res) = resolution {
+			card = card.row("Handled by", format!("<@{}>", res.staff_id));
+			if let Some(roms) = res.roms_updated {
+				card = card.row("ROMs updated", roms.to_string());
+			}
+		}
+
+		// Provider entry section.
+		if let Some(e) = self.enrichment.as_ref() {
+			card = card.section(format!("{provider_label} Entry"));
+			card = card.row("Name", e.entry_name.clone());
+			if let Some(released) = e.released {
+				card = card.row("Released", long_date(released));
+			}
+			if let Some(summary) = e.summary.clone() {
+				card = card.quote(summary);
+			}
+		}
+
+		// Existing matches section.
+		card = card.section("Existing Matches").text(self.matches_line.clone());
+
+		match resolution {
+			Some(_) => card.footer(format!("Suggestion `{}`", data.suggestion_id)),
+			None => card,
+		}
+	}
+
+	/// The full pending staff card: the shared body plus the provider link, Approve/Decline
+	/// buttons and owners footer. Any change to this layout must bump
+	/// SUGGESTION_CARD_LAYOUT_VERSION.
+	fn staff_card(&self, data: &SuggestionMessageHandleData) -> Card<'static> {
+		let provider_label = self.provider_label;
+		let mut staff_card = self.card(
+			data,
+			Status::Info,
+			format!("New {} Suggestion", self.display_type),
+			None,
+		);
+		if let Some(url) = self.enrichment.as_ref().and_then(|e| e.page_url.clone()) {
+			staff_card = staff_card.link_external(url, format!("View on {provider_label}"));
+		}
+		staff_card
+			.link(
+				CreateButton::new(format!("approve:{}", data.suggestion_id))
+					.label("Approve")
+					.style(ButtonStyle::Success),
+			)
+			.link(
+				CreateButton::new(format!("decline:{}", data.suggestion_id))
+					.label("Decline")
+					.style(ButtonStyle::Danger),
+			)
+			.footer("Only bot owners can approve or decline.")
+	}
+}
+
+/// Posts or refreshes the staff card, then waits on the Approve/Decline buttons. This path
+/// always renders a card, so it builds the `RenderContext` (and its provider reads) up
+/// front. A steady-state re-arm renders nothing and goes through the poller's
+/// `rearm_existing_collector`, which builds the context only after a button is pressed.
 pub(crate) async fn handle_suggestion_message(
 	data: SuggestionMessageHandleData,
-	existing: Option<ExistingCard>,
+	presentation: CardPresentation,
 ) -> CommandResult {
 	let http: &Http = data.serenity_ctx.http.as_ref();
 	let cache: Arc<Cache> = data.serenity_ctx.cache.clone();
@@ -1006,163 +1188,17 @@ pub(crate) async fn handle_suggestion_message(
 		return Err(anyhow!("Suggestion channel not found"));
 	}
 
-	let (author_label, dm_target): (String, Option<UserId>) = match &data.submitter {
-		SuggestionSubmitter::DiscordUser(id) => {
-			let user = http.get_user(*id).await?;
-			(format!("<@{}> ({})", user.id, user.name), Some(user.id))
-		}
-		SuggestionSubmitter::External { source } => (format!("External ({source})"), None),
-	};
+	let cx = RenderContext::build(&data).await?;
 
-	let display_type = match data.r#type {
-		SuggestionType::Platform => "Platform",
-		SuggestionType::Company => "Company",
-		SuggestionType::Game => "Game",
-	};
-
-	let enrichment: Option<Enrichment> = match data.r#type {
-		SuggestionType::Game => {
-			providers::fetch_game(&data.playmatch_client, data.provider, &data.provider_id)
-				.await
-				.map(|i| Enrichment {
-					page_url: i.page_url,
-					thumbnail_url: i.cover_url,
-					entry_name: i.name,
-					summary: i.summary,
-					released: i.first_release_date,
-				})
-		}
-		SuggestionType::Company => {
-			providers::fetch_company(&data.playmatch_client, data.provider, &data.provider_id)
-				.await
-				.map(|i| Enrichment {
-					page_url: i.page_url,
-					thumbnail_url: i.logo_url,
-					entry_name: i.name,
-					summary: i.description,
-					released: None,
-				})
-		}
-		SuggestionType::Platform => {
-			providers::fetch_platform(&data.playmatch_client, data.provider, &data.provider_id)
-				.await
-				.map(|i| Enrichment {
-					page_url: i.page_url,
-					thumbnail_url: i.logo_url,
-					entry_name: i.name,
-					summary: i.summary,
-					released: None,
-				})
-		}
-	};
-
-	let provider_label = display_name(data.provider);
-	let matches_line = format_match_summaries(&data.existing_matches);
-
-	let build_card =
-		|status: Status, heading: String, resolution: Option<&Resolution>| -> Card<'static> {
-			let subheading = match resolution {
-				Some(res) => format!(
-					"Suggested {} · resolved {}",
-					relative_timestamp(data.created_at),
-					relative_timestamp(res.resolved_at),
-				),
-				None => format!("Suggested {}", relative_timestamp(data.created_at)),
-			};
-
-			let mut card = Card::new(status, heading).subheading(subheading);
-			if let Some(thumb) = enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
-				card = card.thumbnail(thumb);
-			}
-
-			// Claim rows.
-			card = card.row(display_type.to_string(), data.name.clone());
-			if let Some(platform) = data.platform.clone() {
-				card = card.row("Platform", platform);
-			}
-			if let Some(company) = data.company.clone() {
-				card = card.row("Company", company);
-			}
-			card = card.row(
-				format!("{provider_label} ID"),
-				format!("`{}`", data.provider_id),
-			);
-
-			// Provenance rows.
-			card = card.row("Suggested by", author_label.clone());
-			if let Some(comment) = data.comment.clone() {
-				card = card.row("Comment", comment);
-			}
-			if let Some(res) = resolution {
-				card = card.row("Handled by", format!("<@{}>", res.staff_id));
-				if let Some(roms) = res.roms_updated {
-					card = card.row("ROMs updated", roms.to_string());
-				}
-			}
-
-			// Provider entry section.
-			if let Some(e) = enrichment.as_ref() {
-				card = card.section(format!("{provider_label} Entry"));
-				card = card.row("Name", e.entry_name.clone());
-				if let Some(released) = e.released {
-					card = card.row("Released", long_date(released));
-				}
-				if let Some(summary) = e.summary.clone() {
-					card = card.quote(summary);
-				}
-			}
-
-			// Existing matches section.
-			card = card.section("Existing Matches").text(matches_line.clone());
-
-			match resolution {
-				Some(_) => card.footer(format!("Suggestion `{}`", data.suggestion_id)),
-				None => card,
-			}
-		};
-
-	// The full staff card: the shared body plus the provider link, Approve/Decline
-	// buttons and owners footer. Built identically for the initial post and for the
-	// re-arm edit. Any change to this layout must bump SUGGESTION_CARD_LAYOUT_VERSION.
-	let build_staff_card = || -> Card<'static> {
-		let mut staff_card =
-			build_card(Status::Info, format!("New {display_type} Suggestion"), None);
-		if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
-			staff_card = staff_card.link_external(url, format!("View on {provider_label}"));
-		}
-		staff_card
-			.link(
-				CreateButton::new(format!("approve:{}", data.suggestion_id))
-					.label("Approve")
-					.style(ButtonStyle::Success),
-			)
-			.link(
-				CreateButton::new(format!("decline:{}", data.suggestion_id))
-					.label("Decline")
-					.style(ButtonStyle::Danger),
-			)
-			.footer("Only bot owners can approve or decline.")
-	};
-
-	let message_id = match existing {
-		// Layout is current: arm the collector on the stored card without any Discord
-		// write. Steady-state boots make zero edits.
-		Some(ExistingCard {
-			message_id,
-			refresh: false,
-		}) => message_id,
-		// Re-arm path: the stored layout is stale (or unknown), so rewrite the card with
-		// the freshly built staff card before arming the collector, then record the
-		// current version. Version is written only after the edit succeeds, so a crash
-		// in between skews toward one redundant (paced) refresh next boot, never toward a
-		// silently-stale card.
-		Some(ExistingCard {
-			message_id: id,
-			refresh: true,
-		}) => {
+	let message_id = match presentation {
+		// The stored layout is stale (or unknown), so rewrite the card before arming the
+		// collector, then record the current version. Version is written only after the
+		// edit succeeds, so a crash in between skews toward one redundant (paced) refresh
+		// next boot, never toward a silently-stale card.
+		CardPresentation::Refresh(id) => {
 			match channel_id
 				.widen()
-				.edit_message(http, id, build_staff_card().into_edit())
+				.edit_message(http, id, cx.staff_card(&data).into_edit())
 				.await
 			{
 				Ok(_) => {
@@ -1178,11 +1214,11 @@ pub(crate) async fn handle_suggestion_message(
 					}
 					id
 				}
-				// A 404 means the card was deleted out from under us. Treat it like a
-				// dead entry, exactly as delete_suggestion_card does: drop the store
-				// entry and skip arming a collector (a card that does not exist cannot be
-				// approved). The next reconcile reposts the suggestion fresh from its
-				// source if it is still pending, so the end state stays coherent.
+				// A 404 means the card was deleted out from under us. Treat it like a dead
+				// entry, exactly as delete_suggestion_card does: drop the store entry and
+				// skip arming a collector (a card that does not exist cannot be approved).
+				// The next reconcile reposts the suggestion fresh from its source if it is
+				// still pending, so the end state stays coherent.
 				Err(serenity::Error::Http(e)) if e.status_code() == Some(StatusCode::NOT_FOUND) => {
 					if let Err(e) = data.suggestion_store.remove(data.suggestion_id).await {
 						warn!(
@@ -1193,8 +1229,8 @@ pub(crate) async fn handle_suggestion_message(
 					return Ok(());
 				}
 				// Transient Discord blips must not kill the re-arm; arm the collector on
-				// the existing (still stale) card without a version write so the next
-				// boot retries the refresh.
+				// the existing (still stale) card without a version write so the next boot
+				// retries the refresh.
 				Err(e) => {
 					warn!(
 						"failed to refresh suggestion card {} on re-arm, arming collector anyway: {e}",
@@ -1204,10 +1240,10 @@ pub(crate) async fn handle_suggestion_message(
 				}
 			}
 		}
-		None => {
+		CardPresentation::New => {
 			let message = channel_id
 				.widen()
-				.send_message(http, build_staff_card().into_message())
+				.send_message(http, cx.staff_card(&data).into_message())
 				.await?;
 			data.suggestion_store
 				.mark_posted(
@@ -1229,9 +1265,35 @@ pub(crate) async fn handle_suggestion_message(
 		return Ok(());
 	};
 
-	let staff_id = interaction.user.id;
+	// The context is already in hand, so answer the interaction in one shot.
+	resolve_from_interaction(&data, &cx, interaction, message_id, false).await
+}
 
+/// Handle an Approve/Decline click: resolve on playmatch, swap the staff card for a
+/// resolution card, then drop the store entry (plus a submitter DM). The interaction is
+/// acknowledged first, before the playmatch call, so a slow write (e.g. blocked behind a
+/// 429 cooldown) cannot outrun Discord's 3 s response window and fail the interaction.
+/// `acked` is true when the caller already sent that acknowledgement (the lazy re-arm
+/// path acks before fetching card data); this path then skips the redundant ack.
+pub(crate) async fn resolve_from_interaction(
+	data: &SuggestionMessageHandleData,
+	cx: &RenderContext,
+	interaction: ComponentInteraction,
+	message_id: MessageId,
+	acked: bool,
+) -> CommandResult {
+	let http: &Http = data.serenity_ctx.http.as_ref();
+	let channel_id = ChannelId::new(*SUGGESTION_CHANNEL_ID);
+	let staff_id = interaction.user.id;
 	let action = interaction.data.custom_id.split(':').next().unwrap_or("");
+
+	// Acknowledge up front (unless the caller already did) so the card edit and any paced
+	// playmatch write happen after the interaction is answered, never against its 3 s clock.
+	if !acked {
+		interaction
+			.create_response(http, CreateInteractionResponse::Acknowledge)
+			.await?;
+	}
 
 	match action {
 		"approve" => {
@@ -1241,16 +1303,10 @@ pub(crate) async fn handle_suggestion_message(
 				.await
 				.concise()?;
 
-			if let Err(e) = data.suggestion_store.remove(data.suggestion_id).await {
-				warn!(
-					"failed to remove suggestion {} from store after approve: {e}",
-					data.suggestion_id
-				);
-			}
-
 			let roms_updated =
 				matches!(data.r#type, SuggestionType::Game).then(|| updated.updated.max(0) as u64);
-			let mut resolution = build_card(
+			let mut resolution = cx.card(
+				data,
 				Status::Success,
 				"Suggestion Approved".to_string(),
 				Some(&Resolution {
@@ -1259,38 +1315,27 @@ pub(crate) async fn handle_suggestion_message(
 					resolved_at: Utc::now(),
 				}),
 			);
-			if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
-				resolution = resolution.link_external(url, format!("View on {provider_label}"));
+			if let Some(url) = cx.enrichment.as_ref().and_then(|e| e.page_url.clone()) {
+				resolution = resolution.link_external(url, format!("View on {}", cx.provider_label));
 			}
 
-			interaction
-				.create_response(
-					http,
-					CreateInteractionResponse::UpdateMessage(
-						CreateInteractionResponseMessage::new()
-							.flags(MessageFlags::IS_COMPONENTS_V2)
-							.components(vec![CreateComponent::Container(
-								resolution.into_container(),
-							)]),
-					),
-				)
-				.await?;
+			finalize_resolution(data, channel_id, message_id, resolution).await;
 
-			if let Some(dm_id) = dm_target {
+			if let Some(dm_id) = cx.dm_target {
 				let mut dm = Card::new(Status::Success, "Suggestion Approved");
-				if let Some(thumb) = enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
+				if let Some(thumb) = cx.enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
 					dm = dm.thumbnail(thumb);
 				}
-				dm = dm.row(display_type.to_string(), data.name.clone()).row(
-					format!("{provider_label} ID"),
+				dm = dm.row(cx.display_type.to_string(), data.name.clone()).row(
+					format!("{} ID", cx.provider_label),
 					format!("`{}`", data.provider_id),
 				);
 				if let Some(roms) = roms_updated {
 					dm = dm.row("ROMs updated", roms.to_string());
 				}
 				dm = dm.text("Thanks for contributing.");
-				if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
-					dm = dm.link_external(url, format!("View on {provider_label}"));
+				if let Some(url) = cx.enrichment.as_ref().and_then(|e| e.page_url.clone()) {
+					dm = dm.link_external(url, format!("View on {}", cx.provider_label));
 				}
 				if let Err(e) = dm_id.dm(http, dm.into_message()).await {
 					error!("failed to DM submitter on approval: {e}");
@@ -1303,14 +1348,8 @@ pub(crate) async fn handle_suggestion_message(
 				.await
 				.concise()?;
 
-			if let Err(e) = data.suggestion_store.remove(data.suggestion_id).await {
-				warn!(
-					"failed to remove suggestion {} from store after decline: {e}",
-					data.suggestion_id
-				);
-			}
-
-			let mut resolution = build_card(
+			let mut resolution = cx.card(
+				data,
 				Status::Error,
 				"Suggestion Declined".to_string(),
 				Some(&Resolution {
@@ -1319,37 +1358,26 @@ pub(crate) async fn handle_suggestion_message(
 					resolved_at: Utc::now(),
 				}),
 			);
-			if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
-				resolution = resolution.link_external(url, format!("View on {provider_label}"));
+			if let Some(url) = cx.enrichment.as_ref().and_then(|e| e.page_url.clone()) {
+				resolution = resolution.link_external(url, format!("View on {}", cx.provider_label));
 			}
 
-			interaction
-				.create_response(
-					http,
-					CreateInteractionResponse::UpdateMessage(
-						CreateInteractionResponseMessage::new()
-							.flags(MessageFlags::IS_COMPONENTS_V2)
-							.components(vec![CreateComponent::Container(
-								resolution.into_container(),
-							)]),
-					),
-				)
-				.await?;
+			finalize_resolution(data, channel_id, message_id, resolution).await;
 
-			if let Some(dm_id) = dm_target {
+			if let Some(dm_id) = cx.dm_target {
 				let mut dm = Card::new(Status::Error, "Suggestion Declined");
-				if let Some(thumb) = enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
+				if let Some(thumb) = cx.enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
 					dm = dm.thumbnail(thumb);
 				}
 				dm = dm
-					.row(display_type.to_string(), data.name.clone())
+					.row(cx.display_type.to_string(), data.name.clone())
 					.row(
-						format!("{provider_label} ID"),
+						format!("{} ID", cx.provider_label),
 						format!("`{}`", data.provider_id),
 					)
 					.text("If you'd like context, reach out to the Playmatch team.");
-				if let Some(url) = enrichment.as_ref().and_then(|e| e.page_url.clone()) {
-					dm = dm.link_external(url, format!("View on {provider_label}"));
+				if let Some(url) = cx.enrichment.as_ref().and_then(|e| e.page_url.clone()) {
+					dm = dm.link_external(url, format!("View on {}", cx.provider_label));
 				}
 				if let Err(e) = dm_id.dm(http, dm.into_message()).await {
 					error!("failed to DM submitter on decline: {e}");
@@ -1365,6 +1393,39 @@ pub(crate) async fn handle_suggestion_message(
 	}
 
 	Ok(())
+}
+
+/// Edit the staff card into its resolution card, then drop the store entry. The store
+/// entry is removed only after the edit succeeds: if the edit fails the suggestion is
+/// already resolved on playmatch but keeping the entry lets the next reconcile pass delete
+/// the now-stale card, instead of orphaning a card with dead Approve/Decline buttons.
+async fn finalize_resolution(
+	data: &SuggestionMessageHandleData,
+	channel_id: ChannelId,
+	message_id: MessageId,
+	resolution: Card<'static>,
+) {
+	let http: &Http = data.serenity_ctx.http.as_ref();
+	match channel_id
+		.widen()
+		.edit_message(http, message_id, resolution.into_edit())
+		.await
+	{
+		Ok(_) => {
+			if let Err(e) = data.suggestion_store.remove(data.suggestion_id).await {
+				warn!(
+					"failed to remove suggestion {} from store after resolve: {e}",
+					data.suggestion_id
+				);
+			}
+		}
+		Err(e) => {
+			warn!(
+				"failed to update resolved card for suggestion {} (keeping store entry for reconcile): {e}",
+				data.suggestion_id
+			);
+		}
+	}
 }
 
 async fn get_playmatch_user_ctx(ctx: CommandContext<'_>) -> anyhow::Result<PlaymatchUserCtx> {

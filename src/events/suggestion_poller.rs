@@ -3,8 +3,8 @@ use crate::abstraction::playmatch::{ConciseError, describe};
 use crate::abstraction::suggestion_store::TrackedCard;
 use crate::command::SUGGESTION_CHANNEL_ID;
 use crate::command::playmatch::{
-	ExistingCard, SUGGESTION_CARD_LAYOUT_VERSION, SuggestionMessageHandleData, SuggestionSubmitter,
-	SuggestionType, handle_suggestion_message,
+	CardPresentation, RenderContext, SUGGESTION_CARD_LAYOUT_VERSION, SuggestionMessageHandleData,
+	SuggestionSubmitter, SuggestionType, handle_suggestion_message, resolve_from_interaction,
 };
 use governor::{Quota, RateLimiter};
 use lazy_static::lazy_static;
@@ -12,8 +12,9 @@ use log::{debug, info, warn};
 use playmatch_client::types::{ExternalMetadata, MetadataMatchType, MetadataProvider, Suggestion};
 use reqwest::StatusCode;
 use serenity::all::{
-	ActionRowComponent, ButtonKind, ChannelId, Component, ContainerComponent, Context, GetMessages,
-	Http, Message, MessageId, TeamMemberRole, UserId,
+	ActionRowComponent, ButtonKind, ChannelId, Component, ComponentInteractionCollector,
+	ContainerComponent, Context, CreateInteractionResponse, GetMessages, Http, Message, MessageId,
+	TeamMemberRole, UserId,
 };
 use std::collections::{HashMap, HashSet};
 use std::env;
@@ -392,7 +393,7 @@ fn spawn_new_post(
 		// Permit taken after the playmatch reads, immediately before the send inside
 		// handle_suggestion_message.
 		pace_bulk_write().await;
-		if let Err(e) = handle_suggestion_message(payload, None).await {
+		if let Err(e) = handle_suggestion_message(payload, CardPresentation::New).await {
 			warn!("suggestion poller: posting {suggestion_id} ended with error: {e}");
 		}
 	});
@@ -407,28 +408,85 @@ fn spawn_collector(
 ) {
 	tokio::spawn(async move {
 		let suggestion_id = suggestion.id;
-		let payload = match build_handle_data(ctx.clone(), data.clone(), owners, suggestion).await {
-			Ok(p) => p,
-			Err(e) => {
-				warn!("suggestion poller: cannot build re-arm payload for {suggestion_id}: {e}");
-				return;
-			}
-		};
-		let refresh = needs_layout_refresh(tracked.layout_version);
-		// Only a refresh issues a Discord write, so only a refresh takes a permit. The
-		// permit is acquired after build_handle_data's playmatch reads, immediately
-		// before the edit inside handle_suggestion_message.
-		if refresh {
+		if needs_layout_refresh(tracked.layout_version) {
+			// Stale (or unknown) layout: rebuild the card data and rewrite the card before
+			// arming the collector. Rare: only right after a layout bump.
+			let payload =
+				match build_handle_data(ctx.clone(), data.clone(), owners, suggestion).await {
+					Ok(p) => p,
+					Err(e) => {
+						warn!(
+							"suggestion poller: cannot build re-arm payload for {suggestion_id}: {e}"
+						);
+						return;
+					}
+				};
+			// The permit is taken after build_handle_data's reads, immediately before the
+			// edit inside handle_suggestion_message.
 			pace_bulk_write().await;
-		}
-		let existing = ExistingCard {
-			message_id: tracked.message_id,
-			refresh,
-		};
-		if let Err(e) = handle_suggestion_message(payload, Some(existing)).await {
-			warn!("suggestion poller: collector for {suggestion_id} ended with error: {e}");
+			if let Err(e) =
+				handle_suggestion_message(payload, CardPresentation::Refresh(tracked.message_id))
+					.await
+			{
+				warn!("suggestion poller: collector for {suggestion_id} ended with error: {e}");
+			}
+		} else {
+			// Current layout: arm the collector with zero playmatch reads and zero Discord
+			// writes. Card data is built lazily only if a button is actually pressed.
+			rearm_existing_collector(ctx, data, owners, suggestion, tracked.message_id).await;
 		}
 	});
+}
+
+/// Re-attach an owners-only Approve/Decline collector to an existing, current-layout card
+/// without fetching anything. Steady-state boots take this path for every tracked card, so
+/// it issues no playmatch reads and no Discord writes until a button is pressed. On a press
+/// it acknowledges first (to beat Discord's 3s interaction deadline), then builds the card
+/// data and resolves.
+async fn rearm_existing_collector(
+	ctx: Context,
+	data: Arc<CommandData>,
+	owners: HashSet<UserId>,
+	suggestion: Suggestion,
+	message_id: MessageId,
+) {
+	let suggestion_id = suggestion.id;
+	let filter_owners = owners.clone();
+	let Some(interaction) = ComponentInteractionCollector::new(&ctx)
+		.message_id(message_id)
+		.filter(move |i| filter_owners.contains(&i.user.id))
+		.await
+	else {
+		return;
+	};
+
+	// Acknowledge before any playmatch read: build_handle_data plus enrichment can take
+	// several paced requests, well past Discord's 3s response window.
+	if let Err(e) = interaction
+		.create_response(ctx.http.as_ref(), CreateInteractionResponse::Acknowledge)
+		.await
+	{
+		warn!("suggestion poller: failed to ack interaction for {suggestion_id}: {e}");
+		return;
+	}
+
+	let payload = match build_handle_data(ctx.clone(), data, owners, suggestion).await {
+		Ok(p) => p,
+		Err(e) => {
+			warn!("suggestion poller: cannot build resolve payload for {suggestion_id}: {e}");
+			return;
+		}
+	};
+	let cx = match RenderContext::build(&payload).await {
+		Ok(cx) => cx,
+		Err(e) => {
+			warn!("suggestion poller: cannot build render context for {suggestion_id}: {e}");
+			return;
+		}
+	};
+	if let Err(e) = resolve_from_interaction(&payload, &cx, interaction, message_id, true).await {
+		warn!("suggestion poller: resolving {suggestion_id} ended with error: {e}");
+	}
 }
 
 async fn fetch_owners(http: &Http) -> serenity::Result<HashSet<UserId>> {
