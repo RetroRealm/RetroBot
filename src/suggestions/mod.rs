@@ -20,7 +20,7 @@ use std::env;
 use std::sync::Arc;
 use std::time::Duration;
 
-use log::{info, warn};
+use log::{debug, info, warn};
 use playmatch_client::types::Suggestion;
 use serenity::all::{Context, Http, TeamMemberRole, UserId};
 use tokio::time::interval;
@@ -58,10 +58,18 @@ pub async fn run(ctx: Context, data: Arc<CommandData>) {
 	let interval_secs = poll_interval_secs();
 	info!("suggestions: reconciling every {interval_secs}s");
 	let mut tick = interval(Duration::from_secs(interval_secs));
+	// The first successful pass is logged at info (the startup summary of what's pending /
+	// to migrate); later passes drop to debug so steady-state runs don't spam.
+	let mut first = true;
 	loop {
 		tick.tick().await;
-		if let Err(e) = sync::sync_once(&ctx, &data, dispatcher).await {
-			warn!("suggestions: sync failed: {e}");
+		match sync::sync_once(&ctx, &data, dispatcher).await {
+			Ok(summary) if first => {
+				info!("suggestions: {summary}");
+				first = false;
+			}
+			Ok(summary) => debug!("suggestions: {summary}"),
+			Err(e) => warn!("suggestions: sync failed: {e}"),
 		}
 	}
 }

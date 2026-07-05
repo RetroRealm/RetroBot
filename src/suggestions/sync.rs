@@ -17,11 +17,39 @@ use crate::suggestions::card::{LAYOUT_VERSION, SuggestionSubmitter};
 use crate::suggestions::dispatch::Dispatcher;
 use crate::suggestions::store::TrackedCard;
 
+/// What one reconcile pass decided, for logging. Counts are of suggestions, not requests
+/// (each `to_post`/`to_refresh`/`to_delete` becomes one rate-limited job).
+#[derive(Default)]
+pub struct SyncSummary {
+	/// Total pending suggestions fetched from playmatch.
+	pub pending: usize,
+	/// Already have a current-layout card; only re-armed.
+	pub current: usize,
+	/// No card yet; queued to send.
+	pub to_post: usize,
+	/// Card on an old layout; queued to re-render (migrate).
+	pub to_refresh: usize,
+	/// Card whose suggestion is gone (resolved outside Discord); queued to delete.
+	pub to_delete: usize,
+	/// Dismissed this pass because the target already had an active provider match.
+	pub swept: usize,
+}
+
+impl std::fmt::Display for SyncSummary {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(
+			f,
+			"{} pending: {} current, {} to post, {} to migrate, {} to delete, {} swept",
+			self.pending, self.current, self.to_post, self.to_refresh, self.to_delete, self.swept
+		)
+	}
+}
+
 pub async fn sync_once(
 	ctx: &Context,
 	data: &Arc<CommandData>,
 	dispatcher: &Dispatcher,
-) -> anyhow::Result<()> {
+) -> anyhow::Result<SyncSummary> {
 	// Snapshot Redis before fetching pending. A card the /suggest path posts mid-sync would
 	// otherwise appear in neither snapshot consistently; reading `posted` first keeps a
 	// freshly-posted card off the delete list until it also shows up in `pending`.
@@ -35,19 +63,30 @@ pub async fn sync_once(
 	pending.sort_by_key(|s| s.created_at);
 	let pending_ids: HashSet<Uuid> = pending.iter().map(|s| s.id).collect();
 
+	let mut summary = SyncSummary {
+		pending: pending.len(),
+		swept: swept.len(),
+		..Default::default()
+	};
+
 	for suggestion in pending {
 		if swept.contains(&suggestion.id) {
 			continue;
 		}
 		match posted.get(&suggestion.id) {
-			None => dispatcher.queue_send(suggestion),
+			None => {
+				summary.to_post += 1;
+				dispatcher.queue_send(suggestion);
+			}
 			Some(card) if card.version == LAYOUT_VERSION => {
+				summary.current += 1;
 				let submitter = SuggestionSubmitter::from_source(suggestion.source.clone());
 				dispatcher.arm(ctx, data, suggestion, card.message_id, submitter);
 			}
 			Some(card) => {
 				// Outdated layout: arm now so the buttons work immediately, and queue the
 				// (heavily rate-limited) refresh to catch the card up to the new layout.
+				summary.to_refresh += 1;
 				let submitter = SuggestionSubmitter::from_source(suggestion.source.clone());
 				let message_id = card.message_id;
 				dispatcher.arm(ctx, data, suggestion.clone(), message_id, submitter);
@@ -59,11 +98,12 @@ pub async fn sync_once(
 	// Cards whose suggestion is no longer pending were resolved outside Discord: remove them.
 	for (uuid, card) in &posted {
 		if !pending_ids.contains(uuid) && !swept.contains(uuid) {
+			summary.to_delete += 1;
 			dispatcher.queue_delete(*uuid, card.message_id);
 		}
 	}
 
-	Ok(())
+	Ok(summary)
 }
 
 /// Dismiss game suggestions whose target already has an `Automatic`/`Manual` mapping for the
