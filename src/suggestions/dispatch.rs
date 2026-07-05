@@ -34,7 +34,11 @@ use crate::suggestions::interaction;
 type DirectLimiter = RateLimiter<NotKeyed, InMemoryState, DefaultClock>;
 
 fn per_hour(var: &str, default: u32) -> u32 {
-	env::var(var).ok().and_then(|v| v.parse().ok()).unwrap_or(default).max(1)
+	env::var(var)
+		.ok()
+		.and_then(|v| v.parse().ok())
+		.unwrap_or(default)
+		.max(1)
 }
 
 /// A steady limiter that hands out `per_hour` permits an hour, evenly spaced (burst 1).
@@ -45,8 +49,14 @@ fn hourly_limiter(per_hour: u32) -> DirectLimiter {
 
 /// An operation on an existing card, drained by the edit worker.
 enum EditJob {
-	Refresh { suggestion: Suggestion, message_id: MessageId },
-	Delete { uuid: Uuid, message_id: MessageId },
+	Refresh {
+		suggestion: Suggestion,
+		message_id: MessageId,
+	},
+	Delete {
+		uuid: Uuid,
+		message_id: MessageId,
+	},
 }
 
 impl EditJob {
@@ -105,7 +115,12 @@ impl Dispatcher {
 			hourly_limiter(edit_rate),
 		));
 
-		Self { owners, send_tx, edit_tx, managed }
+		Self {
+			owners,
+			send_tx,
+			edit_tx,
+			managed,
+		}
 	}
 
 	/// Queue a new card. No-op if this suggestion already has a job in flight.
@@ -118,7 +133,10 @@ impl Dispatcher {
 	/// Queue a layout refresh of an existing card. No-op if a job is already in flight.
 	pub fn queue_refresh(&self, suggestion: Suggestion, message_id: MessageId) {
 		if self.managed.queued.lock().unwrap().insert(suggestion.id) {
-			let _ = self.edit_tx.send(EditJob::Refresh { suggestion, message_id });
+			let _ = self.edit_tx.send(EditJob::Refresh {
+				suggestion,
+				message_id,
+			});
 		}
 	}
 
@@ -138,7 +156,15 @@ impl Dispatcher {
 		message_id: MessageId,
 		submitter: SuggestionSubmitter,
 	) {
-		arm(&self.managed, ctx, data, &self.owners, suggestion, message_id, submitter);
+		arm(
+			&self.managed,
+			ctx,
+			data,
+			&self.owners,
+			suggestion,
+			message_id,
+			submitter,
+		);
 	}
 
 	/// Post a card for a just-created suggestion immediately, bypassing the send limiter, and
@@ -157,19 +183,26 @@ impl Dispatcher {
 			return; // already being handled by the sync path
 		}
 
-		let card_data = match build_card_data(&data.playmatch_client, &suggestion, submitter.clone())
-			.await
-		{
-			Ok(d) => Some(d),
-			Err(e) => {
-				warn!("suggestion {id}: cannot build card data: {e}");
-				None
-			}
-		};
+		let card_data =
+			match build_card_data(&data.playmatch_client, &suggestion, submitter.clone()).await {
+				Ok(d) => Some(d),
+				Err(e) => {
+					warn!("suggestion {id}: cannot build card data: {e}");
+					None
+				}
+			};
 		if let Some(card_data) = card_data
 			&& let Some(message_id) = send_staff_card(ctx, data, &card_data).await
 		{
-			arm(&self.managed, ctx, data, &self.owners, suggestion, message_id, submitter);
+			arm(
+				&self.managed,
+				ctx,
+				data,
+				&self.owners,
+				suggestion,
+				message_id,
+				submitter,
+			);
 		}
 
 		self.managed.queued.lock().unwrap().remove(&id);
@@ -240,9 +273,10 @@ async fn edit_worker(
 		data.discord_cooldown.wait().await;
 		let uuid = job.uuid();
 		match job {
-			EditJob::Refresh { suggestion, message_id } => {
-				refresh_card(&ctx, &data, &managed, &suggestion, message_id).await
-			}
+			EditJob::Refresh {
+				suggestion,
+				message_id,
+			} => refresh_card(&ctx, &data, &managed, &suggestion, message_id).await,
 			EditJob::Delete { uuid, message_id } => {
 				delete_card(&ctx, &data, &managed, uuid, message_id).await
 			}
@@ -281,7 +315,9 @@ async fn post_new_card(
 		};
 
 	if let Some(message_id) = send_staff_card(ctx, data, &card_data).await {
-		arm(managed, ctx, data, owners, suggestion, message_id, submitter);
+		arm(
+			managed, ctx, data, owners, suggestion, message_id, submitter,
+		);
 	}
 }
 
@@ -294,7 +330,8 @@ async fn send_staff_card(
 	card_data: &CardData,
 ) -> Option<MessageId> {
 	let id = card_data.suggestion_id;
-	let cx = match RenderContext::build(ctx.http.as_ref(), &data.playmatch_client, card_data).await {
+	let cx = match RenderContext::build(ctx.http.as_ref(), &data.playmatch_client, card_data).await
+	{
 		Ok(cx) => cx,
 		Err(e) => {
 			warn!("suggestion {id}: cannot build render context to post: {e}");
@@ -314,7 +351,11 @@ async fn send_staff_card(
 		}
 	};
 
-	if let Err(e) = data.suggestion_store.mark_posted(id, message.id, LAYOUT_VERSION).await {
+	if let Err(e) = data
+		.suggestion_store
+		.mark_posted(id, message.id, LAYOUT_VERSION)
+		.await
+	{
 		warn!("suggestion {id}: posted card but failed to record it: {e}");
 	}
 	Some(message.id)
@@ -347,11 +388,19 @@ async fn refresh_card(
 
 	match ChannelId::new(*SUGGESTION_CHANNEL_ID)
 		.widen()
-		.edit_message(ctx.http.as_ref(), message_id, cx.staff_card(&card_data).into_edit())
+		.edit_message(
+			ctx.http.as_ref(),
+			message_id,
+			cx.staff_card(&card_data).into_edit(),
+		)
 		.await
 	{
 		Ok(_) => {
-			if let Err(e) = data.suggestion_store.mark_posted(id, message_id, LAYOUT_VERSION).await {
+			if let Err(e) = data
+				.suggestion_store
+				.mark_posted(id, message_id, LAYOUT_VERSION)
+				.await
+			{
 				warn!("suggestion {id}: refreshed card but failed to record version: {e}");
 			}
 		}

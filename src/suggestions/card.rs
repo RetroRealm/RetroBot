@@ -79,38 +79,43 @@ pub async fn build_card_data(
 	suggestion: &Suggestion,
 	submitter: SuggestionSubmitter,
 ) -> anyhow::Result<CardData> {
-	let (kind, name, platform, company, existing_matches) = if let Some(game_id) =
-		suggestion.game_id
-	{
-		let game = client.get_game_with_relations_by_id(game_id).await.concise()?;
-		(
-			SuggestionType::Game,
-			game.game.name.clone(),
-			Some(game.platform.name.clone()),
-			game.company.map(|c| c.name),
-			game.external_metadata.iter().map(Into::into).collect(),
-		)
-	} else if let Some(company_id) = suggestion.company_id {
-		let c = client.get_company_by_id(company_id).await.concise()?;
-		(
-			SuggestionType::Company,
-			c.name.clone(),
-			None,
-			None,
-			c.external_metadata.iter().map(Into::into).collect(),
-		)
-	} else if let Some(platform_id) = suggestion.platform_id {
-		let p = client.get_platform_by_id(platform_id).await.concise()?;
-		(
-			SuggestionType::Platform,
-			p.name.clone(),
-			None,
-			p.company_name.clone(),
-			p.external_metadata.iter().map(Into::into).collect(),
-		)
-	} else {
-		anyhow::bail!("suggestion {} has no game/company/platform id", suggestion.id);
-	};
+	let (kind, name, platform, company, existing_matches) =
+		if let Some(game_id) = suggestion.game_id {
+			let game = client
+				.get_game_with_relations_by_id(game_id)
+				.await
+				.concise()?;
+			(
+				SuggestionType::Game,
+				game.game.name.clone(),
+				Some(game.platform.name.clone()),
+				game.company.map(|c| c.name),
+				game.external_metadata.iter().map(Into::into).collect(),
+			)
+		} else if let Some(company_id) = suggestion.company_id {
+			let c = client.get_company_by_id(company_id).await.concise()?;
+			(
+				SuggestionType::Company,
+				c.name.clone(),
+				None,
+				None,
+				c.external_metadata.iter().map(Into::into).collect(),
+			)
+		} else if let Some(platform_id) = suggestion.platform_id {
+			let p = client.get_platform_by_id(platform_id).await.concise()?;
+			(
+				SuggestionType::Platform,
+				p.name.clone(),
+				None,
+				p.company_name.clone(),
+				p.external_metadata.iter().map(Into::into).collect(),
+			)
+		} else {
+			anyhow::bail!(
+				"suggestion {} has no game/company/platform id",
+				suggestion.id
+			);
+		};
 
 	Ok(CardData {
 		suggestion_id: suggestion.id,
@@ -233,7 +238,11 @@ impl RenderContext {
 		};
 
 		let mut card = Card::new(status, heading).subheading(subheading);
-		if let Some(thumb) = self.enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
+		if let Some(thumb) = self
+			.enrichment
+			.as_ref()
+			.and_then(|e| e.thumbnail_url.clone())
+		{
 			card = card.thumbnail(thumb);
 		}
 
@@ -244,7 +253,10 @@ impl RenderContext {
 		if let Some(company) = data.company.clone() {
 			card = card.row("Company", company);
 		}
-		card = card.row(format!("{provider_label} ID"), format!("`{}`", data.provider_id));
+		card = card.row(
+			format!("{provider_label} ID"),
+			format!("`{}`", data.provider_id),
+		);
 
 		card = card.row("Suggested by", self.author_label.clone());
 		if let Some(comment) = data.comment.clone() {
@@ -268,7 +280,9 @@ impl RenderContext {
 			}
 		}
 
-		card = card.section("Existing Matches").text(self.matches_line.clone());
+		card = card
+			.section("Existing Matches")
+			.text(self.matches_line.clone());
 
 		match resolution {
 			Some(_) => card.footer(format!("Suggestion `{}`", data.suggestion_id)),
@@ -304,9 +318,18 @@ impl RenderContext {
 
 	/// The submitter DM sent on resolution. `approved` picks the wording; games may report
 	/// how many ROMs were updated.
-	pub fn resolution_dm(&self, data: &CardData, approved: bool, roms_updated: Option<u64>) -> Card<'static> {
+	pub fn resolution_dm(
+		&self,
+		data: &CardData,
+		approved: bool,
+		roms_updated: Option<u64>,
+	) -> Card<'static> {
 		let (status, heading, closing) = if approved {
-			(Status::Success, "Suggestion Approved", "Thanks for contributing.")
+			(
+				Status::Success,
+				"Suggestion Approved",
+				"Thanks for contributing.",
+			)
 		} else {
 			(
 				Status::Error,
@@ -316,7 +339,11 @@ impl RenderContext {
 		};
 
 		let mut dm = Card::new(status, heading);
-		if let Some(thumb) = self.enrichment.as_ref().and_then(|e| e.thumbnail_url.clone()) {
+		if let Some(thumb) = self
+			.enrichment
+			.as_ref()
+			.and_then(|e| e.thumbnail_url.clone())
+		{
 			dm = dm.thumbnail(thumb);
 		}
 		dm = dm.row(data.kind.label(), data.name.clone()).row(

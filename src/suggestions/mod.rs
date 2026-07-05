@@ -105,7 +105,10 @@ async fn fetch_owners(http: &Http) -> serenity::Result<HashSet<UserId>> {
 	}
 	if let Some(team) = app_info.team.as_ref() {
 		for member in team.members.iter() {
-			if matches!(member.role, TeamMemberRole::Admin | TeamMemberRole::Developer) {
+			if matches!(
+				member.role,
+				TeamMemberRole::Admin | TeamMemberRole::Developer
+			) {
 				owners.insert(member.user.id);
 			}
 		}

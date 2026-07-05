@@ -54,7 +54,11 @@ pub async fn sync_once(
 	// otherwise appear in neither snapshot consistently; reading `posted` first keeps a
 	// freshly-posted card off the delete list until it also shows up in `pending`.
 	let posted = data.suggestion_store.list_all().await?;
-	let mut pending = data.playmatch_client.get_all_suggestions().await.concise()?;
+	let mut pending = data
+		.playmatch_client
+		.get_all_suggestions()
+		.await
+		.concise()?;
 
 	// Tear down suggestions whose target already has an active provider match.
 	let swept = sweep_redundant(data, dispatcher, &pending, &posted).await;
@@ -137,7 +141,10 @@ async fn sweep_redundant(
 				.filter_map(|r| r.data.map(|g| (r.id, g.external_metadata)))
 				.collect(),
 			Err(e) => {
-				warn!("suggestion sweep: bulk game lookup failed: {}", describe(&e));
+				warn!(
+					"suggestion sweep: bulk game lookup failed: {}",
+					describe(&e)
+				);
 				return swept;
 			}
 		};
@@ -155,7 +162,11 @@ async fn sweep_redundant(
 
 		// Playmatch is the source of truth; tear it down there first.
 		if let Err(e) = data.playmatch_client.delete_suggestion(suggestion.id).await {
-			warn!("suggestion sweep: delete_suggestion({}) failed: {}", suggestion.id, describe(&e));
+			warn!(
+				"suggestion sweep: delete_suggestion({}) failed: {}",
+				suggestion.id,
+				describe(&e)
+			);
 			continue;
 		}
 		if let Some(card) = posted.get(&suggestion.id) {
@@ -174,6 +185,9 @@ async fn sweep_redundant(
 fn has_active_provider_match(metas: &[ExternalMetadata], provider: MetadataProvider) -> bool {
 	metas.iter().any(|m| {
 		m.provider_name == provider
-			&& matches!(m.match_type, MetadataMatchType::Automatic | MetadataMatchType::Manual)
+			&& matches!(
+				m.match_type,
+				MetadataMatchType::Automatic | MetadataMatchType::Manual
+			)
 	})
 }

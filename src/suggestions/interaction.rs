@@ -91,13 +91,21 @@ async fn resolve(
 		Some("approve") => true,
 		Some("decline") => false,
 		_ => {
-			warn!("unexpected suggestion button custom_id: {}", interaction.data.custom_id);
+			warn!(
+				"unexpected suggestion button custom_id: {}",
+				interaction.data.custom_id
+			);
 			return;
 		}
 	};
 
 	let roms_updated = if approved {
-		match data.playmatch_client.approve_suggestion(card.suggestion_id).await.concise() {
+		match data
+			.playmatch_client
+			.approve_suggestion(card.suggestion_id)
+			.await
+			.concise()
+		{
 			Ok(updated) => {
 				matches!(card.kind, SuggestionType::Game).then(|| updated.updated.max(0) as u64)
 			}
@@ -107,7 +115,12 @@ async fn resolve(
 			}
 		}
 	} else {
-		if let Err(e) = data.playmatch_client.delete_suggestion(card.suggestion_id).await.concise() {
+		if let Err(e) = data
+			.playmatch_client
+			.delete_suggestion(card.suggestion_id)
+			.await
+			.concise()
+		{
 			warn!("suggestion {}: decline failed: {e}", card.suggestion_id);
 			return;
 		}
@@ -138,7 +151,10 @@ async fn resolve(
 	if let Some(dm_id) = cx.dm_target {
 		let dm = cx.resolution_dm(card, approved, roms_updated);
 		if let Err(e) = dm_id.dm(ctx.http.as_ref(), dm.into_message()).await {
-			error!("suggestion {}: failed to DM submitter: {e}", card.suggestion_id);
+			error!(
+				"suggestion {}: failed to DM submitter: {e}",
+				card.suggestion_id
+			);
 		}
 	}
 }

@@ -61,8 +61,14 @@ impl SuggestionStore {
 		version: u32,
 	) -> Result<(), Error> {
 		let mut c = self.conn.clone();
-		c.set::<_, _, ()>(key_for(uuid), encode(TrackedCard { message_id, version }))
-			.await
+		c.set::<_, _, ()>(
+			key_for(uuid),
+			encode(TrackedCard {
+				message_id,
+				version,
+			}),
+		)
+		.await
 	}
 
 	pub async fn get(&self, uuid: Uuid) -> Result<Option<TrackedCard>, Error> {

@@ -510,12 +510,12 @@ fn describe_429(headers: &reqwest::header::HeaderMap) -> String {
 		.get(reqwest::header::CONTENT_TYPE)
 		.and_then(|v| v.to_str().ok())
 		.unwrap_or("<none>");
-	let retry_after = if headers.contains_key("retry-after") || headers.contains_key("x-ratelimit-after")
-	{
-		"present"
-	} else {
-		"absent"
-	};
+	let retry_after =
+		if headers.contains_key("retry-after") || headers.contains_key("x-ratelimit-after") {
+			"present"
+		} else {
+			"absent"
+		};
 	let cf_mitigated = if headers.contains_key("cf-mitigated") {
 		"present"
 	} else {
@@ -649,7 +649,10 @@ mod tests {
 		let first = client.cooldown_until.lock().unwrap().unwrap();
 		client.extend_cooldown(Duration::from_secs(1));
 		let second = client.cooldown_until.lock().unwrap().unwrap();
-		assert_eq!(first, second, "shorter cooldown must not pull the deadline in");
+		assert_eq!(
+			first, second,
+			"shorter cooldown must not pull the deadline in"
+		);
 		client.extend_cooldown(Duration::from_secs(120));
 		let third = client.cooldown_until.lock().unwrap().unwrap();
 		assert!(third > second, "longer cooldown must push the deadline out");
