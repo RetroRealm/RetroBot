@@ -1,6 +1,7 @@
 pub mod abstraction;
 mod command;
 mod events;
+mod suggestions;
 pub mod util;
 
 use crate::command::{
@@ -10,7 +11,7 @@ use crate::util::retry::{backoff_delay, jittered, retry_discord_startup};
 use abstraction::command::CommandData;
 use dotenvy::dotenv;
 use log::{error, info};
-use serenity::all::{GuildId, Http, Token};
+use serenity::all::{GuildId, Token};
 use serenity::prelude::GatewayIntents;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
@@ -42,28 +43,6 @@ async fn main() -> anyhow::Result<()> {
 	// fatal-fast: it is a local dependency and container restart is the right remedy.
 	let data = Arc::new(CommandData::new().await?);
 
-	let http = Http::new(token.clone());
-
-	// The three startup REST calls retry in-process instead of propagating: a Discord
-	// error here must not exit and hand control to the container restart loop (see
-	// util::retry). Command lists are built once and reborrowed per attempt.
-	let app_info =
-		retry_discord_startup("application info", || http.get_current_application_info()).await;
-	http.set_application_id(app_info.id);
-
-	let global_commands = get_global_commands();
-	retry_discord_startup("global command registration", || {
-		poise::builtins::register_globally(&http, global_commands.iter())
-	})
-	.await;
-
-	let guild_commands = retrorealm_server_commands();
-	let guild_id = GuildId::new(*RETROREALM_SERVER_ID);
-	retry_discord_startup("guild command registration", || {
-		poise::builtins::register_in_guild(&http, guild_commands.iter(), guild_id)
-	})
-	.await;
-
 	let options = poise::FrameworkOptions {
 		commands: get_all_commands(),
 		post_command: |ctx| {
@@ -90,11 +69,38 @@ async fn main() -> anyhow::Result<()> {
 
 	let framework = poise::Framework::new(options);
 
+	// One Http for the whole process: the client's own, reused for the startup REST calls
+	// below. A separate standalone Http would carry its own ratelimiter that never sees the
+	// client's learned limits, so the two could collectively exceed Discord's limits.
 	let mut client = serenity::Client::builder(token, intents)
 		.framework(Box::new(framework))
-		.event_handler(Arc::new(events::Handler))
+		.event_handler(Arc::new(events::Handler {
+			discord_cooldown: data.discord_cooldown.clone(),
+		}))
 		.data(data as _)
 		.await?;
+
+	let http = client.http.clone();
+
+	// The three startup REST calls retry in-process instead of propagating: a Discord
+	// error here must not exit and hand control to the container restart loop (see
+	// util::retry). Command lists are built once and reborrowed per attempt.
+	let app_info =
+		retry_discord_startup("application info", || http.get_current_application_info()).await;
+	http.set_application_id(app_info.id);
+
+	let global_commands = get_global_commands();
+	retry_discord_startup("global command registration", || {
+		poise::builtins::register_globally(http.as_ref(), global_commands.iter())
+	})
+	.await;
+
+	let guild_commands = retrorealm_server_commands();
+	let guild_id = GuildId::new(*RETROREALM_SERVER_ID);
+	retry_discord_startup("guild command registration", || {
+		poise::builtins::register_in_guild(http.as_ref(), guild_commands.iter(), guild_id)
+	})
+	.await;
 
 	// Gateway loop: start() is re-callable (&mut self). On error, back off with jitter
 	// and retry instead of exiting; a clean Ok(()) exits normally. Retrying in-process

@@ -59,9 +59,12 @@ pub fn jittered(delay: Duration) -> Duration {
 	jittered_from(delay, entropy)
 }
 
-/// True for the Cloudflare-ban shape at our serenity rev: `Error::Http` carrying a 429.
-/// A JSON global 429 never surfaces here (serenity retries it internally), so the only
-/// 429 a caller sees is the edge ban.
+/// True for a 429 that reaches us as `Error::Http`. serenity handles most 429s internally
+/// (a global 429, or an edge ban that carries `retry-after`, is slept-then-retried inside
+/// its ratelimiter and never surfaces), so this only catches the residual shape: an edge
+/// 429 with no parseable `retry-after`. The global stand-down driven by
+/// `EventHandler::ratelimit` is what actually reacts to the common (retry-after-bearing)
+/// ban; this floor is the fallback for the header-less variant.
 pub fn is_rate_limited(e: &serenity::Error) -> bool {
 	matches!(
 		e,

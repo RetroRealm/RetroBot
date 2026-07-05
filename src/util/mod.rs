@@ -1,6 +1,7 @@
 extern crate unicode_width;
 use unicode_width::UnicodeWidthStr;
 
+pub mod discord_ratelimit;
 pub mod retry;
 
 fn pad_string(input: &str, width: usize) -> String {

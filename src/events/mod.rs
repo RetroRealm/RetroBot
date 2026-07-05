@@ -1,15 +1,18 @@
 use crate::abstraction::activity_data::FromStringTuple;
 use crate::abstraction::command::CommandData;
+use crate::util::discord_ratelimit::DiscordCooldown;
 use lazy_static::lazy_static;
-use log::{debug, info};
-use serenity::all::{ActivityData, Context, EventHandler, FullEvent};
+use log::{debug, info, warn};
+use serenity::all::{ActivityData, Context, EventHandler, FullEvent, RatelimitInfo};
 use serenity::async_trait;
 use std::env;
+use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 
-pub mod suggestion_poller;
-
-pub struct Handler;
+pub struct Handler {
+	/// Shared with `CommandData`; armed here from `ratelimit`, honored by the poller.
+	pub discord_cooldown: Arc<DiscordCooldown>,
+}
 
 lazy_static! {
 	static ref DISCORD_STATUS: String = env::var("DISCORD_STATUS").unwrap_or_default();
@@ -36,7 +39,7 @@ impl EventHandler for Handler {
 					let ctx = ctx.clone();
 					let data = ctx.data::<CommandData>();
 					tokio::spawn(async move {
-						suggestion_poller::run(ctx, data).await;
+						crate::suggestions::run(ctx, data).await;
 					});
 				}
 			}
@@ -45,5 +48,20 @@ impl EventHandler for Handler {
 			}
 			_ => {}
 		}
+	}
+
+	/// serenity calls this for every 429 it sees. We log each one at warn (serenity itself
+	/// only logs them at debug, so this is the operator's one window into rate limiting) and
+	/// arm the global stand-down when the wait is ban-length, so the poller stops feeding
+	/// the ban.
+	async fn ratelimit(&self, info: RatelimitInfo) {
+		warn!(
+			"discord ratelimit: {:?} {} (global={}, wait {:.1}s)",
+			info.method,
+			info.path,
+			info.global,
+			info.timeout.as_secs_f64()
+		);
+		self.discord_cooldown.record(info.timeout);
 	}
 }

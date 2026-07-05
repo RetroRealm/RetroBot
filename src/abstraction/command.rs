@@ -18,7 +18,13 @@ pub type CheckResult = Result<bool, CommandError>;
 pub struct CommandData {
 	pub client: reqwest::Client,
 	pub playmatch_client: Arc<crate::abstraction::playmatch_client::PlaymatchClient>,
-	pub suggestion_store: Arc<crate::abstraction::suggestion_store::SuggestionStore>,
+	pub suggestion_store: Arc<crate::suggestions::store::SuggestionStore>,
+	/// Global stand-down gate shared with the event handler, which arms it from
+	/// `EventHandler::ratelimit` when Discord reports a ban-length wait.
+	pub discord_cooldown: Arc<crate::util::discord_ratelimit::DiscordCooldown>,
+	/// The rate-limited card dispatcher, set once when the suggestion system starts. Shared
+	/// so `/suggest` and the sync loop enqueue through the same limiters and dedup state.
+	pub dispatcher: std::sync::OnceLock<crate::suggestions::dispatch::Dispatcher>,
 }
 
 impl CommandData {
@@ -54,7 +60,7 @@ impl CommandData {
 
 		let redis_url = env::var("REDIS_URL").expect("missing REDIS_URL");
 		let suggestion_store =
-			crate::abstraction::suggestion_store::SuggestionStore::connect(&redis_url).await?;
+			crate::suggestions::store::SuggestionStore::connect(&redis_url).await?;
 
 		Ok(Self {
 			client,
@@ -62,6 +68,8 @@ impl CommandData {
 				inner,
 			)),
 			suggestion_store: Arc::new(suggestion_store),
+			discord_cooldown: Arc::new(crate::util::discord_ratelimit::DiscordCooldown::new()),
+			dispatcher: std::sync::OnceLock::new(),
 		})
 	}
 }
