@@ -280,6 +280,14 @@ impl PlaymatchClient {
 			.await
 	}
 
+	pub async fn delete_suggestion_if_exists(&self, id: Uuid) -> Result<bool, Error<()>> {
+		match self.delete_suggestion(id).await {
+			Ok(()) => Ok(true),
+			Err(e) if e.status() == Some(StatusCode::NOT_FOUND) => Ok(false),
+			Err(e) => Err(e),
+		}
+	}
+
 	pub async fn create_game_suggestion(
 		&self,
 		body: GameSuggestionRequest,
@@ -795,6 +803,40 @@ mod tests {
 		let client = make_client(&server.uri());
 		let result = client.get_all_companies().await;
 		assert!(result.is_err());
+	}
+
+	#[tokio::test]
+	async fn delete_suggestion_if_exists_reports_whether_it_deleted() {
+		let server = MockServer::start().await;
+		let deleted_id = Uuid::from_u128(1);
+		let missing_id = Uuid::from_u128(2);
+
+		Mock::given(method("DELETE"))
+			.and(path(format!("/api/v2/suggestion/{deleted_id}")))
+			.respond_with(ResponseTemplate::new(204))
+			.expect(1)
+			.mount(&server)
+			.await;
+		Mock::given(method("DELETE"))
+			.and(path(format!("/api/v2/suggestion/{missing_id}")))
+			.respond_with(ResponseTemplate::new(404))
+			.expect(1)
+			.mount(&server)
+			.await;
+
+		let client = make_client(&server.uri());
+		assert!(
+			client
+				.delete_suggestion_if_exists(deleted_id)
+				.await
+				.unwrap()
+		);
+		assert!(
+			!client
+				.delete_suggestion_if_exists(missing_id)
+				.await
+				.unwrap()
+		);
 	}
 
 	#[tokio::test]

@@ -160,22 +160,32 @@ async fn sweep_redundant(
 			continue;
 		}
 
-		// Playmatch is the source of truth; tear it down there first.
-		if let Err(e) = data.playmatch_client.delete_suggestion(suggestion.id).await {
-			warn!(
-				"suggestion sweep: delete_suggestion({}) failed: {}",
-				suggestion.id,
-				describe(&e)
-			);
-			continue;
-		}
+		// Playmatch is the source of truth; tear it down there first. A 404 means another
+		// actor already resolved it after our pending snapshot.
+		let deleted = match data
+			.playmatch_client
+			.delete_suggestion_if_exists(suggestion.id)
+			.await
+		{
+			Ok(deleted) => deleted,
+			Err(e) => {
+				warn!(
+					"suggestion sweep: delete_suggestion({}) failed: {}",
+					suggestion.id,
+					describe(&e)
+				);
+				continue;
+			}
+		};
 		if let Some(card) = posted.get(&suggestion.id) {
 			dispatcher.queue_delete(suggestion.id, card.message_id);
 		}
-		info!(
-			"suggestion sweep: dismissed {} (game {game_id}, provider {})",
-			suggestion.id, suggestion.provider
-		);
+		if deleted {
+			info!(
+				"suggestion sweep: dismissed {} (game {game_id}, provider {})",
+				suggestion.id, suggestion.provider
+			);
+		}
 		swept.insert(suggestion.id);
 	}
 
